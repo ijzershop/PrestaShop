@@ -2,6 +2,9 @@
 
 namespace MsThemeConfig\Service;
 
+use DynamicProduct\classes\helpers\DynamicInputFieldsHelper;
+use DynamicProduct\classes\models\DynamicConfig;
+use DynamicProduct\classes\models\DynamicInput;
 use MsThemeConfig\QueryResult\DmsOrderPreviewProductDetail;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\AttributeGroup;
@@ -29,7 +32,11 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Adapter\Entity\State;
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+use Product;
+use Smarty;
+use Tools;
 use Validate;
+use Context;
 
 /**
  *
@@ -67,9 +74,7 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
         $this->addressFormatter = $addressFormatter ?? new AddressFormatter();
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function handle(GetOrderPreview $query): OrderPreview
     {
         $order = $this->getOrder($query->getOrderId());
@@ -144,9 +149,7 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     private function getShippingDetails(Order $order): OrderPreviewShippingDetails
     {
         if(Address::addressExists($order->id_address_delivery)){
@@ -223,6 +226,11 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
                 $totalPrice = $detail['total_price_tax_incl'];
             }
 
+            if(Product::isDynamicProduct($detail)){
+                $detail['customization'] =  $this->displayAdminInputSummary($detail['customization']);
+            }
+
+
             $productDetails[] = new DmsOrderPreviewProductDetail(
                 AttributeGroup::stripSawCutModuleAttributeGroupName($detail['product_name']),
                 $detail['product_reference'],
@@ -255,4 +263,52 @@ final class DmsAdminOrderPreviewService implements GetOrderPreviewHandlerInterfa
 
         return Group::getPriceDisplayMethod((int) $customer->id_default_group);
     }
+
+
+
+
+    public function displayAdminInputSummary($id_input)
+    {
+        $id_lang = (int)Context::getContext()->language->id;
+        $input = new DynamicInput($id_input, $id_lang, Context::getContext()->shop->getShopId());
+        $input_fields[0] = $input->getInputFields();
+
+        $dynamic_config = DynamicConfig::getByProduct($input->id_product);
+        if ($dynamic_config->split_summary) {
+            $grouped_fields = DynamicInputFieldsHelper::groupFields($input->id_product, $input_fields);
+        } else {
+            $fields = [];
+            foreach ($input_fields[0] as $i => $field) {
+                if($field->type !== 0){
+                    if($field->type !== 2){
+                        $field->visible = true;
+                        $fields[$i] = $field;
+                    } else {
+                        $field->visible = false;
+                        $fields[$i] = $field;
+                    }
+                }
+
+            }
+            $grouped_fields = [
+                [
+                    'label' => '',
+                    'fields' => $fields,
+                ],
+            ];
+        }
+
+        $smarty = new Smarty();
+
+        $smarty->assign([
+            'id_lang' => $id_lang,
+            'input' => $input,
+            'grouped_fields' => $grouped_fields,
+            'is_pdf' => false,
+            'is_admin' => true,
+        ]);
+
+        return $smarty->fetch(_PS_ROOT_DIR_.'/modules/modernesmiddynamicproduct/views/templates/admin/display-dynamic-input-summary.tpl');
+    }
+
 }

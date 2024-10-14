@@ -846,11 +846,10 @@ class MsThemeConfig extends Module
     {
         try {
             $hookClass = $this->getModernHooks();
-            $hookClass->hookActionObjectCategoryUpdateAfter($params);
+            return $hookClass->hookActionObjectCategoryUpdateAfter($params);
         } catch (\PrestaShopException $e) {
             dd($e);
         }
-        die();
     }
 
     /**

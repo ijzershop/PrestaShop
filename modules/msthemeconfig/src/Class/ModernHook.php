@@ -1835,8 +1835,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      */
     public function hookActionObjectCategoryUpdateAfter(array $params)
     {
-        $this->updateCustomCategoryFields($params);
-        die();
+        return $this->updateCustomCategoryFields($params);
     }
 
     /**
@@ -1850,30 +1849,27 @@ public function hookActionFrontControllerSetVariables(&$param): void
 
         $idLang = Context::getContext()->language->id;
         $form_values = Tools::getAllValues();
-
         $object = $params['object'] ?? new Category($params['id']);
 
+        $categoryArray = [];
 
-        if(isset($form_values['category'])){
+        if (isset($form_values['category'])) {
             $categoryFormData = $form_values['category'];
         }
 
-        if(isset($form_values['root_category'])){
+        if (isset($form_values['root_category'])) {
             $categoryFormData = $form_values['root_category'];
         }
 
-        if(empty($categoryFormData)){
-            return;
+        if (empty($categoryFormData)) {
+            return false;
         }
-
-
 
         if (empty($categoryFormData['additional_description'])) {
             $additional_description = '';
         } else {
             $additional_description = $categoryFormData['additional_description'];
         }
-
 
         if (empty($categoryFormData['top_description'])) {
             $top_description = '';
@@ -1893,11 +1889,36 @@ public function hookActionFrontControllerSetVariables(&$param): void
             $jsonld = $categoryFormData['jsonld'];
         }
 
-        $object->additional_description = $additional_description;
-        $object->top_description = $top_description;
-        $object->second_name = $second_name;
-        $object->jsonld = $jsonld;
-        return $object->update(false, true);
+        // If this table is linked to multishop system, update / insert for all shops from context
+        $id_shop_list = \Shop::getShops(true, null, true);
+        $id_lang_list = \Language::getIds(true);
+        $result = false;
+        foreach ($id_shop_list as $id_shop) {
+            foreach ($id_lang_list as $id_lang) {
+                $where = pSQL('`id_category` = ' . (int)$object->id . ' AND id_lang = ' . (int)$id_lang . ' AND id_shop = ' . (int)$id_shop . ' ');
+
+                $categoryArray['id_shop'] = (int)$id_shop;
+                $categoryArray['id_lang'] = (int)$id_lang;
+                $categoryArray['second_name'] = $categoryFormData['second_name'][$id_lang];
+                $categoryArray['jsonld'] = trim(addslashes($categoryFormData['jsonld'][$id_lang]), '"');
+                $categoryArray['top_description'] = $categoryFormData['top_description'][$id_lang];
+                $categoryArray['additional_description'] = $categoryFormData['additional_description'][$id_lang];
+
+                if (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'category_lang WHERE ' . $where, false)) {
+                    $result = Db::getInstance()->update('category_lang', $categoryArray, $where);
+                } else {
+                    $categoryArray['id_category'] = $object->id;
+                    $categoryArray['name'] = $object->name[$id_lang];
+                    $categoryArray['description'] = $object->description[$id_lang];
+                    $categoryArray['link_rewrite'] = $object->link_rewrite[$id_lang];
+                    $categoryArray['meta_title'] = $object->meta_title[$id_lang];
+                    $categoryArray['meta_keywords'] = $object->meta_keywords[$id_lang];
+                    $categoryArray['meta_description'] = $object->meta_description[$id_lang];
+                    Db::getInstance()->insert('category_lang', $categoryArray, false, false,Db::INSERT, true);
+                }
+            }
+        }
+        return $result;
     }
 
     /**

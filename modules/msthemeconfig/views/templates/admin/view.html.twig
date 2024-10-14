@@ -135,10 +135,10 @@
 
     $(document).ready(function(){
       $('.total_amount_refund_checkbox').on('click', function(){
-        let orderDetailId = $(this).attr('data-id');
-          console.log(orderDetailId);
-          $('#cancel_product_amount_'+orderDetailId).toggleClass('disabled');
-          $('#cancel_product_amount_'+orderDetailId).attr('readonly',!$('#cancel_product_amount_'+orderDetailId).attr('readonly'));
+          let orderDetailId = $(this).attr('data-id');
+          let cancelElem = $('#cancel_product_amount_'+orderDetailId);
+          cancelElem.toggleClass('disabled');
+          cancelElem.attr('readonly',!cancelElem.attr('readonly'));
       });
 
 
@@ -160,11 +160,11 @@
               customer_search: request.term,
             },
             success: function( data ) {
-              var d = JSON.parse(data);
+              let d = JSON.parse(data);
               response($.map(d.customers, function (value, key) {
                 return {
                   label: value.fullname_and_email,
-                  value: value.email + '#' + value.firstname
+                  value: value.email + '#' + value.id_customer
                 };
               }));
             }

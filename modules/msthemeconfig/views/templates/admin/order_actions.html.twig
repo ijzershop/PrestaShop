@@ -166,7 +166,6 @@
   {% endif %}
 
 
-
   {# Shipping Status Button #}
   <form class="order-actions-shipping-status">
     <div class="input-group">
@@ -181,9 +180,6 @@
   </form>
 
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/extra_order_button_actions.html.twig' %}
-
-
-
 
   {% if merchandiseReturnEnabled %}
     {% if orderForViewing.isDelivered() %}
@@ -291,7 +287,7 @@
       $('#migrateOrder').on('click', function (event) {
         event.preventDefault();
         var customerEmail = $('#selectCustomerToMigrate').val().split('#');
-
+console.log(customerEmail,$('#selectCustomerToMigrate').val())
         var postdata = {
           customer_email: customerEmail[0],
           customer: customerEmail[1],

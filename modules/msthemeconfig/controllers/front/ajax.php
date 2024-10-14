@@ -747,6 +747,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 }
             }
         }
+
         if (count($customers) && Tools::getValue('sf2')) {
             $to_return = $customers;
         } elseif (count($customers) && !Tools::getValue('sf2')) {

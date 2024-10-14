@@ -40,8 +40,8 @@
           {foreach $order_detail.customizedDatas as $customizationPerAddress}
           {foreach $customizationPerAddress as $customizationId => $customization}
           {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
-          {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}{if !empty($customization_infos.value)}
-            {if !empty($customization_infos.technical_image) }
+          {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
+                {if !empty($customization_infos.technical_image) }
                   <table>
                     <tr>
                       <td colspan="2">
@@ -51,14 +51,15 @@
                     <tr>
                       <td colspan="2">
                         <br/>
-                        <img src="https://{Context::getContext()->shop->getBaseURL(true)}/{$customization_infos.technical_image}" width="200"  alt=""/>
+                        <img src="{Context::getContext()->shop->getBaseURL(true)}{$customization_infos.technical_image}" width="200"  alt=""/>
                       </td>
                     </tr>
                   </table>
+                {elseif !empty($customization_infos.pdf_value) }
+                  {$customization_infos.pdf_value|strip_tags:true|strip}
                 {else}
                   {$customization_infos.value|strip_tags:true|strip}
                 {/if}
-              {/if}
             {/foreach}
           {/if}
           {if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}

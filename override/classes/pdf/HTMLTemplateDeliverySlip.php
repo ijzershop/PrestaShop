@@ -193,9 +193,19 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                             if (isset($customized['datas'])) {
                                 if (isset($customized['datas'][1][0]['technical_image'])) {
                                        $file = $customized['datas'][1][0]['technical_image'];
-                                       if (!exif_imagetype('https://ijzershop.nl/'.$file)) {
-                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
 
+                                       $domain = 'ijzershop.nl';
+                                        if(isset(Context::getContext()->shop->domain_ssl)){
+                                            $domain = Context::getContext()->shop->domain_ssl;
+                                        }
+                                    if($domain == 'ijzershop8.local'){
+                                        $context = stream_context_create(["ssl" => ["verify_peer" => false,"verify_peer_name" => false]]);
+                                    } else {
+                                        $context = stream_context_create(["ssl" => ["verify_peer" => true,"verify_peer_name" => true]]);
+                                    }
+
+                                    if (!file_get_contents('https://'.$domain.'/'.$file,false, $context)) {
+                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
                                        }
                                    }
                                }

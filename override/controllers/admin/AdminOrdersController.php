@@ -295,11 +295,9 @@ class AdminOrdersController extends AdminOrdersControllerCore
         $customer = Tools::getValue('customer');
         $order = Tools::getValue('order');
 
-        $cust = new Customer;
-        $customerObj = $cust->getCustomersByEmail($email);
-        if(isset($customerObj[0])){
-            if(!is_null($customerObj[0]['id_customer'])){
-                $id = $customerObj[0]['id_customer'];
+        $cust = new Customer($customer);
+            if(!is_null($cust->id)){
+                $id = (int)$cust->id;
                 // Update order and set new customer id
                 $result = Db::getInstance()->execute('UPDATE `' . _DB_PREFIX_ . 'orders` SET `id_customer`='.$id.' WHERE `id_order` = '.(int)$order);
                 if($result){
@@ -308,9 +306,7 @@ class AdminOrdersController extends AdminOrdersControllerCore
                     return die(json_encode(array('success'=>false,'msg'=>'Koppelen van de bestelling aan klant : '. $customer. ' is niet gelukt, probeer het nogmaal')));
                 }
             }
-        }
-        return die(json_encode(array('success'=>false,'msg'=>'Klant met naam: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
-
+        return die(json_encode(array('success'=>false,'msg'=>'Klant met id: '. $customer.' en email adres: '.$email.' kon niet gevonden worden in de database')));
     }
 
 

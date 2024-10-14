@@ -1,7 +1,11 @@
 <?php
 use DynamicProduct\classes\models\DynamicConfig;
 use DynamicProduct\classes\models\DynamicEquation;
+use DynamicProduct\classes\module\DynamicProvider;
+use DynamicProduct\classes\models\DynamicInput;
+
 use PrestaShop\PrestaShop\Adapter\Entity\StockAvailable;
+
 
 class Product extends ProductCore {
         /*
@@ -309,6 +313,7 @@ class Product extends ProductCore {
         foreach ($result as $row) {
             if ((int) $row['id_module'] && (int) $row['type'] == Product::CUSTOMIZE_TEXTFIELD) {
                 $row['value'] = Hook::exec('displayCustomization', ['customization' => $row], (int) $row['id_module']);
+                $row['pdf_value'] = self::getBasicDynamicProductValue(['customization' => $row, 'is_pdf'=>true , 'is_order_detail' => true],(int) $row['id_module'], Context::getContext());
             }
             $customized_datas[(int) $row['id_product']][(int) $row['id_product_attribute']][(int) $row['id_address_delivery']][(int) $row['id_customization']]['datas'][(int) $row['type']][] = $row;
         }
@@ -332,6 +337,55 @@ class Product extends ProductCore {
 
         return $customized_datas;
     }
+
+
+
+    /**
+     * Add empty modal after footer for wizard
+     */
+    public static function getBasicDynamicProductValue($params, $id_module, $context)
+    {
+        $id_lang = $context->language->id;
+
+        $provider = new DynamicProvider($id_module, $context);
+        unset($params['customization']['value']);
+        $id_input = $provider->getDynamicInputId($params['customization']);
+
+        $input = new DynamicInput($id_input, $id_lang, Context::getContext()->shop->getShopId());
+
+        $input_fields[0] = $input->getInputFields();
+
+        $dynamic_config = DynamicConfig::getByProduct($input->id_product);
+        if ($dynamic_config->split_summary) {
+            $grouped_fields = DynamicInputFieldsHelper::groupFields($input->id_product, $input_fields);
+        } else {
+            $fields = [];
+            foreach ($input_fields[0] as $i => $field) {
+                if((int)$field->type !== 0){
+                    if((int)$field->type !== 2) {
+                        $field->visible = true;
+                        $fields[$i] = $field;
+                    }
+                }
+
+            }
+            $grouped_fields = [
+                [
+                    'label' => '',
+                    'fields' => $fields,
+                ],
+            ];
+        }
+        $summary = '';
+        foreach ($grouped_fields[0]['fields'] as $field){
+            if(!empty($field->value)){
+                $summary .= $field->label.': '.$field->value.' | ';
+            }
+        }
+
+        return rtrim($summary, ' | ');
+    }
+
     public static function getOfferRows($id_oi_offer = null, $id_lang = 1) {
         if ($id_oi_offer == null || !is_numeric($id_oi_offer)) {
             return array();

@@ -413,9 +413,10 @@ $(() => {
         // @ts-ignore
         $.fancybox.open(offerFormTemplate(offer), {
           dropdownParent: $('#offer-row-form'),
-          width: '800',
-          height: '800',
-          modal: true,
+          minWidth: '90%',
+          maxHeight: '90%',
+          maxWidth: '1200px',
+          top: '5%',
           autoDimensions: false,
           closeClick  : false,
           openEffect  : 'none',

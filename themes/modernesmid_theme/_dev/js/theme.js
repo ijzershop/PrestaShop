@@ -2159,24 +2159,25 @@ $(function () {
   });
 });
 
+
 $(document).ready(function () {
 // Init a timeout variable to be used below
     let timeoutAlertFunction =
     setTimeout(function () {
-        $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
-          $(this).remove();
+        $('#notification .alert, #checkout .alert').fadeTo(1000, 0).slideUp(1000, function () {
+            $(this).remove();
         });
     }, 20000);
 
 
 
-    $(document).on('show','.alert:not(#custom-msg)', function(elem){
-      $('.alert:not(#custom-msg)').hover(function(){
+    $(document).on('show','#notification .alert, #checkout .alert', function(elem){
+      $('#notification .alert, #checkout .alert').hover(function(){
         clearTimeout(timeoutAlertFunction);
         timeoutAlertFunction =
           setTimeout(function () {
-            $('.alert:not(#custom-msg)').fadeTo(1000, 0).slideUp(1000, function () {
-              $(this).remove();
+            $('#notification .alert, #checkout .alert').fadeTo(1000, 0).slideUp(1000, function () {
+                $(this).remove();
             });
           }, 20000);
       });

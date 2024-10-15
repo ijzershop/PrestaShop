@@ -15,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_themecusto/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_imageslider/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie_bc/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />

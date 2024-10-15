@@ -171,7 +171,6 @@ $(() => {
     quantity: any;
     weight: any;
     description_short: any;
-    description: any;
     oi_offer_memo: any;
   } | undefined) {
     let extraShippingSelectNo = 'checked="true"';
@@ -206,9 +205,6 @@ $(() => {
     }
 
     return `<div class="card" id="offer-row-card" data-link="${data.link}">
-    <div class="card-header">
-      Offer row
-    </div>
     <div class="card-body">
       <h5 class="card-title"><span>${data.formTitle}</span></h5>
       <p class="card-text">
@@ -216,6 +212,10 @@ $(() => {
       <input type="hidden" name="offer-id" value="${data.id_oi_offer}"/>
       <input type="hidden" name="offer-row-id" value="${idProduct}"/>
       <input type="hidden" name="offer-new" value="${data.new}"/>
+        <div class="form-group">
+          <label for="offer-row-title">Offerte titel</label>
+          <input type="text" class="form-control" name="offer-row-title"  id="offer-row-title" placeholder="Offerte Titel" value="${data.name}">
+        </div>
         <div class="form-group bg-light p-4 border-bottom-1">
           <label for="store-products">Product(en)</label>
             <select id="store-products" class="form-control" name="offer-row-product" data-toggle="select2"  aria-hidden="true" readonly="false">
@@ -231,18 +231,10 @@ $(() => {
 
         </div>
         <div class="form-group">
-          <strong id="estimate_weight" class="w-100 h3 text-dark">Geschat gewicht:<span class="float-right">0.00</span> </strong>
-
-        </div>
-        <div class="form-group">
-          <label for="offer-memo">Interne Memo</label>
+          <label for="offer-memo">Interne Berekening</label>
           <textarea class="autoload_rte form-control" id="offer-memo" name="offer-memo">
             ${data.oi_offer_memo}
           </textarea>
-        </div>
-        <div class="form-group">
-          <label for="offer-row-title">Naam</label>
-          <input type="text" class="form-control" name="offer-row-title"  id="offer-row-title" placeholder="Product Naam" value="${data.name}">
         </div>
 
         <div class="form-row">
@@ -278,18 +270,11 @@ $(() => {
             </div>
            </div>
         <div class="form-group">
-          <label for="offer-message-short">Korte Omschrijving</label>
+          <label for="offer-message-short">Omschrijving</label>
           <textarea class="autoload_rte form-control" id="offer-message-short" name="offer-message-short">
             ${data.description_short}
           </textarea>
         </div>
-        <div class="form-group">
-          <label for="offer-message">Omschrijving</label>
-          <textarea class="autoload_rte form-control" id="offer-message" name="offer-message">
-            ${data.description}
-          </textarea>
-        </div>
-
       <a id="offer-row-submit" class="btn btn-primary">Save</a>
       </form>
       </p>
@@ -405,7 +390,10 @@ $(() => {
         let insertedEmail = $('#offer_integration_email').val();
         let employeeInitials = $('#employee').val();
 
-        let startName = '';
+        let date = new Date();
+
+        // @ts-ignore
+        let startName = 'Offerte Ijzershop | ' + date.toLocaleDateString('nl-NL');
 
         let offer =  {
           oi_offer_extra_shipping: '',
@@ -419,7 +407,6 @@ $(() => {
           quantity: 1,
           weight: '',
           description_short: '',
-          description: '',
           oi_offer_memo: '',
         }
 
@@ -585,7 +572,7 @@ $(() => {
     }
 
     $('#total_price_pack_products span').text(renderMoneyString(totalPackPrice));
-    $('#estimate_weight span').text(totalPackWeight.toFixed(2)+' Kg');
+    $('#offer-weight').val(totalPackWeight.toFixed(2));
   }
 
   $(document).on('click', '.delete-offer-row', function (e) {

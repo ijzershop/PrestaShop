@@ -219,9 +219,8 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_size = 0;
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
-            $pack->oi_offer_memo = Tools::getValue('offer-memo');
-            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message-short'])];
-            $pack->description = [1 => Tools::purifyHTML($_POST['offer-message'])];
+            $pack->oi_offer_memo = Tools::purifyHTML($_POST['offer-memo']);
+            $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message-short'], true, true)];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;
             $pack->out_of_stock = 0;
@@ -305,9 +304,8 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             $pack->min_cut_size = 0;
             $pack->min_cut_remainder = 0;
             $pack->oi_offer_extra_shipping = Tools::getValue('offer-extra-shipping');
-            $pack->oi_offer_memo = Tools::getValue('offer-memo');
+            $pack->oi_offer_memo = Tools::purifyHTML($_POST['offer-memo']);
             $pack->description_short = [1 => Tools::purifyHTML($_POST['offer-message-short'])];
-            $pack->description = [1 => Tools::purifyHTML($_POST['offer-message'])];
             $pack->id_category_default = $catID;
             $pack->id_tax_rules_group = 1;
             $pack->out_of_stock = 0;

@@ -43,6 +43,7 @@
     var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
     var roundMode = {$round_mode|intval};
     var youEditFieldFor = '';
+    var storeName = {$shop_name};
     {if isset($shop_context)}
     {if $shop_context == Shop::CONTEXT_ALL}
     youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1 d='Admin.Notifications.Info'}';

@@ -677,7 +677,7 @@ $(document).ready(() => {
       let city = $('#customer_address_form input[name="city"]').val();
 
       if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0)) {
-        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
+        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "");
       }
 
       if (validated) {
@@ -701,7 +701,7 @@ $(document).ready(() => {
       let city = $('#checkout-form input[name="city"]').val();
 
       if (validate && postcode !== undefined && (postcode.length >= 4 || houseNumber.length > 0)) {
-        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), '', "");
+        validated = await validateAddressApiCheckout(postcode.trim(), street.trim(), houseNumber.trim(), extension.trim(), id_country.trim(), city.trim(), "");
       }
 
       if (validated) {

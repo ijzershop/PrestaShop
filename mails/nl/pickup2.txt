@@ -1,6 +1,6 @@
 {shop_url}
 
-Uw order met order-referentie {order_name} is klaar gemaakt door {shop_name}. U kunt uw order ophalen op het volgende adres:
+Uw order met factuurnummer {order_name} is klaar gemaakt door {shop_name}. U kunt uw order ophalen op het volgende adres:
 
 Ijzershop
 Ceresweg 1
@@ -13,7 +13,7 @@ Wij hebben pauze om 9:00-9:30 en 12:30-13:00 uur
 
 Heeft u een vraag?
 Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://ijzershop.nl/content/51-FAQ)
+[> veel gestelde vragen](https://content/51-FAQ)
 
 [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 

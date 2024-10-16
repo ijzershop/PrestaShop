@@ -8,7 +8,7 @@ Postcode:  {postcode}
 
 Phone number:  {phonenumber}
 
-Factuurnummer:  {order_reference}
+Bestelreferentie:  {order_reference}
 
 Bijlage: {attached_file}
 

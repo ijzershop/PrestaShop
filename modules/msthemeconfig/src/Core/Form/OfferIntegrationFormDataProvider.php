@@ -49,7 +49,6 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             'email' => $offerIntegration->getEmail(),
             'phone' => $offerIntegration->getPhone(),
             'message' => $offerIntegration->getMessage(),
-            'employee_memo' => $offerIntegration->getMemo(),
             'date_exp' => $offerIntegration->getDateExp(),
         ];
     }
@@ -78,11 +77,10 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
         return [
             'id_oi_offer' => '',
             'code' => date_format(date_create(), 'Ymd') . '-' . rand ( 1000 , 9999 ),
-            'name' => '',
+            'name' => 'Offerte '. $shop_name . ' | ' . date_format(date_create(), 'd-m-Y'),
             'email' => '',
             'phone' => '',
             'message' => '',
-            'employee_memo' => '<small>Offerte '. $shop_name .' | '. $user .' | '. date_format(date_create(), 'd-m-Y').'</small><br><br>',
             'date_exp' => $newExpDate,
         ];
     }

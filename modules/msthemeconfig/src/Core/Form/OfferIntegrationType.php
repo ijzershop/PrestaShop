@@ -43,8 +43,8 @@ class OfferIntegrationType extends TranslatorAwareType
                 ],
             ])
             ->add('name', TextType::class, [
-                'label' => 'Name',
-                'help' => 'De naam van de klant',
+                'label' => 'Naam klant',
+                'help' => 'De naam van de klant, (bij invoeren van email adres word deze ook toegevoegd aan het onderstaande email veld)',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => true,
                 'constraints' => [
@@ -52,7 +52,7 @@ class OfferIntegrationType extends TranslatorAwareType
                 ],
             ])
             ->add('email', TextType::class, [
-                'label' => 'Email',
+                'label' => 'Email klant',
                 'help' => 'Het email adres van de klant',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => true,
@@ -67,24 +67,17 @@ class OfferIntegrationType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('message', TextareaType::class, [
-                'label' => 'Message',
+                'label' => 'Bericht',
                 'attr' => ['class' => 'autoload_rte'],
                 'help' => 'Het bericht voor bij de offerte',
-                'translation_domain' => 'Modules.Pricemodifier.Admin',
-                'required' => false,
-            ])
-            ->add('employee_memo', TextareaType::class, [
-                'label' => 'Interne Memo',
-                'attr' => ['class' => 'autoload_rte'],
-                'help' => 'Interne memo voor werknemers',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => false,
             ])
             ->add('date_exp', DateTimeType::class, [
                 'time_widget' => 'single_text',
                 'date_widget' => 'single_text',
-                'label' => 'Exp. Date',
-                'help' => 'De verloop datum',
+                'label' => 'Verloopdatum',
+                'help' => 'De verloopdatum',
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => false,
                 'constraints' => [

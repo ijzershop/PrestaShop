@@ -30,6 +30,12 @@
         {if $nodes|count}
           <ul class="category-sub-menu depth{$depth} p-0 collapse {if (int)$loopindex <= 1 && $depth <= 1 && $key === 0}show{/if}" id="submenu-item{$sub_id}">
               {foreach from=$nodes key=key item=node}
+                {if !in_array($node.id, [
+                Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)])}
+
+
                   {assign var="key" value=$key}
                   {assign var="sub_id" value=$node.id}
                 <li data-depth="{$depth}" data-sub="{$sub_id}" data-index="{$loopindex}"  data-key="{$key}" class="p-0 pb-1 pt-1 {if $depth >= 2}pl-{$depth*1}{/if}">
@@ -59,6 +65,7 @@
                     {/if}
                 </li>
                   {assign var="loopindex" value=$loopindex++}
+                {/if}
               {/foreach}
           </ul>
         {/if}

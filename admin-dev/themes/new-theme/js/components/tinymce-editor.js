@@ -111,7 +111,7 @@ class TinyMCEEditor {
     const cfg = {
       selector: '.rte',
       relative_urls: false,
-      plugins: ['paste','link', 'table', 'media', 'advlist', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
+      plugins: ['paste','link', 'table', 'media', 'advlist', 'lists', 'code', 'table', 'autoresize', 'bootstrap', 'fullscreen', 'responsivefilemanager'],
       browser_spellcheck: true,
       toolbar: "undo redo code | bold italic underline strikethrough fullscreen responsivefilemanager | fontselect fontsizeselect formatselect styleselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print paste | pageembed template link anchor codesample | a11ycheck ltr rtl | showcomments | bootstrap",
       paste_data_images: true,

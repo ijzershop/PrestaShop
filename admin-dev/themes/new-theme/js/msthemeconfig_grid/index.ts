@@ -66,20 +66,24 @@ $(() => {
     // * - 1 Allow orders
     // * - 2 Use global setting
       if(parseInt(item.out_of_stock) === 0){
-        name = item.category + ' - ' + item.name + ' || ' + item.quantity + ' stuk(s)';
+        name = item.name + ' || ' + item.quantity + ' stuk(s)';
       } else {
-        name = item.category + ' - ' + item.name + ' || ∞ stuk(s)';
+        name = item.name + ' || ∞ stuk(s)';
       }
       idProduct = item.id;
+      if(typeof idProduct === 'undefined'){
+        idProduct = item.id_product;
+      }
       quantity = item.pack_quantity;
       weight = item.weight*quantity;
       native_price = item.price*quantity;
       price  = renderMoneyString(item.price*quantity);
-      let testArr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
       customCount = 0;
       if(item.attributes.length > 0){
         idProductAttribute = item.id_pack_product_attribute;
-        customCount = testArr.indexOf(item.attributes[0].name)+1;
+        customCount = item.attributes[0].customizedValue;
+        native_price = item.attributes[0].price;
+        price = renderMoneyString(item.attributes[0].price);
         customCountSelected = 'checked';
         display = 'display:table-row;'
       }
@@ -108,7 +112,7 @@ $(() => {
       '<td  style="width:10%;padding:4px;"><button type="button" data-row-id="'+rowId+'" class="btn delete_selected_stock_product btn-danger w-100">X</button></td>' +
       '</tr>' +
       '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
-      '<td colspan="2">Aantal knippen of zaagsnedes:</td>' +
+      '<td colspan="2">Aanpassing:</td>' +
       '<td colspan="3">' +
       '<input type="number" step="1" min="1" max="10" name="stock_selected_product_customization[]" data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" value="'+customCount+'" class="form-control"/>' +
       '</td></tr></table></li>';
@@ -360,7 +364,7 @@ $(() => {
         let url = $('#select2-url').val();
         initSelect2(url, false);
         initChangePacks();
-
+        updateTotalPrice();
         // @ts-ignore
         if (typeof window.tinyMCE != 'undefined' && $(window.tinyMCE.editors).length > 0) {
           // @ts-ignore
@@ -373,9 +377,9 @@ $(() => {
           });
         }
         new window.prestashop.component.TinyMCEEditor();
-        updateTotalPrice();
       }
     });
+
   });
 
   $(document).on('click',

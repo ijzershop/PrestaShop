@@ -69,14 +69,6 @@ class OfferIntegration
     private $message;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="employee_memo", type="string", nullable=true)
-     */
-    private $employee_memo;
-
-
-    /**
      * @var datetime
      *
      * @ORM\Column(name="date_exp", type="datetime", nullable=true)
@@ -215,24 +207,6 @@ class OfferIntegration
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getMemo(): ?string
-    {
-        return $this->employee_memo;
-    }
-
-    /**
-     * @param string|null $employee_memo
-     *
-     */
-    public function setMemo(?string $employee_memo)
-    {
-        $this->employee_memo = $employee_memo;
-
-        return $this;
-    }
 
     /**
      * @return DateTime

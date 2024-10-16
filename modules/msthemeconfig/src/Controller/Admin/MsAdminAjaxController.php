@@ -245,40 +245,48 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                 $customizedValue = Tools::getValue('stock_selected_product_customization');
 
                 for ($i = 0; $i < count($ids); $i++) {
-//                    $attachProduct = new Product($ids[$i]);
-//                    $combinations = $attachProduct->getAttributeCombinations();
-//
-//                    $attr_names = array_column($combinations, 'attribute_name');
-//                    array_multisort($attr_names, SORT_ASC, $combinations);
-//
-//                    if ((int)$customizedValue[$i] > 0) {
-//                        $customizationValue = $customizedValue[$i];
-//                        $attr_key = (int)$customizationValue - 1;
-//                    } else {
-//                        $customizationValue = 0;
-//                        $attr_key = 0;
-//                    }
-//
-//                    if (count($combinations) > 0) {
-//                        if ($customizationValue > count($combinations)) {
-//                            $neededAttribute = end($combinations);
-//                        } else {
-//                            $neededAttribute = $combinations[$attr_key];
-//                        }
-//
-//                        $id_product_attribute = $neededAttribute['id_product_attribute'];
-//                    } else {
-//                        $id_product_attribute = 0;
-//                    }
-                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i]);
+                    $attachProduct = new Product($ids[$i]);
+                    $combinations = $attachProduct->getAttributeCombinations();
+                    $attr_names = array_column($combinations, 'attribute_name');
+                    array_multisort($attr_names, SORT_NUMERIC, $combinations);
+
+                    if ((int)$customizedValue[$i] > 0) {
+                        $customizationValue = (int)$customizedValue[$i];
+                        $attr_key = $customizationValue - 1;
+                    } else {
+                        $customizationValue = 0;
+                        $attr_key = 0;
+                    }
+
+                    if (count($combinations) > 0) {
+                        if ($customizationValue > count($combinations)) {
+                            $neededAttribute = end($combinations);
+                        } else {
+                            $neededAttribute = $combinations[$attr_key];
+                        }
+
+                        $id_product_attribute = $neededAttribute['id_product_attribute'];
+                    } else {
+                        $id_product_attribute = 0;
+                    }
+                    Pack::addItem($pack->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
                 }
             }
-//            //Voeg zaagsnedes toe
-//            $pack->packedProducts = Pack::getItems($pack->id, 1);
-//            foreach ($pack->packedProducts as $key => $packItem) {
-//                $pack->packedProducts[$key]->attributes = Product::getAttributesParams($packItem->id, $packItem->id_pack_product_attribute);
-//            }
             $pack->update();
+            //Voeg zaagsnedes toe
+            $pack->packedProducts = Pack::getItemTable($pack->id, Context::getContext()->language->id);
+            foreach ($pack->packedProducts as $key => $packItem) {
+                $pack->packedProducts[$key]['attributes'] = Product::getAttributesParams($packItem['id_product'], $packItem['id_product_attribute']);
+
+                $attachProduct = new Product($packItem['id_product']);
+                $combinations = $attachProduct->getAttributeCombinations();
+                $attr_names = array_column($combinations, 'attribute_name');
+                array_multisort($attr_names, SORT_NUMERIC, $combinations);
+                $keyItem = array_search($pack->packedProducts[$key]['attributes'][0]['name'], $attr_names);
+
+                $pack->packedProducts[$key]['attributes'][0]['price']  = Product::getPriceStatic($packItem['id_product'],false,  $packItem['id_product_attribute'])*(int)$packItem['pack_quantity'];
+                $pack->packedProducts[$key]['attributes'][0]['customizedValue']  = $keyItem+1;
+            }
 
             return Response::create(json_encode(['msg' => 'Offer updated', 'offer' => $pack, 'error' => false]));
 
@@ -332,6 +340,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                     $attr_names = array_column($combinations, 'attribute_name');
                     array_multisort($attr_names, SORT_ASC, $combinations);
 
+
                     if ((int)$customizedValue[$i] > 0) {
                         $customizationValue = $customizedValue[$i];
                         $attr_key = (int)$customizationValue - 1;
@@ -351,6 +360,9 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                     } else {
                         $id_product_attribute = 0;
                     }
+
+
+
                     Pack::addItem($pack->id, $ids[$i], (int)$totals[$i], $id_product_attribute);
                 }
             }

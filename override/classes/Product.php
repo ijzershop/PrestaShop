@@ -409,10 +409,23 @@ class Product extends ProductCore {
             $row['price_tax_exc'] = Product::getPriceStatic($row['id_product'], false, null, 2);
             $row['quantity'] = (int)StockAvailable::getQuantityAvailableByProduct($row['id_product'], null);
             $row['out_of_stock'] = (int)StockAvailable::outOfStock((int)$row['id_product']);
-            $row['packedProducts'] = Pack::getItems($row['id_product'], $id_lang);
+            $row['packedProducts'] = Pack::getItemTable($row['id_product'], $id_lang);
 
             foreach ($row['packedProducts'] as $key => $pack){
-                $row['packedProducts'][$key]->attributes = Product::getAttributesParams($pack->id, $pack->id_pack_product_attribute);
+
+                $packItemAttributes =  Product::getAttributesParams($pack['id_product'], $pack['id_product_attribute']);
+                if(count($packItemAttributes) > 0){
+                    $row['packedProducts'][$key]['attributes'][0] = $packItemAttributes[0];
+                    $attachProduct = new Product($pack['id_product']);
+                    $combinations = $attachProduct->getAttributeCombinations();
+                    $attr_names = array_column($combinations, 'attribute_name');
+                    array_multisort($attr_names, SORT_NUMERIC, $combinations);
+                    $keyItem = array_search($row['packedProducts'][$key]['attributes'][0]['name'], $attr_names);
+                    $row['packedProducts'][$key]['attributes'][0]['price']  = Product::getPriceStatic($pack['id_product'],false,  $pack['id_product_attribute'])*(int)$pack['pack_quantity'];
+                    $row['packedProducts'][$key]['attributes'][0]['customizedValue']  = $keyItem+1;
+                } else {
+                    $row['packedProducts'][$key]['attributes'] = [];
+                }
             }
             $results_array[] = $row;
         }

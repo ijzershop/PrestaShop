@@ -3,19 +3,19 @@ declare(strict_types=1);
 
 namespace MsThemeConfig\Class;
 
-use PrestaShop\PrestaShop\Adapter\Entity\Carrier;
-use PrestaShop\PrestaShop\Adapter\Entity\CartRule;
-use PrestaShop\PrestaShop\Adapter\Entity\Category;
-use PrestaShop\PrestaShop\Adapter\Entity\CMS;
-use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
-use PrestaShop\PrestaShop\Adapter\Entity\Context;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\Feature;
-use PrestaShop\PrestaShop\Adapter\Entity\Group;
-use PrestaShop\PrestaShop\Adapter\Entity\OrderState;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
-use PrestaShop\PrestaShop\Adapter\Entity\Profile;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use Configuration;
+use Carrier;
+use CartRule;
+use Category;
+use CMS;
+use Context;
+use Db;
+use Feature;
+use Group;
+use OrderState;
+use PrestaShopCollection;
+use Profile;
+use Tools;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 use PrestaShopDatabaseException;
@@ -378,6 +378,7 @@ class ModernAjax
                 break;
             case 'config-main':
                 //Custom Product
+                $dataArray[$this->prefix . 'CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop, '0'), 'categories_home');
                 $dataArray[$this->prefix . 'CUSTOM_PRODUCT_CATEGORY'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop, '1'), 'categories_home');
                 $dataArray[$this->prefix . 'CUSTOM_PRODUCT_REFERENCE'] = Configuration::get($this->prefix . 'CUSTOM_PRODUCT_REFERENCE', $this->idLang, $this->idShopGroup, $this->idShop, '');
 
@@ -626,6 +627,7 @@ class ModernAjax
 
         return implode("", $selectedOptionList);
     }
+
     /**
      *
      * Ajax data for select2 inputs
@@ -633,6 +635,7 @@ class ModernAjax
      * @param $data_type
      * @return JsonResponse
      * @throws PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     public function getSelect2Data($data_type, $sort = true, $options=null): JsonResponse
     {
@@ -770,6 +773,7 @@ class ModernAjax
 
             case 'categories_home':
                 $categories = Category::getSimpleCategoriesWithParentInfos($this->idLang);
+
                 $categoriesList = [];
                 $filteredCategories = [];
                 foreach ($categories as $category) {
@@ -781,6 +785,7 @@ class ModernAjax
                     } else {
                         $title = $category['name'];
                     }
+
 
                     if (!empty($search)) {
                         if (!preg_match('(' . $search . ')', $title)) {
@@ -979,7 +984,7 @@ class ModernAjax
                 return Response::create('Mail theme removed the symlink!', 200);
             }
         } catch(Exception $e){
-            return Response::create('Mail theme failed creation of the symlink', 200);
+            return Response::create('Mail theme failed creation of the symlink: '.$e->getMessage(), 200);
         }
     }
     /**
@@ -991,7 +996,6 @@ class ModernAjax
     private function sortSearchResult($searchArray): array
     {
         $tempArray = (array)$searchArray['results'];
-        $sortedArray = [];
         $textColumn = array_column($tempArray, 'text');
         if (array_multisort($textColumn, SORT_NATURAL | SORT_FLAG_CASE, $tempArray)) {
             $searchArray['results'] = $tempArray;

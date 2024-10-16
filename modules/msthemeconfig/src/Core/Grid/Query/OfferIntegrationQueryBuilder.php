@@ -71,7 +71,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             q.email,
             q.phone,
             q.message,
-            q.employee_memo,
             q.date_exp,
             q.date_upd')
             ->groupBy('q.id_oi_offer');
@@ -111,7 +110,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             'email',
             'phone',
             'message',
-            'employee_memo',
             'date_exp',
             'date_upd'];
 
@@ -122,7 +120,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             'email' => 'q.email',
             'phone' => 'q.phone',
             'message' => 'q.message',
-            'employee_memo' => 'q.employee_memo',
             'date_exp' => 'q.date_exp',
             'date_upd' => 'q.date_upd'
             ];
@@ -186,17 +183,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ('message' === $name && !empty($value)) {
-                $searchTerms = explode(" ", $value);
-
-                foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                    $qb->setParameter($name, '%' . $term . '%');
-                }
-                continue;
-            }
-
-
-            if ('employee_memo' === $name && !empty($value)) {
                 $searchTerms = explode(" ", $value);
 
                 foreach ($searchTerms as $i => $term){

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>bridgeconnector</name>
-    <displayName><![CDATA[Bridge Connector]]></displayName>
-    <version><![CDATA[3.1.8]]></version>
-    <description><![CDATA[Install Bridge Connector module to fluently connect Store Manager desktop application to PrestaShop 
-            database. Increase speed of data management, take advantage of simplicity and reliability with all-in-one 
-            Store Manager via Bridge Connector.]]></description>
+    <displayName><![CDATA[eMagicOne Store Manager Bridge Connector]]></displayName>
+    <version><![CDATA[3.2.0]]></version>
+    <description><![CDATA[Install eMagicOne Bridge Connector module to fluently connect Store Manager desktop application to 
+            PrestaShop database. Increase speed of data management, take advantage of simplicity and reliability  
+            with all-in-one Store Manager via eMagicOne Bridge Connector.]]></description>
     <author><![CDATA[eMagicOne]]></author>
     <tab><![CDATA[others]]></tab>
     <is_configurable>1</is_configurable>

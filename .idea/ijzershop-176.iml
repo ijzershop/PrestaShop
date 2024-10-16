@@ -69,7 +69,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/psaddonsconnect/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/cronjobs/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/demo/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/ps_banner/vendor/composer" />
@@ -327,6 +326,7 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/workflow" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_imageslider/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert_backup/vendor/composer" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -22,14 +22,16 @@
 $(function () {
     let bridgeconnector_div_tables = '<div id="bridgeconnector_div_tables" style="height: 300px; overflow: scroll;">';
     let baseUrl = $('#mobassistantconnector_base_url').val();
-    let adminModuleUrl = $('#mobassistantconnector_admin_module_url').val();
+    //MAlet adminModuleUrl = $('#mobassistantconnector_admin_module_url').val();
+    let adminModuleUrl = $('#bridgeconnector_admin_module_url').val();
     let loader_img = '<img src="' + baseUrl + 'modules/bridgeconnector/views/img/loader.gif" alt="Loader">';
     let loader = '<div class="mobassistantconnector_loader">' + loader_img + '</div>';
     let loader_users_container = '<div id="mobassistantconnector_users_loader_container">' + loader + '</div>';
     let loader_tables_container = '<div id="bridgeconnector_tables_loader_container">' + loader + '</div>';
     let users_parent = $('#mobassistantconnector_users').parent();
     let tables_parent = $('#bridgeconnector_db_tables_invisible').parent();
-    let key = $('#mobassistantconnector_key').val();
+    //MAlet key = $('#mobassistantconnector_key').val();
+    let key = $('#bridgeconnector_key').val();
     let new_users_count = 0;
     let enabled = '<img src="' + baseUrl +
         'modules/bridgeconnector/views/img/enabled.gif" alt="Disable" title="Disable">';
@@ -46,9 +48,9 @@ $(function () {
     users_parent.append(mobassistantconnector_users_container);
     $('#mobassistantconnector_users_container').append(mobassistantconnector_users_table_div);
 
-    getUsers();
-    setEvents();
-    generateAppQRCode();
+    //MAgetUsers();
+    //MAsetEvents();
+    //MAgenerateAppQRCode();
     getTables();
 
     function getTables() {

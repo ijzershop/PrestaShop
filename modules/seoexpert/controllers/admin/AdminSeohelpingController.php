@@ -1,46 +1,63 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+if (defined('_PS_VERSION_') === false) {
+    exit;
+}
+
 class AdminSeohelpingController extends ModuleAdminController
 {
-    /** @var protected array cache filled with lang informations */
+    /** @var array cache filled with lang informations */
     protected static $rc;
+
     protected static $social_rule_cache;
+
     protected static $products;
+
+    /** @var SeoExpert */
+    public $module;
 
     /**
      * Load the HTML form in the modalbox
      *
-     * @param int $id_rule
-     * @param string $role
-     * @param string $type
-     *
-     * @return html
+     * @return void
      */
     public function ajaxProcessLoadForm()
     {
         $id_objet = (int) trim(pSQL(Tools::getValue('id_rule')));
         $role = trim(pSQL(Tools::getValue('role')));
         $type = trim(pSQL(Tools::getValue('type')));
-        exit($this->module->loadForm($id_objet, $role, $type));
+
+        $categories = $this->module->loadForm($id_objet, $role, $type);
+        if (!$categories) {
+            error_log('Categories could not be loaded.');
+        } else {
+            error_log('Categories loaded successfully.');
+        }
+
+        exit($categories);
     }
 
     /**
      * Delete all the rules !
      *
-     * @return string
+     * @return void
      */
     public function ajaxProcessCleanUp()
     {
@@ -48,8 +65,9 @@ class AdminSeohelpingController extends ModuleAdminController
             return;
         }
 
-        if (version_compare(_PS_VERSION_, '1.6', '>') && _PS_CACHE_ENABLED_) {
-            Cache::getInstance()->deleteCacheDirectory();
+        //todo: is cache enabled is taken from parameters.php fine not from database. Is that really okay?
+        if (_PS_CACHE_ENABLED_) {
+            Tools::clearSmartyCache();
         }
 
         $rules = Db::getInstance()->Execute('TRUNCATE TABLE `' . _DB_PREFIX_ . bqSQL(SeoExpert::$rules_table) . '`');
@@ -64,11 +82,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Load detail of a rule
-     *
-     * @param int $id_cat
-     * @param string $type
-     *
-     * @return html
      */
     public function ajaxProcessRuleDetails()
     {
@@ -79,11 +92,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Get all rules already create
-     *
-     * @param string $role
-     * @param string $type
-     *
-     * @return html
      */
     public function ajaxProcessGetHistory()
     {
@@ -94,10 +102,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Switch rule status
-     *
-     * @param int $id_rule
-     *
-     * @return int
      */
     public function ajaxProcessSwitchAction()
     {
@@ -107,14 +111,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Save all the rule
-     *
-     * @param array $params
-     * @param string $role
-     * @param string $type
-     * @param int $apply
-     * @param int $id_rule
-     *
-     * @return html
      */
     public function ajaxProcessSaveRules()
     {
@@ -124,7 +120,8 @@ class AdminSeohelpingController extends ModuleAdminController
         $type = trim(pSQL(Tools::getValue('type')));
         $apply = (int) trim(pSQL(Tools::getValue('apply')));
         $id_rule = (int) trim(pSQL(Tools::getValue('id_rule')));
-
+        $id_lang = null;
+        $rule_name = null;
         if (!empty($params)) {
             $count_feat = 1;
             foreach ($params as &$param) {
@@ -173,7 +170,6 @@ class AdminSeohelpingController extends ModuleAdminController
                 'active' => 1,
                 'date_add' => date('Y-m-d H:i:s'),
             ];
-
             if ($apply === 1) {
                 $save_rule['date_upd'] = date('Y-m-d H:i:s');
             }
@@ -207,6 +203,7 @@ class AdminSeohelpingController extends ModuleAdminController
                     }
                     unset($metas);
 
+                    // Save the selected categories
                     $this->module->delete($id_rule, SeoExpert::$objects_table);
                     foreach ($categories as &$cat) {
                         $insert_category = [
@@ -229,10 +226,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Delete all rows from one rule
-     *
-     * @param int $id
-     *
-     * @return html
      */
     public function ajaxProcessDeleteRules()
     {
@@ -244,13 +237,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Check if it's the default rule
-     *
-     * @param int $id_lang
-     * @param int $id_rule
-     * @param string $role
-     * @param string $type
-     *
-     * @return bool
      */
     public function ajaxProcessDefaultRule()
     {
@@ -265,17 +251,6 @@ class AdminSeohelpingController extends ModuleAdminController
     /**
      * Reload DOM after performing an action
      * see (http://legacy.datatables.net/usage/server-side)
-     *
-     * @param string $role
-     * @param string $type
-     * @param string $sEcho
-     * @param string $sSearch
-     * @param string $iSortCol_0
-     * @param string $iSortingCols
-     * @param string $iDisplayStart
-     * @param string $iDisplayLength
-     *
-     * @return json
      */
     public function ajaxProcessReloadData()
     {
@@ -284,15 +259,15 @@ class AdminSeohelpingController extends ModuleAdminController
         $type = trim(pSQL(Tools::getValue('type')));
         $echo = (int) trim(pSQL(Tools::getValue('sEcho')));
         $search = trim(pSQL(Tools::getValue('sSearch')));
-        $sort_col = (int) trim(pSQL(Tools::getValue('iSortCol_0')));
+        $sort_col = trim(pSQL(Tools::getValue('iSortCol_0')));
         $sorting_cols = (int) trim(pSQL(Tools::getValue('iSortingCols')));
         $display_start = (int) trim(pSQL(Tools::getValue('iDisplayStart')));
         $display_length = (int) trim(pSQL(Tools::getValue('iDisplayLength')));
         $columns = ['msr.id_rule', 'l.name', 's.name', 'msr.active', 'msr.date_upd'];
         $count_columns = count($columns);
-
+        $id_lang = false;
         /* search column filtering */
-        if (isset($search) && !empty($search)) {
+        if (!empty($search) && $search != false) {
             $filter = 'AND (';
             for ($i = 0; $i < $count_columns; ++$i) {
                 $filter .= $columns[$i] . " LIKE '%" . $search . "%' OR ";
@@ -305,19 +280,19 @@ class AdminSeohelpingController extends ModuleAdminController
         for ($i = 0; $i < $count_columns; ++$i) {
             $search_x = trim(pSQL(Tools::getValue('search_' . $i)));
             $searchable_x = trim(pSQL(Tools::getValue('bSearchable_' . $i)));
-            if (isset($searchable_x) && $searchable_x === 'true' && $search_x !== '') {
+            if ($searchable_x === 'true' && $search_x !== '') {
                 $filter .= ' AND ' . $columns[$i] . " LIKE '%" . $search_x . "%' ";
             }
         }
 
         /* Order column filtering */
-        if (isset($sort_col)) {
+        if ($sort_col !== false) {
             $order = 'ORDER BY ';
             for ($i = 0; $i < $sorting_cols; ++$i) {
                 $sort_dir_x = trim(pSQL(Tools::getValue('sSortDir_' . $i)));
                 $sort_col_x = trim(pSQL(Tools::getValue('iSortCol_' . $i)));
                 if ($sort_col_x) {
-                    $order .= $columns[$sort_col_x - 1] . ' ' . ($sort_dir_x === 'asc' ? 'ASC' : 'DESC') . ', ';
+                    $order .= $columns[(int) $sort_col_x - 1] . ' ' . ($sort_dir_x === 'asc' ? 'ASC' : 'DESC') . ', ';
                 }
             }
 
@@ -328,7 +303,7 @@ class AdminSeohelpingController extends ModuleAdminController
         }
 
         /* Set limit */
-        if (isset($display_start) && $display_length !== -1) {
+        if ($display_start !== false && $display_length !== -1) {
             $limit = ' LIMIT ' . $display_start . ', ' . $display_length;
         }
 
@@ -384,10 +359,6 @@ class AdminSeohelpingController extends ModuleAdminController
 
     /**
      * Read counter cache
-     *
-     * @param int $id_category
-     *
-     * @return json
      */
     public function ajaxProcessGetProgress()
     {
@@ -398,23 +369,7 @@ class AdminSeohelpingController extends ModuleAdminController
     }
 
     /**
-     * Remove counter cache
-     *
-     * @param int $id_category
-     */
-    public function ajaxProcessResetCounter()
-    {
-        $id_rule = (int) trim(pSQL(Tools::getValue('id_rule')));
-        TinyCache::clearCache('cpt_rule_' . $id_rule);
-        echo json_encode(false);
-    }
-
-    /**
      * Applies a rule
-     *
-     * @param int $id_category
-     *
-     * @return html
      */
     public function ajaxProcessGenerateRule()
     {
@@ -434,8 +389,8 @@ class AdminSeohelpingController extends ModuleAdminController
 
         $id_employee = isset($this->context->employee) ? $this->context->employee->id : '';
         $id_shop = isset(self::$rc['id_shop']) ? (int) self::$rc['id_shop'] : $this->context->shop->id;
-
-        Cache::store('hook_module_exec_list_' . $id_shop . $id_employee, []);
+        $calc = false;
+        Cache::store('hook_module_exec_list_' . $id_shop . $id_employee, []); // @phpstan-ignore-line
 
         if (!empty(self::$rc)) {
             $id_category = '';
@@ -499,7 +454,7 @@ class AdminSeohelpingController extends ModuleAdminController
 
             Cache::clean('hook_module_exec_list_*');
 
-            die(json_encode([
+            exit(json_encode([
                 'page' => $page,
                 'pourcent' => $calc,
                 'message' => $message,
@@ -526,7 +481,7 @@ class AdminSeohelpingController extends ModuleAdminController
 
                 Cache::clean('hook_module_exec_list_*');
 
-                die(json_encode([
+                exit(json_encode([
                     'pourcent' => 100,
                     'message' => $this->l('All the products have been updated'),
                     'batch' => 1,

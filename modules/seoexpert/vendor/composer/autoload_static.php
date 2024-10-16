@@ -4,11 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1c92cba52b5f9c8b318ed2073cc419df
+class ComposerStaticInit4dd93a151b85f9ead19e386e30163973
 {
     public static $classMap = array (
         'APIFAQ' => __DIR__ . '/../..' . '/classes/APIFAQClass.php',
         'AdminSeohelpingController' => __DIR__ . '/../..' . '/controllers/admin/AdminSeohelpingController.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Pattern' => __DIR__ . '/../..' . '/classes/Pattern.php',
         'SeoExpert' => __DIR__ . '/../..' . '/seoexpert.php',
         'SeoTools' => __DIR__ . '/../..' . '/classes/SeoTools.php',
@@ -18,7 +19,7 @@ class ComposerStaticInit1c92cba52b5f9c8b318ed2073cc419df
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit1c92cba52b5f9c8b318ed2073cc419df::$classMap;
+            $loader->classMap = ComposerStaticInit4dd93a151b85f9ead19e386e30163973::$classMap;
 
         }, null, ClassLoader::class);
     }

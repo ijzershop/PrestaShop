@@ -1,18 +1,22 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
 if (defined('_PS_VERSION_') === false) {
     exit;
 }
@@ -48,17 +52,17 @@ class SeoExpert extends Module
     /** @var string Module css path (eg. '/shop/modules/module_name/css/') */
     protected $sql_path = null;
 
-    /** @var protected array cache filled with lang informations */
+    /** @var array cache filled with lang informations */
     protected static $lang_cache;
 
-    /** @var protected array cache filled with lang informations */
+    /** @var array cache filled with lang informations */
     protected static $rc;
     protected static $static_products;
 
-    /** @var protected string cache filled with informations */
+    /** @var string cache filled with informations */
     protected $cache_path;
 
-    /** @var public string allow to increase memory size */
+    /** @var bool allow to increase memory size */
     public $increase_memory = true;
 
     public $front_url;
@@ -67,14 +71,25 @@ class SeoExpert extends Module
     const INSTALL_SQL_FILE = 'install.sql';
     const UNINSTALL_SQL_FILE = 'uninstall.sql';
 
+    /**
+     * @var string
+     */
+    private $secure_key;
+
+    /**
+     * @var string
+     */
+    private $author_address;
+
     public function __construct()
     {
         $this->name = 'seoexpert';
         $this->tab = 'seo';
-        $this->version = '4.0.0';
+        $this->version = '4.0.4';
         $this->author = 'PrestaShop';
+        $this->ps_versions_compliancy = ['min' => '1.6', 'max' => _PS_VERSION_];
 
-        $this->need_instance = '0';
+        $this->need_instance = 0;
 
         $this->bootstrap = true;
         $this->secure_key = Tools::encrypt($this->name);
@@ -120,7 +135,7 @@ class SeoExpert extends Module
 
     public function cronProcessGenerateRule($id_rule)
     {
-        $db = Db::getInstance(_PS_USE_SQL_SLAVE_);
+        $db = Db::getInstance((bool) _PS_USE_SQL_SLAVE_);
         $id_rule = (int) trim($id_rule);
 
         self::$rc = TinyCache::getCache('rule_cache_' . $id_rule);
@@ -134,10 +149,10 @@ class SeoExpert extends Module
             $id_lang = (int) self::$rc['id_lang'];
             $id_shop = isset(self::$rc['id_shop']) ? (int) self::$rc['id_shop'] : $this->context->shop->id;
             $id_employee = isset($this->context->employee) ? $this->context->employee->id : '';
-            Cache::store('hook_module_exec_list_' . $id_shop . $id_employee, []);
+            Cache::store('hook_module_exec_list_' . $id_shop . $id_employee, []); // @phpstan-ignore-line
 
             self::$static_products[$id_rule] = TinyCache::getCache('prod_cache_' . $id_rule, 20, 'minutes');
-            if (self::$static_products[$id_rule] === null || empty(self::$static_products[$id_rule])) {
+            if (self::$static_products[$id_rule] == null || empty(self::$static_products[$id_rule])) {
                 $id_category = '';
                 $get_obj = $this->getObjectsRule($id_rule);
                 foreach ($get_obj as &$obj) {
@@ -206,28 +221,27 @@ class SeoExpert extends Module
     /**
      * Get Language
      *
-     * @return array Lang
+     * @return void
      */
     private function getLang()
     {
         self::$lang_cache = TinyCache::getCache('language_' . (int) $this->context->shop->id);
+        $languages = Language::getLanguages(true, $this->context->shop->id);
 
         if (self::$lang_cache === null || empty(self::$lang_cache)) {
-            if ($languages = Language::getLanguages()) {
-                foreach ($languages as &$row) {
-                    $exprow = explode(' (', $row['name']);
-                    $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
-                    self::$lang_cache[$row['iso_code']] = [
-                        'id' => (int) $row['id_lang'],
-                        'title' => trim($exprow[0]),
-                        'subtitle' => $subtitle,
-                    ];
-                }
-                // Cache Data
-                TinyCache::setCache('language_' . (int) $this->context->shop->id, self::$lang_cache);
-                // Clean memory
-                unset($row, $exprow, $subtitle, $languages);
+            foreach ($languages as &$row) {
+                $exprow = explode(' (', $row['name']);
+                $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
+                self::$lang_cache[$row['iso_code']] = [
+                    'id' => (int) $row['id_lang'],
+                    'title' => trim($exprow[0]),
+                    'subtitle' => $subtitle,
+                ];
             }
+            // Cache Data
+            TinyCache::setCache('language_' . (int) $this->context->shop->id, self::$lang_cache);
+            // Clean memory
+            unset($row, $exprow, $subtitle, $languages);
         }
     }
 
@@ -317,7 +331,7 @@ class SeoExpert extends Module
         }
 
         $tab = new Tab();
-        $tab->active = 1;
+        $tab->active = true;
         $tab->class_name = 'AdminSeohelping';
         $tab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
@@ -326,7 +340,7 @@ class SeoExpert extends Module
         $tab->id_parent = -1;
         $tab->module = $this->name;
 
-        return $tab->add();
+        return (bool) $tab->add();
     }
 
     /**
@@ -339,7 +353,7 @@ class SeoExpert extends Module
         $id_tab = (int) Tab::getIdFromClassName('AdminSeohelping');
         if ($id_tab) {
             $tab = new Tab($id_tab);
-            if ($tab instanceof Tab) {
+            if (Validate::isLoadedObject($tab)) {
                 return $tab->delete();
             } else {
                 return false;
@@ -356,6 +370,7 @@ class SeoExpert extends Module
      */
     public function isMyisam()
     {
+        /* @phpstan-ignore-next-line */
         if (_MYSQL_ENGINE_ === 'MyISAM') {
             return true;
         }
@@ -695,9 +710,9 @@ class SeoExpert extends Module
      */
     public function getTwitterImage($type)
     {
+        $name = [];
         $images = ImageType::getImagesTypes($type);
         if (!empty($images)) {
-            $name = [];
             foreach ($images as $key => $image) {
                 if ($images[$key]['width'] >= 120) {
                     $name[$image['name']] = $image['width'] . ' x ' . $image['height'];
@@ -707,6 +722,8 @@ class SeoExpert extends Module
 
             return $name;
         }
+
+        return $name;
     }
 
     /**
@@ -772,7 +789,7 @@ class SeoExpert extends Module
     /**
      * Make tree with the categories
      *
-     * @return array
+     * @return array|false
      */
     public function getTree($type, $res_par, $ids, $max_depth, $id_cat = null, $cur_depth = 0)
     {
@@ -859,11 +876,12 @@ class SeoExpert extends Module
     /**
      * Get all social objects of a rule
      *
-     * @param int $id_rule
+     * @param string $type
+     * @param int $default
      *
      * @return array
      */
-    public function getSocialsRule($type, $default = false)
+    public function getSocialsRule($type, $default = 0)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT SQL_BIG_RESULT msr.id_rule, msr.id_lang, msr.id_shop, msr.active, mso.id_obj, msp.field, msp.pattern
@@ -873,7 +891,7 @@ class SeoExpert extends Module
 		WHERE msr.type = "' . pSQL($type) . '"
 		AND msr.active = 1
 		AND (msp.field like "fb_%" OR msp.field like "tw_%")
-		AND mso.id_obj  = ' . (($default === false) ? '0' : (int) $default) . '
+		AND mso.id_obj  = ' . (int) $default . '
 		AND msr.id_shop = ' . (int) $this->context->shop->id . '
 		AND msr.id_lang = ' . (int) $this->context->language->id);
     }
@@ -883,7 +901,7 @@ class SeoExpert extends Module
      *
      * @param int $id_rule
      *
-     * @return array
+     * @return false|string|null
      */
     public function getLangRule($id_rule)
     {
@@ -897,9 +915,12 @@ class SeoExpert extends Module
     /**
      * Get all objects of a rule
      *
-     * @param int $id_rule
+     * @param string $type
+     * @param array|bool $default
      *
      * @return array
+     *
+     * @throws PrestaShopDatabaseException
      */
     public function getRules($type, $default = false)
     {
@@ -953,7 +974,7 @@ class SeoExpert extends Module
     /**
      * Get icon
      *
-     * @return html
+     * @return string
      */
     public function getIcon($type, $obj = null)
     {
@@ -1009,55 +1030,51 @@ class SeoExpert extends Module
     /**
      * Load the form template file
      *
-     * @return html
+     * @return string
      */
     public function loadForm($id_object, $role, $type = 'product')
     {
+        PrestaShopLogger::addLog("Loading form. ID Object: $id_object, Role: $role, Type: $type", 1);
+
         $img_type = '';
         $id_object = (int) $id_object;
         if ($type == 'product' || $type == 'category') {
-            if ($type == 'product') {
-                $img_type = $type . 's';
-            } else {
-                $img_type = 'categories';
-            }
-
-            $cache_type = 'category';
-        } elseif ($type == 'cms' || $type == 'cmscategory') {
-            $cache_type = 'cmscategory';
-        } else {
-            $cache_type = false;
+            $img_type = ($type == 'product') ? $type . 's' : 'categories';
+            PrestaShopLogger::addLog("Image type set to: $img_type", 1);
         }
 
-        $category_select = false;
-        if ($cache_type !== false) {
-            $category_select = TinyCache::getCache($cache_type . '_' . (int) $this->context->shop->id);
-            if (empty($category_select)) {
-                if (!$result = $this->getSimpleCategories($cache_type)) {
-                    return;
-                }
+        // Fetching product categories directly using the Category class
+        PrestaShopLogger::addLog('Fetching product categories from the database.', 1);
+        $categories = Category::getCategories((int) $this->context->language->id, true, false);
 
-                $result_ids = [];
-                $result_parents = [];
-                foreach ($result as &$row) {
-                    $result_parents[$row['id_parent']][] = &$row;
-                    $result_ids[$row['id_category']] = &$row;
-                }
+        if (empty($categories)) {
+            PrestaShopLogger::addLog('No categories found.', 3);
 
-                $category_select = $this->getTree($cache_type, $result_parents, $result_ids, 0);
-                unset($result, $row, $result_parents, $result_ids);
-                TinyCache::setCache($cache_type . '_' . (int) $this->context->shop->id, $category_select, 6);
-            }
+            return '';
         }
 
+        PrestaShopLogger::addLog('Categories fetched: ' . print_r($categories, true), 1);
+
+        $category_select = [];
+        foreach ($categories as $category) {
+            $category_select[] = [
+            'id_category' => (int) $category['id_category'],
+            'name' => $category['name'],
+            'id_parent' => (int) $category['id_parent'],
+        ];
+        }
+
+        PrestaShopLogger::addLog('Category selection prepared: ' . print_r($category_select, true), 1);
+
+        // Handling default category or rule-specific categories
         $default_category = 0;
         if ($id_object > 0) {
             $histories = $this->loadRuleDetails($id_object, $type, false);
             if (!empty($histories)) {
                 foreach ($histories as &$history) {
                     $this->context->smarty->assign([
-                        $history['field'] => $history['pattern'],
-                    ]);
+                    $history['field'] => $history['pattern'],
+                ]);
                 }
                 unset($histories, $history);
             }
@@ -1070,24 +1087,26 @@ class SeoExpert extends Module
         }
 
         $iso_code = Context::getContext()->language->iso_code;
-        $lang = 'EN';
-        if ($iso_code == 'fr' || $iso_code == 'FR') {
-            $lang = 'FR';
-        }
+        $lang = ($iso_code == 'fr' || $iso_code == 'FR') ? 'FR' : 'EN';
+
+        // Assigning data to Smarty template
+        PrestaShopLogger::addLog('Assigning Category Tree to Smarty: ' . print_r($category_select, true), 1);
 
         $this->context->smarty->assign([
-            'tw_img' => $tw_img,
-            'object' => $id_object,
-            'lang_select' => self::$lang_cache,
-            'blockCategTree' => $category_select,
-            'default_category' => $default_category,
-            'rule_name' => $this->getRuleName($id_object),
-            'guide_link' => 'docs/seo_pro_guide_' . $lang . '.pdf',
-            'rule_lang' => (int) $this->getLangRule($id_object),
-            'default_lang' => (int) $this->context->language->id,
-            'branche_tpl_path' => $this->admin_tpl_path . 'tree/category-tree-branch.tpl',
-            'shop_name' => sprintf($this->l('You are on the %s shop'), $this->context->shop->name),
-        ]);
+        'tw_img' => $tw_img,
+        'object' => $id_object,
+        'lang_select' => self::$lang_cache,
+        'blockCategTree' => $category_select,
+        'default_category' => $default_category,
+        'rule_name' => $this->getRuleName($id_object),
+        'guide_link' => 'docs/seo_pro_guide_' . $lang . '.pdf',
+        'rule_lang' => (int) $this->getLangRule($id_object),
+        'default_lang' => (int) $this->context->language->id,
+        'branche_tpl_path' => $this->admin_tpl_path . 'tree/category-tree-branch.tpl',
+        'shop_name' => sprintf($this->l('You are on the %s shop'), $this->context->shop->name),
+    ]);
+
+        PrestaShopLogger::addLog("Form loaded successfully with role: $role", 1);
 
         return $this->display(__FILE__, 'views/templates/admin/forms/forms_' . $role . '.tpl');
     }
@@ -1099,7 +1118,7 @@ class SeoExpert extends Module
      * @param string $type
      * @param bool $smarty
      *
-     * @return array|html
+     * @return array|string
      */
     public function loadRuleDetails($id_obj, $type = 'product', $smarty = true)
     {
@@ -1120,6 +1139,8 @@ class SeoExpert extends Module
                 return $this->display(__FILE__, 'views/templates/admin/history/history.tpl');
             }
         }
+
+        return [];
     }
 
     /**
@@ -1127,7 +1148,7 @@ class SeoExpert extends Module
      *
      * @param int $status
      *
-     * @return html
+     * @return string
      */
     public function loadStatus($status)
     {
@@ -1145,7 +1166,7 @@ class SeoExpert extends Module
      * @param string $type
      * @param string $role
      *
-     * @return html
+     * @return string
      */
     public function loadActions($actions, $type, $role)
     {
@@ -1162,15 +1183,12 @@ class SeoExpert extends Module
         return $this->display(__FILE__, 'views/templates/admin/table/actions.tpl');
     }
 
-    /****************************/
     /*			 CRUD 			*/
-    /****************************/
 
     /**
      * Save current object to database (add or update)
      *
      * @param string $table
-     * @param int $id_obj
      * @param array $data
      */
     public function saveObj($table, $data)
@@ -1184,7 +1202,7 @@ class SeoExpert extends Module
      * @param string $table
      * @param array $data
      *
-     * @return bool Insertion result
+     * @return int|string|false Insertion result
      */
     public function save($table, $data)
     {
@@ -1206,6 +1224,8 @@ class SeoExpert extends Module
         if (Db::getInstance()->execute($sql)) {
             return Db::getInstance()->Insert_ID();
         }
+
+        return false;
     }
 
     /**
@@ -1250,7 +1270,7 @@ class SeoExpert extends Module
     /**
      * Delete current object from database
      *
-     * @param int $id_obj
+     * @param int $id_object
      * @param string $table
      *
      * @return bool Insertion result
@@ -1279,7 +1299,7 @@ class SeoExpert extends Module
         }
         unset($tables, $table);
 
-        return $result;
+        return (bool) $result;
     }
 
     /**
@@ -1287,8 +1307,10 @@ class SeoExpert extends Module
      *
      * @param int $id_product
      * @param array $rules
-     * @param int $id_shop
-     * @param int $id_lang
+     * @param int|bool $id_shop
+     * @param int|bool $id_lang
+     *
+     * @return string|void
      */
     public function generate($id_product, $rules, $id_shop = false, $id_lang = false)
     {
@@ -1351,9 +1373,7 @@ class SeoExpert extends Module
         }
     }
 
-    /****************************/
     /*		 HOOK Display 		*/
-    /****************************/
 
     public function hookdisplayHeader()
     {
@@ -1365,11 +1385,12 @@ class SeoExpert extends Module
         $id_shop = (int) $this->context->shop->id;
         $id_lang = (int) $this->context->language->id;
         $controller = trim(pSQL(Tools::getValue('controller')));
-
+        $obj = new Product();
+        $id_obj = 0;
         if ($controller === 'product') {
             $id_obj = (int) trim(Tools::getValue('id_product'));
             $obj = new Product($id_obj, false, $id_lang);
-            if ($obj instanceof Product) {
+            if (Validate::isLoadedObject($obj)) {
                 $default_cat = $obj->getDefaultCategory();
                 $rules = $this->getSocialsRule($controller);
                 $a = isset($default_cat['id_category_default']) ? $default_cat['id_category_default'] : $default_cat;
@@ -1378,6 +1399,7 @@ class SeoExpert extends Module
             }
         }
 
+        $field = '';
         if (!empty($rules) && isset($rules[$id_lang][$id_shop])) {
             $link = $this->context->link;
             foreach ($rules[$id_lang][$id_shop] as $key => $rule) {
@@ -1387,10 +1409,9 @@ class SeoExpert extends Module
                 } elseif ($key == 'fb_desc') {
                     $field = pSQL(SeoTools::truncateString(pSQL($pattern), 160));
                 } elseif ($key == 'tw_card_type') {
-                    $tw_card_type = trim($rule);
                     $field = trim($rule);
                 } elseif ($key == 'fb_image' || $key == 'tw_img_size') {
-                    if ((int) $rule === 1 || ($key == 'tw_img_size' && $tw_card_type !== 'gallery')) {
+                    if ((int) $rule === 1 || $key == 'tw_img_size') {
                         $cover = Product::getCover($id_obj);
                         if (!empty($cover)) {
                             $id_cover = $id_obj . '-' . (int) $cover['id_image'];
@@ -1466,12 +1487,18 @@ class SeoExpert extends Module
                         default:
                             $label = $this->l('nothing');
                             break;
+                        }
+                    if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+                        $field = [
+                            'label' => $label,
+                            'value' => Tools::displayPrice((float) $pattern, $this->context->currency, false),
+                        ];
+                    } else {
+                        $field = [
+                            'label' => $label,
+                            'value' => Context::getContext()->getCurrentLocale()->formatPrice((float) $pattern, $this->context->currency->iso_code),
+                        ];
                     }
-
-                    $field = [
-                        'label' => $label,
-                        'value' => Tools::displayPrice($pattern, $this->context->currency, false),
-                    ];
                 } else {
                     $field = $pattern;
                 }
@@ -1511,9 +1538,7 @@ class SeoExpert extends Module
         }
     */
 
-    /****************************/
     /*		 HOOK Action 		*/
-    /****************************/
 
     public function hookactionObjectProductAddAfter($params)
     {
@@ -1539,7 +1564,9 @@ class SeoExpert extends Module
                         }
                         unset($field, $pattern);
                     }
+                    /* @phpstan-ignore-next-line */
                     $this->generate($obj, $myrule, $id_shop, $id_lang);
+                    /* @phpstan-ignore-next-line */
                     unset($myrule, $id_shop, $id_lang);
                 }
                 unset($rules, $idlang, $rule, $default_category, $get_rules, $obj);
@@ -1571,6 +1598,9 @@ class SeoExpert extends Module
                         }
                         unset($field, $pattern);
                     }
+                    if (!isset($myrule, $id_shop)) {
+                        continue;
+                    }
                     $this->generate($obj, $myrule, $id_shop, $id_lang);
                     unset($myrule, $id_shop, $id_lang);
                 }
@@ -1579,9 +1609,7 @@ class SeoExpert extends Module
         }
     }
 
-    /****************************/
     /*		 CLEAN cache 		*/
-    /****************************/
 
     public function hookactionObjectCategoryAddAfter($params)
     {

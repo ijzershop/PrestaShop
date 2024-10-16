@@ -1,18 +1,3 @@
-{*
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-*}
-
 <form id="form_add" name="form_metas">
 	<div id="wizard" class="swMain">
 		{*<div class="alert alert-info">{$shop_name|escape:'htmlall':'UTF-8'}</div> *}
@@ -119,42 +104,33 @@
 						</div>
 						{/if}
 					</div>
-					{if $blockCategTree != false}
-					<div id="catree" class="hide">
-						<div>
-							<div id="button_tree" class="btn-group pull-left">
-								<button id="expandall"type="button" class="btn btn-xs btn-default"> {l s='Expand All' mod='seoexpert'}</button>
-								<button id="collapseall"type="button" class="btn btn-xs btn-default"> {l s='Collapse All' mod='seoexpert'}</button>
-								<button id="checkall" type="button" class="btn btn-xs btn-default"> {l s='Check All' mod='seoexpert'}</button>
-								<button id="uncheckall" type="button" class="btn btn-xs btn-default"> {l s='Uncheck All' mod='seoexpert'}</button>
+				{if $blockCategTree != false}
+						<div id="catree" class="hide">
+							<div>
+								<div id="button_tree" class="btn-group pull-left">
+									<button id="expandall" type="button" class="btn btn-xs btn-default"> {l s='Expand All' mod='seoexpert'}</button>
+									<button id="collapseall" type="button" class="btn btn-xs btn-default"> {l s='Collapse All' mod='seoexpert'}</button>
+									<button id="checkall" type="button" class="btn btn-xs btn-default"> {l s='Check All' mod='seoexpert'}</button>
+									<button id="uncheckall" type="button" class="btn btn-xs btn-default"> {l s='Uncheck All' mod='seoexpert'}</button>
+								</div>
 							</div>
-						</div>
 
-						<div id="jstree" class="clear">
-							<ul>
-								<li id="category_{$blockCategTree.id|intval}" class="jstree-open">
-									{foreach from=$default_category item=def}
-										{if $def['id_obj'] == $blockCategTree.id}
-											<a class="jstree-clicked">{$blockCategTree.name|escape:'htmlall':'UTF-8'}</a>
-										{else}
-											{$blockCategTree.name|escape:'htmlall':'UTF-8'}
-										{/if}
-									{/foreach}
-									<ul>
-										{foreach from=$blockCategTree.children item=child name=blockCategTree}
-											{if $smarty.foreach.blockCategTree.last}
-												{include file="$branche_tpl_path" node=$child last='true'}
-											{else}
-												{include file="$branche_tpl_path" node=$child}
-											{/if}
-										{/foreach}
-									</ul>
-								</li>
-							</ul>
+							<!-- Category Tree Rendering -->
+							<div id="jstree">
+								<ul>
+									  {foreach from=$blockCategTree item=category}
+                            <li>
+                                <input type="radio" name="categorys_id" value="{$category.id_category}">
+                                {$category.name|escape:'htmlall':'UTF-8'}
+                            </li>
+                        {/foreach}
+								</ul>
+							</div>
+
+							<input type="hidden" name="category_id" id="category_id" value="" />
 						</div>
-						<input type="hidden" name="category_id" id="category_id" value="" />
-					</div>
 					{/if}
+
 				</div>
 			</div>
 		</div>

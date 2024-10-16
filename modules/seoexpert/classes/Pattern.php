@@ -1,22 +1,26 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-* -------------------------------------------------------------------
-*
-* Description :
-*   This is a PHP class for replace SEO tags.
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+if (defined('_PS_VERSION_') === false) {
+    exit;
+}
+
 class Pattern
 {
     protected static $html;
@@ -25,8 +29,8 @@ class Pattern
     /**
      * Replace price Tags
      *
-     * @param obj $obj
-     * @param string $pattern
+     * @param object $obj
+     * @param string $pat
      *
      * @return string
      */
@@ -37,27 +41,43 @@ class Pattern
             $context->employee = new Employee(1);
         }
 
-        $currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $currencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         if (isset($context->cookie->id_currency)) {
-            $currency = (int) $context->cookie->id_currency;
+            $currencyId = (int) $context->cookie->id_currency;
         }
 
         $format = 'number_format';
         if (preg_match('{product_price}', $pat)) {
-            $price = $format(Product::getPriceStatic($obj->id, 1, 0, 2, null, 0, 0), 2);
-            $pat = str_replace('{product_price}', Tools::displayPrice($price, $currency), $pat);
+            $price = $format(Product::getPriceStatic($obj->id, true, 0, 2, null, false, false), 2);
+            if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+                $pat = str_replace('{product_price}', Tools::displayPrice((float) $price, $currencyId), $pat);
+            } else {
+                $pat = str_replace('{product_price}', Context::getContext()->getCurrentLocale()->formatPrice((float) $price, $context->currency->iso_code), $pat);
+            }
         }
         if (preg_match('{product_price_wt}', $pat)) {
-            $price = $format(Product::getPriceStatic($obj->id, 0, 0, 2, null, 0, 0), 2);
-            $pat = str_replace('{product_price_wt}', Tools::displayPrice($price, $currency), $pat);
+            $price = $format(Product::getPriceStatic($obj->id, false, 0, 2, null, false, false), 2);
+            if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+                $pat = str_replace('{product_price_wt}', Tools::displayPrice((float) $price, $currencyId), $pat);
+            } else {
+                $pat = str_replace('{product_price_wt}', Context::getContext()->getCurrentLocale()->formatPrice((float) $price, $context->currency->iso_code), $pat);
+            }
         }
         if (preg_match('{product_reduce_price}', $pat)) {
-            $price = $format(Product::getPriceStatic($obj->id, 1, 0, 2, null, 0, 1), 2);
-            $pat = str_replace('{product_reduce_price}', Tools::displayPrice($price, $currency), $pat);
+            $price = $format(Product::getPriceStatic($obj->id, true, 0, 2, null, false, true), 2);
+            if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+                $pat = str_replace('{product_reduce_price}', Tools::displayPrice((float) $price, $currencyId), $pat);
+            } else {
+                $pat = str_replace('{product_reduce_price}', Context::getContext()->getCurrentLocale()->formatPrice((float) $price, $context->currency->iso_code), $pat);
+            }
         }
         if (preg_match('{product_reduce_price_wt}', $pat)) {
-            $price = $format(Product::getPriceStatic($obj->id, 0, 0, 2, null, 0, 1), 2);
-            $pat = str_replace('{product_reduce_price_wt}', Tools::displayPrice($price, $currency), $pat);
+            $price = $format(Product::getPriceStatic($obj->id, false, 0, 2, null, false, true), 2);
+            if (version_compare(_PS_VERSION_, '1.7.6.0', '<')) {
+                $pat = str_replace('{product_reduce_price_wt}', Tools::displayPrice((float) $price, $currencyId), $pat);
+            } else {
+                $pat = str_replace('{product_reduce_price_wt}', Context::getContext()->getCurrentLocale()->formatPrice((float) $price, $context->currency->iso_code), $pat);
+            }
         }
 
         return $pat;
@@ -66,7 +86,7 @@ class Pattern
     /**
      * Replace reference Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      *
      * @return string
@@ -83,7 +103,7 @@ class Pattern
     /**
      * Replace discounts Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      *
      * @return string
@@ -112,7 +132,7 @@ class Pattern
     /**
      * Replace names Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      * @param int $id_lang
      *
@@ -154,7 +174,7 @@ class Pattern
     /**
      * Replace features Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      * @param int $id_lang
      *
@@ -171,7 +191,7 @@ class Pattern
                     if ($feat instanceof Feature) {
                         $feat_value = new FeatureValue((int) $feature['id_feature_value'], (int) $id_lang);
                         if ($feat_value instanceof FeatureValue) {
-                            self::$html .= $feat->name . ': ' . $feat_value->value . ' -';
+                            self::$html .= $feat->name . ': ' . $feat_value->value . ' -'; // @phpstan-ignore-line
                         }
                     }
                 }
@@ -189,7 +209,7 @@ class Pattern
     /**
      * Replace categories Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      * @param int $id_lang
      *
@@ -230,7 +250,7 @@ class Pattern
     /**
      * Replace descriptions Tags
      *
-     * @param obj $obj
+     * @param object $obj
      * @param string $pattern
      * @param int $id_lang
      *
@@ -268,7 +288,7 @@ class Pattern
     /**
      * Replace all tags for Products
      *
-     * @param obj $product
+     * @param object $product
      * @param int $id_lang
      * @param string $pattern
      *
@@ -293,7 +313,7 @@ class Pattern
     /**
      * Compile the patterns according to the object
      *
-     * @param obj $product
+     * @param object $obj
      * @param int $id_lang
      * @param string $pattern
      *
@@ -306,5 +326,7 @@ class Pattern
         if (method_exists('Pattern', $func)) {
             return self::$func($obj, $id_lang, $pattern);
         }
+
+        return '';
     }
 }

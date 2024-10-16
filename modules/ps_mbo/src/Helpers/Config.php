@@ -26,6 +26,29 @@ use Shop;
 
 class Config
 {
+    const AVAILABLE_SHOP_ACTIVITIES = [
+        1 => 'Lingerie and Adult',
+        2 => 'Animals and Pets',
+        3 => 'Art and Culture',
+        4 => 'Babies',
+        5 => 'Beauty and Personal Care',
+        6 => 'Cars',
+        7 => 'Computer Hardware and Software',
+        8 => 'Download',
+        9 => 'Fashion and accessories',
+        10 => 'Flowers, Gifts and Crafts',
+        11 => 'Food and beverage',
+        12 => 'HiFi, Photo and Video',
+        13 => 'Home and Garden',
+        14 => 'Home Appliances',
+        15 => 'Jewelry',
+        16 => 'Mobile and Telecom',
+        17 => 'Services',
+        18 => 'Shoes and accessories',
+        19 => 'Sport and Entertainment',
+        20 => 'Travel',
+    ];
+
     /**
      * @var string|null
      */
@@ -59,7 +82,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_UUID have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_UUID = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_UUID',
@@ -79,7 +102,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_ADMIN_MAIL = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_MAIL',
@@ -106,7 +129,7 @@ class Config
         }
 
         if (null === self::$SHOP_URL) {
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
             $domains = \Tools::getDomains();
 
             $shopDomain = array_filter(
@@ -157,7 +180,7 @@ class Config
      */
     public static function isUsingSecureProtocol(): bool
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return (bool) Configuration::get(
             'PS_SSL_ENABLED',
@@ -172,7 +195,7 @@ class Config
         // PS_MBO_LAST_PS_VERSION_API_CONFIG have the same value for all shops
         // to prevent errors in a multishop context,
         // we request the shops list and get the config value for the 1st one
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return Configuration::get(
             'PS_MBO_LAST_PS_VERSION_API_CONFIG',
@@ -183,10 +206,40 @@ class Config
         );
     }
 
-    public static function getSingleShop(): Shop
+    public static function getDefaultShop(): Shop
     {
-        $shops = Shop::getShops(false, null, true);
+        return new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+    }
 
-        return new Shop((int) reset($shops));
+    /**
+     * @return array{
+     *     "id": int|null,
+     *     "name": string|null
+     * }
+     */
+    public static function getShopActivity(): array
+    {
+        $singleShop = self::getDefaultShop();
+        $activity = [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $activityId = (int) Configuration::get(
+            'PS_SHOP_ACTIVITY',
+            null,
+            $singleShop->id_shop_group,
+            $singleShop->id,
+            null
+        );
+
+        if (empty($activityId)) {
+            return $activity;
+        }
+
+        $activity['id'] = $activityId;
+        $activity['name'] = self::AVAILABLE_SHOP_ACTIVITIES[$activityId] ?? 'Unknown';
+
+        return $activity;
     }
 }

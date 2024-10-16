@@ -32,7 +32,7 @@ class EM1Constants
      * 2. Increment module revisions (BC_MODULE_REVISION/MA_MODULE_REVISION) if some functionality was updated
      * 3. Specify the number of new (public) functions (MA_MODULE_NEW_REQUESTS)
      */
-    const MODULE_VERSION = '3.1.8';
+    const MODULE_VERSION = '3.2.0';
     const BC_MODULE_REVISION = 20;
     const MA_MODULE_REVISION = 20;
     const MA_MODULE_NEW_REQUESTS = 0;

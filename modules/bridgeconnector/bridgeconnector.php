@@ -35,6 +35,9 @@ class Bridgeconnector extends Module
     private $cartVersion;
     private $defaultTmpDirectory;
 
+    public $is_configurable;
+    public $defaultShop;
+
     public function __construct()
     {
         include_once _PS_MODULE_DIR_ . '/bridgeconnector/classes/helper/EM1Constants.php';
@@ -45,9 +48,9 @@ class Bridgeconnector extends Module
         // Module settings
         $this->name = 'bridgeconnector';
         $this->tab = 'others';
-        $this->version = '3.1.8';
+        $this->version = '3.2.0';
         $this->author = 'eMagicOne';
-        $this->module_key = '2939fcd625448e7b3d9713696cbd1beb';
+        $this->module_key = '0d90a4ec7c4a83fa979f710a1ead2c72';
         $this->need_instance = 0;
         $this->is_configurable = 1;
         $this->bootstrap = true;
@@ -69,11 +72,11 @@ class Bridgeconnector extends Module
 
         parent::__construct();
 
-        $this->displayName = $this->l('Bridge Connector');
+        $this->displayName = $this->l('eMagicOne Store Manager Bridge Connector');
         $this->description = $this->l(
-            'Install Bridge Connector module to fluently connect Store Manager desktop application to PrestaShop 
-            database. Increase speed of data management, take advantage of simplicity and reliability with all-in-one 
-            Store Manager via Bridge Connector.'
+            'Install eMagicOne Bridge Connector module to fluently connect Store Manager desktop application to 
+            PrestaShop database. Increase speed of data management, take advantage of simplicity and reliability  
+            with all-in-one Store Manager via eMagicOne Bridge Connector.'
         );
 
         $this->checkAndUpdateToNewVersion();
@@ -108,7 +111,7 @@ class Bridgeconnector extends Module
                 ? $this->registerHook(EM1Constants::HOOK_ACTION_CUSTOMER_ACCOUNT_ADD)
                 : $this->registerHook(EM1Constants::HOOK_CREATE_ACCOUNT))
             && $this->createTables()
-            && $this->populateTableUsers()
+            /*&& $this->populateTableUsers()*/
             && $this->saveBridgeData()
         ;
     }
@@ -276,6 +279,16 @@ class Bridgeconnector extends Module
                     'id' => 'bridgeconnector_db_tables_hidden',
                 ],
                 [
+                    'type' => 'hidden',
+                    'name' => 'bridgeconnector_admin_module_url',
+                    'id' => 'bridgeconnector_admin_module_url',
+                ],
+                [
+                    'type' => 'hidden',
+                    'name' => 'bridgeconnector_key',
+                    'id' => 'bridgeconnector_key',
+                ],
+                [
                     'type' => 'text',
                     'label' => $this->l('Allowed IPs'),
                     'name' => 'bridgeconnector_allowed_ips',
@@ -295,7 +308,7 @@ class Bridgeconnector extends Module
             ],
         ];
 
-        $fields_form[1]['form'] = [
+        /*MA$fields_form[1]['form'] = [
             'legend' => [
                 'title' => $this->l('Mobile Assistant Connector Settings'),
             ],
@@ -329,9 +342,9 @@ class Bridgeconnector extends Module
                     : $this->l('Save'),
                 'class' => 'btn btn-default pull-right',
             ],
-        ];
+        ];*/
 
-        /*$fields_form[2]['form'] = [
+        /*MA$fields_form[2]['form'] = [
             'legend' => [
                 'title' => $this->l('Get the Mobile Assistant for PrestaShop App from Google Play'),
             ],
@@ -455,22 +468,25 @@ class Bridgeconnector extends Module
             'bridgeconnector_allowed_ips' => $bridge_options['allowed_ips'],
             'bridgeconnector_db_tables_hidden' => '',
             'bridgeconnector_db_tables_invisible' => '',
-            'mobassistantconnector_tracknum_message_lng_all' => Configuration::get(
+
+            'bridgeconnector_admin_module_url' => $adminModuleUrl,
+            'bridgeconnector_key' => hash('sha256', _COOKIE_KEY_),
+            /*MA'mobassistantconnector_tracknum_message_lng_all' => Configuration::get(
                 EM1Constants::MODULE_TN_LNG
             ),
             'mobassistantconnector_qrcode_app' => '',
             'mobassistantconnector_users' => '',
             'mobassistantconnector_base_url' => $baseUrl,
             'mobassistantconnector_admin_module_url' => $adminModuleUrl,
-            'mobassistantconnector_key' => hash('sha256', _COOKIE_KEY_),
+            'mobassistantconnector_key' => hash('sha256', _COOKIE_KEY_),*/
         ];
 
-        foreach ($languages as $lang) {
+        /*MAforeach ($languages as $lang) {
             $data['mobassistantconnector_tracknum_template_text'][$lang['id_lang']] = Configuration::get(
                 EM1Constants::MODULE_TN_TEXT,
                 $lang['id_lang']
             );
-        }
+        }*/
 
         return $data;
     }
@@ -1015,11 +1031,11 @@ class Bridgeconnector extends Module
 
     private function createTables()
     {
-        return $this->createBridgeconnectorMATableUsers()
+        return /*MA$this->createBridgeconnectorMATableUsers()
             && $this->createBridgeconnectorMATableTokens()
             && $this->createBridgeconnectorMATableFailedLogin()
             && $this->createBridgeconnectorMATablePushNotifications()
-            && $this->createBridgeconnectorTableSessionKeys()
+            &&*/ $this->createBridgeconnectorTableSessionKeys()
             && $this->createBridgeconnectorTableFailedLogin();
     }
 
@@ -1055,6 +1071,30 @@ class Bridgeconnector extends Module
             && $dropTableMobileAssistantUsers
             && $dropTableBridgeconnectorSessionKeys
             && $dropTableBridgeconnectorFailedLogin;
+    }
+
+    private function dropTablesMA()
+    {
+        // Drop table `bridgeconnector_ma_session_keys`
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_TOKENS . '`';
+        $tableDropMobileAssistantTokens = Db::getInstance()->execute($sql);
+
+        // Drop table `bridgeconnector_ma_failed_login`
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_FAILED_LOGIN . '`';
+        $tableDropMobileAssistantFailedAttempts = Db::getInstance()->execute($sql);
+
+        // Drop table `bridgeconnector_ma_push_notifications`
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_PUSH_NOTIFICATIONS . '`';
+        $tableDropMobileAssistantPushNotifications = Db::getInstance()->execute($sql);
+
+        // Drop table `bridgeconnector_ma_users`
+        $sql = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . EM1Constants::TABLE_MA_USERS . '`';
+        $dropTableMobileAssistantUsers = Db::getInstance()->execute($sql);
+
+        return $tableDropMobileAssistantTokens
+            && $tableDropMobileAssistantFailedAttempts
+            && $tableDropMobileAssistantPushNotifications
+            && $dropTableMobileAssistantUsers;
     }
 
     private function getActiveDevices()
@@ -1295,7 +1335,7 @@ class Bridgeconnector extends Module
 
         if (version_compare($moduleVersion, $this->version, '<')) {
             // Update module version in database
-            if (version_compare($moduleVersion, '2.0', '<')) {
+            /*MAif (version_compare($moduleVersion, '2.0', '<')) {
                 $this->createBridgeconnectorMATableUsers();
                 $this->createBridgeconnectorMATableTokens();
                 $this->createBridgeconnectorMATablePushNotifications();
@@ -1310,6 +1350,16 @@ class Bridgeconnector extends Module
             }
             if (!$isNewUserAdded) {
                 $this->addEmployeeIdValueToExistingUsers();
+            }*/
+
+            if (version_compare($moduleVersion, '3.2.0', '<')) {
+                $this->dropTablesMA();
+
+                $jsSources = [
+                    $this->_path . 'views/js/common.js',
+                ];
+                $this->context->controller->removeJS($jsSources);
+                $this->context->controller->addJS($jsSources);
             }
 
             self::upgradeModuleVersion($this->name, $this->version);

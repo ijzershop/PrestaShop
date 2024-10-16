@@ -1,28 +1,33 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-* -------------------------------------------------------------------
-*
-* Description :
-*   This is a PHP class for some shortcuts of SEO module.
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+if (defined('_PS_VERSION_') === false) {
+    exit;
+}
+
 class SeoTools
 {
     /**
      * Properly clean URL's better than currently in PrestaShop
      *
-     * @param string $datas
+     * @param string $str
+     * @param string $iso_code
      * @param array $replace
      * @param string $delimiter
      *
@@ -43,7 +48,7 @@ class SeoTools
 
             return $clean;
         } else {
-            if (version_compare((float) _PS_VERSION_, '1.6', '>=')) {
+            if (version_compare(_PS_VERSION_, '1.6', '>=')) {
                 return Tools::link_rewrite($str);
             } else {
                 return SeoTools::str2url($str);
@@ -192,7 +197,7 @@ class SeoTools
         $options = [
             'ellipsis' => '...', 'exact' => true, 'html' => false,
         ];
-        if (version_compare((float) _PS_VERSION_, '1.5.6.1', '>=')) {
+        if (version_compare(_PS_VERSION_, '1.5.6.1', '>=')) {
             return Tools::truncateString($text, $length, $options);
         } else {
             return SeoTools::truncateStrings($text, $length, $options);
@@ -209,14 +214,14 @@ class SeoTools
 
         $options = array_merge($default, $options);
         extract($options);
+        $open_tags = [];
 
-        if ($html) {
+        if ($html) { /* @phpstan-ignore-line */
             if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
                 return $text;
             }
 
             $total_length = Tools::strlen(strip_tags($ellipsis));
-            $open_tags = [];
             $truncate = '';
             preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
 
@@ -270,9 +275,9 @@ class SeoTools
             $truncate = Tools::substr($text, 0, $length - Tools::strlen($ellipsis));
         }
 
-        if (!$exact) {
+        if (!$exact) {/** @phpstan-ignore-line */
             $spacepos = SeoTools::strrpos($truncate, ' ');
-            if ($html) {
+            if ($html) {/** @phpstan-ignore-line */
                 $truncate_check = Tools::substr($truncate, 0, $spacepos);
                 $last_open_tag = SeoTools::strrpos($truncate_check, '<');
                 $last_close_tag = SeoTools::strrpos($truncate_check, '>');
@@ -308,8 +313,8 @@ class SeoTools
 
         $truncate .= $ellipsis;
 
-        if ($html) {
-            foreach ($open_tags as &$tag) {
+        if ($html && !isEmpty($open_tags)) {/* @phpstan-ignore-line */
+            foreach ($open_tags as &$tag) {/* @phpstan-ignore-line */
                 $truncate .= '</' . $tag . '>';
             }
         }
@@ -328,7 +333,7 @@ class SeoTools
 
     public static function displayDate($value, $id_lang)
     {
-        if (version_compare((float) _PS_VERSION_, (float) '1.5.5.0', '>=')) {
+        if (version_compare(_PS_VERSION_, '1.5.5.0', '>=')) {
             return Tools::displayDate($value);
         } else {
             return Tools::displayDate($value, $id_lang);

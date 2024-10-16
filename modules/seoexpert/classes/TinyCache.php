@@ -1,22 +1,26 @@
 <?php
 /**
-* 2007-2017 PrestaShop
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-* @author    PrestaShop SA <contact@prestashop.com>
-* @copyright 2007-2017 PrestaShop SA
-* @license   http://addons.prestashop.com/en/content/12-terms-and-conditions-of-use
-* International Registered Trademark & Property of PrestaShop SA
-* -------------------------------------------------------------------
-*
-* Description :
-*   This is a PHP class for generating cache file.
-*/
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+if (defined('_PS_VERSION_') === false) {
+    exit;
+}
+
 class TinyCache
 {
     protected static $path;
@@ -39,7 +43,7 @@ class TinyCache
     /**
      * Get cache path
      *
-     * @return sting
+     * @return string
      */
     public static function getPath()
     {
@@ -53,7 +57,7 @@ class TinyCache
      * @param int $ttl
      * @param string $type
      *
-     * @return sting
+     * @return string
      */
     public static function getTTL($name, $ttl = 0, $type = '')
     {
@@ -78,7 +82,7 @@ class TinyCache
      * @param int $ttl
      * @param string $type
      *
-     * @return array
+     * @return array|bool
      */
     public static function getCache($name, $ttl = 0, $type = '')
     {
@@ -126,7 +130,7 @@ class TinyCache
     {
         $is_dot = ['.', '..'];
         if (is_dir(self::$path)) {
-            if (version_compare((float) phpversion(), '5.3', '<')) {
+            if (version_compare(phpversion(), '5.3', '<')) {
                 $iterator = new RecursiveIteratorIterator(
                     new RecursiveDirectoryIterator(self::$path),
                     RecursiveIteratorIterator::SELF_FIRST
@@ -139,11 +143,11 @@ class TinyCache
             }
 
             foreach ($iterator as $file) {
-                if (version_compare((float) phpversion(), '5.2.17', '<=')) {
+                if (version_compare(phpversion(), '5.2.17', '<=')) {
                     if (in_array($file->getBasename(), $is_dot)) {
                         continue;
                     }
-                } elseif (version_compare((float) phpversion(), '5.3', '<')) {
+                } elseif (version_compare(phpversion(), '5.3', '<')) {
                     if ($file->isDot()) {
                         continue;
                     }
@@ -168,6 +172,8 @@ class TinyCache
         if (Tools::file_exists_cache(self::$path . $name)) {
             return @unlink(self::$path . $name);
         }
+
+        return true;
     }
 
     /**

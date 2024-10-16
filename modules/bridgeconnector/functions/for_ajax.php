@@ -119,7 +119,7 @@ function emoGetUsers()
     foreach ($users as $i => $user) {
         if ($user['employee_id']) {
             $employee = Db::getInstance()->executeS('
-            SELECT firstname, lastname FROM ' . _DB_PREFIX_ . "employee WHERE id_employee = ${user['employee_id']}
+            SELECT firstname, lastname FROM ' . _DB_PREFIX_ . "employee WHERE id_employee = {$user['employee_id']}
             ");
         }
         if (array_key_exists('firstname', reset($employee))

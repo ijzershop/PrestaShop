@@ -20,8 +20,8 @@
  */
 
 declare(strict_types=1);
-if (!defined('_PS_VERSION_')) {
-    exit;
+if (!defined('_PS_VERSION_') || version_compare(_PS_VERSION_, '8.0.2', '<')) {
+    return;
 }
 
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
@@ -48,7 +48,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.11.0';
+    public const VERSION = '4.12.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -93,14 +93,14 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.11.0';
+        $this->version = '4.12.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '8.0.2',
-            'max' => _PS_VERSION_,
+            'max' => '8.99.99',
         ];
 
         parent::__construct();

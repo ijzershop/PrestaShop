@@ -28,13 +28,16 @@
       <script type="application/javascript" src="{{ cdc_url }}"></script>
     {% endif %}
 
+    <script>
+      var psAccountLoaded = false;
+    </script>
     {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
       {# PrestaShop Account #}
       <script src="{{ urlAccountsCdn }}" rel=preload></script>
       <script>
         if (window?.psaccountsVue) {
           window?.psaccountsVue?.init();
-          {% set shop_context = shop_context|merge({'accounts_component_loaded': true}) %}
+          psAccountLoaded = true;
         }
       </script>
     {% endif %}
@@ -50,6 +53,10 @@
         const renderModules = window.mboCdc.renderModules
 
         const context = {{ shop_context|json_encode()|raw }};
+
+        if (psAccountLoaded) {
+          context.accounts_component_loaded = true;
+        }
 
         renderModules(context, '#cdc-container')
       }

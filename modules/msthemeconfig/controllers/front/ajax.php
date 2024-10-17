@@ -195,8 +195,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $id_country = Tools::getValue('id_country');
         $city = str_replace(' ', '%', Tools::getValue('city'));
 
-        $urlNl = $this->apiPath . '/nl?authKey=' . $this->token . '&postalCode=' . $postcode . '&streetNumber=' . $houseNumber . '&premise=' . $extension;
-        $urlBe = $this->apiPath . '/be?authKey=' . $this->token . '&postalCode=' . $postcode . '&street=' . $street . '&streetNumber=' . $houseNumber;
+        $urlNl = $this->apiPath . '/nl?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&streetNumber=' . urlencode($houseNumber) . '&premise=' . urlencode($extension);
+        $urlBe = $this->apiPath . '/be?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&street=' . urlencode($street) . '&streetNumber=' . urlencode($houseNumber);
 
         $valid = false;
         $zip_code_format = Country::getZipCodeFormat((int)$id_country);
@@ -243,7 +243,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'X-Api-Key:' . $this->token,
         ]);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER,false);
 
         $result = curl_exec($curl);
         curl_close($curl);

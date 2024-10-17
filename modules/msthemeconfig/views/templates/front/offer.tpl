@@ -77,7 +77,7 @@
 
   <div class="mt-3 d-none" id="offer_card">
     <div id="js-product-list-header" class="col-12 pr-3 pl-3  pr-lg-0 pl-lg-0 ">
-      <h2 class="h2 mb-4 text-center">Offerte voor {$offer.name}</h2>
+      <h2 class="h2 mb-4 text-center">{$offer.name}</h2>
       <div id="block-category-inner" class="block-category-inner row">
         <div class="col-12">
           <div id="category-description" class="text-muted table-responsive">

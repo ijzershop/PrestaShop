@@ -121,7 +121,6 @@ class AdminOfferController extends FrameworkBundleAdminController {
 
         $vars = [
             '{customer_name}' => $offer->name,
-            '{message}' => $offer->message,
             '{offer_code}' => $offer->code,
             '{offer_access_code}' => $offer->access_code,
             '{customer_email}' => $offer->email,

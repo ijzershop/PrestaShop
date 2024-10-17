@@ -412,7 +412,8 @@ class Product extends ProductCore {
             $row['packedProducts'] = Pack::getItemTable($row['id_product'], $id_lang);
 
             foreach ($row['packedProducts'] as $key => $pack){
-                $packItemAttributes =  Product::getAttributesParams($pack['id_product'], $pack['id_product_attribute']);
+//                dd($pack);
+                $packItemAttributes =  Product::getAttributesParams($pack['id_product'], $pack['id_product_attribute_item']);
 
                 if(count($packItemAttributes) > 0){
                     $row['packedProducts'][$key]['attributes'][0] = $packItemAttributes[0];

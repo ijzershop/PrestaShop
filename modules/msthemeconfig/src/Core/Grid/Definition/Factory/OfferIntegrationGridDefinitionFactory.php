@@ -145,14 +145,6 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                     'field' => 'phone',
                     'sortable' => true,
                 ]))
-
-            ->add((new HtmlColumn('message'))
-                ->setName($this->trans('Message', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'message',
-                    'sortable' => false,
-                ])
-            )
             ->add((new DateTimeColumn('date_exp'))
                 ->setName($this->trans('Exp. date', [], 'Admin.Global'))
                 ->setOptions([
@@ -272,15 +264,6 @@ class OfferIntegrationGridDefinitionFactory extends AbstractGridDefinitionFactor
                     ],
                 ])
                 ->setAssociatedColumn('phone')
-            )
-            ->add((new Filter('message', TextType::class))
-                ->setTypeOptions([
-                    'required' => false,
-                    'attr' => [
-                        'placeholder' => $this->trans('Message', [], 'Modules.MsThemeConfig.OfferIntegrationGridDefinitionFactory'),
-                    ],
-                ])
-                ->setAssociatedColumn('message')
             )
             ->add((new Filter('date_exp', DateRangeType::class))
                 ->setTypeOptions([

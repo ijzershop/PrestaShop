@@ -89,8 +89,7 @@ $(() => {
         display = 'display:table-row;'
       }
 
-
-      if(item.hasOwnProperty('attribute_combinations') && item.attribute_combinations.length > 0){
+      if(typeof item.attribute_combinations !== "undefined" && item.attribute_combinations.length > 0){
         combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
         for (let i = 0; i < item.attribute_combinations.length; i++){
           let checked = '';
@@ -116,7 +115,7 @@ $(() => {
       customCount = 1;
 
 
-      if(item.data.hasOwnProperty('attribute_combinations') &&  item.data.attribute_combinations.length > 0){
+      if(typeof item.data.attribute_combinations !== "undefined" &&  item.data.attribute_combinations.length > 0){
         combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
         for (let i = 0; i < item.data.attribute_combinations.length; i++){
           let checked = '';
@@ -130,6 +129,10 @@ $(() => {
       }
     }
 
+
+    if(combinationInput === ''){
+      combinationInput = '<input type="hidden" data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" name="stock_selected_product_customization[]"/>';
+    }
 
     let block = '<li class="list-group-item added"><table class="w-100"><tr><td style="width:5%;padding:4px;"><input type="checkbox" class="form-control customization_check" data-row-id="'+rowId+'" '+customCountSelected+'></td>' +
       '<td style="width:45%;padding:4px;" class="pack_product_name" data-row-id="'+rowId+'">'+name+'</td>' +
@@ -308,7 +311,6 @@ $(() => {
             ${data.description_short}
           </textarea>
         </div>
-      <a id="offer-row-submit" class="btn btn-primary">Save</a>
       </form>
       </p>
     </div>
@@ -408,6 +410,8 @@ $(() => {
           });
         }
         new window.prestashop.component.TinyMCEEditor();
+        $('.fancybox-outer').prepend('<div class="col-12"><a id="offer-row-submit-top" class="btn btn-primary w-100 mb-3">Save</a></div>');
+        $('.fancybox-outer').append('<div class="col-12"><a id="offer-row-submit" class="btn btn-primary w-100">Save</a></div>');
       }
     });
 
@@ -480,6 +484,8 @@ $(() => {
             }
             new window.prestashop.component.TinyMCEEditor();
             updateTotalPrice();
+            $('.fancybox-outer').prepend('<div class="col-12"><a id="offer-row-submit-top" class="btn btn-primary w-100 mb-3">Save</a></div>');
+            $('.fancybox-outer').append('<div class="col-12"><a id="offer-row-submit" class="btn btn-primary w-100">Save</a></div>');
           }
         });
 
@@ -512,7 +518,6 @@ $(() => {
       formData['offer-code'] = $('#offer_integration_code').val();
       formData['offer-name'] = $('#offer_integration_name').val();
       formData['offer-email'] = $('#offer_integration_email').val();
-      formData['offer-message'] = $('#offer-message').val();
       formData['offer-memo'] = $('#offer-memo').val();
       formData['offer-phone'] = $('#offer_integration_phone').val();
       formData['offer-date-exp'] = $('#offer_integration_date_exp_date').val();
@@ -528,7 +533,6 @@ $(() => {
         let offer = data.offer;
         offer.name = offer.name[1];
         offer.description_short = offer.description_short[1];
-        offer.description = offer.description[1];
 
         let idProduct = offer.id;
         let xShipping = 'Nee';
@@ -596,6 +600,10 @@ $(() => {
         $('button#button_' + idProduct).attr('data-offer', JSON.stringify(offer));
       });
   });
+
+  $(document).on('click', '#offer-row-submit-top', function (e) {
+    $('#offer-row-submit').trigger('click');
+  })
 
   let updateTotalPrice = function() {
     let totalPackPrice = 0;

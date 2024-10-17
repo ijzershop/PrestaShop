@@ -66,13 +66,6 @@ class OfferIntegrationType extends TranslatorAwareType
                 'translation_domain' => 'Modules.Pricemodifier.Admin',
                 'required' => false,
             ])
-            ->add('message', TextareaType::class, [
-                'label' => 'Bericht',
-                'attr' => ['class' => 'autoload_rte'],
-                'help' => 'Het bericht voor bij de offerte',
-                'translation_domain' => 'Modules.Pricemodifier.Admin',
-                'required' => false,
-            ])
             ->add('date_exp', DateTimeType::class, [
                 'time_widget' => 'single_text',
                 'date_widget' => 'single_text',

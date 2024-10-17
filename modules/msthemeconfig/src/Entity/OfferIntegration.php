@@ -60,14 +60,6 @@ class OfferIntegration
      */
     private $phone;
 
-
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="message", type="string", nullable=true)
-     */
-    private $message;
-
     /**
      * @var datetime
      *
@@ -185,24 +177,6 @@ class OfferIntegration
     public function setPhone(?string $phone)
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMessage(): ?string
-    {
-        return $this->message;
-    }
-    /**
-     * @param string|null $message
-     *
-     */
-    public function setMessage(?string $message)
-    {
-        $this->message = $message;
 
         return $this;
     }

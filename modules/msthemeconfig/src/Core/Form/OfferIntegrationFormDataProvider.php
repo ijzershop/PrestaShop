@@ -50,7 +50,6 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             'name' => $offerIntegration->getName(),
             'email' => $offerIntegration->getEmail(),
             'phone' => $offerIntegration->getPhone(),
-            'message' => $offerIntegration->getMessage(),
             'date_exp' => $offerIntegration->getDateExp(),
         ];
     }
@@ -89,7 +88,6 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             'name' => 'Offerte '. $reference .' | ' . date_format(date_create(), 'd-m-Y') . ' | ' . $shop_name . ' | ' . $user,
             'email' => '',
             'phone' => '',
-            'message' => '',
             'date_exp' => $newExpDate,
         ];
     }

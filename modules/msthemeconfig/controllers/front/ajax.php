@@ -274,13 +274,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $returnedAddress = [];
             }
 
-//
-//            if ($this->testCountry($id_country) == 'be' && !empty($street)) {
-//                $streetData = $this->fetchStreetForBelgicAddress($city, $postcode, $street);
-//                if (isset($streetData[0]->street)) {
-//                    $returnedAddress[0]->street = $streetData[0]->street;
-//                }
-//            }
 
 
             header('Content-Type: application/json');

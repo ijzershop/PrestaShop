@@ -111,6 +111,10 @@
               </tr>
               <tr>
                 <th class="col-auto">Referentie</th>
+                <td class="col">{$reference}</td>
+              </tr>
+              <tr>
+                <th class="col-auto">Unieke code</th>
                 <td class="col">{$offer.code}</td>
               </tr>
               {if $offer.message}

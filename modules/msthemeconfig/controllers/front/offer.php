@@ -73,9 +73,18 @@ class MsThemeConfigOfferModuleFrontController extends ModuleFrontController {
             Tools::redirect('index.php');
         }
 
+        preg_match('/(OF-[0-9]{6})/', $this->offer['name'], $matches);
+        if(count($matches) > 0){
+            $reference = $matches[0];
+        } else {
+            $reference = $this->offer['id_oi_offer'];
+        }
+
+
         $this->context->smarty->assign([
             'robots_follow' => 'nofollow',
             'offer' =>  $this->offer,
+            'reference' =>  $reference,
             'products' =>  $this->products,
             'date_exp' =>  $this->date_exp,
             'date_exp_days' =>  $this->date_exp_days

@@ -412,12 +412,13 @@ class Product extends ProductCore {
             $row['packedProducts'] = Pack::getItemTable($row['id_product'], $id_lang);
 
             foreach ($row['packedProducts'] as $key => $pack){
-
                 $packItemAttributes =  Product::getAttributesParams($pack['id_product'], $pack['id_product_attribute']);
+
                 if(count($packItemAttributes) > 0){
                     $row['packedProducts'][$key]['attributes'][0] = $packItemAttributes[0];
                     $attachProduct = new Product($pack['id_product']);
                     $combinations = $attachProduct->getAttributeCombinations();
+                    $row['packedProducts'][$key]['attribute_combinations'] = $combinations;
                     $attr_names = array_column($combinations, 'attribute_name');
                     array_multisort($attr_names, SORT_NUMERIC, $combinations);
                     $keyItem = array_search($row['packedProducts'][$key]['attributes'][0]['name'], $attr_names);
@@ -429,7 +430,6 @@ class Product extends ProductCore {
             }
             $results_array[] = $row;
         }
-
         return $results_array;
     }
 

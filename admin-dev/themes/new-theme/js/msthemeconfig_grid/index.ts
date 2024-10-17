@@ -60,6 +60,7 @@ $(() => {
     let customCountSelected = '';
     let display = 'display:none;'
     let idProductAttribute = 0;
+    let combinationInput = '';
     if(item.data === undefined){
 
     // * - O Deny orders
@@ -80,12 +81,26 @@ $(() => {
       price  = renderMoneyString(item.price*quantity);
       customCount = 0;
       if(item.attributes.length > 0){
-        idProductAttribute = item.id_pack_product_attribute;
+        idProductAttribute = item.id_product_attribute;
         customCount = item.attributes[0].customizedValue;
         native_price = item.attributes[0].price;
         price = renderMoneyString(item.attributes[0].price);
         customCountSelected = 'checked';
         display = 'display:table-row;'
+      }
+
+
+      if(item.hasOwnProperty('attribute_combinations') && item.attribute_combinations.length > 0){
+        combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
+        for (let i = 0; i < item.attribute_combinations.length; i++){
+          let checked = '';
+          if(idProductAttribute === item.attribute_combinations[i].id_product_attribute){
+            checked = 'selected="selected"'
+          }
+          combinationInput += '<option ' + checked + ' data-price="'+ item.attribute_combinations[i].price +'" value="' + item.attribute_combinations[i].id_product_attribute + '">' +
+            item.attribute_combinations[i].group_name + ' - '+ item.attribute_combinations[i].attribute_name + '</option>';
+        }
+        combinationInput += '</select>';
       }
     } else {
       name  = item.data.text;
@@ -99,7 +114,22 @@ $(() => {
         price = renderMoneyString('0.00');
       }
       customCount = 1;
+
+
+      if(item.data.hasOwnProperty('attribute_combinations') &&  item.data.attribute_combinations.length > 0){
+        combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
+        for (let i = 0; i < item.data.attribute_combinations.length; i++){
+          let checked = '';
+          if(idProductAttribute === item.data.attribute_combinations[i].id_product_attribute){
+            checked = 'selected="selected"'
+          }
+          combinationInput += '<option ' + checked + ' data-price="'+ item.data.attribute_combinations[i].price +'" value="' + item.data.attribute_combinations[i].id_product_attribute + '">' +
+            item.data.attribute_combinations[i].group_name + ' - '+ item.data.attribute_combinations[i].attribute_name + '</option>';
+        }
+        combinationInput += '</select>';
+      }
     }
+
 
     let block = '<li class="list-group-item added"><table class="w-100"><tr><td style="width:5%;padding:4px;"><input type="checkbox" class="form-control customization_check" data-row-id="'+rowId+'" '+customCountSelected+'></td>' +
       '<td style="width:45%;padding:4px;" class="pack_product_name" data-row-id="'+rowId+'">'+name+'</td>' +
@@ -113,8 +143,7 @@ $(() => {
       '</tr>' +
       '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
       '<td colspan="2">Aanpassing:</td>' +
-      '<td colspan="3">' +
-      '<input type="number" step="1" min="1" max="10" name="stock_selected_product_customization[]" data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" value="'+customCount+'" class="form-control"/>' +
+      '<td colspan="3">' + combinationInput +
       '</td></tr></table></li>';
 
     return block;
@@ -324,6 +353,8 @@ $(() => {
         $('#stock_selected_products').append(block);
       }
       updateTotalPrice();
+    }).on('select2:open', function (e: any) {
+        $('.select2-search__field').select();
     });
   };
 

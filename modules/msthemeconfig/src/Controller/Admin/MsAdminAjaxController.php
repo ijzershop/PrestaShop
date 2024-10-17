@@ -66,6 +66,10 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             } else {
                 $qty = Product::getQuantity($product['id']);
             }
+            $attachProduct = new Product($product['id']);
+            $combinations = $attachProduct->getAttributeCombinations($this->context->language->id);
+            $products[$key]['attribute_combinations'] = $combinations;
+
             $products[$key]['quantity'] = $qty;
         }
 
@@ -135,34 +139,13 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
 
         $customization = (int)Tools::getValue('productCustomization');
         $product = new Product($id_product);
-        $combinations = $product->getAttributeCombinations($id_product);
 
-        $attr_names = array_column($combinations, 'attribute_name');
-        array_multisort($attr_names, SORT_ASC, $combinations);
-
-        if ((int)$customization > 0) {
-            $customizationValue = $customization;
-            $attr_key = (int)$customizationValue - 1;
-        } else {
-            $customizationValue = 0;
-            $attr_key = 0;
-        }
-
-        if (count($combinations) > 0) {
-            if ($customizationValue > count($combinations)) {
-                $neededAttribute = end($combinations);
-            } else {
-                $neededAttribute = $combinations[$attr_key];
-            }
-
-            $id_product_attribute = $neededAttribute['id_product_attribute'];
-        } else {
-            $id_product_attribute = 0;
-        }
-
-        $staticPrice = Product::getPriceStatic($id_product, false, $id_product_attribute);
-        $name = Product::getProductName($id_product, $id_product_attribute, Context::getContext()->language->id);
-        $price = $staticPrice * $qty;
+        $staticPrice = Product::getPriceStatic($id_product,
+            false,
+            $customization
+        );
+        $name = Product::getProductName($id_product, $customization, Context::getContext()->language->id);
+        $price = $staticPrice*$qty;
         $weight = (float)$product->weight * $qty;
 
         if (is_numeric($price)) {

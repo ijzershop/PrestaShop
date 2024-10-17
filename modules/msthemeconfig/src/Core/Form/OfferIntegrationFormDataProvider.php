@@ -12,10 +12,12 @@
 declare(strict_types=1);
 
 namespace MsThemeConfig\Core\Form;
-
+use Db;
 use DateTime;
+use Http\Client\Exception;
 use MsThemeConfig\Core\Repository\OfferIntegrationRepository;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
+use PrestaShopDatabaseException;
 
 /**
  *
@@ -74,14 +76,36 @@ class OfferIntegrationFormDataProvider implements FormDataProviderInterface
             $user = 'RO';
         }
 
+
+        try {
+            $reference = $this->generateNextOfferNumber();
+        } catch(Exception $exception) {
+            $reference = 'OF-'. date_format(date_create(), 'Ymd');
+        }
+
         return [
             'id_oi_offer' => '',
             'code' => date_format(date_create(), 'Ymd') . '-' . rand ( 1000 , 9999 ),
-            'name' => 'Offerte '. $shop_name . ' | ' . date_format(date_create(), 'd-m-Y'),
+            'name' => 'Offerte '. $reference .' | ' . date_format(date_create(), 'd-m-Y') . ' | ' . $shop_name . ' | ' . $user,
             'email' => '',
             'phone' => '',
             'message' => '',
             'date_exp' => $newExpDate,
         ];
+    }
+
+
+    /**
+     * @return string
+     */
+    public function generateNextOfferNumber(){
+        $prefix = 'OF-';
+        $prefixLength = strlen($prefix);
+        $restLength = 9 - $prefixLength;
+        $query = 'SELECT `id_oi_offer` FROM `'._DB_PREFIX_.'offer_integration` ORDER BY `id_oi_offer` DESC';
+        $previousOrderId = Db::getInstance()->getValue($query, false);
+        $nextOrderId = (int) str_replace($prefix, '', $previousOrderId) + 1;
+        $reference = sprintf('%0'.$restLength.'d', $nextOrderId);
+        return strtoupper($prefix.$reference);
     }
 }

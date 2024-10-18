@@ -32,6 +32,9 @@ public $shippingFieldError;
                 $this->context->cart->added_to_order = $requestParams['added_to_order'];
                 $this->context->cart->update();
             } else {
+                  $this->getCheckoutProcess()->setHasErrors(true);
+                  $this->setAddedToOrderValidationMsg('Er is geen order referentie geselecteerd waaraan u deze bestelling wilt toevoegen!',$delivery_option, 'error');
+                  return false;
             }
         } else {
             $this->context->cart->added_to_order = null;

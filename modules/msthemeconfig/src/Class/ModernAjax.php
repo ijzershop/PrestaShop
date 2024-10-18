@@ -775,7 +775,6 @@ class ModernAjax
 
             case 'categories_home':
                 $categories = Category::getSimpleCategoriesWithParentInfos($this->idLang);
-
                 $categoriesList = [];
                 $filteredCategories = [];
                 foreach ($categories as $category) {

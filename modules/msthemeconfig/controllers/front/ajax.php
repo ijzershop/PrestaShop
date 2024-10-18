@@ -32,7 +32,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         require_once _PS_ROOT_DIR_ . '/app/AppKernel.php';
         $this->token = 'JNtOUInXJD27nRgH';
         $this->apiPath = 'https://api.pro6pp.nl/v2/autocomplete';
-        $this->kernel = new AppKernel('dev', true);
+        $this->kernel = new \AppKernel('dev', true);
         $this->kernel->boot();
         $this->context = Context::getContext();
         $this->soapoptions = [
@@ -198,6 +198,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $urlNl = $this->apiPath . '/nl?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&streetNumber=' . urlencode($houseNumber) . '&premise=' . urlencode($extension);
         $urlBe = $this->apiPath . '/be?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&street=' . urlencode($street) . '&streetNumber=' . urlencode($houseNumber);
 
+
         $valid = false;
         $zip_code_format = Country::getZipCodeFormat((int)$id_country);
 
@@ -243,7 +244,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         curl_setopt($curl, CURLOPT_HTTPHEADER, [
             'X-Api-Key:' . $this->token,
         ]);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER,false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         $result = curl_exec($curl);
         curl_close($curl);
@@ -255,14 +256,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 if (isset($data->errors)) {
                     $returnedAddressMsg = $this->getMatchingMessage(strtolower($data->error_id));
                     $returnedAddress = [];
-                } elseif (strtolower($street) !== strtolower($data->street)) {
-                    $returnedAddressMsg = 'De ingevoerde straat komt niet overeen met de postcode';
-                    $returnedAddress = [];
-                    $valid = false;
-                } elseif (strtolower($city) !== strtolower($data->settlement)) {
-                    $returnedAddressMsg = 'De ingevoerde stad komt niet overeen met de postcode';
-                    $returnedAddress = [];
-                    $valid = false;
                 } else {
                     $returnedAddressMsg = 'ok';
                     $returnedAddress = (array)$data;
@@ -274,6 +267,13 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $returnedAddress = [];
             }
 
+//
+//            if ($this->testCountry($id_country) == 'be' && !empty($street)) {
+//                $streetData = $this->fetchStreetForBelgicAddress($city, $postcode, $street);
+//                if (isset($streetData[0]->street)) {
+//                    $returnedAddress[0]->street = $streetData[0]->street;
+//                }
+//            }
 
 
             header('Content-Type: application/json');
@@ -282,12 +282,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     }
 
 
-    public function _addGoogleDataToCsvForTesting()
-    {
+    public function _addGoogleDataToCsvForTesting(){
         $data = Tools::getValue('data');
 
 
-        if ($data != null) {
+        if($data != null){
             $event = $data['event'];
             $idEvent = $data['eventId'];
             $eventData = $data['data'];
@@ -297,11 +296,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $ip_customer = Tools::getRemoteAddr();
 
             $headerArray = ['Datum', 'Event Naam', 'Event Id', 'Klant Id', 'Klant IP', 'Doorgestuurde Data'];
-            $dataArray = ['date' => $date->format('D, d M Y H:i:s'), 'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
-            $data2Array = ['date' => $date->format('D, d M Y H:i:s'), 'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
+            $dataArray = ['date'=>$date->format('D, d M Y H:i:s'),'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
+            $data2Array = ['date'=>$date->format('D, d M Y H:i:s'),'event' => $event, 'id' => $idEvent, 'customer' => $idCustomer, 'ip_customer' => $ip_customer, 'data' => json_encode($eventData)];
 
 
-            $dir = _PS_ROOT_DIR_ . '/google_dumps/';
+            $dir = _PS_ROOT_DIR_.'/google_dumps/';
             $filesPurchase = array();
             $filesBulk = array();
 
@@ -309,7 +308,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
             foreach (scandir($dir) as $file) {
                 if (in_array($file, $ignored)) continue;
-                if (str_contains($file, 'Purchases')) {
+                if(str_contains($file, 'Purchases')){
                     $filesPurchase[$file] = filemtime($dir . '/' . $file);
                 } else {
                     $filesBulk[$file] = filemtime($dir . '/' . $file);
@@ -320,22 +319,22 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $lengthBulk = count($filesBulk);
 
             for ($i = $lengthBulk; $i > 15; $i--) {
-                unlink($dir . $filesBulk[$i]);
+                unlink($dir.$filesBulk[$i]);
             }
 
-            if (filesize($dir . end($filesBulk)) >= 524288) {
-                $callback = function ($matches) {
+            if(filesize($dir.end($filesBulk)) >= 524288){
+                $callback = function($matches) {
                     return $matches[1] . ($matches[2] + 1);
                 };
                 $csvBulkName = preg_replace_callback('/(\D*)(\d+)/', $callback, end($filesBulk));
 
-                $file = new SplFileObject($dir . $csvBulkName, 'a');
+                $file = new SplFileObject($dir.$csvBulkName, 'a');
                 $file->fputcsv($headerArray);
                 $file->fputcsv($dataArray);
                 $file = null;
             } else {
                 $csvBulkName = end($filesBulk);
-                $file = new SplFileObject($dir . $csvBulkName, 'a');
+                $file = new SplFileObject($dir.$csvBulkName, 'a');
                 $file->fputcsv($dataArray);
                 $file = null;
             }
@@ -347,13 +346,15 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
 
             for ($i = $lengthPurch; $i > 15; $i--) {
-                unlink($dir . $filesPurchase[$i]);
+                unlink($dir.$filesPurchase[$i]);
             }
 
 
-            if ($event === 'purchase' || $event === 'refund') {
-                if (filesize($dir . end($filesPurchase)) >= 524288) {
-                    $callbackPurchase = function ($matches) {
+
+
+            if($event === 'purchase' || $event === 'refund'){
+                if(filesize($dir.end($filesPurchase)) >= 524288){
+                    $callbackPurchase = function($matches) {
                         return $matches[1] . ($matches[2] + 1);
                     };
 
@@ -376,6 +377,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         die();
     }
+
 
 
     public function _checkForExistingEmailAddress($email)
@@ -401,8 +403,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $paid = (int)$_POST['switchinput'];
         $withTax = (int)$_POST['with_tax'];
 
-        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $reference = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_REFERENCE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+        $category = Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
         $cart = Context::getContext()->cart;
 
@@ -545,7 +547,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      *
      * @return bool
      */
-    public function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
+    function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
     {
         $tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
         $watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));
@@ -746,7 +748,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 }
             }
         }
-
         if (count($customers) && Tools::getValue('sf2')) {
             $to_return = $customers;
         } elseif (count($customers) && !Tools::getValue('sf2')) {
@@ -1097,15 +1098,15 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 //                $ref = 'YS-133671';
 
         try {
-            $order = Order::getByReference($ref)->getFirst();
+            $order =  Order::getByReference($ref)->getFirst();
             $orderDetails = $order->getOrderDetailList();
-        } catch (Exception $e) {
-            PrestaShopLogger::addLog('failing to get order list:' . $e->getMessage());
+        } catch (Exception $e){
+                PrestaShopLogger::addLog('failing to get order list:' . $e->getMessage());
         }
 //                $ref = 'YS-131376';
         try {
             $status = $client->getAktueleOpdracht($login, $zendingnr, $ref);
-            if (empty($status)) {
+            if(empty($status)){
                 die('<div class="w-100 mt-4 text-center text-danger h2">De bestelling is nog niet aangemeld of is al verzonden!</div>');
             }
         } catch (Exception $e) {
@@ -1119,7 +1120,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $data = [];
         $colliesData = [];
 
-        if (isset($status->aRegel)) {
+        if(isset($status->aRegel)){
             for ($s = 0; $s < count($status->aRegel); $s++) {
                 $Mgewicht = '';
                 $Mlengte = '';
@@ -1150,7 +1151,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     $Mbreedte = $status->aRegel[$s]->breedte;
                 }
 
-                $colliesData[] = [
+                $colliesData[] =  [
                     'nr' => $Mnrcollie,
                     'type' => $Meenheid,
                     'weight' => $Mgewicht,
@@ -1165,53 +1166,53 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $data['products'] = $orderDetails;
 
         $data['datum'] = '';
-        if (isset($status->datum)) {
+        if(isset($status->datum)){
             $data['datum'] = $status->datum;
         }
 
         $data['nrorder'] = $ref;
-        if (isset($status->nrorder)) {
+        if(isset($status->nrorder)){
             $data['nrorder'] = $status->nrorder;
         }
 
         $data['nrzend'] = '';
-        if (isset($status->nrzend)) {
+        if(isset($status->nrzend)){
             $data['nrzend'] = $status->nrzend;
         }
         $data['naam'] = '';
-        if (isset($status->geanaam)) {
+        if(isset($status->geanaam)){
             $data['naam'] = $status->geanaam;
         }
         $data['naam2'] = '';
-        if (isset($status->geanaam2)) {
+        if(isset($status->geanaam2)){
             $data['naam2'] = $status->geanaam2;
         }
         $data['straat'] = '';
-        if (isset($status->geastraat)) {
+        if(isset($status->geastraat)){
             $data['straat'] = $status->geastraat;
         }
         $data['huisnr'] = '';
-        if (isset($status->geahuisnr)) {
+        if(isset($status->geahuisnr)){
             $data['huisnr'] = $status->geahuisnr;
         }
         $data['postcode'] = '';
-        if (isset($status->geapostcode)) {
+        if(isset($status->geapostcode)){
             $data['postcode'] = $status->geapostcode;
         }
         $data['plaats'] = '';
-        if (isset($status->geaplaats)) {
+        if(isset($status->geaplaats)){
             $data['plaats'] = $status->geaplaats;
         }
         $data['land'] = '';
-        if (isset($status->gealand)) {
+        if(isset($status->gealand)){
             $data['land'] = $status->gealand;
         }
         $data['telefoon'] = '';
-        if (isset($status->geatelefoon)) {
+        if(isset($status->geatelefoon)){
             $data['telefoon'] = $status->geatelefoon;
         }
         $data['email'] = '';
-        if (isset($status->geaemail)) {
+        if(isset($status->geaemail)){
             $data['email'] = $status->geaemail;
         }
 
@@ -1509,7 +1510,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _getKoopmanPrintedLabel()
     {
 
-        if (Tools::getIsset('updateAddress')) {
+        if(Tools::getIsset('updateAddress')){
             $this->updateOrderDeliveryAddress(Tools::getAllValues());
         }
 
@@ -1522,17 +1523,18 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         $export = new ExportOrdersMultipleCollies($id_order, $weight, $weight_option, $collies, $collieType);
         $export->export();
-        if ($export->redirect) {
+        if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
             $order = new Order($id_order);
 
-            if ((int)$readyForShippingStatus !== (int)$order->current_state) {
+            if((int)$readyForShippingStatus !== (int)$order->current_state){
                 $history = new OrderHistory();
                 $history->id_order = (int)$id_order;
                 $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
                 $history->add();
             }
+
 
 
             die('printed');
@@ -1583,8 +1585,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $id_order = Tools::getValue('id_order');
         if ($type == 'statusandcard') {
             $trello_url = Configuration::get('MSTHEMECONFIG_TRELLO_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_secret = Configuration::get('MSTHEMECONFIG_TRELLO_SECRET', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
+            $trello_token = Configuration::get('MSTHEMECONFIG_TRELLO_TOKEN', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id,  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
             $action_type = '';
             $trello_card_lane = '';
@@ -1804,7 +1806,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $message['time'] = date("Y-m-d H:i:s");
 
             $call = $this->doApiCall('log-message', [
-                'profile' => Context::getContext()->shop->getUrls()[0]['domain'] . 'test',
+                'profile' => Context::getContext()->shop->getUrls()[0]['domain'].'test',
                 'type' => "koopman-actions",
                 'version' => _PS_VERSION_,
                 'message' => json_encode($message),
@@ -1851,7 +1853,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         try {
             $order = new Order($getAllValues['id_order']);
 
-            if (!is_null($order->id_address_delivery)) {
+            if(!is_null($order->id_address_delivery)){
                 $address = new Address($order->id_address_delivery);
                 $address->address1 = $getAllValues['address1'];
                 $address->house_number = $getAllValues['house_number'];
@@ -1861,8 +1863,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
                 $address->update(false);
             }
-        } catch (PrestaShopDatabaseException|PrestaShopException $e) {
-            return false;
+        } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+        return false;
         }
 
         return true;
@@ -1918,8 +1920,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      * @param bool $vat
      * @return void
      */
-    private function _setVatInclExclContext(bool $vat = true)
-    {
+    private function _setVatInclExclContext(bool $vat = true){
         try {
             // Set new value for price_vat_settings_incl
             $this->context->cookie->__set('price_vat_settings_incl', json_encode($vat));
@@ -1928,8 +1929,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             // Clear cache
             Tools::clearCache();
 
-            return die(json_encode(['msg' => 'Vat preference is set to ' . json_encode($vat), 'success' => true]));
-        } catch (Exception $exception) {
+            return die(json_encode(['msg' => 'Vat preference is set to '.json_encode($vat), 'success' => true]));
+        } catch (Exception $exception){
             return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }
@@ -1937,13 +1938,13 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _removeDefaultCartDiscountRuleCounterAccess()
     {
         $cart = new Cart($this->context->cart->id);
-        $cartRuleId = Configuration::get('MSTHEMECONFIG_NO_DISCOUNT_RULE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '152');
+        $cartRuleId = Configuration::get('MSTHEMECONFIG_NO_DISCOUNT_RULE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '152');
 
         try {
             $cart->addCartRule((int)$cartRuleId);
-            return die(json_encode(['msg' => 'Discount Rules are removed', 'success' => true]));
-        } catch (Exception $exception) {
-            return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
+                return die(json_encode(['msg' => 'Discount Rules are removed', 'success' => true]));
+            } catch (Exception $exception){
+                return die(json_encode(['msg' => $exception->getMessage(), 'success' => false]));
         }
     }
 

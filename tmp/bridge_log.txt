@@ -1,731 +1,730 @@
-[Mon, 07 Oct 2024 08:23:13 +0200]Intializing
-[Mon, 07 Oct 2024 08:23:13 +0200]Connecting to database
-[Mon, 07 Oct 2024 08:23:13 +0200]Creating backup file em1_bridge_db_dump001.sql
-[Mon, 07 Oct 2024 08:23:13 +0200]Selecting tables
-[Mon, 07 Oct 2024 08:23:13 +0200]Handling table `ps176_access` [3 378].
-[Mon, 07 Oct 2024 08:23:13 +0200]-SELECT * FROM `ps176_access` LIMIT 61682
-[Mon, 07 Oct 2024 08:23:13 +0200]Handling table `ps176_accessory` [44].
-[Mon, 07 Oct 2024 08:23:13 +0200]-SELECT * FROM `ps176_accessory` LIMIT 5623
-[Mon, 07 Oct 2024 08:23:13 +0200]Handling table `ps176_address` [172 888].
-[Mon, 07 Oct 2024 08:23:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 0, 14076) t2
+[Fri, 18 Oct 2024 08:13:11 +0200]Intializing
+[Fri, 18 Oct 2024 08:13:11 +0200]Connecting to database
+[Fri, 18 Oct 2024 08:13:11 +0200]Creating backup file em1_bridge_db_dump001.sql
+[Fri, 18 Oct 2024 08:13:11 +0200]Selecting tables
+[Fri, 18 Oct 2024 08:13:11 +0200]Handling table `ps176_access` [3 334].
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT * FROM `ps176_access` LIMIT 59920
+[Fri, 18 Oct 2024 08:13:11 +0200]Handling table `ps176_accessory` [44].
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT * FROM `ps176_accessory` LIMIT 5623
+[Fri, 18 Oct 2024 08:13:11 +0200]Handling table `ps176_address` [172 165].
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 0, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 14076, 14076) t2
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 13982, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 28152, 14076) t2
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 27964, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 42228, 14076) t2
+[Fri, 18 Oct 2024 08:13:11 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 41946, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 56304, 14076) t2
+[Fri, 18 Oct 2024 08:13:12 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 55928, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 70380, 14076) t2
+[Fri, 18 Oct 2024 08:13:12 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 69910, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 84456, 14076) t2
+[Fri, 18 Oct 2024 08:13:12 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 83892, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:15 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 98532, 14076) t2
+[Fri, 18 Oct 2024 08:13:12 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 97874, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:15 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 112608, 14076) t2
+[Fri, 18 Oct 2024 08:13:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 111856, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:15 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 126684, 14076) t2
+[Fri, 18 Oct 2024 08:13:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 125838, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 140760, 14076) t2
+[Fri, 18 Oct 2024 08:13:13 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 139820, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 154836, 14076) t2
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 153802, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 168912, 14076) t2
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 167784, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 182988, 14076) t2
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT t1.* FROM `ps176_address` t1 JOIN (SELECT id_address FROM ps176_address LIMIT 181766, 13982) t2
                 ON t1.id_address = t2.id_address
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_address_format` [244].
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT * FROM `ps176_address_format` LIMIT 7797
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attachment` [0].
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attachment_lang` [0].
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attribute` [28].
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT * FROM `ps176_attribute` LIMIT 3580
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attribute_group` [4].
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT * FROM `ps176_attribute_group` LIMIT 513
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attribute_group_lang` [4].
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT * FROM `ps176_attribute_group_lang` LIMIT 513
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attribute_group_shop` [4].
-[Mon, 07 Oct 2024 08:23:16 +0200]-SELECT * FROM `ps176_attribute_group_shop` LIMIT 513
-[Mon, 07 Oct 2024 08:23:16 +0200]Handling table `ps176_attribute_impact` [454].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_attribute_impact` LIMIT 14464
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_attribute_lang` [28].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_attribute_lang` LIMIT 3580
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_attribute_shop` [28].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_attribute_shop` LIMIT 3580
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_authorization_role` [1 272].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_authorization_role` LIMIT 23047
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_bridgeconnector_ma_tokens` [0].
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_bridgeconnector_ma_users` [0].
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_bridgeconnector_session_keys` [0].
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier` [13].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier` LIMIT 1664
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier_group` [58].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier_group` LIMIT 7411
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier_lang` [13].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier_lang` LIMIT 1664
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier_shop` [13].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier_shop` LIMIT 1664
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier_tax_rules_group_shop` [13].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier_tax_rules_group_shop` LIMIT 1664
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_carrier_zone` [31].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT * FROM `ps176_carrier_zone` LIMIT 3965
-[Mon, 07 Oct 2024 08:23:17 +0200]Handling table `ps176_cart` [144 974].
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 0, 5505) t2
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_address_format` [244].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_address_format` LIMIT 7797
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attachment` [0].
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attachment_lang` [0].
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute` [28].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute` LIMIT 3580
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_group` [4].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_group` LIMIT 513
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_group_lang` [4].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_group_lang` LIMIT 513
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_group_shop` [4].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_group_shop` LIMIT 513
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_impact` [454].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_impact` LIMIT 14464
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_lang` [28].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_lang` LIMIT 3580
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_attribute_shop` [28].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_attribute_shop` LIMIT 3580
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_authorization_role` [1 300].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_authorization_role` LIMIT 23565
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_bridgeconnector_ma_tokens` [0].
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_bridgeconnector_ma_users` [0].
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_bridgeconnector_session_keys` [0].
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier` [12].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier` LIMIT 1536
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier_group` [53].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier_group` LIMIT 6766
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier_lang` [12].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier_lang` LIMIT 1536
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier_shop` [12].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier_shop` LIMIT 1536
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier_tax_rules_group_shop` [13].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier_tax_rules_group_shop` LIMIT 1664
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_carrier_zone` [28].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT * FROM `ps176_carrier_zone` LIMIT 3580
+[Fri, 18 Oct 2024 08:13:14 +0200]Handling table `ps176_cart` [154 911].
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 0, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 5505, 5505) t2
+[Fri, 18 Oct 2024 08:13:14 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 5892, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 11010, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 11784, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 16515, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 17676, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 22020, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 23568, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 27525, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 29460, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 33030, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 35352, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 38535, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 41244, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 44040, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 47136, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 49545, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 53028, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 55050, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 58920, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 60555, 5505) t2
+[Fri, 18 Oct 2024 08:13:15 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 64812, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 66060, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 70704, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 71565, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 76596, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 77070, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 82488, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 82575, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 88380, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 88080, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 94272, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 93585, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 100164, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 99090, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 106056, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 104595, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 111948, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 110100, 5505) t2
+[Fri, 18 Oct 2024 08:13:16 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 117840, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 115605, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 123732, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:18 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 121110, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 129624, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 126615, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 135516, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 132120, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 141408, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 137625, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 147300, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 143130, 5505) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 153192, 5892) t2
                 ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 148635, 5505) t2
-                ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT t1.* FROM `ps176_cart` t1 JOIN (SELECT id_cart FROM ps176_cart LIMIT 154140, 5505) t2
-                ON t1.id_cart = t2.id_cart
-[Mon, 07 Oct 2024 08:23:19 +0200]Handling table `ps176_cart_cart_rule` [10 106].
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT * FROM `ps176_cart_cart_rule` LIMIT 63551
-[Mon, 07 Oct 2024 08:23:19 +0200]Handling table `ps176_cart_product` [366 753].
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 37450
-[Mon, 07 Oct 2024 08:23:19 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 37450, 37450
-[Mon, 07 Oct 2024 08:23:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 74900, 37450
-[Mon, 07 Oct 2024 08:23:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 112350, 37450
-[Mon, 07 Oct 2024 08:23:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 149800, 37450
-[Mon, 07 Oct 2024 08:23:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 187250, 37450
-[Mon, 07 Oct 2024 08:23:21 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 224700, 37450
-[Mon, 07 Oct 2024 08:23:21 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 262150, 37450
-[Mon, 07 Oct 2024 08:23:21 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 299600, 37450
-[Mon, 07 Oct 2024 08:23:21 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 337050, 37450
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 374500, 37450
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 411950, 37450
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule` [32].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule` LIMIT 4089
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_carrier` [0].
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_combination` [54].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_combination` LIMIT 6900
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_country` [0].
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_fees` [15].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_fees` LIMIT 1920
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_group` [10].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_group` LIMIT 1281
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_lang` [32].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_lang` LIMIT 4089
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_product_rule` [3].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_product_rule` LIMIT 385
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_product_rule_group` [3].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_product_rule_group` LIMIT 385
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_product_rule_value` [802].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cart_rule_product_rule_value` LIMIT 33826
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cart_rule_shop` [0].
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_category` [376].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category` LIMIT 16010
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_category_group` [1 888].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category_group` LIMIT 47664
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_category_lang` [277].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category_lang` LIMIT 221
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category_lang` LIMIT 221, 221
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_category_product` [4 988].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category_product` LIMIT 52430
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_category_shop` [381].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_category_shop` LIMIT 47664
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms` [36].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms` LIMIT 4600
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_category` [7].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_category` LIMIT 897
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_category_lang` [8].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_category_lang` LIMIT 1025
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_category_shop` [7].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_category_shop` LIMIT 897
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_lang` [52].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_lang` LIMIT 73
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_role` [7].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_role` LIMIT 897
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_role_lang` [0].
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_cms_shop` [36].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_cms_shop` LIMIT 4600
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_configuration` [1 419].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_configuration` LIMIT 13889
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_configuration_kpi` [144].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_configuration_kpi` LIMIT 18397
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_configuration_kpi_lang` [8].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_configuration_kpi_lang` LIMIT 1025
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_configuration_lang` [215].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_configuration_lang` LIMIT 6877
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_contact` [3].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_contact` LIMIT 385
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_contact_lang` [3].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_contact_lang` LIMIT 385
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_contact_shop` [3].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_contact_shop` LIMIT 385
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_country` [244].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_country` LIMIT 30841
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_country_lang` [244].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_country_lang` LIMIT 30841
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_country_shop` [244].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_country_shop` LIMIT 30841
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_currency` [2].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_currency` LIMIT 257
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_currency_lang` [2].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_currency_lang` LIMIT 257
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_currency_shop` [2].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_currency_shop` LIMIT 257
-[Mon, 07 Oct 2024 08:23:22 +0200]Handling table `ps176_customer` [96 469].
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 8526
-[Mon, 07 Oct 2024 08:23:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 8526, 8526
-[Mon, 07 Oct 2024 08:23:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 17052, 8526
-[Mon, 07 Oct 2024 08:23:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 25578, 8526
-[Mon, 07 Oct 2024 08:23:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 34104, 8526
-[Mon, 07 Oct 2024 08:23:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 42630, 8526
-[Mon, 07 Oct 2024 08:23:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 51156, 8526
-[Mon, 07 Oct 2024 08:23:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 59682, 8526
-[Mon, 07 Oct 2024 08:23:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 68208, 8526
-[Mon, 07 Oct 2024 08:23:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 76734, 8526
-[Mon, 07 Oct 2024 08:23:25 +0200]-SELECT * FROM `ps176_customer` LIMIT 85260, 8526
-[Mon, 07 Oct 2024 08:23:25 +0200]-SELECT * FROM `ps176_customer` LIMIT 93786, 8526
-[Mon, 07 Oct 2024 08:23:25 +0200]-SELECT * FROM `ps176_customer` LIMIT 102312, 8526
-[Mon, 07 Oct 2024 08:23:25 +0200]Handling table `ps176_customer_group` [98 767].
-[Mon, 07 Oct 2024 08:23:25 +0200]-SELECT * FROM `ps176_customer_group` LIMIT 55189
-[Mon, 07 Oct 2024 08:23:25 +0200]-SELECT * FROM `ps176_customer_group` LIMIT 55189, 55189
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customer_message` [13 824].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 7856
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 7856, 7856
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 15712, 7856
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customer_message_sync_imap` [0].
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customer_session` [40 929].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_session` LIMIT 23047
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_session` LIMIT 23047, 23047
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customer_thread` [12 638].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customer_thread` LIMIT 16645
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customization` [33 164].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customization` LIMIT 26215
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customization` LIMIT 26215, 26215
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customization_field` [1 002].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customization_field` LIMIT 31776
-[Mon, 07 Oct 2024 08:23:26 +0200]Handling table `ps176_customization_field_lang` [971].
-[Mon, 07 Oct 2024 08:23:26 +0200]-SELECT * FROM `ps176_customization_field_lang` LIMIT 24673
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_customized_data` [30 399].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 17191
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 17191, 17191
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 34382, 17191
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_date_range` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_delivery` [27].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_delivery` LIMIT 3456
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_employee` [12].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_employee` LIMIT 1536
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_employee_account` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_employee_session` [4 014].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_employee_session` LIMIT 25576
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_employee_shop` [12].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_employee_shop` LIMIT 1536
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature` [33].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature` LIMIT 4221
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_flag` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_flag` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_lang` [33].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_lang` LIMIT 4221
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_product` [13 121].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_product` LIMIT 59920
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_shop` [33].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_shop` LIMIT 4221
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_value` [7 402].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_value` LIMIT 58255
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_feature_value_lang` [7 402].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_feature_value_lang` LIMIT 37450
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_gender` [2].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_gender` LIMIT 257
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_gender_lang` [2].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_gender_lang` LIMIT 257
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_group` [6].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_group` LIMIT 769
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_group_lang` [6].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_group_lang` LIMIT 769
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_group_reduction` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_group_shop` [6].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_group_shop` LIMIT 769
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_hook` [870].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_hook` LIMIT 10083
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_hook_alias` [88].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_hook_alias` LIMIT 11216
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_hook_module` [559].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_hook_module` LIMIT 23832
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_hook_module_exceptions` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_image` [2 516].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_image` LIMIT 45591
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_image_lang` [2 517].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_image_lang` LIMIT 31776
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_image_shop` [2 517].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_image_shop` LIMIT 29128
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_image_type` [7].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_image_type` LIMIT 897
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_lang` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_lang` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_lang_shop` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_lang_shop` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_category` [282].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_category` LIMIT 35546
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_filter` [3].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_filter` LIMIT 385
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_filter_block` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_filter_shop` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_attribute_group` [6].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_indexable_attribute_group` LIMIT 769
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_attribute_group_lang_value` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_indexable_attribute_group_lang_value` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_attribute_lang_value` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_feature` [33].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_indexable_feature` LIMIT 4221
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_feature_lang_value` [40].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_indexable_feature_lang_value` LIMIT 5116
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_indexable_feature_value_lang_value` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_price_index` [10 792].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_price_index` LIMIT 15088
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_layered_product_attribute` [2 755].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_layered_product_attribute` LIMIT 43692
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_manufacturer` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_manufacturer_lang` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_manufacturer_shop` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_message` [9 156].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_message` LIMIT 12054
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_message_readed` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module` [99].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module` LIMIT 12634
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_access` [811].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_access` LIMIT 34381
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_carrier` [24].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_carrier` LIMIT 3072
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_country` [32].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_country` LIMIT 4089
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_currency` [8].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_currency` LIMIT 1025
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_group` [616].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_group` LIMIT 26215
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_history` [209].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_history` LIMIT 26547
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_preference` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_seohelping_objects` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_seohelping_patterns` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_seohelping_rules` [0].
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_module_shop` [61].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT * FROM `ps176_module_shop` LIMIT 7797
-[Mon, 07 Oct 2024 08:23:27 +0200]Handling table `ps176_order_carrier` [108 274].
-[Mon, 07 Oct 2024 08:23:27 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 0, 22551) t2
+[Fri, 18 Oct 2024 08:13:17 +0200]Handling table `ps176_cart_cart_rule` [10 278].
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT * FROM `ps176_cart_cart_rule` LIMIT 61682
+[Fri, 18 Oct 2024 08:13:17 +0200]Handling table `ps176_cart_product` [362 515].
+[Fri, 18 Oct 2024 08:13:17 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 36793
+[Fri, 18 Oct 2024 08:13:18 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 36793, 36793
+[Fri, 18 Oct 2024 08:13:18 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 73586, 36793
+[Fri, 18 Oct 2024 08:13:18 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 110379, 36793
+[Fri, 18 Oct 2024 08:13:19 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 147172, 36793
+[Fri, 18 Oct 2024 08:13:19 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 183965, 36793
+[Fri, 18 Oct 2024 08:13:19 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 220758, 36793
+[Fri, 18 Oct 2024 08:13:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 257551, 36793
+[Fri, 18 Oct 2024 08:13:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 294344, 36793
+[Fri, 18 Oct 2024 08:13:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 331137, 36793
+[Fri, 18 Oct 2024 08:13:20 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 367930, 36793
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_product` LIMIT 404723, 36793
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule` [33].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule` LIMIT 4221
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_carrier` [0].
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_combination` [54].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_combination` LIMIT 6900
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_country` [0].
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_fees` [15].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_fees` LIMIT 1920
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_group` [10].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_group` LIMIT 1281
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_lang` [31].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_lang` LIMIT 3965
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_product_rule` [4].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_product_rule` LIMIT 513
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_product_rule_group` [4].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_product_rule_group` LIMIT 513
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_product_rule_value` [802].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cart_rule_product_rule_value` LIMIT 33826
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cart_rule_shop` [0].
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_category` [376].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category` LIMIT 16010
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_category_group` [1 888].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category_group` LIMIT 47664
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_category_lang` [277].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category_lang` LIMIT 221
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category_lang` LIMIT 221, 221
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_category_product` [4 909].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category_product` LIMIT 51151
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_category_shop` [381].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_category_shop` LIMIT 47664
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms` [36].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms` LIMIT 4600
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_category` [7].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_category` LIMIT 897
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_category_lang` [8].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_category_lang` LIMIT 1025
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_category_shop` [7].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_category_shop` LIMIT 897
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_lang` [52].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_lang` LIMIT 73
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_role` [7].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_role` LIMIT 897
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_role_lang` [0].
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_cms_shop` [36].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_cms_shop` LIMIT 4600
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_configuration` [1 420].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_configuration` LIMIT 13982
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_configuration_kpi` [144].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_configuration_kpi` LIMIT 18397
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_configuration_kpi_lang` [8].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_configuration_kpi_lang` LIMIT 1025
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_configuration_lang` [215].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_configuration_lang` LIMIT 6877
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_contact` [3].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_contact` LIMIT 385
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_contact_lang` [3].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_contact_lang` LIMIT 385
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_contact_shop` [3].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_contact_shop` LIMIT 385
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_country` [244].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_country` LIMIT 30841
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_country_lang` [244].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_country_lang` LIMIT 30841
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_country_shop` [244].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_country_shop` LIMIT 30841
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_currency` [2].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_currency` LIMIT 257
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_currency_lang` [2].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_currency_lang` LIMIT 257
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_currency_shop` [2].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_currency_shop` LIMIT 257
+[Fri, 18 Oct 2024 08:13:21 +0200]Handling table `ps176_customer` [95 790].
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_customer` LIMIT 8491
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_customer` LIMIT 8491, 8491
+[Fri, 18 Oct 2024 08:13:21 +0200]-SELECT * FROM `ps176_customer` LIMIT 16982, 8491
+[Fri, 18 Oct 2024 08:13:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 25473, 8491
+[Fri, 18 Oct 2024 08:13:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 33964, 8491
+[Fri, 18 Oct 2024 08:13:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 42455, 8491
+[Fri, 18 Oct 2024 08:13:22 +0200]-SELECT * FROM `ps176_customer` LIMIT 50946, 8491
+[Fri, 18 Oct 2024 08:13:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 59437, 8491
+[Fri, 18 Oct 2024 08:13:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 67928, 8491
+[Fri, 18 Oct 2024 08:13:23 +0200]-SELECT * FROM `ps176_customer` LIMIT 76419, 8491
+[Fri, 18 Oct 2024 08:13:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 84910, 8491
+[Fri, 18 Oct 2024 08:13:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 93401, 8491
+[Fri, 18 Oct 2024 08:13:24 +0200]-SELECT * FROM `ps176_customer` LIMIT 101892, 8491
+[Fri, 18 Oct 2024 08:13:24 +0200]Handling table `ps176_customer_group` [98 093].
+[Fri, 18 Oct 2024 08:13:24 +0200]-SELECT * FROM `ps176_customer_group` LIMIT 55189
+[Fri, 18 Oct 2024 08:13:24 +0200]-SELECT * FROM `ps176_customer_group` LIMIT 55189, 55189
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customer_message` [13 552].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 7683
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 7683, 7683
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_message` LIMIT 15366, 7683
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customer_message_sync_imap` [0].
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customer_session` [41 161].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_session` LIMIT 23303
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_session` LIMIT 23303, 23303
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customer_thread` [12 372].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customer_thread` LIMIT 16258
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customization` [32 766].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customization` LIMIT 25892
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customization` LIMIT 25892, 25892
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customization_field` [1 002].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customization_field` LIMIT 31776
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customization_field_lang` [971].
+[Fri, 18 Oct 2024 08:13:25 +0200]-SELECT * FROM `ps176_customization_field_lang` LIMIT 24673
+[Fri, 18 Oct 2024 08:13:25 +0200]Handling table `ps176_customized_data` [30 001].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 17051
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 17051, 17051
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_customized_data` LIMIT 34102, 17051
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_date_range` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_delivery` [27].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_delivery` LIMIT 3456
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_employee` [11].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_employee` LIMIT 1408
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_employee_account` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_employee_session` [4 032].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_employee_session` LIMIT 25576
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_employee_shop` [11].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_employee_shop` LIMIT 1408
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature` [33].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature` LIMIT 4221
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_flag` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_flag` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_lang` [33].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_lang` LIMIT 4221
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_product` [13 177].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_product` LIMIT 59920
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_shop` [33].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_shop` LIMIT 4221
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_value` [7 456].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_value` LIMIT 58255
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_feature_value_lang` [7 456].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_feature_value_lang` LIMIT 38131
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_gender` [2].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_gender` LIMIT 257
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_gender_lang` [2].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_gender_lang` LIMIT 257
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_group` [6].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_group` LIMIT 769
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_group_lang` [6].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_group_lang` LIMIT 769
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_group_reduction` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_group_shop` [6].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_group_shop` LIMIT 769
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_hook` [869].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_hook` LIMIT 10083
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_hook_alias` [88].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_hook_alias` LIMIT 11216
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_hook_module` [557].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_hook_module` LIMIT 23565
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_hook_module_exceptions` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_image` [2 668].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_image` LIMIT 48772
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_image_lang` [2 459].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_image_lang` LIMIT 31302
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_image_shop` [2 459].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_image_shop` LIMIT 28341
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_image_type` [7].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_image_type` LIMIT 897
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_lang` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_lang` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_lang_shop` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_lang_shop` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_category` [282].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_category` LIMIT 35546
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_filter` [3].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_filter` LIMIT 385
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_filter_block` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_filter_shop` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_attribute_group` [6].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_indexable_attribute_group` LIMIT 769
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_attribute_group_lang_value` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_indexable_attribute_group_lang_value` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_attribute_lang_value` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_feature` [33].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_indexable_feature` LIMIT 4221
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_feature_lang_value` [40].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_indexable_feature_lang_value` LIMIT 5116
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_indexable_feature_value_lang_value` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_price_index` [10 779].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_price_index` LIMIT 15088
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_layered_product_attribute` [2 755].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_layered_product_attribute` LIMIT 43692
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_manufacturer` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_manufacturer_lang` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_manufacturer_shop` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_message` [8 939].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_message` LIMIT 11783
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_message_readed` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module` [98].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module` LIMIT 12484
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_access` [811].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_access` LIMIT 34381
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_carrier` [24].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_carrier` LIMIT 3072
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_country` [32].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_country` LIMIT 4089
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_currency` [8].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_currency` LIMIT 1025
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_group` [618].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_group` LIMIT 26215
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_history` [208].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_history` LIMIT 26547
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_preference` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_seohelping_objects` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_seohelping_patterns` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_seohelping_rules` [0].
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_module_shop` [63].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT * FROM `ps176_module_shop` LIMIT 8036
+[Fri, 18 Oct 2024 08:13:26 +0200]Handling table `ps176_order_carrier` [107 360].
+[Fri, 18 Oct 2024 08:13:26 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 0, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:28 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 22551, 22551) t2
+[Fri, 18 Oct 2024 08:13:27 +0200]Connecting to database
+[Fri, 18 Oct 2024 08:13:27 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 22551, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:28 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 45102, 22551) t2
+[Fri, 18 Oct 2024 08:13:27 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 45102, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:28 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 67653, 22551) t2
+[Fri, 18 Oct 2024 08:13:27 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 67653, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:28 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 90204, 22551) t2
+[Fri, 18 Oct 2024 08:13:27 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 90204, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:29 +0200]Connecting to database
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 112755, 22551) t2
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT t1.* FROM `ps176_order_carrier` t1 JOIN (SELECT id_order_carrier FROM ps176_order_carrier LIMIT 112755, 22551) t2
                 ON t1.id_order_carrier = t2.id_order_carrier
-[Mon, 07 Oct 2024 08:23:29 +0200]Handling table `ps176_order_cart_rule` [3 775].
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT * FROM `ps176_order_cart_rule` LIMIT 22796
-[Mon, 07 Oct 2024 08:23:29 +0200]Handling table `ps176_order_detail` [193 631].
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 0, 5715) t2
+[Fri, 18 Oct 2024 08:13:28 +0200]Handling table `ps176_order_cart_rule` [3 781].
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT * FROM `ps176_order_cart_rule` LIMIT 23047
+[Fri, 18 Oct 2024 08:13:28 +0200]Handling table `ps176_order_detail` [191 730].
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 0, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 5715, 5715) t2
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 5669, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 11430, 5715) t2
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 11338, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 17145, 5715) t2
+[Fri, 18 Oct 2024 08:13:28 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 17007, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 22860, 5715) t2
+[Fri, 18 Oct 2024 08:13:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 22676, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 28575, 5715) t2
+[Fri, 18 Oct 2024 08:13:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 28345, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 34290, 5715) t2
+[Fri, 18 Oct 2024 08:13:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 34014, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 40005, 5715) t2
+[Fri, 18 Oct 2024 08:13:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 39683, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 45720, 5715) t2
+[Fri, 18 Oct 2024 08:13:29 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 45352, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 51435, 5715) t2
+[Fri, 18 Oct 2024 08:13:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 51021, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 57150, 5715) t2
+[Fri, 18 Oct 2024 08:13:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 56690, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 62865, 5715) t2
+[Fri, 18 Oct 2024 08:13:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 62359, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 68580, 5715) t2
+[Fri, 18 Oct 2024 08:13:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 68028, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 74295, 5715) t2
+[Fri, 18 Oct 2024 08:13:30 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 73697, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 80010, 5715) t2
+[Fri, 18 Oct 2024 08:13:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 79366, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 85725, 5715) t2
+[Fri, 18 Oct 2024 08:13:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 85035, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 91440, 5715) t2
+[Fri, 18 Oct 2024 08:13:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 90704, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 97155, 5715) t2
+[Fri, 18 Oct 2024 08:13:31 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 96373, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 102870, 5715) t2
+[Fri, 18 Oct 2024 08:13:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 102042, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 108585, 5715) t2
+[Fri, 18 Oct 2024 08:13:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 107711, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 114300, 5715) t2
+[Fri, 18 Oct 2024 08:13:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 113380, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 120015, 5715) t2
+[Fri, 18 Oct 2024 08:13:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 119049, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 125730, 5715) t2
+[Fri, 18 Oct 2024 08:13:32 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 124718, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 131445, 5715) t2
+[Fri, 18 Oct 2024 08:13:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 130387, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 137160, 5715) t2
+[Fri, 18 Oct 2024 08:13:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 136056, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 142875, 5715) t2
+[Fri, 18 Oct 2024 08:13:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 141725, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 148590, 5715) t2
+[Fri, 18 Oct 2024 08:13:33 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 147394, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 154305, 5715) t2
+[Fri, 18 Oct 2024 08:13:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 153063, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 160020, 5715) t2
+[Fri, 18 Oct 2024 08:13:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 158732, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 165735, 5715) t2
+[Fri, 18 Oct 2024 08:13:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 164401, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 171450, 5715) t2
+[Fri, 18 Oct 2024 08:13:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 170070, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 177165, 5715) t2
+[Fri, 18 Oct 2024 08:13:34 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 175739, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 182880, 5715) t2
+[Fri, 18 Oct 2024 08:13:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 181408, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 188595, 5715) t2
+[Fri, 18 Oct 2024 08:13:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 187077, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 194310, 5715) t2
+[Fri, 18 Oct 2024 08:13:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 192746, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 200025, 5715) t2
+[Fri, 18 Oct 2024 08:13:35 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 198415, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 205740, 5715) t2
+[Fri, 18 Oct 2024 08:13:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 204084, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:37 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 211455, 5715) t2
+[Fri, 18 Oct 2024 08:13:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 209753, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:37 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 217170, 5715) t2
+[Fri, 18 Oct 2024 08:13:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 215422, 5669) t2
                 ON t1.id_order_detail = t2.id_order_detail
-[Mon, 07 Oct 2024 08:23:37 +0200]Handling table `ps176_order_detail_tax` [197 536].
-[Mon, 07 Oct 2024 08:23:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 37450
-[Mon, 07 Oct 2024 08:23:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 37450, 37450
-[Mon, 07 Oct 2024 08:23:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 74900, 37450
-[Mon, 07 Oct 2024 08:23:38 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 112350, 37450
-[Mon, 07 Oct 2024 08:23:38 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 149800, 37450
-[Mon, 07 Oct 2024 08:23:38 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 187250, 37450
-[Mon, 07 Oct 2024 08:23:38 +0200]Handling table `ps176_order_fees` [18 955].
-[Mon, 07 Oct 2024 08:23:38 +0200]-SELECT * FROM `ps176_order_fees` LIMIT 77673
-[Mon, 07 Oct 2024 08:23:38 +0200]Handling table `ps176_order_history` [253 132].
-[Mon, 07 Oct 2024 08:23:38 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 0, 47664) t2
+[Fri, 18 Oct 2024 08:13:36 +0200]-SELECT t1.* FROM `ps176_order_detail` t1 JOIN (SELECT id_order_detail FROM ps176_order_detail LIMIT 221091, 5669) t2
+                ON t1.id_order_detail = t2.id_order_detail
+[Fri, 18 Oct 2024 08:13:36 +0200]Handling table `ps176_order_detail_tax` [195 636].
+[Fri, 18 Oct 2024 08:13:36 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 36793
+[Fri, 18 Oct 2024 08:13:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 36793, 36793
+[Fri, 18 Oct 2024 08:13:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 73586, 36793
+[Fri, 18 Oct 2024 08:13:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 110379, 36793
+[Fri, 18 Oct 2024 08:13:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 147172, 36793
+[Fri, 18 Oct 2024 08:13:37 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 183965, 36793
+[Fri, 18 Oct 2024 08:13:38 +0200]-SELECT * FROM `ps176_order_detail_tax` LIMIT 220758, 36793
+[Fri, 18 Oct 2024 08:13:38 +0200]Handling table `ps176_order_fees` [18 133].
+[Fri, 18 Oct 2024 08:13:38 +0200]-SELECT * FROM `ps176_order_fees` LIMIT 72317
+[Fri, 18 Oct 2024 08:13:38 +0200]Handling table `ps176_order_history` [249 728].
+[Fri, 18 Oct 2024 08:13:38 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 0, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 47664, 47664) t2
+[Fri, 18 Oct 2024 08:13:38 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 46604, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 95328, 47664) t2
+[Fri, 18 Oct 2024 08:13:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 93208, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 142992, 47664) t2
+[Fri, 18 Oct 2024 08:13:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 139812, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:40 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 190656, 47664) t2
+[Fri, 18 Oct 2024 08:13:39 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 186416, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:40 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 238320, 47664) t2
+[Fri, 18 Oct 2024 08:13:40 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 233020, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:40 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 285984, 47664) t2
+[Fri, 18 Oct 2024 08:13:40 +0200]-SELECT t1.* FROM `ps176_order_history` t1 JOIN (SELECT id_order_history FROM ps176_order_history LIMIT 279624, 46604) t2
                 ON t1.id_order_history = t2.id_order_history
-[Mon, 07 Oct 2024 08:23:40 +0200]Handling table `ps176_order_invoice` [105 443].
-[Mon, 07 Oct 2024 08:23:40 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 0, 8925) t2
+[Fri, 18 Oct 2024 08:13:40 +0200]Handling table `ps176_order_invoice` [104 528].
+[Fri, 18 Oct 2024 08:13:40 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 0, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:40 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 8925, 8925) t2
+[Fri, 18 Oct 2024 08:13:40 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 8850, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 17850, 8925) t2
+[Fri, 18 Oct 2024 08:13:40 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 17700, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 26775, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 26550, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 35700, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 35400, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 44625, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 44250, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 53550, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 53100, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 62475, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 61950, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 71400, 8925) t2
+[Fri, 18 Oct 2024 08:13:41 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 70800, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 80325, 8925) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 79650, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 89250, 8925) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 88500, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 98175, 8925) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 97350, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 107100, 8925) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 106200, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 116025, 8925) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT t1.* FROM `ps176_order_invoice` t1 JOIN (SELECT id_order_invoice FROM ps176_order_invoice LIMIT 115050, 8850) t2
                 ON t1.id_order_invoice = t2.id_order_invoice
-[Mon, 07 Oct 2024 08:23:43 +0200]Handling table `ps176_order_invoice_payment` [55 772].
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_invoice_payment` LIMIT 43692
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_invoice_payment` LIMIT 43692, 43692
-[Mon, 07 Oct 2024 08:23:43 +0200]Handling table `ps176_order_invoice_tax` [54 108].
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 30395
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 30395, 30395
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 60790, 30395
-[Mon, 07 Oct 2024 08:23:43 +0200]Handling table `ps176_order_message` [3].
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_message` LIMIT 385
-[Mon, 07 Oct 2024 08:23:43 +0200]Handling table `ps176_order_message_lang` [2].
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_message_lang` LIMIT 257
-[Mon, 07 Oct 2024 08:23:43 +0200]Handling table `ps176_order_payment` [58 340].
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 20973
-[Mon, 07 Oct 2024 08:23:43 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 20973, 20973
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 41946, 20973
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 62919, 20973
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_return` [22].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_return` LIMIT 2816
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_return_detail` [22].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_return_detail` LIMIT 2816
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_return_state` [5].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_return_state` LIMIT 641
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_return_state_lang` [5].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_return_state_lang` LIMIT 641
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_slip` [236].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_slip` LIMIT 7545
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_slip_detail` [306].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_slip_detail` LIMIT 9755
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_slip_detail_tax` [0].
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_state` [47].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_state` LIMIT 6010
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_order_state_lang` [47].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT * FROM `ps176_order_state_lang` LIMIT 6010
-[Mon, 07 Oct 2024 08:23:44 +0200]Handling table `ps176_orders` [116 024].
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 0, 5448) t2
+[Fri, 18 Oct 2024 08:13:42 +0200]Handling table `ps176_order_invoice_payment` [54 916].
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT * FROM `ps176_order_invoice_payment` LIMIT 42800
+[Fri, 18 Oct 2024 08:13:42 +0200]-SELECT * FROM `ps176_order_invoice_payment` LIMIT 42800, 42800
+[Fri, 18 Oct 2024 08:13:42 +0200]Handling table `ps176_order_invoice_tax` [53 206].
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 29960
+[Fri, 18 Oct 2024 08:13:43 +0200]Connecting to database
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 29960, 29960
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_invoice_tax` LIMIT 59920, 29960
+[Fri, 18 Oct 2024 08:13:43 +0200]Handling table `ps176_order_message` [3].
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_message` LIMIT 385
+[Fri, 18 Oct 2024 08:13:43 +0200]Handling table `ps176_order_message_lang` [2].
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_message_lang` LIMIT 257
+[Fri, 18 Oct 2024 08:13:43 +0200]Handling table `ps176_order_payment` [57 485].
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 20765
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 20765, 20765
+[Fri, 18 Oct 2024 08:13:43 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 41530, 20765
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_payment` LIMIT 62295, 20765
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_return` [22].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_return` LIMIT 2816
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_return_detail` [22].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_return_detail` LIMIT 2816
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_return_state` [5].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_return_state` LIMIT 641
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_return_state_lang` [5].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_return_state_lang` LIMIT 641
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_slip` [235].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_slip` LIMIT 7518
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_slip_detail` [305].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_slip_detail` LIMIT 9755
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_slip_detail_tax` [0].
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_state` [47].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_state` LIMIT 6010
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_order_state_lang` [47].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT * FROM `ps176_order_state_lang` LIMIT 6010
+[Fri, 18 Oct 2024 08:13:44 +0200]Handling table `ps176_orders` [116 114].
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 0, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 5448, 5448) t2
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 5448, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 10896, 5448) t2
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 10896, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]Connecting to database
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 16344, 5448) t2
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 16344, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 21792, 5448) t2
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 21792, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 27240, 5448) t2
+[Fri, 18 Oct 2024 08:13:44 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 27240, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 32688, 5448) t2
+[Fri, 18 Oct 2024 08:13:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 32688, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 38136, 5448) t2
+[Fri, 18 Oct 2024 08:13:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 38136, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 43584, 5448) t2
+[Fri, 18 Oct 2024 08:13:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 43584, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 49032, 5448) t2
+[Fri, 18 Oct 2024 08:13:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 49032, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 54480, 5448) t2
+[Fri, 18 Oct 2024 08:13:45 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 54480, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 59928, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 59928, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 65376, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 65376, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 70824, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 70824, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 76272, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 76272, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 81720, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 81720, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 87168, 5448) t2
+[Fri, 18 Oct 2024 08:13:46 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 87168, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 92616, 5448) t2
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 92616, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 98064, 5448) t2
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 98064, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 103512, 5448) t2
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 103512, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 108960, 5448) t2
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 108960, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 114408, 5448) t2
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT t1.* FROM `ps176_orders` t1 JOIN (SELECT id_order FROM ps176_orders LIMIT 114408, 5448) t2
                 ON t1.id_order = t2.id_order
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_pack` [185].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_pack` LIMIT 23565
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product` [4 772].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product` LIMIT 6280
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attachment` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attribute` [2 750].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_attribute` LIMIT 18397
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attribute_combination` [2 774].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_attribute_combination` LIMIT 49933
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attribute_image` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attribute_lang` [66].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_attribute_lang` LIMIT 99865
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_attribute_shop` [2 750].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_attribute_shop` LIMIT 19419
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_carrier` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_criterion` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_criterion_category` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_criterion_lang` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_criterion_product` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_grade` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_report` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_comment_usefulness` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_country_tax` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_download` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_group_reduction_cache` [0].
-[Mon, 07 Oct 2024 08:23:48 +0200]Handling table `ps176_product_lang` [3 785].
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 286, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 572, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 858, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1144, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1430, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1716, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2002, 286
-[Mon, 07 Oct 2024 08:23:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2288, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2574, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2860, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3146, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3432, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3718, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 4004, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 4290, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 4576, 286
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_product_sale` [3 266].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_sale` LIMIT 45591
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_product_shop` [4 730].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_shop` LIMIT 6243
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_product_supplier` [6 564].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_supplier` LIMIT 34954
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_product_tag` [5 673].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_product_tag` LIMIT 38131
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_profile` [9].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_profile` LIMIT 1153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_profile_lang` [9].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_profile_lang` LIMIT 1153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_range_price` [9].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_range_price` LIMIT 1153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_range_weight` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_range_weight` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_search_engine` [38].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_search_engine` LIMIT 4856
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_search_index` [13 143].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_search_index` LIMIT 19241
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_search_word` [2 231].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_search_word` LIMIT 25892
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_shop` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_shop` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_shop_group` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_shop_group` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_shop_url` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_shop_url` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_sm_picker` [2].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_sm_picker` LIMIT 257
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_sm_picker_items` [3].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_sm_picker_items` LIMIT 385
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_specific_price` [573].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_specific_price` LIMIT 12194
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_specific_price_priority` [148].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_specific_price_priority` LIMIT 18894
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_specific_price_rule` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_specific_price_rule_condition` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_specific_price_rule_condition_group` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_state` [569].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_state` LIMIT 18080
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_stock` [0].
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_stock_available` [5 640].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_stock_available` LIMIT 28729
-[Mon, 07 Oct 2024 08:23:49 +0200]Handling table `ps176_stock_mvt` [91 688].
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 19241
-[Mon, 07 Oct 2024 08:23:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 19241, 19241
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 38482, 19241
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 57723, 19241
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 76964, 19241
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_stock_mvt_reason` [12].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_stock_mvt_reason` LIMIT 1536
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_stock_mvt_reason_lang` [12].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_stock_mvt_reason_lang` LIMIT 1536
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_store` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_store` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_store_lang` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_store_lang` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_store_shop` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_store_shop` LIMIT 2097153
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supplier` [11].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_supplier` LIMIT 1408
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supplier_lang` [11].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_supplier_lang` LIMIT 1408
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supplier_shop` [11].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_supplier_shop` LIMIT 1408
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order_detail` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order_history` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order_receipt_history` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order_state` [6].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_supply_order_state` LIMIT 769
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_supply_order_state_lang` [6].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_supply_order_state_lang` LIMIT 769
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tab` [208].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tab` LIMIT 26547
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tab_advice` [187].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tab_advice` LIMIT 23832
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tab_lang` [222].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tab_lang` LIMIT 28341
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tab_module_preference` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tag` [1 664].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tag` LIMIT 34954
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tag_count` [1 305].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tag_count` LIMIT 27595
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax` [29].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tax` LIMIT 3713
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_lang` [29].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tax_lang` LIMIT 3713
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_rule` [244].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tax_rule` LIMIT 30841
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_rules_group` [5].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tax_rules_group` LIMIT 641
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_rules_group_shop` [5].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_tax_rules_group_shop` LIMIT 641
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_state` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_tax_zone` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_warehouse` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_warehouse_carrier` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_warehouse_product_location` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_warehouse_shop` [0].
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_zone` [10].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_zone` LIMIT 1281
-[Mon, 07 Oct 2024 08:23:50 +0200]Handling table `ps176_zone_shop` [10].
-[Mon, 07 Oct 2024 08:23:50 +0200]-SELECT * FROM `ps176_zone_shop` LIMIT 1281
+[Fri, 18 Oct 2024 08:13:47 +0200]Handling table `ps176_pack` [197].
+[Fri, 18 Oct 2024 08:13:47 +0200]-SELECT * FROM `ps176_pack` LIMIT 24967
+[Fri, 18 Oct 2024 08:13:47 +0200]Handling table `ps176_product` [4 765].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product` LIMIT 6280
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attachment` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attribute` [2 750].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_attribute` LIMIT 18397
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attribute_combination` [2 774].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_attribute_combination` LIMIT 49933
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attribute_image` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attribute_lang` [66].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_attribute_lang` LIMIT 99865
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_attribute_shop` [2 750].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_attribute_shop` LIMIT 19419
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_carrier` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_criterion` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_criterion_category` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_criterion_lang` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_criterion_product` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_grade` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_report` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_comment_usefulness` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_country_tax` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_download` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_group_reduction_cache` [0].
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_lang` [3 737].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 283, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 566, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 849, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1132, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1415, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1698, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 1981, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2264, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2547, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 2830, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3113, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3396, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3679, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 3962, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 4245, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_lang` LIMIT 4528, 283
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_sale` [3 276].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_sale` LIMIT 45591
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_shop` [4 724].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_shop` LIMIT 6224
+[Fri, 18 Oct 2024 08:13:48 +0200]Handling table `ps176_product_supplier` [6 565].
+[Fri, 18 Oct 2024 08:13:48 +0200]-SELECT * FROM `ps176_product_supplier` LIMIT 34954
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_product_tag` [5 668].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_product_tag` LIMIT 38131
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_profile` [9].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_profile` LIMIT 1153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_profile_lang` [9].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_profile_lang` LIMIT 1153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_range_price` [8].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_range_price` LIMIT 1025
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_range_weight` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_range_weight` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_search_engine` [38].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_search_engine` LIMIT 4856
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_search_index` [13 127].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_search_index` LIMIT 19241
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_search_word` [2 214].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_search_word` LIMIT 25576
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_shop` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_shop` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_shop_group` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_shop_group` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_shop_url` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_shop_url` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_sm_picker` [2].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_sm_picker` LIMIT 257
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_sm_picker_items` [3].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_sm_picker_items` LIMIT 385
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_specific_price` [573].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_specific_price` LIMIT 12194
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_specific_price_priority` [153].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_specific_price_priority` LIMIT 19419
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_specific_price_rule` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_specific_price_rule_condition` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_specific_price_rule_condition_group` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_state` [569].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_state` LIMIT 18080
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_stock` [0].
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_stock_available` [5 946].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_available` LIMIT 29128
+[Fri, 18 Oct 2024 08:13:49 +0200]Handling table `ps176_stock_mvt` [91 636].
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 19241
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 19241, 19241
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 38482, 19241
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 57723, 19241
+[Fri, 18 Oct 2024 08:13:49 +0200]-SELECT * FROM `ps176_stock_mvt` LIMIT 76964, 19241
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_stock_mvt_reason` [12].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_stock_mvt_reason` LIMIT 1536
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_stock_mvt_reason_lang` [12].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_stock_mvt_reason_lang` LIMIT 1536
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_store` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_store` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_store_lang` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_store_lang` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_store_shop` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_store_shop` LIMIT 2097153
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supplier` [11].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_supplier` LIMIT 1408
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supplier_lang` [11].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_supplier_lang` LIMIT 1408
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supplier_shop` [11].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_supplier_shop` LIMIT 1408
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order_detail` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order_history` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order_receipt_history` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order_state` [6].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_supply_order_state` LIMIT 769
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_supply_order_state_lang` [6].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_supply_order_state_lang` LIMIT 769
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tab` [210].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tab` LIMIT 26547
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tab_advice` [187].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tab_advice` LIMIT 23832
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tab_lang` [229].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tab_lang` LIMIT 29128
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tab_module_preference` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tag` [1 664].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tag` LIMIT 34954
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tag_count` [1 319].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tag_count` LIMIT 27963
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax` [29].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tax` LIMIT 3713
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_lang` [29].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tax_lang` LIMIT 3713
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_rule` [244].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tax_rule` LIMIT 30841
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_rules_group` [5].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tax_rules_group` LIMIT 641
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_rules_group_shop` [5].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_tax_rules_group_shop` LIMIT 641
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_state` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_tax_zone` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_warehouse` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_warehouse_carrier` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_warehouse_product_location` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_warehouse_shop` [0].
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_zone` [10].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_zone` LIMIT 1281
+[Fri, 18 Oct 2024 08:13:50 +0200]Handling table `ps176_zone_shop` [10].
+[Fri, 18 Oct 2024 08:13:50 +0200]-SELECT * FROM `ps176_zone_shop` LIMIT 1281

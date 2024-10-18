@@ -38,7 +38,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
     {
         $this->context = Context::getContext();
         $this->moduleName = 'msthemeconfig';
-
+        $this->time_based_products = Configuration::get('MSTHEMECONFIG_TIME_BASED_PRODUCTS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id, '');
         parent::__construct();
     }
 
@@ -49,6 +49,19 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
     {
         $product = new Product($req->get('id_product'));
         return json_encode(['cat' => $product->id_category_default, 'price' => $product->price]);
+    }
+
+    /**
+     * @param $id_product
+     * @return bool
+     */
+    public function checkTimeBased($id_product): bool
+    {
+        if(in_array($id_product, explode(',',$this->time_based_products))){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -68,6 +81,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
             }
             $attachProduct = new Product($product['id']);
             $combinations = $attachProduct->getAttributeCombinations($this->context->language->id);
+            $products[$key]['time_based_product'] = $this->checkTimeBased($product['id']);
             $products[$key]['attribute_combinations'] = $combinations;
 
             $products[$key]['quantity'] = $qty;
@@ -247,6 +261,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                     $pack->packedProducts[$key]['attribute_combinations'] = $combinations;
                     $pack->packedProducts[$key]['attributes'][0]['price']  = Product::getPriceStatic($packItem['id_product'],false,  $packItem['id_product_attribute_item'])*(int)$packItem['pack_quantity'];
                     $pack->packedProducts[$key]['attributes'][0]['customizedValue']  = $packItem['id_product_attribute_item'];
+                    $pack->packedProducts[$key]['time_based_product'] = $this->checkTimeBased($packItem['id_product']);
                 }
             }
 
@@ -314,6 +329,7 @@ class MsAdminAjaxController extends FrameworkBundleAdminController
                     $pack->packedProducts[$key]['attribute_combinations'] = $combinations;
                     $pack->packedProducts[$key]['attributes'][0]['price']  = Product::getPriceStatic($packItem['id_product'],false,  $packItem['id_product_attribute_item'])*(int)$packItem['pack_quantity'];
                     $pack->packedProducts[$key]['attributes'][0]['customizedValue']  = $packItem['id_product_attribute_item'];
+                    $pack->packedProducts[$key]['time_based_product'] = $this->checkTimeBased($packItem['id_product']);
                 }
             }
             $pack->update();

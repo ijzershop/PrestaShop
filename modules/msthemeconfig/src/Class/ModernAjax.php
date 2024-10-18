@@ -14,6 +14,7 @@ use Feature;
 use Group;
 use OrderState;
 use PrestaShopCollection;
+use Product;
 use Profile;
 use Tools;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -381,6 +382,7 @@ class ModernAjax
                 $dataArray[$this->prefix . 'CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop, '0'), 'categories_home');
                 $dataArray[$this->prefix . 'CUSTOM_PRODUCT_CATEGORY'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'CUSTOM_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop, '1'), 'categories_home');
                 $dataArray[$this->prefix . 'CUSTOM_PRODUCT_REFERENCE'] = Configuration::get($this->prefix . 'CUSTOM_PRODUCT_REFERENCE', $this->idLang, $this->idShopGroup, $this->idShop, '');
+                $dataArray[$this->prefix . 'TIME_BASED_PRODUCTS'] = Configuration::get($this->prefix . 'TIME_BASED_PRODUCTS', $this->idLang, $this->idShopGroup, $this->idShop, '');
 
                 //Order states
                 $dataArray[$this->prefix . 'ORDERSTATE_PAID'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'ORDERSTATE_PAID', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'order_states');

@@ -61,6 +61,14 @@ $(() => {
     let display = 'display:none;'
     let idProductAttribute = 0;
     let combinationInput = '';
+    let tdOptionStartChange = '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
+      '<td colspan="2">Aanpassing:</td>' +
+      '<td colspan="3">';
+
+    let tdOptionStartConvert = '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
+      '<td colspan="2">Omzetten van uren naar minuten:<br/>- Voorbeeld: 1 uur en 15 minuten = 1.15<br/>- Voorbeeld: 1 uur en 54 minuten = 1.54</td>' +
+      '<td colspan="3">';
+
     if(item.data === undefined){
 
     // * - O Deny orders
@@ -72,6 +80,8 @@ $(() => {
         name = item.name + ' || ∞ stuk(s)';
       }
       idProduct = item.id;
+
+
       if(typeof idProduct === 'undefined'){
         idProduct = item.id_product;
       }
@@ -80,6 +90,8 @@ $(() => {
       native_price = item.price*quantity;
       price  = renderMoneyString(item.price*quantity);
       customCount = 0;
+
+
       if(item.attributes.length > 0){
         idProductAttribute = item.id_product_attribute;
         customCount = item.attributes[0].customizedValue;
@@ -90,7 +102,7 @@ $(() => {
       }
 
       if(typeof item.attribute_combinations !== "undefined" && item.attribute_combinations.length > 0){
-        combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
+        combinationInput += tdOptionStartChange + '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
         for (let i = 0; i < item.attribute_combinations.length; i++){
           let checked = '';
           if(idProductAttribute === item.attribute_combinations[i].id_product_attribute){
@@ -99,8 +111,20 @@ $(() => {
           combinationInput += '<option ' + checked + ' data-price="'+ item.attribute_combinations[i].price +'" value="' + item.attribute_combinations[i].id_product_attribute + '">' +
             item.attribute_combinations[i].group_name + ' - '+ item.attribute_combinations[i].attribute_name + '</option>';
         }
-        combinationInput += '</select>';
+        combinationInput += '</select></td></tr>';
       }
+      let timebasedBlock = '';
+      if(item.time_based_product){
+
+        timebasedBlock += tdOptionStartConvert+'<div class="input-group mb-3">' +
+        '  <input type="text" class="convert_hour_to_minutes form-control"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" placeholder="Uur -> Minuten" aria-label="Uur -> Minuten">' +
+        '  <div class="input-group-append">' +
+        '    <button class="btn btn-outline-secondary convert_hour_to_minutes_convert"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" type="button">Omzetten</button>' +
+        '  </div>' +
+        '</div></td></tr>';
+
+      }
+
     } else {
       name  = item.data.text;
       idProduct  = item.data.id;
@@ -116,7 +140,7 @@ $(() => {
 
 
       if(typeof item.data.attribute_combinations !== "undefined" &&  item.data.attribute_combinations.length > 0){
-        combinationInput += '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
+        combinationInput += tdOptionStartChange + '<select data-pack-id="'+idProduct+'" data-row-id="'+rowId+'"  class="form-control" name="stock_selected_product_customization[]">';
         for (let i = 0; i < item.data.attribute_combinations.length; i++){
           let checked = '';
           if(idProductAttribute === item.data.attribute_combinations[i].id_product_attribute){
@@ -125,10 +149,21 @@ $(() => {
           combinationInput += '<option ' + checked + ' data-price="'+ item.data.attribute_combinations[i].price +'" value="' + item.data.attribute_combinations[i].id_product_attribute + '">' +
             item.data.attribute_combinations[i].group_name + ' - '+ item.data.attribute_combinations[i].attribute_name + '</option>';
         }
-        combinationInput += '</select>';
+        combinationInput += '</select></td></tr>';
       }
     }
 
+    let timebasedBlock = '';
+    if(item.data.time_based_product){
+
+      timebasedBlock += tdOptionStartConvert + '<div class="input-group mb-3">' +
+        '  <input type="text" class="convert_hour_to_minutes form-control"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" placeholder="Uur -> Minuten" aria-label="Uur -> Minuten">' +
+        '  <div class="input-group-append">' +
+        '    <button class="btn btn-outline-secondary convert_hour_to_minutes_convert"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" type="button">Omzetten</button>' +
+        '  </div>' +
+        '</div></td></tr>';
+
+    }
 
     if(combinationInput === ''){
       combinationInput = '<input type="hidden" data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" name="stock_selected_product_customization[]"/>';
@@ -143,11 +178,8 @@ $(() => {
       '</td>' +
       '<td  style="width:10%;padding:4px;"><span class="price_span" data-row-id="'+rowId+'" data-price="'+native_price+'"  data-weight="'+weight+'">'+price+'</span></td>' +
       '<td  style="width:10%;padding:4px;"><button type="button" data-row-id="'+rowId+'" class="btn delete_selected_stock_product btn-danger w-100">X</button></td>' +
-      '</tr>' +
-      '<tr class="customization_row_'+rowId+'" style="'+display+'">' +
-      '<td colspan="2">Aanpassing:</td>' +
-      '<td colspan="3">' + combinationInput +
-      '</td></tr></table></li>';
+      '</tr>' + combinationInput + timebasedBlock +
+      '</table></li>';
 
     return block;
   }
@@ -359,6 +391,30 @@ $(() => {
         $('.select2-search__field').select();
     });
   };
+
+  $(document).on('click', '.convert_hour_to_minutes_convert', function(e) {
+  let rowId = $(this).attr('data-row-id');
+  // @ts-ignore
+  let hours = $('.convert_hour_to_minutes[data-row-id="'+rowId+'"]').val();
+  let minutesElem = $('[name="stock_selected_product_qty[]"][data-row-id="'+rowId+'"]');
+  let minutes = 0;
+    // @ts-ignore
+    if(hours !== undefined) {
+      // @ts-ignore
+      if (hours.match(/[,.:]/).length > 0) {
+        // @ts-ignore
+        let splitTime = hours.split(/[,.:]/);
+        let newHourMinutes = parseInt(splitTime[0]) * 60;
+        minutes = newHourMinutes + parseInt(splitTime[1]);
+      } else {
+        // @ts-ignore
+        minutes = parseInt(hours) * 60;
+      }
+    }
+    minutesElem.val(minutes);
+
+  });
+
 
   $(document).on('click', '.customization_check', function(e){
     $('tr.customization_row_'+$(this).attr('data-row-id')).toggle();

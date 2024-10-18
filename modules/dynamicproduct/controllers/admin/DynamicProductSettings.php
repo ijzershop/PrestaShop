@@ -156,7 +156,7 @@ class DynamicProductSettingsController extends ModuleAdminController
         $options = Tools::getValue('options', []);
         $clear = (int)($options['clear'] ?? 1);
         $link = (int)($options['link'] ?? 0);
-
+        $grids_new = [];
         $id_target_product = (int)Tools::getValue('id_target_product');
         $id_source_product = (int)Tools::getValue('id_source_product');
 

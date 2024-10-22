@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const LicensePlugin = require('webpack-license-plugin');
+
 const common = require('./common.js');
 
 /**
@@ -10,13 +11,13 @@ const common = require('./common.js');
  */
 function prodConfig() {
   const prod = Object.assign(common, {
-    stats: 'minimal',
+  stats: true,
     optimization: {
       minimize: true,
       minimizer: [
         new TerserPlugin({
           parallel: true,
-          extractComments: false,
+          extractComments: true,
         }),
       ],
     },

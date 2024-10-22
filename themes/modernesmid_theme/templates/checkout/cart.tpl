@@ -37,7 +37,7 @@
           {block name='cart_overview'}
             {include file='checkout/_partials/cart-detailed.tpl' cart=$cart}
           {/block}
-            {if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}
+            {if Context::getContext()->is_counter_customer}
                 <div class="col">
                   {* Show print cart button *}
                   <a href="#" id="addCustomProductByEmployee" data-cart="{Context::getContext()->cart->id}"  class="btn btn-success float-right mt-2" alt="Extra product toevoegen"><i class="fasl fa-plus"></i> Regel toevoegen</a>

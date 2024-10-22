@@ -25,17 +25,15 @@
 {assign var="key" value=0}
 {assign var="sub_id" value=0}
 {assign var="loopindex" value=0}
+{assign var="internal_categories" value=Context::getContext()->internal_product_categories}
 {function name="categories" nodes=[] depth=0}
     {strip}
         {if $nodes|count}
           <ul class="category-sub-menu depth{$depth} p-0 collapse {if (int)$loopindex <= 1 && $depth <= 1 && $key === 0}show{/if}" id="submenu-item{$sub_id}">
-              {foreach from=$nodes key=key item=node}
-                {if !in_array($node.id, [
-                Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
-                Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
-                Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)])}
 
+            {foreach from=$nodes key=key item=node}
 
+                {if !in_array($node.id, $internal_categories)}
                   {assign var="key" value=$key}
                   {assign var="sub_id" value=$node.id}
                 <li data-depth="{$depth}" data-sub="{$sub_id}" data-index="{$loopindex}"  data-key="{$key}" class="p-0 pb-1 pt-1 {if $depth >= 2}pl-{$depth*1}{/if}">

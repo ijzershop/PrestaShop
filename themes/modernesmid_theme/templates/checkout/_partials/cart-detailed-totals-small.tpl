@@ -28,7 +28,7 @@
   <div class="cart-summary-line cart-total row m-0">
 <div class="col-6 pl-0">
     <span class="font-weight-bolder pt-3 text-black" style="font-size: 1.25rem;">
-              {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0 && (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id)}
+              {if (float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0 && (Context::getContext()->is_counter_customer)}
                   {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR')}
               {else}
                   {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal($withTax, Cart::BOTH), 'EUR')}

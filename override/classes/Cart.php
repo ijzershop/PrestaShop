@@ -106,16 +106,11 @@ class Cart extends CartCore
                 } elseif ($option['unique_carrier'] && in_array(Configuration::get('KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER', $context->language->id,
                         $context->shop->id_shop_group,
                         $context->shop->id), array_keys($option['carrier_list'])) &&
-                    Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                        $context->language->id,
-                        $context->shop->id_shop_group,
-                        $context->shop->id) == (int)$context->customer->id) {
+                        Context::getContext()->is_counter_customer
+                ) {
                     $delivery_option[$id_address] = $key;
                     break;
-                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list'])) && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                        $context->language->id,
-                        $context->shop->id_shop_group,
-                        $context->shop->id) != $context->customer->id) {
+                } elseif ($option['unique_carrier'] && in_array(Configuration::get('PS_CARRIER_DEFAULT'), array_keys($option['carrier_list'])) && !Context::getContext()->is_counter_customer) {
                     $delivery_option[$id_address] = $key;
                     break;
                 }

@@ -117,7 +117,7 @@
                       <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
                       {if !Module::isEnabled('dynamicproduct') || !Product::isDynamicProduct($product)}
 <!--                       {block name='product_pack'}
-                      {if $packItems && (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}
+                      {if $packItems && !in_array((int)$product.id_category_default, Context::getContext()->internal_product_categories)}
                       <section class="product-pack">
                         <p class="h4">{l s='This pack contains' d='Shop.Theme.Catalog'}</p>
                         {foreach from=$packItems item="product_pack"}
@@ -169,7 +169,7 @@
                     {hook h='displayProductSawAndCutButtons' product=$product}
                   </div>
 
-                    {if !in_array((int)$category->id_category, [6, (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->cookie->id_lang, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, 382)]) }
+                    {if !in_array((int)$category->id_category, Context::getContext()->internal_product_categories)) }
                   <div class="cart-related-products mt-2 mb-2 text-black col-12">
                     <div class="card-body bg-light text-bold">
                           {include file="themes/modernesmid_theme/modules/ps_crossselling/views/templates/hook/ps_crossselling_selectbox.tpl" category=$category}
@@ -205,7 +205,7 @@
       </div>
     </div>
     <div class="row border-bottom">
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-6 pb-4{/if} pt-3 ">
+      <div class="col-12 {if  !in_array((int)$product.id_category_default, Context::getContext()->internal_product_categories)}col-lg-6 pb-4{/if} pt-3 ">
         {if !empty($product.description)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
@@ -213,7 +213,7 @@
                   <div class="col-12">{$product.description nofilter}</div>
             </div>
           {/block}
-          {elseif (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == (int)$product.id_category_default}
+          {elseif in_array((int)$product.id_category_default, Context::getContext()->internal_product_categories)}
           {block name='product_description'}
             <div class="product-description border-bottom pb-4 pt-4 row">
               <span class="description-title font-weight-bold h5 col-12">Beschrijving</span>
@@ -229,7 +229,7 @@
           {/block}
         {/if}
       </div>
-      <div class="col-12 {if  (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}col-lg-6 pt-2{/if} ">
+      <div class="col-12 {if  !in_array((int)$product.id_category_default, Context::getContext()->internal_product_categories)}col-lg-6 pt-2{/if} ">
         {if Configuration::get('SHOW_PRODUCT_FEATURES') === 'category'}
             {assign var='cat' value=Category::getNestedCategories($product.id_category_default)}
             {if is_null($cat[$product.id_category_default].top_description)}

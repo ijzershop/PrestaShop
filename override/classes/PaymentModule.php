@@ -586,7 +586,7 @@ class PaymentModule extends PaymentModuleCore
             (float) $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $carrierId),
             $computingPrecision
         );
-        if((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) {
+        if(Context::getContext()->is_counter_customer) {
             $discountType = Cart::ONLY_DISCOUNTS_NO_CALCULATION;
         } else {
             $discountType = Cart::ONLY_DISCOUNTS;

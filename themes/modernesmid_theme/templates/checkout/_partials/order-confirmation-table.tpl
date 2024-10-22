@@ -133,7 +133,7 @@
           <td class="qty align-middle text-right bold {$border_top}">{Context::getContext()->currentLocale->formatPrice((float)$rule.value_tax_exc, 'EUR')}</td>
         {else}
           <td colspan="2" class="qty align-middle text-right bold {$border_top}">
-            {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+            {if Context::getContext()->is_counter_customer}
               {if $withTax}
                 {Context::getContext()->currentLocale->formatPrice(-(float)$rule.reduction_amount, 'EUR')}
               {else}
@@ -182,7 +182,7 @@
           <td>Verzending</td>
           <td class="text-right">{if $subtotals.shipping.amount > 0}{Context::getContext()->currentLocale->formatPrice((float)$subtotals.shipping.amount/1.21,'EUR')}{else}{Context::getContext()->currentLocale->formatPrice((float)0,'EUR')}{/if}</td>
         </tr>
-          {if ((int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)) && $total_discount_no_calc > 0}
+          {if (Context::getContext()->is_counter_customer) && $total_discount_no_calc > 0}
             <tr>
               <td>Korting</td>
               <td class="text-right">{Context::getContext()->currentLocale->formatPrice((float)-$total_discount_no_calc_tax_exc,'EUR')}</td>
@@ -198,7 +198,7 @@
           <tr class="sub taxes">
             <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td>
             <td class="text-right"><span class="value">
-                {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) && $total_remainder < 0}
+                {if Context::getContext()->is_counter_customer && $total_remainder < 0}
                     {Context::getContext()->currentLocale->formatPrice((float)$total_remainder - $total_remainder_tax_exc,  'EUR')}
                   {else}
                     {Context::getContext()->currentLocale->formatPrice((float)$subtotals.total_paid_tax_incl-(float)$subtotals.total_paid_tax_excl,'EUR')}
@@ -217,7 +217,7 @@
             <td class="text-right">{$totals.total_including_tax.value}</td>
           </tr>
         {else}
-          {if (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
+          {if Context::getContext()->is_counter_customer}
             {if  $total_remainder < 0}
               <tr class="total-value font-weight-bold">
                 <td><span>Terugbetaling</span></td>

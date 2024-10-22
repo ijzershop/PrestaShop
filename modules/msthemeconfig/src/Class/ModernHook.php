@@ -1341,6 +1341,47 @@ class ModernHook
      */
     public function hookActionFrontControllerInitAfter(): void
     {
+        /**
+         * MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE
+         * MSTHEMECONFIG_FAVICON_SHOP
+         * MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP
+         *
+         * MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID
+         * MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY
+         * MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY
+         */
+
+        $this->context->shop_name = $this->shopName;
+        $this->context->shop_favicon = Configuration::get('MSTHEMECONFIG_FAVICON_SHOP', $this->idLang, $this->idShopGroup, $this->idShop);
+
+        if(empty($this->context->shop_favicon)){
+            $this->context->shop_favicon = 'IJ';
+        }
+
+        $this->context->is_counter_customer = false;
+        $this->context->belongs_to_voucher_group = false;
+        $this->context->belongs_to_counter_group = false;
+
+        $this->context->internal_product_categories = [
+            (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', $this->idLang, $this->idShopGroup, $this->idShop),
+            (int)Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop),
+            (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $this->idLang, $this->idShopGroup, $this->idShop)
+        ];
+
+        if(isset($this->context->cart->id_customer) && Context::getContext()->customer->isLogged())
+        {
+            if(in_array($this->context->cart->id_customer, explode(',', Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE', $this->idLang, $this->idShopGroup, $this->idShop)))){
+                $this->context->is_counter_customer = true;
+            }
+            if(in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_BALIE_GROUP', $this->idLang, $this->idShopGroup, $this->idShop), Customer::getGroupsStatic($this->context->cart->id_customer))){
+                $this->context->belongs_to_counter_group = true;
+            }
+
+            if(in_array((int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_VOUCHER_GROUP', $this->idLang, $this->idShopGroup, $this->idShop), Customer::getGroupsStatic($this->context->cart->id_customer))){
+                $this->context->belongs_to_voucher_group = true;
+            }
+        }
+
         $filterManager = $this->module->get('prestashop.core.filter.front_end_object.search_result_product');
         $filterManager->whitelist(['quantity', 'minimal_quantity', 'out_of_stock', 'depends_on_stock']);
     }

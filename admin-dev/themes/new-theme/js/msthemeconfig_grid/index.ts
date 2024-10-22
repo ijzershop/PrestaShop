@@ -69,6 +69,8 @@ $(() => {
       '<td colspan="2">Omzetten van uren naar minuten:<br/>- Voorbeeld: 1 uur en 15 minuten = 1.15<br/>- Voorbeeld: 1 uur en 54 minuten = 1.54</td>' +
       '<td colspan="3">';
 
+    let timebasedBlock = '';
+
     if(item.data === undefined){
 
     // * - O Deny orders
@@ -113,8 +115,8 @@ $(() => {
         }
         combinationInput += '</select></td></tr>';
       }
-      let timebasedBlock = '';
-      if(item.time_based_product){
+
+      if(typeof item.time_based_product !== "undefined" && item.time_based_product){
 
         timebasedBlock += tdOptionStartConvert+'<div class="input-group mb-3">' +
         '  <input type="text" class="convert_hour_to_minutes form-control"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" placeholder="Uur -> Minuten" aria-label="Uur -> Minuten">' +
@@ -151,18 +153,16 @@ $(() => {
         }
         combinationInput += '</select></td></tr>';
       }
-    }
 
-    let timebasedBlock = '';
-    if(item.data.time_based_product){
+      if(typeof item.data.time_based_product !== "undefined" && item.data.time_based_product){
+        timebasedBlock += tdOptionStartConvert + '<div class="input-group mb-3">' +
+          '  <input type="text" class="convert_hour_to_minutes form-control"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" placeholder="Uur -> Minuten" aria-label="Uur -> Minuten">' +
+          '  <div class="input-group-append">' +
+          '    <button class="btn btn-outline-secondary convert_hour_to_minutes_convert"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" type="button">Omzetten</button>' +
+          '  </div>' +
+          '</div></td></tr>';
 
-      timebasedBlock += tdOptionStartConvert + '<div class="input-group mb-3">' +
-        '  <input type="text" class="convert_hour_to_minutes form-control"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" placeholder="Uur -> Minuten" aria-label="Uur -> Minuten">' +
-        '  <div class="input-group-append">' +
-        '    <button class="btn btn-outline-secondary convert_hour_to_minutes_convert"  data-pack-id="'+idProduct+'" data-row-id="'+rowId+'" type="button">Omzetten</button>' +
-        '  </div>' +
-        '</div></td></tr>';
-
+      }
     }
 
     if(combinationInput === ''){
@@ -401,7 +401,8 @@ $(() => {
     // @ts-ignore
     if(hours !== undefined) {
       // @ts-ignore
-      if (hours.match(/[,.:]/).length > 0) {
+      let matched = hours.match(/[,.:]/);
+      if (matched && matched.length > 0) {
         // @ts-ignore
         let splitTime = hours.split(/[,.:]/);
         let newHourMinutes = parseInt(splitTime[0]) * 60;
@@ -412,7 +413,7 @@ $(() => {
       }
     }
     minutesElem.val(minutes);
-
+    minutesElem.trigger('change');
   });
 
 

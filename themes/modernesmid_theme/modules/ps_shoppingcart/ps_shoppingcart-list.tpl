@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <div class="shoppingcart-top-checkout col-sm-4 float-right">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->is_counter_customer}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Bestellen' d='Shop.Theme.Actions'}">{l s='Bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
             </div>
         </div>
@@ -75,14 +75,14 @@
                           <!-- </div> -->
                         </span><span class="col-7 text-right price pt-2 pt-sm-0">{if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING) > 0}{Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_SHIPPING), 'EUR')}{else}€ 0,00{/if}</span>
                     </div>
-                  {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id) && Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) > 0}
+                  {if (Context::getContext()->is_counter_customer) && Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) > 0}
                       <div class="border-bottom-0 pb-1 row">
                         <span class="col-5">Korting</span><span class="col-7 text-right price">{Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}</span>
                       </div>
                   {/if}
                     <div class="border-bottom-0 pb-1 row">
                         <span class="col-5">{$tax.0}</span><span class="col-7 text-right price">
-                            {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id) && Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0}
+                            {if (Context::getContext()->is_counter_customer) && Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0}
                               {Context::getContext()->currentLocale->formatPrice(Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_REMAINDER_OF_DISCOUNTS)-Context::getContext()->cart->getOrderTotal(true, Cart::ONLY_REMAINDER_OF_DISCOUNTS),'EUR')}
                             {else}
                               {$tax.1}
@@ -104,7 +104,7 @@
                     {/if}
                 </div>
                 <div class="mt-3">
-                    <a href="{if Context::getContext()->customer->isLogged() && Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
+                    <a href="{if Context::getContext()->is_counter_customer}{$cart_url}{else}{if isset($urls.pages['order'])}{$urls.pages['order']}{else}{$cart_url}{/if}{/if}" rel="nofollow" class="btn btn-success w-100 enabled btn_to_checkout" title="{l s='Verder naar bestellen' d='Shop.Theme.Actions'}">{l s='Verder naar bestellen' d='Shop.Theme.Actions'}</a>
                 </div>
                 {if Context::getContext()->cart->getOrderTotal() > 0}
                 <div class="text-center mt-3 p-1">Toon details (verzendkosten, korting & btw.) <label class="switch">

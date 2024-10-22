@@ -300,25 +300,25 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 
 
-            foreach ($order_details as &$order_detail) {
-                if ($order_detail['image'] != null) {
-                    $name = 'product_mini_' . (int)$order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int)$order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
-
-                    $order_detail['image_tag'] = preg_replace(
-                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
-                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
-                        ImageManager::thumbnail($path, $name, 45, 'jpg', false),
-                        1
-                    );
-
-                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
-                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
-                    } else {
-                        $order_detail['image_size'] = false;
-                    }
-                }
-            }
+//            foreach ($order_details as &$order_detail) {
+//                if ($order_detail['image'] != null) {
+//                    $name = 'product_mini_' . (int)$order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int)$order_detail['product_attribute_id'] : '') . '.jpg';
+//                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+//
+//                    $order_detail['image_tag'] = preg_replace(
+//                        '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
+//                        _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR,
+//                        ImageManager::thumbnail($path, $name, 45, 'jpg', false),
+//                        1
+//                    );
+//
+//                    if (file_exists(_PS_TMP_IMG_DIR_ . $name)) {
+//                        $order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_ . $name);
+//                    } else {
+//                        $order_detail['image_size'] = false;
+//                    }
+//                }
+//            }
             unset($order_detail); // don't overwrite the last order_detail later
 
 
@@ -333,9 +333,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         foreach ($cart_rules as $key => $cart_rule) {
 //            //Add return amount by balie orders
             $cartRuleData = new CartRule($cart_rule['id_cart_rule']);
-            if((int)$this->order->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id))
+            if(Context::getContext()->is_counter_customer)
             {
-
                 $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
                 $cart_rules[$key]['reduction_amount'] = $cartRuleData->reduction_amount;
             }

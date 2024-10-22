@@ -11,7 +11,7 @@
       {foreach from=Shop::getShops(true, $group->id) key=shopKey item=shop}
         {if $shop.active && $shop.id_shop !== Context::getContext()->shop->id}
           <a class="dropdown-item pl-1 pr-2" href="https://{$shop.domain_ssl}" data-key="{$shopKey}">
-            <img class="store-switcher-shop-logo mr-1" src="/themes/modernesmid_theme/assets/favicons/{Configuration::get('MSTHEMECONFIG_FAVICON_SHOP',Context::getContext()->language->id, $shop.id_shop_group, $shop.id_shop)}_favicons/favicon-32x32.png"/> <span class="font-weight-bold"> {$shop.name}</span></a>
+            <img class="store-switcher-shop-logo mr-1" src="/themes/modernesmid_theme/assets/favicons/{Context::getContext()->shop_favicon}_favicons/favicon-32x32.png"/> <span class="font-weight-bold"> {$shop.name}</span></a>
         {/if}
       {/foreach}
     {/foreach}

@@ -28,14 +28,8 @@
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div class="payment-option-row p-1 {if ($selected_payment_option == $option.id || $is_free) ||
-        ($selected_payment_option == null && $option.call_to_action_text == 'Ideal' && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                                                                                                    Context::getContext()->language->id,
-                                                                                                    Context::getContext()->shop->id_shop_group,
-                                                                                                    Context::getContext()->shop->id) !== (int)Context::getContext()->customer->id) ||
-        ($selected_payment_option == null && $option.module_name == 'ps_pinpayment' && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-        Context::getContext()->language->id,
-        Context::getContext()->shop->id_shop_group,
-        Context::getContext()->shop->id) == (int)Context::getContext()->customer->id)
+        ($selected_payment_option == null && $option.call_to_action_text == 'Ideal' && Context::getContext()->is_counter_customer) ||
+        ($selected_payment_option == null && $option.module_name == 'ps_pinpayment' && Context::getContext()->is_counter_customer)
         } selected {/if}">
           <div id="{$option.id}-container" class="payment-option clearfix row mb-0">
             {* This is the way an option should be selected when Javascript is enabled *}
@@ -48,28 +42,12 @@
                 type="radio"
                 required
                 {if ($selected_payment_option == $option.id || $is_free) ||
-                ($selected_payment_option == null && $option.call_to_action_text == 'Ideal' && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                Context::getContext()->language->id,
-                Context::getContext()->shop->id_shop_group,
-                Context::getContext()->shop->id) !== (int)Context::getContext()->customer->id) ||
-                ($selected_payment_option == null && $option.module_name == 'ps_pinpayment' && (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
-                Context::getContext()->language->id,
-                Context::getContext()->shop->id_shop_group,
-                Context::getContext()->shop->id) == (int)Context::getContext()->customer->id)
+                ($selected_payment_option == null && $option.call_to_action_text == 'Ideal' && Context::getContext()->is_counter_customer) ||
+                ($selected_payment_option == null && $option.module_name == 'ps_pinpayment' && Context::getContext()->is_counter_customer)
                 } checked {/if}
               >
               <span></span>
             </span>
-{*            *}{* This is the way an option should be selected when Javascript is disabled *}
-{*            <form method="GET" class="ps-hidden-by-js">*}
-{*              {if $option.id === $selected_payment_option}*}
-{*                {l s='Selected' d='Shop.Theme.Checkout'}*}
-{*              {else}*}
-{*                <button class="ps-hidden-by-js" type="submit" name="select_payment_option" value="{$option.id}">*}
-{*                  {l s='Choose' d='Shop.Theme.Actions'}*}
-{*                </button>*}
-{*              {/if}*}
-{*            </form>*}
 
             <label  style="line-height: 75px;" for="{$option.id}" class="col mb-0">
               <span class="w-auto h5">{$option.call_to_action_text}</span>
@@ -77,7 +55,6 @@
                 <img style="width:100px;" class="img-responsive float-right" height="auto" src="{$option.logo}" loading="lazy">
               {/if}
             </label>
-
 
           {if $option.additionalInformation && ($option.module_name !== 'ps_pinpayment' && $option.module_name !== 'ps_cashpayment')}
             <div

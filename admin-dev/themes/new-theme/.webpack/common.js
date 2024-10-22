@@ -35,6 +35,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
+
 module.exports = {
   externals: {
     jquery: 'jQuery',
@@ -160,6 +161,9 @@ module.exports = {
     sourceMapFilename: '[name].[hash:8].map',
     chunkFilename: '[id].[hash:8].js',
   },
+  stats: {
+    errorDetails: true
+  },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
@@ -174,6 +178,24 @@ module.exports = {
       '@PSTypes': path.resolve(__dirname, '../js/types'),
       '@images': path.resolve(__dirname, '../img'),
     },
+    fallback: {
+      stream: require.resolve("stream-browserify"),
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
+      vm: require.resolve("vm-browserify"),
+      zlib: require.resolve("browserify-zlib"),
+      crypto: require.resolve("crypto-browserify"),
+      os: require.resolve("os-browserify/browser"),
+      fs: false,
+      tty: false,
+      constants: false,
+      inspector: false,
+      worker_threads: false,
+      pnpapi: false,
+      child_process: false,
+      module: false,
+      '@swc/core': false,
+    }
   },
   module: {
     rules: [

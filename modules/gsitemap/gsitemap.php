@@ -441,9 +441,9 @@ class Gsitemap extends Module
         * and we are left with only accessible products.
         */
         if (Group::isFeatureActive() && !empty(Configuration::get('PS_UNIDENTIFIED_GROUP'))) {
-            $group_join = ' INNER JOIN (SELECT DISTINCT cp.`id_product` FROM `' . _DB_PREFIX_ . 'category_product` cp 
-            INNER JOIN `' . _DB_PREFIX_ . 'category_group` ctg ON (ctg.`id_category` = cp.`id_category`) 
-            WHERE ctg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . ' AND cp.`id_product` >= ' . (int) $id_product . ' 
+            $group_join = ' INNER JOIN (SELECT DISTINCT cp.`id_product` FROM `' . _DB_PREFIX_ . 'category_product` cp
+            INNER JOIN `' . _DB_PREFIX_ . 'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
+            WHERE ctg.`id_group` = ' . (int) Configuration::get('PS_UNIDENTIFIED_GROUP') . ' AND cp.`id_product` >= ' . (int) $id_product . '
             ) g ON ps.`id_product` = g.`id_product`';
         } else {
             $group_join = ' ';
@@ -451,13 +451,23 @@ class Gsitemap extends Module
 
         // Get product IDs
         $products_id = Db::getInstance()->ExecuteS('SELECT ps.`id_product` FROM `' . _DB_PREFIX_ . 'product_shop` ps' . $group_join . '
-        WHERE ps.`id_product` >= ' . (int) $id_product . ' AND ps.`active` = 1 AND ps.`visibility` != \'none\' 
-        AND ps.`id_shop`=' . $this->context->shop->id . ' 
+        WHERE ps.`id_product` >= ' . (int) $id_product . ' AND ps.`active` = 1 AND ps.`visibility` != \'none\'
+        AND ps.`id_shop`=' . $this->context->shop->id . '
         ORDER BY ps.`id_product` ASC');
+
+        $customCats = [
+            (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            (int)Configuration::get('MSTHEMECONFIG_CUSTOM_INTERNAL_COSTS_PRODUCT_CATEGORY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)
+        ];
 
         // Process each category and add it to list of links that will be further "converted" to XML and added to the sitemap
         foreach ($products_id as $product_id) {
             $product = new Product((int) $product_id['id_product'], false, (int) $lang['id_lang']);
+
+            if(str_contains(strtolower($product->category), 'offer') || $product->id_category_default == 0 || in_array($product->id_category_default, $customCats)){
+                continue;
+            }
 
             $url = $link->getProductLink($product, $product->link_rewrite, htmlspecialchars(strip_tags($product->category)), $product->ean13, (int) $lang['id_lang'], (int) $this->context->shop->id, 0);
 
@@ -481,6 +491,7 @@ class Gsitemap extends Module
                 }
                 unset($image_link);
             }
+
 
             if (!$this->addLinkToSitemap($link_sitemap, [
                 'type' => 'product',
@@ -525,10 +536,10 @@ class Gsitemap extends Module
         $categories_id = Db::getInstance()->ExecuteS('SELECT c.id_category FROM `' . _DB_PREFIX_ . 'category` c
                 INNER JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON c.`id_category` = cs.`id_category`' .
                 $group_join . '
-                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1 
-                AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . ' 
-                AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . ' 
-                AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = ' . (int) $this->context->shop->id . ' 
+                WHERE c.`id_category` >= ' . (int) $id_category . ' AND c.`active` = 1
+                AND c.`id_category` != ' . (int) Configuration::get('PS_ROOT_CATEGORY') . '
+                AND c.id_category != ' . (int) Configuration::get('PS_HOME_CATEGORY') . '
+                AND c.id_parent > 0 AND c.`id_category` > 0 AND cs.`id_shop` = ' . (int) $this->context->shop->id . '
                 ORDER BY c.`id_category` ASC');
 
         // Process each category and add it to list of links that will be further "converted" to XML and added to the sitemap

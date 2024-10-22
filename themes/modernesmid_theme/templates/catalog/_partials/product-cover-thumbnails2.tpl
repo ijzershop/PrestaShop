@@ -28,7 +28,7 @@
       {assign var="control_check"  value=0}
 <div id="product-images-carousel" class="carousel slide" data-ride="false" data-keyboard="true" data-touch="true" data-pause="hover">
   <div class="carousel-inner">
-    {if (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) != (int)$product.id_category_default}
+    {if !in_array((int)$product.id_category_default, Context::getContext()->internal_product_categories)}
     {foreach from=$product.images item=image key=key}
     {if strpos($image.legend, 'techntabel') == false}
       <div class="carousel-item  {if $image.id_image == $product.cover.id_image}active{/if}">

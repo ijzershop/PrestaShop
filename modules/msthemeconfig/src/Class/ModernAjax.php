@@ -126,7 +126,6 @@ class ModernAjax
             $panel_name = 'home';
         }
 
-
         try {
             if($panel_name == 'vat'){
                 $from = $request->get('from');
@@ -406,7 +405,6 @@ class ModernAjax
                 $dataArray[$this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP'] = $this->getSelect2SelectedOptions(Configuration::get($this->prefix . 'EMPLOYEE_CUSTOMER_VOUCHER_GROUP', $this->idLang, $this->idShopGroup, $this->idShop, ''), 'groups');
                 $dataArray[$this->prefix . 'SHOW_ONCREDIT_CUSTOMER'] = (int)Configuration::get($this->prefix . 'SHOW_ONCREDIT_CUSTOMER', $this->idLang, $this->idShopGroup, $this->idShop, 0);
 
-
                 break;
             case 'dev':
                 $dataArray[$this->prefix . 'ORDERLIST_FILTER_TIME'] = Configuration::get($this->prefix . 'ORDERLIST_FILTER_TIME', $this->idLang, $this->idShopGroup, $this->idShop, '-4 weeks');
@@ -609,7 +607,6 @@ class ModernAjax
             $selectedOptions = explode(',', (string)$options);
             if ($optionList) {
                 $data = json_decode($optionList);
-
                 foreach ($selectedOptions as $selectedOption){
                     foreach ($data->results as $option) {
                         if(is_string($option->id)){
@@ -830,9 +827,9 @@ class ModernAjax
 
                 if($options){
                     if(is_array($options)){
-                        $sql .= " `id_customer` = IN(".implode(',',$options).") AND ";
+                        $sql .= " `id_customer` IN(".implode(',',$options).") AND ";
                     } else {
-                        $sql .= " `id_customer` = ".$options." AND ";
+                        $sql .= " `id_customer` IN(".$options.") AND ";
                     }
                 }
 

@@ -19,7 +19,7 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
         $customers = array();
         $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
-        $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id;
+        $is_balie_employee = Context::getContext()->is_counter_customer;
         $add_to_list = false;
         if($is_balie_employee){
             $add_to_list = true;

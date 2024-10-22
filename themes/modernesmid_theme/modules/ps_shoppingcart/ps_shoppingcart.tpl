@@ -53,7 +53,7 @@
           <tr id="tr-header-cart-discounts" {if Context::getContext()->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS_NO_CALCULATION) <= 0}style="display: none;" {/if}>
             <td width="60%" class="text-nowrap">Korting</td>
             <td class="text-right" id="header-cart-discounts">
-              {if (Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id)}
+              {if (Context::getContext()->is_counter_customer)}
                 {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS_NO_CALCULATION), 'EUR')}
               {else}
                 {Context::getContext()->currentLocale->formatPrice(0-(float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_DISCOUNTS), 'EUR')}
@@ -76,8 +76,7 @@
                                                       style="left: -48px;top: -12px;font-size: 10px;min-width: 15px;height: 15px;line-height: 11px;display: inline-block;position: relative;">{if Context::getContext()->cart->nbProducts() > 99}99+{else}{Context::getContext()->cart->nbProducts()}{/if}</span><span
                   class="align-text-bottom d-inline-block d-lg-none d-xl-inline-block" style="position: absolute;left:135px;">Winkelwagen</span>
                 <span class="float-right text-right" id="header-cart-total">
-                      {if (float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0 && (int)Context::getContext()->cart->id_customer == (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}
-
+                      {if (float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS) < 0 && Context::getContext()->is_counter_customer}
                           {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::ONLY_REMAINDER_OF_DISCOUNTS), 'EUR' )}
                       {else}
                           {Context::getContext()->currentLocale->formatPrice((float)Context::getContext()->cart->getOrderTotal($withTax, Cart::BOTH), 'EUR' )}

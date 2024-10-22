@@ -434,6 +434,7 @@ class MsThemeConfig extends Module
             'MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES',
             'MSTHEMECONFIG_EMPLOYEE_WORKSHOP_PROFILES',
             'MSTHEMECONFIG_EMPLOYEE_SHOP_PROFILES',
+            'MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',
             'MSTHEMECONFIG_FEATURE_ENABLED',
             'KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES',
             'KOOPMANORDEREXPORT_RETOUR_ACCEPTED_STATUSSES',
@@ -510,9 +511,6 @@ class MsThemeConfig extends Module
             }
         }
     }
-
-
-
 
 
     /**

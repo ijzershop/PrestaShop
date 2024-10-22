@@ -242,7 +242,7 @@ class Ps_Creditpayment extends PaymentModule
         $customers = array();
         $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
-        $is_balie_employee = Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) == Context::getContext()->customer->id;
+        $is_balie_employee = Context::getContext()->is_counter_customer;
 
         $add_to_list = false;
 //        if ($is_balie_employee) {
@@ -350,9 +350,7 @@ class Ps_Creditpayment extends PaymentModule
 
     function updateContextBalieAccount()
     {
-        $id_customer = (int)Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_PROFILE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
-
-        $customer = new Customer($id_customer);
+        $customer = new Customer($this->context->cookie->id_customer);
         $this->context->customer = $customer;
         $this->context->customer->logged = true;
         $this->context->customer->is_guest = false;
@@ -372,7 +370,6 @@ class Ps_Creditpayment extends PaymentModule
         $this->context->cookie->selected_customer_customer_lastname = null;
         $this->context->cookie->selected_customer_id_customer = null;
         $this->context->cookie->selected_customer_email = null;
-
 
         $this->context->smarty->assign('confirmation', 1);
     }

@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * Removes abstract Definitions.
  */
@@ -26,7 +24,7 @@ class RemoveAbstractDefinitionsPass implements CompilerPassInterface
         foreach ($container->getDefinitions() as $id => $definition) {
             if ($definition->isAbstract()) {
                 $container->removeDefinition($id);
-                $container->log($this, sprintf('Removed service "%s"; reason: abstract.', $id));
+                $container->log($this, \sprintf('Removed service "%s"; reason: abstract.', $id));
             }
         }
     }

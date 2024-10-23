@@ -2,8 +2,8 @@
 <module>
     <name>ps_accounts</name>
     <displayName><![CDATA[PrestaShop-account]]></displayName>
-    <version><![CDATA[7.0.7]]></version>
-    <description><![CDATA[Koppel uw winkel aan uw PrestaShop account om uw abonnementen te activeren en te beheren in uw backoffice. De-installeer deze module niet als u een lopend abonnement hebt.]]></description>
+    <version><![CDATA[7.0.8]]></version>
+    <description><![CDATA[Koppel uw winkel aan uw PrestaShop-account om uw abonnementen te activeren en te beheren in uw backoffice. Verwijder deze module niet als u een lopend abonnement hebt.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>
 	<confirmUninstall><![CDATA[Deze actie zal onmiddellijk voorkomen dat uw PrestaShop diensten en communautaire diensten werken als ze PrestaShop Accounts module voor authenticatie gebruiken.]]></confirmUninstall>

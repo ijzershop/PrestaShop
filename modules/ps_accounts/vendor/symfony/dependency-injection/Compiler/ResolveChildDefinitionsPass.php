@@ -8,15 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\ExceptionInterface;
-use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ChildDefinition;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\ExceptionInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 /**
  * This replaces all ChildDefinition instances with their equivalent fully
  * merged Definition instance.
@@ -27,8 +25,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
 class ResolveChildDefinitionsPass extends AbstractRecursivePass
 {
     private $currentPath;
-
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, $isRoot = \false)
     {
         if (!$value instanceof Definition) {
             return parent::processValue($value, $isRoot);
@@ -45,10 +42,8 @@ class ResolveChildDefinitionsPass extends AbstractRecursivePass
                 $this->container->setDefinition($this->currentId, $value);
             }
         }
-
         return parent::processValue($value, $isRoot);
     }
-
     /**
      * Resolves the definition.
      *
@@ -64,26 +59,21 @@ class ResolveChildDefinitionsPass extends AbstractRecursivePass
             throw $e;
         } catch (ExceptionInterface $e) {
             $r = new \ReflectionProperty($e, 'message');
-            $r->setAccessible(true);
-            $r->setValue($e, sprintf('Service "%s": %s', $this->currentId, $e->getMessage()));
-
+            $r->setAccessible(\true);
+            $r->setValue($e, \sprintf('Service "%s": %s', $this->currentId, $e->getMessage()));
             throw $e;
         }
     }
-
     private function doResolveDefinition(ChildDefinition $definition)
     {
         if (!$this->container->has($parent = $definition->getParent())) {
-            throw new RuntimeException(sprintf('Parent definition "%s" does not exist.', $parent));
+            throw new RuntimeException(\sprintf('Parent definition "%s" does not exist.', $parent));
         }
-
-        $searchKey = array_search($parent, $this->currentPath);
+        $searchKey = \array_search($parent, $this->currentPath);
         $this->currentPath[] = $parent;
-
-        if (false !== $searchKey) {
+        if (\false !== $searchKey) {
             throw new ServiceCircularReferenceException($parent, \array_slice($this->currentPath, $searchKey));
         }
-
         $parentDef = $this->container->findDefinition($parent);
         if ($parentDef instanceof ChildDefinition) {
             $id = $this->currentId;
@@ -92,21 +82,19 @@ class ResolveChildDefinitionsPass extends AbstractRecursivePass
             $this->container->setDefinition($parent, $parentDef);
             $this->currentId = $id;
         }
-
-        $this->container->log($this, sprintf('Resolving inheritance for "%s" (parent: %s).', $this->currentId, $parent));
+        $this->container->log($this, \sprintf('Resolving inheritance for "%s" (parent: %s).', $this->currentId, $parent));
         $def = new Definition();
-
         // merge in parent definition
         // purposely ignored attributes: abstract, shared, tags, autoconfigured
         $def->setClass($parentDef->getClass());
         $def->setArguments($parentDef->getArguments());
         $def->setMethodCalls($parentDef->getMethodCalls());
         $def->setProperties($parentDef->getProperties());
-        if ($parentDef->getAutowiringTypes(false)) {
-            $def->setAutowiringTypes($parentDef->getAutowiringTypes(false));
+        if ($parentDef->getAutowiringTypes(\false)) {
+            $def->setAutowiringTypes($parentDef->getAutowiringTypes(\false));
         }
         if ($parentDef->isDeprecated()) {
-            $def->setDeprecated(true, $parentDef->getDeprecationMessage('%service_id%'));
+            $def->setDeprecated(\true, $parentDef->getDeprecationMessage('%service_id%'));
         }
         $def->setFactory($parentDef->getFactory());
         $def->setConfigurator($parentDef->getConfigurator());
@@ -115,9 +103,7 @@ class ResolveChildDefinitionsPass extends AbstractRecursivePass
         $def->setLazy($parentDef->isLazy());
         $def->setAutowired($parentDef->isAutowired());
         $def->setChanges($parentDef->getChanges());
-
         $def->setBindings($definition->getBindings() + $parentDef->getBindings());
-
         // overwrite with values specified in the decorator
         $changes = $definition->getChanges();
         if (isset($changes['class'])) {
@@ -157,42 +143,35 @@ class ResolveChildDefinitionsPass extends AbstractRecursivePass
                 $def->setDecoratedService($decoratedService[0], $decoratedService[1], $decoratedService[2]);
             }
         }
-
         // merge arguments
         foreach ($definition->getArguments() as $k => $v) {
-            if (is_numeric($k)) {
+            if (\is_numeric($k)) {
                 $def->addArgument($v);
-            } elseif (0 === strpos($k, 'index_')) {
-                $def->replaceArgument((int) substr($k, \strlen('index_')), $v);
+            } elseif (0 === \strpos($k, 'index_')) {
+                $def->replaceArgument((int) \substr($k, \strlen('index_')), $v);
             } else {
                 $def->setArgument($k, $v);
             }
         }
-
         // merge properties
         foreach ($definition->getProperties() as $k => $v) {
             $def->setProperty($k, $v);
         }
-
         // append method calls
         if ($calls = $definition->getMethodCalls()) {
-            $def->setMethodCalls(array_merge($def->getMethodCalls(), $calls));
+            $def->setMethodCalls(\array_merge($def->getMethodCalls(), $calls));
         }
-
         // merge autowiring types
-        foreach ($definition->getAutowiringTypes(false) as $autowiringType) {
+        foreach ($definition->getAutowiringTypes(\false) as $autowiringType) {
             $def->addAutowiringType($autowiringType);
         }
-
         // these attributes are always taken from the child
         $def->setAbstract($definition->isAbstract());
         $def->setTags($definition->getTags());
         // autoconfigure is never taken from parent (on purpose)
         // and it's not legal on an instanceof
         $def->setAutoconfigured($definition->isAutoconfigured());
-
         return $def;
     }
 }
-
-class_alias(ResolveChildDefinitionsPass::class, ResolveDefinitionTemplatesPass::class);
+\class_alias(ResolveChildDefinitionsPass::class, ResolveDefinitionTemplatesPass::class);

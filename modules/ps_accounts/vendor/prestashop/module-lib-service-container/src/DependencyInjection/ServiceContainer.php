@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,29 +18,24 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\PrestaShop\ModuleLibServiceContainer\DependencyInjection;
 
-namespace PrestaShop\ModuleLibServiceContainer\DependencyInjection;
-
-use PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
 class ServiceContainer
 {
     /**
      * @var string Module Name
      */
     private $moduleName;
-
     /**
      * @var string Module Local Path
      */
     private $moduleLocalPath;
-
     /**
      * @var ContainerInterface
      */
     private $container;
-
     /**
      * @param string $moduleName
      * @param string $moduleLocalPath
@@ -49,7 +45,6 @@ class ServiceContainer
         $this->moduleName = $moduleName;
         $this->moduleLocalPath = $moduleLocalPath;
     }
-
     /**
      * @param string $serviceName
      *
@@ -60,22 +55,15 @@ class ServiceContainer
         if (null === $this->container) {
             $this->initContainer();
         }
-
         return $this->container->get($serviceName);
     }
-
     /**
      * Instantiate a new ContainerProvider
      */
     private function initContainer()
     {
-        $cacheDirectory = new CacheDirectoryProvider(
-            _PS_VERSION_,
-            _PS_ROOT_DIR_,
-            _PS_MODE_DEV_
-        );
+        $cacheDirectory = new CacheDirectoryProvider(_PS_VERSION_, _PS_ROOT_DIR_, _PS_MODE_DEV_);
         $containerProvider = new ContainerProvider($this->moduleName, $this->moduleLocalPath, $cacheDirectory);
-
-        $this->container = $containerProvider->get(defined('_PS_ADMIN_DIR_') || defined('PS_INSTALLATION_IN_PROGRESS') || PHP_SAPI === 'cli' ? 'admin' : 'front');
+        $this->container = $containerProvider->get(\defined('_PS_ADMIN_DIR_') || \defined('PS_INSTALLATION_IN_PROGRESS') || \PHP_SAPI === 'cli' ? 'admin' : 'front');
     }
 }

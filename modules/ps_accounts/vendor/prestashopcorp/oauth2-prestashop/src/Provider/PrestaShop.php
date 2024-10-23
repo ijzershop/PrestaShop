@@ -24,7 +24,7 @@ use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\AbstractPr
 use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Token\AccessToken;
 use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Tool\BearerAuthorizationTrait;
-use Psr\Http\Message\ResponseInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Http\Message\ResponseInterface;
 class PrestaShop extends AbstractProvider
 {
     use BearerAuthorizationTrait;

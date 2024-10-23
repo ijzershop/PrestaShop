@@ -8,15 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Simple;
 
-namespace Symfony\Component\Cache\Simple;
-
-use Symfony\Component\Cache\Traits\ApcuTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\ApcuTrait;
 class ApcuCache extends AbstractCache
 {
     use ApcuTrait;
-
     /**
      * @param string      $namespace
      * @param int         $defaultLifetime

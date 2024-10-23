@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\Node;
 
-namespace Symfony\Component\ExpressionLanguage\Node;
-
-use Symfony\Component\ExpressionLanguage\Compiler;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\Compiler;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -21,40 +19,32 @@ use Symfony\Component\ExpressionLanguage\Compiler;
 class ConstantNode extends Node
 {
     private $isIdentifier;
-
-    public function __construct($value, $isIdentifier = false)
+    public function __construct($value, $isIdentifier = \false)
     {
         $this->isIdentifier = $isIdentifier;
-        parent::__construct(
-            [],
-            ['value' => $value]
-        );
+        parent::__construct([], ['value' => $value]);
     }
-
     public function compile(Compiler $compiler)
     {
         $compiler->repr($this->attributes['value']);
     }
-
     public function evaluate($functions, $values)
     {
         return $this->attributes['value'];
     }
-
     public function toArray()
     {
         $array = [];
         $value = $this->attributes['value'];
-
         if ($this->isIdentifier) {
             $array[] = $value;
-        } elseif (true === $value) {
+        } elseif (\true === $value) {
             $array[] = 'true';
-        } elseif (false === $value) {
+        } elseif (\false === $value) {
             $array[] = 'false';
         } elseif (null === $value) {
             $array[] = 'null';
-        } elseif (is_numeric($value)) {
+        } elseif (\is_numeric($value)) {
             $array[] = $value;
         } elseif (!\is_array($value)) {
             $array[] = $this->dumpString($value);
@@ -75,7 +65,6 @@ class ConstantNode extends Node
             $array[0] = '[';
             $array[] = ']';
         }
-
         return $array;
     }
 }

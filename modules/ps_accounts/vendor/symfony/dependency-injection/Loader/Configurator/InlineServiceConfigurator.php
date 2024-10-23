@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
-use Symfony\Component\DependencyInjection\Definition;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
 class InlineServiceConfigurator extends AbstractConfigurator
 {
     const FACTORY = 'inline';
-
     use Traits\ArgumentTrait;
     use Traits\AutowireTrait;
     use Traits\BindTrait;
@@ -28,7 +25,6 @@ class InlineServiceConfigurator extends AbstractConfigurator
     use Traits\LazyTrait;
     use Traits\ParentTrait;
     use Traits\TagTrait;
-
     public function __construct(Definition $definition)
     {
         $this->definition = $definition;

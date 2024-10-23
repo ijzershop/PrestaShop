@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
 /**
  * @method $this abstract(bool $abstract = true)
@@ -24,10 +23,9 @@ trait AbstractTrait
      *
      * @return $this
      */
-    final protected function setAbstract($abstract = true)
+    protected final function setAbstract($abstract = \true)
     {
         $this->definition->setAbstract($abstract);
-
         return $this;
     }
 }

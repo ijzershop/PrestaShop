@@ -8,18 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Simple;
 
-namespace Symfony\Component\Cache\Simple;
-
-use Symfony\Component\Cache\PruneableInterface;
-use Symfony\Component\Cache\Traits\PdoTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\PruneableInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\PdoTrait;
 class PdoCache extends AbstractCache implements PruneableInterface
 {
     use PdoTrait;
-
     protected $maxIdLength = 255;
-
     /**
      * You can either pass an existing database connection as PDO instance or
      * a Doctrine DBAL Connection or a DSN string that will be used to

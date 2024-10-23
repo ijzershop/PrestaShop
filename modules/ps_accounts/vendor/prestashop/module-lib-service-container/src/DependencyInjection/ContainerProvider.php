@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,34 +18,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\PrestaShop\ModuleLibServiceContainer\DependencyInjection;
 
-namespace PrestaShop\ModuleLibServiceContainer\DependencyInjection;
-
-use PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-
+use PrestaShop\Module\PsAccounts\Vendor\PrestaShop\ModuleLibCacheDirectoryProvider\Cache\CacheDirectoryProvider;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\ConfigCache;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\FileLocator;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class ContainerProvider
 {
     /**
      * @var string Module Name
      */
     private $moduleName;
-
     /**
      * @var string Module Local Path
      */
     private $moduleLocalPath;
-
     /**
      * @var CacheDirectoryProvider
      */
     private $cacheDirectory;
-
     /**
      * @param string $moduleName
      * @param string $moduleLocalPath
@@ -56,7 +52,6 @@ class ContainerProvider
         $this->moduleLocalPath = $moduleLocalPath;
         $this->cacheDirectory = $cacheDirectory;
     }
-
     /**
      * @param string $containerName
      *
@@ -64,37 +59,21 @@ class ContainerProvider
      */
     public function get($containerName)
     {
-        $containerClassName = ucfirst($this->moduleName)
-            . ucfirst($containerName)
-            . 'Container'
-        ;
+        $containerClassName = \ucfirst($this->moduleName) . \ucfirst($containerName) . 'Container';
         $containerFilePath = $this->cacheDirectory->getPath() . '/' . $containerClassName . '.php';
         $containerConfigCache = new ConfigCache($containerFilePath, _PS_MODE_DEV_);
-
         if ($containerConfigCache->isFresh()) {
             require_once $containerFilePath;
-
             return new $containerClassName();
         }
-
         $containerBuilder = new ContainerBuilder();
-        $containerBuilder->set(
-            $this->moduleName . '.cache.directory',
-            $this->cacheDirectory
-        );
-        $moduleConfigPath = $this->moduleLocalPath
-            . 'config/'
-            . $containerName
-        ;
+        $containerBuilder->set($this->moduleName . '.cache.directory', $this->cacheDirectory);
+        $moduleConfigPath = $this->moduleLocalPath . 'config/' . $containerName;
         $loader = new YamlFileLoader($containerBuilder, new FileLocator($moduleConfigPath));
         $loader->load('services.yml');
         $containerBuilder->compile();
         $dumper = new PhpDumper($containerBuilder);
-        $containerConfigCache->write(
-            $dumper->dump(['class' => $containerClassName]),
-            $containerBuilder->getResources()
-        );
-
+        $containerConfigCache->write($dumper->dump(['class' => $containerClassName]), $containerBuilder->getResources());
         return $containerBuilder;
     }
 }

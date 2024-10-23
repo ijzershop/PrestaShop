@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits;
 
-namespace Symfony\Component\Cache\Traits;
-
-use Symfony\Component\Cache\PruneableInterface;
-use Symfony\Component\Cache\ResettableInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\PruneableInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\ResettableInterface;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  *
@@ -22,7 +20,6 @@ use Symfony\Component\Cache\ResettableInterface;
 trait ProxyTrait
 {
     private $pool;
-
     /**
      * {@inheritdoc}
      */
@@ -30,7 +27,6 @@ trait ProxyTrait
     {
         return $this->pool instanceof PruneableInterface && $this->pool->prune();
     }
-
     /**
      * {@inheritdoc}
      */

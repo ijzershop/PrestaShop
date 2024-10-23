@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\ExpressionLanguage;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage;
 
 /**
  * Represents an already parsed expression.
@@ -19,7 +18,6 @@ namespace Symfony\Component\ExpressionLanguage;
 class SerializedParsedExpression extends ParsedExpression
 {
     private $nodes;
-
     /**
      * @param string $expression An expression
      * @param string $nodes      The serialized nodes for the expression
@@ -29,9 +27,8 @@ class SerializedParsedExpression extends ParsedExpression
         $this->expression = (string) $expression;
         $this->nodes = $nodes;
     }
-
     public function getNodes()
     {
-        return unserialize($this->nodes);
+        return \unserialize($this->nodes);
     }
 }

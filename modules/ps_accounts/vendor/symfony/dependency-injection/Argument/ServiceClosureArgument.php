@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Argument;
 
-namespace Symfony\Component\DependencyInjection\Argument;
-
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 /**
  * Represents a service wrapped in a memoizing closure.
  *
@@ -22,12 +20,10 @@ use Symfony\Component\DependencyInjection\Reference;
 class ServiceClosureArgument implements ArgumentInterface
 {
     private $values;
-
     public function __construct(Reference $reference)
     {
         $this->values = [$reference];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -35,16 +31,14 @@ class ServiceClosureArgument implements ArgumentInterface
     {
         return $this->values;
     }
-
     /**
      * {@inheritdoc}
      */
     public function setValues(array $values)
     {
-        if ([0] !== array_keys($values) || !($values[0] instanceof Reference || null === $values[0])) {
+        if ([0] !== \array_keys($values) || !($values[0] instanceof Reference || null === $values[0])) {
             throw new InvalidArgumentException('A ServiceClosureArgument must hold one and only one Reference.');
         }
-
         $this->values = $values;
     }
 }

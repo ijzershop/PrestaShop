@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  *
@@ -21,12 +19,10 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 class DefaultsConfigurator extends AbstractServiceConfigurator
 {
     const FACTORY = 'defaults';
-
     use Traits\AutoconfigureTrait;
     use Traits\AutowireTrait;
     use Traits\BindTrait;
     use Traits\PublicTrait;
-
     /**
      * Adds a tag for this definition.
      *
@@ -37,23 +33,19 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
      *
      * @throws InvalidArgumentException when an invalid tag name or attribute is provided
      */
-    final public function tag($name, array $attributes = [])
+    public final function tag($name, array $attributes = [])
     {
         if (!\is_string($name) || '' === $name) {
             throw new InvalidArgumentException('The tag name in "_defaults" must be a non-empty string.');
         }
-
         foreach ($attributes as $attribute => $value) {
-            if (!is_scalar($value) && null !== $value) {
-                throw new InvalidArgumentException(sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type.', $name, $attribute));
+            if (!\is_scalar($value) && null !== $value) {
+                throw new InvalidArgumentException(\sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type.', $name, $attribute));
             }
         }
-
         $this->definition->addTag($name, $attributes);
-
         return $this;
     }
-
     /**
      * Defines an instanceof-conditional to be applied to following service definitions.
      *
@@ -61,7 +53,7 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
      *
      * @return InstanceofConfigurator
      */
-    final protected function setInstanceof($fqcn)
+    protected final function setInstanceof($fqcn)
     {
         return $this->parent->instanceof($fqcn);
     }

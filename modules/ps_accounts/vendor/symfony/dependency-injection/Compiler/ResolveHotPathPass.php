@@ -8,14 +8,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 /**
  * Propagate "container.hot_path" tags to referenced services.
  *
@@ -25,12 +23,10 @@ class ResolveHotPathPass extends AbstractRecursivePass
 {
     private $tagName;
     private $resolvedIds = [];
-
     public function __construct($tagName = 'container.hot_path')
     {
         $this->tagName = $tagName;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -43,11 +39,10 @@ class ResolveHotPathPass extends AbstractRecursivePass
             $this->resolvedIds = [];
         }
     }
-
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, $isRoot = \false)
     {
         if ($value instanceof ArgumentInterface) {
             return $value;
@@ -58,14 +53,12 @@ class ResolveHotPathPass extends AbstractRecursivePass
         if ($value instanceof Reference && ContainerBuilder::IGNORE_ON_UNINITIALIZED_REFERENCE !== $value->getInvalidBehavior() && $this->container->has($id = $this->container->normalizeId($value))) {
             $definition = $this->container->findDefinition($id);
             if (!$definition->hasTag($this->tagName) && !$definition->isDeprecated()) {
-                $this->resolvedIds[$id] = true;
+                $this->resolvedIds[$id] = \true;
                 $definition->addTag($this->tagName);
-                parent::processValue($definition, false);
+                parent::processValue($definition, \false);
             }
-
             return $value;
         }
-
         return parent::processValue($value, $isRoot);
     }
 }

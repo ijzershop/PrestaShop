@@ -8,13 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ParserCache;
 
-namespace Symfony\Component\ExpressionLanguage\ParserCache;
-
-@trigger_error('The '.__NAMESPACE__.'\ArrayParserCache class is deprecated since Symfony 3.2 and will be removed in 4.0. Use the Symfony\Component\Cache\Adapter\ArrayAdapter class instead.', \E_USER_DEPRECATED);
-
-use Symfony\Component\ExpressionLanguage\ParsedExpression;
-
+@\trigger_error('The ' . __NAMESPACE__ . '\\ArrayParserCache class is deprecated since Symfony 3.2 and will be removed in 4.0. Use the Symfony\\Component\\Cache\\Adapter\\ArrayAdapter class instead.', \E_USER_DEPRECATED);
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ParsedExpression;
 /**
  * @author Adrien Brault <adrien.brault@gmail.com>
  *
@@ -23,7 +20,6 @@ use Symfony\Component\ExpressionLanguage\ParsedExpression;
 class ArrayParserCache implements ParserCacheInterface
 {
     private $cache = [];
-
     /**
      * {@inheritdoc}
      */
@@ -31,7 +27,6 @@ class ArrayParserCache implements ParserCacheInterface
     {
         return isset($this->cache[$key]) ? $this->cache[$key] : null;
     }
-
     /**
      * {@inheritdoc}
      */

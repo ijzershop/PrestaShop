@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\ExpressionLanguage;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage;
 
 /**
  * Compiles a node to PHP code.
@@ -20,17 +19,14 @@ class Compiler
 {
     private $source;
     private $functions;
-
     public function __construct(array $functions)
     {
         $this->functions = $functions;
     }
-
     public function getFunction($name)
     {
         return $this->functions[$name];
     }
-
     /**
      * Gets the current PHP code after compilation.
      *
@@ -40,14 +36,11 @@ class Compiler
     {
         return $this->source;
     }
-
     public function reset()
     {
         $this->source = '';
-
         return $this;
     }
-
     /**
      * Compiles a node.
      *
@@ -56,23 +49,17 @@ class Compiler
     public function compile(Node\Node $node)
     {
         $node->compile($this);
-
         return $this;
     }
-
     public function subcompile(Node\Node $node)
     {
         $current = $this->source;
         $this->source = '';
-
         $node->compile($this);
-
         $source = $this->source;
         $this->source = $current;
-
         return $source;
     }
-
     /**
      * Adds a raw string to the compiled code.
      *
@@ -83,10 +70,8 @@ class Compiler
     public function raw($string)
     {
         $this->source .= $string;
-
         return $this;
     }
-
     /**
      * Adds a quoted string to the compiled code.
      *
@@ -96,11 +81,9 @@ class Compiler
      */
     public function string($value)
     {
-        $this->source .= sprintf('"%s"', addcslashes($value, "\0\t\"\$\\"));
-
+        $this->source .= \sprintf('"%s"', \addcslashes($value, "\x00\t\"\$\\"));
         return $this;
     }
-
     /**
      * Returns a PHP representation of a given value.
      *
@@ -111,14 +94,12 @@ class Compiler
     public function repr($value)
     {
         if (\is_int($value) || \is_float($value)) {
-            if (false !== $locale = setlocale(\LC_NUMERIC, 0)) {
-                setlocale(\LC_NUMERIC, 'C');
+            if (\false !== ($locale = \setlocale(\LC_NUMERIC, 0))) {
+                \setlocale(\LC_NUMERIC, 'C');
             }
-
             $this->raw($value);
-
-            if (false !== $locale) {
-                setlocale(\LC_NUMERIC, $locale);
+            if (\false !== $locale) {
+                \setlocale(\LC_NUMERIC, $locale);
             }
         } elseif (null === $value) {
             $this->raw('null');
@@ -126,12 +107,12 @@ class Compiler
             $this->raw($value ? 'true' : 'false');
         } elseif (\is_array($value)) {
             $this->raw('[');
-            $first = true;
+            $first = \true;
             foreach ($value as $key => $value) {
                 if (!$first) {
                     $this->raw(', ');
                 }
-                $first = false;
+                $first = \false;
                 $this->repr($key);
                 $this->raw(' => ');
                 $this->repr($value);
@@ -140,7 +121,6 @@ class Compiler
         } else {
             $this->string($value);
         }
-
         return $this;
     }
 }

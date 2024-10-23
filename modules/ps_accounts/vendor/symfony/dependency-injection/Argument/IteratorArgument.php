@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Argument;
 
-namespace Symfony\Component\DependencyInjection\Argument;
-
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 /**
  * Represents a collection of values to lazily iterate over.
  *
@@ -22,7 +20,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class IteratorArgument implements ArgumentInterface
 {
     private $values;
-
     /**
      * @param Reference[] $values
      */
@@ -30,7 +27,6 @@ class IteratorArgument implements ArgumentInterface
     {
         $this->setValues($values);
     }
-
     /**
      * @return array The values to lazily iterate over
      */
@@ -38,7 +34,6 @@ class IteratorArgument implements ArgumentInterface
     {
         return $this->values;
     }
-
     /**
      * @param Reference[] $values The service references to lazily iterate over
      */
@@ -46,10 +41,9 @@ class IteratorArgument implements ArgumentInterface
     {
         foreach ($values as $k => $v) {
             if (null !== $v && !$v instanceof Reference) {
-                throw new InvalidArgumentException(sprintf('An IteratorArgument must hold only Reference instances, "%s" given.', \is_object($v) ? \get_class($v) : \gettype($v)));
+                throw new InvalidArgumentException(\sprintf('An IteratorArgument must hold only Reference instances, "%s" given.', \is_object($v) ? \get_class($v) : \gettype($v)));
             }
         }
-
         $this->values = $values;
     }
 }

@@ -8,25 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
 class ParametersConfigurator extends AbstractConfigurator
 {
     const FACTORY = 'parameters';
-
     private $container;
-
     public function __construct(ContainerBuilder $container)
     {
         $this->container = $container;
     }
-
     /**
      * Creates a parameter.
      *
@@ -35,13 +30,11 @@ class ParametersConfigurator extends AbstractConfigurator
      *
      * @return $this
      */
-    final public function set($name, $value)
+    public final function set($name, $value)
     {
-        $this->container->setParameter($name, static::processValue($value, true));
-
+        $this->container->setParameter($name, static::processValue($value, \true));
         return $this;
     }
-
     /**
      * Creates a parameter.
      *
@@ -50,7 +43,7 @@ class ParametersConfigurator extends AbstractConfigurator
      *
      * @return $this
      */
-    final public function __invoke($name, $value)
+    public final function __invoke($name, $value)
     {
         return $this->set($name, $value);
     }

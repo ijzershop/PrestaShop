@@ -8,20 +8,17 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
-use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ChildDefinition;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
 class ServiceConfigurator extends AbstractServiceConfigurator
 {
     const FACTORY = 'services';
-
     use Traits\AbstractTrait;
     use Traits\ArgumentTrait;
     use Traits\AutoconfigureTrait;
@@ -41,26 +38,20 @@ class ServiceConfigurator extends AbstractServiceConfigurator
     use Traits\ShareTrait;
     use Traits\SyntheticTrait;
     use Traits\TagTrait;
-
     private $container;
     private $instanceof;
     private $allowParent;
-
     public function __construct(ContainerBuilder $container, array $instanceof, $allowParent, ServicesConfigurator $parent, Definition $definition, $id, array $defaultTags)
     {
         $this->container = $container;
         $this->instanceof = $instanceof;
         $this->allowParent = $allowParent;
-
         parent::__construct($parent, $definition, $id, $defaultTags);
     }
-
     public function __destruct()
     {
         parent::__destruct();
-
         $this->container->removeBindings($this->id);
-
         if (!$this->definition instanceof ChildDefinition) {
             $this->container->setDefinition($this->id, $this->definition->setInstanceofConditionals($this->instanceof));
         } else {

@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\LazyProxy\PhpDumper;
 
-namespace Symfony\Component\DependencyInjection\LazyProxy\PhpDumper;
-
-use Symfony\Component\DependencyInjection\Definition;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
 /**
  * Lazy proxy dumper capable of generating the instantiation logic PHP code for proxied services.
  *
@@ -26,7 +24,6 @@ interface DumperInterface
      * @return bool
      */
     public function isProxyCandidate(Definition $definition);
-
     /**
      * Generates the code to be used to instantiate a proxy in the dumped factory code.
      *
@@ -34,8 +31,7 @@ interface DumperInterface
      *
      * @return string
      */
-    public function getProxyFactoryCode(Definition $definition, $id/**, $factoryCode = null */);
-
+    public function getProxyFactoryCode(Definition $definition, $id);
     /**
      * Generates the code for the lazy proxy.
      *

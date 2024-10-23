@@ -8,16 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Symfony\Component\Cache\PruneableInterface;
-use Symfony\Component\Cache\Traits\FilesystemTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\PruneableInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\FilesystemTrait;
 class FilesystemAdapter extends AbstractAdapter implements PruneableInterface
 {
     use FilesystemTrait;
-
     /**
      * @param string      $namespace
      * @param int         $defaultLifetime

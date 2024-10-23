@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection;
 
-namespace Symfony\Component\DependencyInjection;
-
-use Symfony\Component\ExpressionLanguage\ExpressionFunction;
-use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ExpressionFunction;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 /**
  * Define some ExpressionLanguage functions.
  *
@@ -25,26 +23,20 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 class ExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
     private $serviceCompiler;
-
     public function __construct(callable $serviceCompiler = null)
     {
         $this->serviceCompiler = $serviceCompiler;
     }
-
     public function getFunctions()
     {
-        return [
-            new ExpressionFunction('service', $this->serviceCompiler ?: function ($arg) {
-                return sprintf('$this->get(%s)', $arg);
-            }, function (array $variables, $value) {
-                return $variables['container']->get($value);
-            }),
-
-            new ExpressionFunction('parameter', function ($arg) {
-                return sprintf('$this->getParameter(%s)', $arg);
-            }, function (array $variables, $value) {
-                return $variables['container']->getParameter($value);
-            }),
-        ];
+        return [new ExpressionFunction('service', $this->serviceCompiler ?: function ($arg) {
+            return \sprintf('$this->get(%s)', $arg);
+        }, function (array $variables, $value) {
+            return $variables['container']->get($value);
+        }), new ExpressionFunction('parameter', function ($arg) {
+            return \sprintf('$this->getParameter(%s)', $arg);
+        }, function (array $variables, $value) {
+            return $variables['container']->getParameter($value);
+        })];
     }
 }

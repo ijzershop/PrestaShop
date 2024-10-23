@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection;
 
 /**
  * Reference represents a service reference.
@@ -20,7 +19,6 @@ class Reference
 {
     private $id;
     private $invalidBehavior;
-
     /**
      * @param string $id              The service identifier
      * @param int    $invalidBehavior The behavior when the service does not exist
@@ -32,7 +30,6 @@ class Reference
         $this->id = (string) $id;
         $this->invalidBehavior = $invalidBehavior;
     }
-
     /**
      * @return string The service identifier
      */
@@ -40,7 +37,6 @@ class Reference
     {
         return $this->id;
     }
-
     /**
      * Returns the behavior to be used when the service does not exist.
      *

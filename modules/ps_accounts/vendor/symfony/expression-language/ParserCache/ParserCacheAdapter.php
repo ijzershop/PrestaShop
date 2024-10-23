@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ParserCache;
 
-namespace Symfony\Component\ExpressionLanguage\ParserCache;
-
-use Psr\Cache\CacheItemInterface;
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Cache\CacheItem;
-
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Cache\CacheItemInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Cache\CacheItemPoolInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\CacheItem;
 /**
  * @author Alexandre GESLIN <alexandre@gesl.in>
  *
@@ -24,25 +22,17 @@ class ParserCacheAdapter implements CacheItemPoolInterface
 {
     private $pool;
     private $createCacheItem;
-
     public function __construct(ParserCacheInterface $pool)
     {
         $this->pool = $pool;
-
-        $this->createCacheItem = \Closure::bind(
-            static function ($key, $value, $isHit) {
-                $item = new CacheItem();
-                $item->key = $key;
-                $item->value = $value;
-                $item->isHit = $isHit;
-
-                return $item;
-            },
-            null,
-            CacheItem::class
-        );
+        $this->createCacheItem = \Closure::bind(static function ($key, $value, $isHit) {
+            $item = new CacheItem();
+            $item->key = $key;
+            $item->value = $value;
+            $item->isHit = $isHit;
+            return $item;
+        }, null, CacheItem::class);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -50,10 +40,8 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         $value = $this->pool->fetch($key);
         $f = $this->createCacheItem;
-
         return $f($key, $value, null !== $value);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -61,7 +49,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         $this->pool->save($item->getKey(), $item->get());
     }
-
     /**
      * {@inheritdoc}
      */
@@ -69,7 +56,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -77,7 +63,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -85,7 +70,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -93,7 +77,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -101,7 +84,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -109,7 +91,6 @@ class ParserCacheAdapter implements CacheItemPoolInterface
     {
         throw new \BadMethodCallException('Not implemented.');
     }
-
     /**
      * {@inheritdoc}
      */

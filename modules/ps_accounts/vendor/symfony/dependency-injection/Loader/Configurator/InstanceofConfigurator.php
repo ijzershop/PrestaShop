@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
@@ -19,7 +18,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 class InstanceofConfigurator extends AbstractServiceConfigurator
 {
     const FACTORY = 'instanceof';
-
     use Traits\AutowireTrait;
     use Traits\CallTrait;
     use Traits\ConfiguratorTrait;
@@ -28,7 +26,6 @@ class InstanceofConfigurator extends AbstractServiceConfigurator
     use Traits\PublicTrait;
     use Traits\ShareTrait;
     use Traits\TagTrait;
-
     /**
      * Defines an instanceof-conditional to be applied to following service definitions.
      *
@@ -36,7 +33,7 @@ class InstanceofConfigurator extends AbstractServiceConfigurator
      *
      * @return self
      */
-    final protected function setInstanceof($fqcn)
+    protected final function setInstanceof($fqcn)
     {
         return $this->parent->instanceof($fqcn);
     }

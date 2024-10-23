@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\Config\Definition;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\Definition;
 
 /**
  * This class is the entry point for config normalization/merging/finalization.
@@ -33,10 +32,8 @@ class Processor
             $config = $configTree->normalize($config);
             $currentConfig = $configTree->merge($currentConfig, $config);
         }
-
         return $configTree->finalize($currentConfig);
     }
-
     /**
      * Processes an array of configurations.
      *
@@ -49,7 +46,6 @@ class Processor
     {
         return $this->process($configuration->getConfigTreeBuilder()->buildTree(), $configs);
     }
-
     /**
      * Normalizes a configuration entry.
      *
@@ -76,22 +72,18 @@ class Processor
     public static function normalizeConfig($config, $key, $plural = null)
     {
         if (null === $plural) {
-            $plural = $key.'s';
+            $plural = $key . 's';
         }
-
         if (isset($config[$plural])) {
             return $config[$plural];
         }
-
         if (isset($config[$key])) {
-            if (\is_string($config[$key]) || !\is_int(key($config[$key]))) {
+            if (\is_string($config[$key]) || !\is_int(\key($config[$key]))) {
                 // only one
-                return  [$config[$key]];
+                return [$config[$key]];
             }
-
-            return  $config[$key];
+            return $config[$key];
         }
-
         return [];
     }
 }

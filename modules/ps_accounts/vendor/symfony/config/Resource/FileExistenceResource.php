@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\Config\Resource;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\Resource;
 
 /**
  * FileExistenceResource represents a resource stored on the filesystem.
@@ -22,18 +21,15 @@ namespace Symfony\Component\Config\Resource;
 class FileExistenceResource implements SelfCheckingResourceInterface, \Serializable
 {
     private $resource;
-
     private $exists;
-
     /**
      * @param string $resource The file path to the resource
      */
     public function __construct($resource)
     {
         $this->resource = (string) $resource;
-        $this->exists = file_exists($resource);
+        $this->exists = \file_exists($resource);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -41,7 +37,6 @@ class FileExistenceResource implements SelfCheckingResourceInterface, \Serializa
     {
         return $this->resource;
     }
-
     /**
      * @return string The file path to the resource
      */
@@ -49,28 +44,25 @@ class FileExistenceResource implements SelfCheckingResourceInterface, \Serializa
     {
         return $this->resource;
     }
-
     /**
      * {@inheritdoc}
      */
     public function isFresh($timestamp)
     {
-        return file_exists($this->resource) === $this->exists;
+        return \file_exists($this->resource) === $this->exists;
     }
-
     /**
      * @internal
      */
     public function serialize()
     {
-        return serialize([$this->resource, $this->exists]);
+        return \serialize([$this->resource, $this->exists]);
     }
-
     /**
      * @internal
      */
     public function unserialize($serialized)
     {
-        list($this->resource, $this->exists) = unserialize($serialized);
+        list($this->resource, $this->exists) = \unserialize($serialized);
     }
 }

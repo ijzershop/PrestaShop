@@ -8,16 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Doctrine\Common\Cache\CacheProvider;
-use Symfony\Component\Cache\Traits\DoctrineTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Doctrine\Common\Cache\CacheProvider;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\DoctrineTrait;
 class DoctrineAdapter extends AbstractAdapter
 {
     use DoctrineTrait;
-
     /**
      * @param string $namespace
      * @param int    $defaultLifetime

@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Config;
 
-namespace Symfony\Component\DependencyInjection\Config;
-
-use Symfony\Component\Config\Resource\ResourceInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\Resource\ResourceInterface;
 /**
  * Tracks container parameters.
  *
@@ -21,7 +19,6 @@ use Symfony\Component\Config\Resource\ResourceInterface;
 class ContainerParametersResource implements ResourceInterface, \Serializable
 {
     private $parameters;
-
     /**
      * @param array $parameters The container parameters to track
      */
@@ -29,31 +26,27 @@ class ContainerParametersResource implements ResourceInterface, \Serializable
     {
         $this->parameters = $parameters;
     }
-
     /**
      * {@inheritdoc}
      */
     public function __toString()
     {
-        return 'container_parameters_'.md5(serialize($this->parameters));
+        return 'container_parameters_' . \md5(\serialize($this->parameters));
     }
-
     /**
      * @internal
      */
     public function serialize()
     {
-        return serialize($this->parameters);
+        return \serialize($this->parameters);
     }
-
     /**
      * @internal
      */
     public function unserialize($serialized)
     {
-        $this->parameters = unserialize($serialized);
+        $this->parameters = \unserialize($serialized);
     }
-
     /**
      * @return array Tracked parameters
      */

@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception;
 
-namespace Symfony\Component\DependencyInjection\Exception;
-
-use Psr\Container\ContainerExceptionInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Container\ContainerExceptionInterface;
 /**
  * Base ExceptionInterface for Dependency Injection component.
  *

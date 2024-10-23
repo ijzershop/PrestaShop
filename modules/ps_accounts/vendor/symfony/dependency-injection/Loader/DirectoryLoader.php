@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader;
 
 /**
  * DirectoryLoader is a recursive loader to go through directories.
@@ -23,32 +22,28 @@ class DirectoryLoader extends FileLoader
      */
     public function load($file, $type = null)
     {
-        $file = rtrim($file, '/');
+        $file = \rtrim($file, '/');
         $path = $this->locator->locate($file);
-        $this->container->fileExists($path, false);
-
-        foreach (scandir($path) as $dir) {
+        $this->container->fileExists($path, \false);
+        foreach (\scandir($path) as $dir) {
             if ('.' !== $dir[0]) {
-                if (is_dir($path.'/'.$dir)) {
-                    $dir .= '/'; // append / to allow recursion
+                if (\is_dir($path . '/' . $dir)) {
+                    $dir .= '/';
+                    // append / to allow recursion
                 }
-
                 $this->setCurrentDir($path);
-
-                $this->import($dir, null, false, $path);
+                $this->import($dir, null, \false, $path);
             }
         }
     }
-
     /**
      * {@inheritdoc}
      */
     public function supports($resource, $type = null)
     {
         if ('directory' === $type) {
-            return true;
+            return \true;
         }
-
-        return null === $type && \is_string($resource) && '/' === substr($resource, -1);
+        return null === $type && \is_string($resource) && '/' === \substr($resource, -1);
     }
 }

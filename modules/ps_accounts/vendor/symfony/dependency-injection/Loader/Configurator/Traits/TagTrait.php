@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
-
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 trait TagTrait
 {
     /**
@@ -23,20 +21,17 @@ trait TagTrait
      *
      * @return $this
      */
-    final public function tag($name, array $attributes = [])
+    public final function tag($name, array $attributes = [])
     {
         if (!\is_string($name) || '' === $name) {
-            throw new InvalidArgumentException(sprintf('The tag name for service "%s" must be a non-empty string.', $this->id));
+            throw new InvalidArgumentException(\sprintf('The tag name for service "%s" must be a non-empty string.', $this->id));
         }
-
         foreach ($attributes as $attribute => $value) {
-            if (!is_scalar($value) && null !== $value) {
-                throw new InvalidArgumentException(sprintf('A tag attribute must be of a scalar-type for service "%s", tag "%s", attribute "%s".', $this->id, $name, $attribute));
+            if (!\is_scalar($value) && null !== $value) {
+                throw new InvalidArgumentException(\sprintf('A tag attribute must be of a scalar-type for service "%s", tag "%s", attribute "%s".', $this->id, $name, $attribute));
             }
         }
-
         $this->definition->addTag($name, $attributes);
-
         return $this;
     }
 }

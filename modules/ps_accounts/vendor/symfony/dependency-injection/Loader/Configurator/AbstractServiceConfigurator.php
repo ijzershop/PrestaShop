@@ -8,18 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 abstract class AbstractServiceConfigurator extends AbstractConfigurator
 {
     protected $parent;
     protected $id;
     private $defaultTags = [];
-
     public function __construct(ServicesConfigurator $parent, Definition $definition, $id = null, array $defaultTags = [])
     {
         $this->parent = $parent;
@@ -27,7 +24,6 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
         $this->id = $id;
         $this->defaultTags = $defaultTags;
     }
-
     public function __destruct()
     {
         // default tags should be added last
@@ -38,7 +34,6 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
         }
         $this->defaultTags = [];
     }
-
     /**
      * Registers a service.
      *
@@ -47,13 +42,11 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
      *
      * @return ServiceConfigurator
      */
-    final public function set($id, $class = null)
+    public final function set($id, $class = null)
     {
         $this->__destruct();
-
         return $this->parent->set($id, $class);
     }
-
     /**
      * Creates an alias.
      *
@@ -62,13 +55,11 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
      *
      * @return AliasConfigurator
      */
-    final public function alias($id, $referencedId)
+    public final function alias($id, $referencedId)
     {
         $this->__destruct();
-
         return $this->parent->alias($id, $referencedId);
     }
-
     /**
      * Registers a PSR-4 namespace using a glob pattern.
      *
@@ -77,13 +68,11 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
      *
      * @return PrototypeConfigurator
      */
-    final public function load($namespace, $resource)
+    public final function load($namespace, $resource)
     {
         $this->__destruct();
-
         return $this->parent->load($namespace, $resource);
     }
-
     /**
      * Gets an already defined service definition.
      *
@@ -93,13 +82,11 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
      *
      * @throws ServiceNotFoundException if the service definition does not exist
      */
-    final public function get($id)
+    public final function get($id)
     {
         $this->__destruct();
-
         return $this->parent->get($id);
     }
-
     /**
      * Registers a service.
      *
@@ -108,10 +95,9 @@ abstract class AbstractServiceConfigurator extends AbstractConfigurator
      *
      * @return ServiceConfigurator
      */
-    final public function __invoke($id, $class = null)
+    public final function __invoke($id, $class = null)
     {
         $this->__destruct();
-
         return $this->parent->set($id, $class);
     }
 }

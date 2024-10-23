@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,8 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-
-namespace PrestaShop\ModuleLibCacheDirectoryProvider\Cache;
+namespace PrestaShop\Module\PsAccounts\Vendor\PrestaShop\ModuleLibCacheDirectoryProvider\Cache;
 
 /**
  * Class responsible for returning cache directory path.
@@ -29,17 +29,14 @@ class CacheDirectoryProvider
      * @var string PrestaShop version
      */
     private $psVersion;
-
     /**
      * @var string PrestaShop path
      */
     private $psPath;
-
     /**
      * @var bool PrestaShop Debug Mode
      */
     private $psIsDebugMode;
-
     /**
      * @param string $psVersion
      * @param string $psPath
@@ -51,43 +48,36 @@ class CacheDirectoryProvider
         $this->psPath = $psPath;
         $this->psIsDebugMode = $psIsDebugMode;
     }
-
     /**
      * @return string
      */
     public function getPath()
     {
-        if (defined('_PS_CACHE_DIR_')) {
-            return constant('_PS_CACHE_DIR_');
+        if (\defined('_PS_CACHE_DIR_')) {
+            return \constant('_PS_CACHE_DIR_');
         }
-
         $path = '/var/cache/' . $this->getEnvName();
-
-        if (version_compare($this->psVersion, '1.7.0.0', '<')) {
+        if (\version_compare($this->psVersion, '1.7.0.0', '<')) {
             $path = '/cache';
-        } elseif (version_compare($this->psVersion, '1.7.4.0', '<')) {
+        } elseif (\version_compare($this->psVersion, '1.7.4.0', '<')) {
             $path = '/app/cache/' . $this->getEnvName();
         }
-
         return $this->psPath . $path;
     }
-
     /**
      * @return bool
      */
     public function isWritable()
     {
-        return is_writable($this->getPath());
+        return \is_writable($this->getPath());
     }
-
     /**
      * @return bool
      */
     public function isReadable()
     {
-        return is_readable($this->getPath());
+        return \is_readable($this->getPath());
     }
-
     /**
      * @return string
      */

@@ -8,13 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ParserCache;
 
-namespace Symfony\Component\ExpressionLanguage\ParserCache;
-
-@trigger_error('The '.__NAMESPACE__.'\ParserCacheInterface interface is deprecated since Symfony 3.2 and will be removed in 4.0. Use Psr\Cache\CacheItemPoolInterface instead.', \E_USER_DEPRECATED);
-
-use Symfony\Component\ExpressionLanguage\ParsedExpression;
-
+@\trigger_error('The ' . __NAMESPACE__ . '\\ParserCacheInterface interface is deprecated since Symfony 3.2 and will be removed in 4.0. Use Psr\\Cache\\CacheItemPoolInterface instead.', \E_USER_DEPRECATED);
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\ParsedExpression;
 /**
  * @author Adrien Brault <adrien.brault@gmail.com>
  *
@@ -29,7 +26,6 @@ interface ParserCacheInterface
      * @param ParsedExpression $expression A ParsedExpression instance to store in the cache
      */
     public function save($key, ParsedExpression $expression);
-
     /**
      * Fetches an expression from the cache.
      *

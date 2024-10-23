@@ -227,16 +227,26 @@ class SeoExpert extends Module
     {
         self::$lang_cache = TinyCache::getCache('language_' . (int) $this->context->shop->id);
         $languages = Language::getLanguages(true, $this->context->shop->id);
+        $exprow = '';
+        $subtitle = '';
 
         if (self::$lang_cache === null || empty(self::$lang_cache)) {
             foreach ($languages as &$row) {
                 $exprow = explode(' (', $row['name']);
-                $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
-                self::$lang_cache[$row['iso_code']] = [
-                    'id' => (int) $row['id_lang'],
-                    'title' => trim($exprow[0]),
-                    'subtitle' => $subtitle,
-                ];
+                if(is_array($exprow)){
+                    $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
+                    self::$lang_cache[$row['iso_code']] = [
+                        'id' => (int) $row['id_lang'],
+                        'title' => trim($exprow[0]),
+                        'subtitle' => $subtitle,
+                    ];
+                } else {
+                    self::$lang_cache[$row['iso_code']] = [
+                        'id' => (int) $row['id_lang'],
+                        'title' => 'Nederlands',
+                        'subtitle' => 'Dutch',
+                    ];
+                }
             }
             // Cache Data
             TinyCache::setCache('language_' . (int) $this->context->shop->id, self::$lang_cache);

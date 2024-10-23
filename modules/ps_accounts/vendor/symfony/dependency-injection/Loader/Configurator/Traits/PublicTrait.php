@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
 /**
  * @method $this public()
@@ -20,20 +19,17 @@ trait PublicTrait
     /**
      * @return $this
      */
-    final protected function setPublic()
+    protected final function setPublic()
     {
-        $this->definition->setPublic(true);
-
+        $this->definition->setPublic(\true);
         return $this;
     }
-
     /**
      * @return $this
      */
-    final protected function setPrivate()
+    protected final function setPrivate()
     {
-        $this->definition->setPublic(false);
-
+        $this->definition->setPublic(\false);
         return $this;
     }
 }

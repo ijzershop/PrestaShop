@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Cache\CacheItem;
-
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Cache\CacheItemPoolInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\CacheItem;
 /**
  * Interface for adapters managing instances of Symfony's CacheItem.
  *
@@ -27,7 +25,6 @@ interface AdapterInterface extends CacheItemPoolInterface
      * @return CacheItem
      */
     public function getItem($key);
-
     /**
      * {@inheritdoc}
      *

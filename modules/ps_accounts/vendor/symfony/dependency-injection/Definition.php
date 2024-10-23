@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection;
 
-namespace Symfony\Component\DependencyInjection;
-
-use Symfony\Component\DependencyInjection\Argument\BoundArgument;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Exception\OutOfBoundsException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Argument\BoundArgument;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\OutOfBoundsException;
 /**
  * Definition represents a service definition.
  *
@@ -25,31 +23,28 @@ class Definition
     private $class;
     private $file;
     private $factory;
-    private $shared = true;
-    private $deprecated = false;
+    private $shared = \true;
+    private $deprecated = \false;
     private $deprecationTemplate;
     private $properties = [];
     private $calls = [];
     private $instanceof = [];
-    private $autoconfigured = false;
+    private $autoconfigured = \false;
     private $configurator;
     private $tags = [];
-    private $public = true;
-    private $private = true;
-    private $synthetic = false;
-    private $abstract = false;
-    private $lazy = false;
+    private $public = \true;
+    private $private = \true;
+    private $synthetic = \false;
+    private $abstract = \false;
+    private $lazy = \false;
     private $decoratedService;
-    private $autowired = false;
+    private $autowired = \false;
     private $autowiringTypes = [];
     private $changes = [];
     private $bindings = [];
     private $errors = [];
-
     protected $arguments = [];
-
     private static $defaultDeprecationTemplate = 'The "%service_id%" service is deprecated. You should stop using it, as it will soon be removed.';
-
     /**
      * @param string|null $class     The service class
      * @param array       $arguments An array of arguments to pass to the service constructor
@@ -61,7 +56,6 @@ class Definition
         }
         $this->arguments = $arguments;
     }
-
     /**
      * Returns all changes tracked for the Definition object.
      *
@@ -71,7 +65,6 @@ class Definition
     {
         return $this->changes;
     }
-
     /**
      * Sets the tracked changes for the Definition object.
      *
@@ -82,10 +75,8 @@ class Definition
     public function setChanges(array $changes)
     {
         $this->changes = $changes;
-
         return $this;
     }
-
     /**
      * Sets a factory.
      *
@@ -95,17 +86,13 @@ class Definition
      */
     public function setFactory($factory)
     {
-        $this->changes['factory'] = true;
-
-        if (\is_string($factory) && false !== strpos($factory, '::')) {
-            $factory = explode('::', $factory, 2);
+        $this->changes['factory'] = \true;
+        if (\is_string($factory) && \false !== \strpos($factory, '::')) {
+            $factory = \explode('::', $factory, 2);
         }
-
         $this->factory = $factory;
-
         return $this;
     }
-
     /**
      * Gets the factory.
      *
@@ -115,7 +102,6 @@ class Definition
     {
         return $this->factory;
     }
-
     /**
      * Sets the service that this service is decorating.
      *
@@ -130,20 +116,16 @@ class Definition
     public function setDecoratedService($id, $renamedId = null, $priority = 0)
     {
         if ($renamedId && $id === $renamedId) {
-            throw new InvalidArgumentException(sprintf('The decorated service inner name for "%s" must be different than the service name itself.', $id));
+            throw new InvalidArgumentException(\sprintf('The decorated service inner name for "%s" must be different than the service name itself.', $id));
         }
-
-        $this->changes['decorated_service'] = true;
-
+        $this->changes['decorated_service'] = \true;
         if (null === $id) {
             $this->decoratedService = null;
         } else {
             $this->decoratedService = [$id, $renamedId, (int) $priority];
         }
-
         return $this;
     }
-
     /**
      * Gets the service that this service is decorating.
      *
@@ -153,7 +135,6 @@ class Definition
     {
         return $this->decoratedService;
     }
-
     /**
      * Sets the service class.
      *
@@ -163,13 +144,10 @@ class Definition
      */
     public function setClass($class)
     {
-        $this->changes['class'] = true;
-
+        $this->changes['class'] = \true;
         $this->class = $class;
-
         return $this;
     }
-
     /**
      * Gets the service class.
      *
@@ -179,7 +157,6 @@ class Definition
     {
         return $this->class;
     }
-
     /**
      * Sets the arguments to pass to the service constructor/factory method.
      *
@@ -188,10 +165,8 @@ class Definition
     public function setArguments(array $arguments)
     {
         $this->arguments = $arguments;
-
         return $this;
     }
-
     /**
      * Sets the properties to define when creating the service.
      *
@@ -200,10 +175,8 @@ class Definition
     public function setProperties(array $properties)
     {
         $this->properties = $properties;
-
         return $this;
     }
-
     /**
      * Gets the properties to define when creating the service.
      *
@@ -213,7 +186,6 @@ class Definition
     {
         return $this->properties;
     }
-
     /**
      * Sets a specific property.
      *
@@ -225,10 +197,8 @@ class Definition
     public function setProperty($name, $value)
     {
         $this->properties[$name] = $value;
-
         return $this;
     }
-
     /**
      * Adds an argument to pass to the service constructor/factory method.
      *
@@ -239,10 +209,8 @@ class Definition
     public function addArgument($argument)
     {
         $this->arguments[] = $argument;
-
         return $this;
     }
-
     /**
      * Replaces a specific argument.
      *
@@ -258,20 +226,15 @@ class Definition
         if (0 === \count($this->arguments)) {
             throw new OutOfBoundsException('Cannot replace arguments if none have been configured yet.');
         }
-
         if (\is_int($index) && ($index < 0 || $index > \count($this->arguments) - 1)) {
-            throw new OutOfBoundsException(sprintf('The index "%d" is not in the range [0, %d].', $index, \count($this->arguments) - 1));
+            throw new OutOfBoundsException(\sprintf('The index "%d" is not in the range [0, %d].', $index, \count($this->arguments) - 1));
         }
-
         if (!\array_key_exists($index, $this->arguments)) {
-            throw new OutOfBoundsException(sprintf('The argument "%s" doesn\'t exist.', $index));
+            throw new OutOfBoundsException(\sprintf('The argument "%s" doesn\'t exist.', $index));
         }
-
         $this->arguments[$index] = $argument;
-
         return $this;
     }
-
     /**
      * Sets a specific argument.
      *
@@ -283,10 +246,8 @@ class Definition
     public function setArgument($key, $value)
     {
         $this->arguments[$key] = $value;
-
         return $this;
     }
-
     /**
      * Gets the arguments to pass to the service constructor/factory method.
      *
@@ -296,7 +257,6 @@ class Definition
     {
         return $this->arguments;
     }
-
     /**
      * Gets an argument to pass to the service constructor/factory method.
      *
@@ -309,12 +269,10 @@ class Definition
     public function getArgument($index)
     {
         if (!\array_key_exists($index, $this->arguments)) {
-            throw new OutOfBoundsException(sprintf('The argument "%s" doesn\'t exist.', $index));
+            throw new OutOfBoundsException(\sprintf('The argument "%s" doesn\'t exist.', $index));
         }
-
         return $this->arguments[$index];
     }
-
     /**
      * Sets the methods to call after service initialization.
      *
@@ -326,10 +284,8 @@ class Definition
         foreach ($calls as $call) {
             $this->addMethodCall($call[0], $call[1]);
         }
-
         return $this;
     }
-
     /**
      * Adds a method to call after service initialization.
      *
@@ -346,10 +302,8 @@ class Definition
             throw new InvalidArgumentException('Method name cannot be empty.');
         }
         $this->calls[] = [$method, $arguments];
-
         return $this;
     }
-
     /**
      * Removes a method to call after service initialization.
      *
@@ -365,10 +319,8 @@ class Definition
                 break;
             }
         }
-
         return $this;
     }
-
     /**
      * Check if the current definition has a given method to call after service initialization.
      *
@@ -380,13 +332,11 @@ class Definition
     {
         foreach ($this->calls as $call) {
             if ($call[0] === $method) {
-                return true;
+                return \true;
             }
         }
-
-        return false;
+        return \false;
     }
-
     /**
      * Gets the methods to call after service initialization.
      *
@@ -396,7 +346,6 @@ class Definition
     {
         return $this->calls;
     }
-
     /**
      * Sets the definition templates to conditionally apply on the current definition, keyed by parent interface/class.
      *
@@ -407,10 +356,8 @@ class Definition
     public function setInstanceofConditionals(array $instanceof)
     {
         $this->instanceof = $instanceof;
-
         return $this;
     }
-
     /**
      * Gets the definition templates to conditionally apply on the current definition, keyed by parent interface/class.
      *
@@ -420,7 +367,6 @@ class Definition
     {
         return $this->instanceof;
     }
-
     /**
      * Sets whether or not instanceof conditionals should be prepended with a global set.
      *
@@ -430,13 +376,10 @@ class Definition
      */
     public function setAutoconfigured($autoconfigured)
     {
-        $this->changes['autoconfigured'] = true;
-
+        $this->changes['autoconfigured'] = \true;
         $this->autoconfigured = $autoconfigured;
-
         return $this;
     }
-
     /**
      * @return bool
      */
@@ -444,7 +387,6 @@ class Definition
     {
         return $this->autoconfigured;
     }
-
     /**
      * Sets tags for this definition.
      *
@@ -453,10 +395,8 @@ class Definition
     public function setTags(array $tags)
     {
         $this->tags = $tags;
-
         return $this;
     }
-
     /**
      * Returns all tags.
      *
@@ -466,7 +406,6 @@ class Definition
     {
         return $this->tags;
     }
-
     /**
      * Gets a tag by name.
      *
@@ -478,7 +417,6 @@ class Definition
     {
         return isset($this->tags[$name]) ? $this->tags[$name] : [];
     }
-
     /**
      * Adds a tag for this definition.
      *
@@ -490,10 +428,8 @@ class Definition
     public function addTag($name, array $attributes = [])
     {
         $this->tags[$name][] = $attributes;
-
         return $this;
     }
-
     /**
      * Whether this definition has a tag with the given name.
      *
@@ -505,7 +441,6 @@ class Definition
     {
         return isset($this->tags[$name]);
     }
-
     /**
      * Clears all tags for a given name.
      *
@@ -516,10 +451,8 @@ class Definition
     public function clearTag($name)
     {
         unset($this->tags[$name]);
-
         return $this;
     }
-
     /**
      * Clears the tags for this definition.
      *
@@ -528,10 +461,8 @@ class Definition
     public function clearTags()
     {
         $this->tags = [];
-
         return $this;
     }
-
     /**
      * Sets a file to require before creating the service.
      *
@@ -541,13 +472,10 @@ class Definition
      */
     public function setFile($file)
     {
-        $this->changes['file'] = true;
-
+        $this->changes['file'] = \true;
         $this->file = $file;
-
         return $this;
     }
-
     /**
      * Gets the file to require before creating the service.
      *
@@ -557,7 +485,6 @@ class Definition
     {
         return $this->file;
     }
-
     /**
      * Sets if the service must be shared or not.
      *
@@ -567,13 +494,10 @@ class Definition
      */
     public function setShared($shared)
     {
-        $this->changes['shared'] = true;
-
+        $this->changes['shared'] = \true;
         $this->shared = (bool) $shared;
-
         return $this;
     }
-
     /**
      * Whether this service is shared.
      *
@@ -583,7 +507,6 @@ class Definition
     {
         return $this->shared;
     }
-
     /**
      * Sets the visibility of this service.
      *
@@ -593,14 +516,11 @@ class Definition
      */
     public function setPublic($boolean)
     {
-        $this->changes['public'] = true;
-
+        $this->changes['public'] = \true;
         $this->public = (bool) $boolean;
-        $this->private = false;
-
+        $this->private = \false;
         return $this;
     }
-
     /**
      * Whether this service is public facing.
      *
@@ -610,7 +530,6 @@ class Definition
     {
         return $this->public;
     }
-
     /**
      * Sets if this service is private.
      *
@@ -626,10 +545,8 @@ class Definition
     public function setPrivate($boolean)
     {
         $this->private = (bool) $boolean;
-
         return $this;
     }
-
     /**
      * Whether this service is private.
      *
@@ -639,7 +556,6 @@ class Definition
     {
         return $this->private;
     }
-
     /**
      * Sets the lazy flag of this service.
      *
@@ -649,13 +565,10 @@ class Definition
      */
     public function setLazy($lazy)
     {
-        $this->changes['lazy'] = true;
-
+        $this->changes['lazy'] = \true;
         $this->lazy = (bool) $lazy;
-
         return $this;
     }
-
     /**
      * Whether this service is lazy.
      *
@@ -665,7 +578,6 @@ class Definition
     {
         return $this->lazy;
     }
-
     /**
      * Sets whether this definition is synthetic, that is not constructed by the
      * container, but dynamically injected.
@@ -677,10 +589,8 @@ class Definition
     public function setSynthetic($boolean)
     {
         $this->synthetic = (bool) $boolean;
-
         return $this;
     }
-
     /**
      * Whether this definition is synthetic, that is not constructed by the
      * container, but dynamically injected.
@@ -691,7 +601,6 @@ class Definition
     {
         return $this->synthetic;
     }
-
     /**
      * Whether this definition is abstract, that means it merely serves as a
      * template for other definitions.
@@ -703,10 +612,8 @@ class Definition
     public function setAbstract($boolean)
     {
         $this->abstract = (bool) $boolean;
-
         return $this;
     }
-
     /**
      * Whether this definition is abstract, that means it merely serves as a
      * template for other definitions.
@@ -717,7 +624,6 @@ class Definition
     {
         return $this->abstract;
     }
-
     /**
      * Whether this definition is deprecated, that means it should not be called
      * anymore.
@@ -729,27 +635,21 @@ class Definition
      *
      * @throws InvalidArgumentException when the message template is invalid
      */
-    public function setDeprecated($status = true, $template = null)
+    public function setDeprecated($status = \true, $template = null)
     {
         if (null !== $template) {
-            if (preg_match('#[\r\n]|\*/#', $template)) {
+            if (\preg_match('#[\\r\\n]|\\*/#', $template)) {
                 throw new InvalidArgumentException('Invalid characters found in deprecation template.');
             }
-
-            if (false === strpos($template, '%service_id%')) {
+            if (\false === \strpos($template, '%service_id%')) {
                 throw new InvalidArgumentException('The deprecation template must contain the "%service_id%" placeholder.');
             }
-
             $this->deprecationTemplate = $template;
         }
-
-        $this->changes['deprecated'] = true;
-
+        $this->changes['deprecated'] = \true;
         $this->deprecated = (bool) $status;
-
         return $this;
     }
-
     /**
      * Whether this definition is deprecated, that means it should not be called
      * anymore.
@@ -760,7 +660,6 @@ class Definition
     {
         return $this->deprecated;
     }
-
     /**
      * Message to use if this definition is deprecated.
      *
@@ -770,9 +669,8 @@ class Definition
      */
     public function getDeprecationMessage($id)
     {
-        return str_replace('%service_id%', $id, $this->deprecationTemplate ?: self::$defaultDeprecationTemplate);
+        return \str_replace('%service_id%', $id, $this->deprecationTemplate ?: self::$defaultDeprecationTemplate);
     }
-
     /**
      * Sets a configurator to call after the service is fully initialized.
      *
@@ -782,17 +680,13 @@ class Definition
      */
     public function setConfigurator($configurator)
     {
-        $this->changes['configurator'] = true;
-
-        if (\is_string($configurator) && false !== strpos($configurator, '::')) {
-            $configurator = explode('::', $configurator, 2);
+        $this->changes['configurator'] = \true;
+        if (\is_string($configurator) && \false !== \strpos($configurator, '::')) {
+            $configurator = \explode('::', $configurator, 2);
         }
-
         $this->configurator = $configurator;
-
         return $this;
     }
-
     /**
      * Gets the configurator to call after the service is fully initialized.
      *
@@ -802,7 +696,6 @@ class Definition
     {
         return $this->configurator;
     }
-
     /**
      * Sets types that will default to this definition.
      *
@@ -814,17 +707,13 @@ class Definition
      */
     public function setAutowiringTypes(array $types)
     {
-        @trigger_error('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead.', \E_USER_DEPRECATED);
-
+        @\trigger_error('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead.', \E_USER_DEPRECATED);
         $this->autowiringTypes = [];
-
         foreach ($types as $type) {
-            $this->autowiringTypes[$type] = true;
+            $this->autowiringTypes[$type] = \true;
         }
-
         return $this;
     }
-
     /**
      * Is the definition autowired?
      *
@@ -834,7 +723,6 @@ class Definition
     {
         return $this->autowired;
     }
-
     /**
      * Enables/disables autowiring.
      *
@@ -844,13 +732,10 @@ class Definition
      */
     public function setAutowired($autowired)
     {
-        $this->changes['autowired'] = true;
-
+        $this->changes['autowired'] = \true;
         $this->autowired = (bool) $autowired;
-
         return $this;
     }
-
     /**
      * Gets autowiring types that will default to this definition.
      *
@@ -858,15 +743,13 @@ class Definition
      *
      * @deprecated since version 3.3, to be removed in 4.0.
      */
-    public function getAutowiringTypes(/*$triggerDeprecation = true*/)
+    public function getAutowiringTypes()
     {
-        if (1 > \func_num_args() || func_get_arg(0)) {
-            @trigger_error('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead.', \E_USER_DEPRECATED);
+        if (1 > \func_num_args() || \func_get_arg(0)) {
+            @\trigger_error('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead.', \E_USER_DEPRECATED);
         }
-
-        return array_keys($this->autowiringTypes);
+        return \array_keys($this->autowiringTypes);
     }
-
     /**
      * Adds a type that will default to this definition.
      *
@@ -878,13 +761,10 @@ class Definition
      */
     public function addAutowiringType($type)
     {
-        @trigger_error(sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
-
-        $this->autowiringTypes[$type] = true;
-
+        @\trigger_error(\sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
+        $this->autowiringTypes[$type] = \true;
         return $this;
     }
-
     /**
      * Removes a type.
      *
@@ -896,13 +776,10 @@ class Definition
      */
     public function removeAutowiringType($type)
     {
-        @trigger_error(sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
-
+        @\trigger_error(\sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
         unset($this->autowiringTypes[$type]);
-
         return $this;
     }
-
     /**
      * Will this definition default for the given type?
      *
@@ -914,11 +791,9 @@ class Definition
      */
     public function hasAutowiringType($type)
     {
-        @trigger_error(sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
-
+        @\trigger_error(\sprintf('Autowiring-types are deprecated since Symfony 3.3 and will be removed in 4.0. Use aliases instead for "%s".', $type), \E_USER_DEPRECATED);
         return isset($this->autowiringTypes[$type]);
     }
-
     /**
      * Gets bindings.
      *
@@ -928,7 +803,6 @@ class Definition
     {
         return $this->bindings;
     }
-
     /**
      * Sets bindings.
      *
@@ -945,12 +819,9 @@ class Definition
                 $bindings[$key] = new BoundArgument($binding);
             }
         }
-
         $this->bindings = $bindings;
-
         return $this;
     }
-
     /**
      * Add an error that occurred when building this Definition.
      *
@@ -960,7 +831,6 @@ class Definition
     {
         $this->errors[] = $error;
     }
-
     /**
      * Returns any errors that occurred while building this Definition.
      *

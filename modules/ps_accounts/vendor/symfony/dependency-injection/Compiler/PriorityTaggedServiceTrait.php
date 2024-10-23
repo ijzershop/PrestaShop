@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 /**
  * Trait that allows a generic method to find and sort service by priority option in the tag.
  *
@@ -38,17 +36,14 @@ trait PriorityTaggedServiceTrait
     private function findAndSortTaggedServices($tagName, ContainerBuilder $container)
     {
         $services = [];
-
-        foreach ($container->findTaggedServiceIds($tagName, true) as $serviceId => $attributes) {
+        foreach ($container->findTaggedServiceIds($tagName, \true) as $serviceId => $attributes) {
             $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
             $services[$priority][] = new Reference($serviceId);
         }
-
         if ($services) {
-            krsort($services);
-            $services = \call_user_func_array('array_merge', $services);
+            \krsort($services);
+            $services = \call_user_func_array('PrestaShop\\Module\\PsAccounts\\Vendor\\array_merge', $services);
         }
-
         return $services;
     }
 }

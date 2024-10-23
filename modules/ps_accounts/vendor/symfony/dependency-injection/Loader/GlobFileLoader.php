@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader;
 
 /**
  * GlobFileLoader loads files from a glob pattern.
@@ -23,13 +22,11 @@ class GlobFileLoader extends FileLoader
      */
     public function load($resource, $type = null)
     {
-        foreach ($this->glob($resource, false, $globResource) as $path => $info) {
+        foreach ($this->glob($resource, \false, $globResource) as $path => $info) {
             $this->import($path);
         }
-
         $this->container->addResource($globResource);
     }
-
     /**
      * {@inheritdoc}
      */

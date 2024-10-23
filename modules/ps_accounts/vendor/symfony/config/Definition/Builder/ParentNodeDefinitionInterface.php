@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\Config\Definition\Builder;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\Definition\Builder;
 
 /**
  * An interface that must be implemented by nodes which can have children.
@@ -24,7 +23,6 @@ interface ParentNodeDefinitionInterface
      * @return NodeBuilder
      */
     public function children();
-
     /**
      * Appends a node definition.
      *
@@ -41,7 +39,6 @@ interface ParentNodeDefinitionInterface
      * @return $this
      */
     public function append(NodeDefinition $node);
-
     /**
      * Sets a custom children builder.
      */

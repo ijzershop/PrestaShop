@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ContainerBuilder;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 /**
  * Replaces aliases with actual service definitions, effectively removing these
  * aliases.
@@ -24,7 +22,6 @@ use Symfony\Component\DependencyInjection\Reference;
 class ReplaceAliasByActualDefinitionPass extends AbstractRecursivePass
 {
     private $replacements;
-
     /**
      * Process the Container to replace aliases with service definitions.
      *
@@ -50,11 +47,11 @@ class ReplaceAliasByActualDefinitionPass extends AbstractRecursivePass
                 continue;
             }
             // Process new target
-            $seenAliasTargets[$targetId] = true;
+            $seenAliasTargets[$targetId] = \true;
             try {
                 $definition = $container->getDefinition($targetId);
             } catch (InvalidArgumentException $e) {
-                throw new InvalidArgumentException(sprintf('Unable to replace alias "%s" with actual definition "%s".', $definitionId, $targetId), null, $e);
+                throw new InvalidArgumentException(\sprintf('Unable to replace alias "%s" with actual definition "%s".', $definitionId, $targetId), null, $e);
             }
             if ($definition->isPublic() || $definition->isPrivate()) {
                 continue;
@@ -67,23 +64,20 @@ class ReplaceAliasByActualDefinitionPass extends AbstractRecursivePass
             $replacements[$targetId] = $definitionId;
         }
         $this->replacements = $replacements;
-
         parent::process($container);
         $this->replacements = [];
     }
-
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, $isRoot = \false)
     {
         if ($value instanceof Reference && isset($this->replacements[$referenceId = $this->container->normalizeId($value)])) {
             // Perform the replacement
             $newId = $this->replacements[$referenceId];
             $value = new Reference($newId, $value->getInvalidBehavior());
-            $this->container->log($this, sprintf('Changed reference of service "%s" previously pointing to "%s" to "%s".', $this->currentId, $referenceId, $newId));
+            $this->container->log($this, \sprintf('Changed reference of service "%s" previously pointing to "%s" to "%s".', $this->currentId, $referenceId, $newId));
         }
-
         return parent::processValue($value, $isRoot);
     }
 }

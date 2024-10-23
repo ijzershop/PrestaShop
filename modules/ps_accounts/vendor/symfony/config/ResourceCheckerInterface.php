@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config;
 
-namespace Symfony\Component\Config;
-
-use Symfony\Component\Config\Resource\ResourceInterface;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Config\Resource\ResourceInterface;
 /**
  * Interface for ResourceCheckers.
  *
@@ -35,7 +33,6 @@ interface ResourceCheckerInterface
      * @return bool True if the ResourceChecker can handle this resource type, false if not
      */
     public function supports(ResourceInterface $metadata);
-
     /**
      * Validates the resource.
      *

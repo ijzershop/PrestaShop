@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\ExpressionLanguage;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage;
 
 /**
  * Represents a Token.
@@ -21,14 +20,12 @@ class Token
     public $value;
     public $type;
     public $cursor;
-
     const EOF_TYPE = 'end of expression';
     const NAME_TYPE = 'name';
     const NUMBER_TYPE = 'number';
     const STRING_TYPE = 'string';
     const OPERATOR_TYPE = 'operator';
     const PUNCTUATION_TYPE = 'punctuation';
-
     /**
      * @param string                $type   The type of the token (self::*_TYPE)
      * @param string|int|float|null $value  The token value
@@ -40,7 +37,6 @@ class Token
         $this->value = $value;
         $this->cursor = $cursor;
     }
-
     /**
      * Returns a string representation of the token.
      *
@@ -48,9 +44,8 @@ class Token
      */
     public function __toString()
     {
-        return sprintf('%3d %-11s %s', $this->cursor, strtoupper($this->type), $this->value);
+        return \sprintf('%3d %-11s %s', $this->cursor, \strtoupper($this->type), $this->value);
     }
-
     /**
      * Tests the current token for a type and/or a value.
      *

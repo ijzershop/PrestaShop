@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Compiler;
 
-namespace Symfony\Component\DependencyInjection\Compiler;
-
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 /**
  * Resolves all TaggedIteratorArgument arguments.
  *
@@ -21,18 +19,15 @@ use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 class ResolveTaggedIteratorArgumentPass extends AbstractRecursivePass
 {
     use PriorityTaggedServiceTrait;
-
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, $isRoot = \false)
     {
         if (!$value instanceof TaggedIteratorArgument) {
             return parent::processValue($value, $isRoot);
         }
-
         $value->setValues($this->findAndSortTaggedServices($value->getTag(), $this->container));
-
         return $value;
     }
 }

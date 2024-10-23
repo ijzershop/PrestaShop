@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
 trait LazyTrait
 {
@@ -20,10 +19,9 @@ trait LazyTrait
      *
      * @return $this
      */
-    final public function lazy($lazy = true)
+    public final function lazy($lazy = \true)
     {
         $this->definition->setLazy($lazy);
-
         return $this;
     }
 }

@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
 /**
  * @method $this class(string $class)
@@ -23,10 +22,9 @@ trait ClassTrait
      *
      * @return $this
      */
-    final protected function setClass($class)
+    protected final function setClass($class)
     {
         $this->definition->setClass($class);
-
         return $this;
     }
 }

@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\Node;
 
-namespace Symfony\Component\ExpressionLanguage\Node;
-
-use Symfony\Component\ExpressionLanguage\Compiler;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\ExpressionLanguage\Compiler;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  *
@@ -21,21 +19,17 @@ use Symfony\Component\ExpressionLanguage\Compiler;
 class ArrayNode extends Node
 {
     protected $index;
-
     public function __construct()
     {
         $this->index = -1;
     }
-
     public function addElement(Node $value, Node $key = null)
     {
         if (null === $key) {
             $key = new ConstantNode(++$this->index);
         }
-
-        array_push($this->nodes, $key, $value);
+        \array_push($this->nodes, $key, $value);
     }
-
     /**
      * Compiles the node to PHP.
      */
@@ -45,26 +39,21 @@ class ArrayNode extends Node
         $this->compileArguments($compiler);
         $compiler->raw(']');
     }
-
     public function evaluate($functions, $values)
     {
         $result = [];
         foreach ($this->getKeyValuePairs() as $pair) {
             $result[$pair['key']->evaluate($functions, $values)] = $pair['value']->evaluate($functions, $values);
         }
-
         return $result;
     }
-
     public function toArray()
     {
         $value = [];
         foreach ($this->getKeyValuePairs() as $pair) {
             $value[$pair['key']->attributes['value']] = $pair['value'];
         }
-
         $array = [];
-
         if ($this->isHash($value)) {
             foreach ($value as $k => $v) {
                 $array[] = ', ';
@@ -82,36 +71,27 @@ class ArrayNode extends Node
             $array[0] = '[';
             $array[] = ']';
         }
-
         return $array;
     }
-
     protected function getKeyValuePairs()
     {
         $pairs = [];
-        foreach (array_chunk($this->nodes, 2) as $pair) {
+        foreach (\array_chunk($this->nodes, 2) as $pair) {
             $pairs[] = ['key' => $pair[0], 'value' => $pair[1]];
         }
-
         return $pairs;
     }
-
-    protected function compileArguments(Compiler $compiler, $withKeys = true)
+    protected function compileArguments(Compiler $compiler, $withKeys = \true)
     {
-        $first = true;
+        $first = \true;
         foreach ($this->getKeyValuePairs() as $pair) {
             if (!$first) {
                 $compiler->raw(', ');
             }
-            $first = false;
-
+            $first = \false;
             if ($withKeys) {
-                $compiler
-                    ->compile($pair['key'])
-                    ->raw(' => ')
-                ;
+                $compiler->compile($pair['key'])->raw(' => ');
             }
-
             $compiler->compile($pair['value']);
         }
     }

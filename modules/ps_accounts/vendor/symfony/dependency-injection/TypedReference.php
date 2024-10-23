@@ -8,8 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
-namespace Symfony\Component\DependencyInjection;
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection;
 
 /**
  * Represents a PHP type-hinted service reference.
@@ -20,7 +19,6 @@ class TypedReference extends Reference
 {
     private $type;
     private $requiringClass;
-
     /**
      * @param string $id              The service identifier
      * @param string $type            The PHP type of the identified service
@@ -33,19 +31,16 @@ class TypedReference extends Reference
         $this->type = $type;
         $this->requiringClass = $requiringClass;
     }
-
     public function getType()
     {
         return $this->type;
     }
-
     public function getRequiringClass()
     {
         return $this->requiringClass;
     }
-
     public function canBeAutoregistered()
     {
-        return $this->requiringClass && (false !== $i = strpos($this->type, '\\')) && 0 === strncasecmp($this->type, $this->requiringClass, 1 + $i);
+        return $this->requiringClass && \false !== ($i = \strpos($this->type, '\\')) && 0 === \strncasecmp($this->type, $this->requiringClass, 1 + $i);
     }
 }

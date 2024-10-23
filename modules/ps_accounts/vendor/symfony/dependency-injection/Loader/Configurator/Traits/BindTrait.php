@@ -8,12 +8,10 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator\Traits;
-
-use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Reference;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Reference;
 trait BindTrait
 {
     /**
@@ -28,16 +26,15 @@ trait BindTrait
      *
      * @return $this
      */
-    final public function bind($nameOrFqcn, $valueOrRef)
+    public final function bind($nameOrFqcn, $valueOrRef)
     {
-        $valueOrRef = static::processValue($valueOrRef, true);
+        $valueOrRef = static::processValue($valueOrRef, \true);
         if (isset($nameOrFqcn[0]) && '$' !== $nameOrFqcn[0] && !$valueOrRef instanceof Reference) {
-            throw new InvalidArgumentException(sprintf('Invalid binding for service "%s": named arguments must start with a "$", and FQCN must map to references. Neither applies to binding "%s".', $this->id, $nameOrFqcn));
+            throw new InvalidArgumentException(\sprintf('Invalid binding for service "%s": named arguments must start with a "$", and FQCN must map to references. Neither applies to binding "%s".', $this->id, $nameOrFqcn));
         }
         $bindings = $this->definition->getBindings();
         $bindings[$nameOrFqcn] = $valueOrRef;
         $this->definition->setBindings($bindings);
-
         return $this;
     }
 }

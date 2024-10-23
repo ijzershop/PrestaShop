@@ -8,17 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Symfony\Component\Cache\Traits\MemcachedTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\MemcachedTrait;
 class MemcachedAdapter extends AbstractAdapter
 {
     use MemcachedTrait;
-
     protected $maxIdLength = 250;
-
     /**
      * Using a MemcachedAdapter with a TagAwareAdapter for storing tags is discouraged.
      * Using a RedisAdapter is recommended instead. If you cannot do otherwise, be aware that:

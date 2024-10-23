@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\ParameterBag;
 
-namespace Symfony\Component\DependencyInjection\ParameterBag;
-
-use Symfony\Component\DependencyInjection\Exception\LogicException;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Exception\LogicException;
 /**
  * Holds read-only parameters.
  *
@@ -31,9 +29,8 @@ class FrozenParameterBag extends ParameterBag
     public function __construct(array $parameters = [])
     {
         $this->parameters = $parameters;
-        $this->resolved = true;
+        $this->resolved = \true;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -41,7 +38,6 @@ class FrozenParameterBag extends ParameterBag
     {
         throw new LogicException('Impossible to call clear() on a frozen ParameterBag.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -49,7 +45,6 @@ class FrozenParameterBag extends ParameterBag
     {
         throw new LogicException('Impossible to call add() on a frozen ParameterBag.');
     }
-
     /**
      * {@inheritdoc}
      */
@@ -57,7 +52,6 @@ class FrozenParameterBag extends ParameterBag
     {
         throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
-
     /**
      * {@inheritdoc}
      */

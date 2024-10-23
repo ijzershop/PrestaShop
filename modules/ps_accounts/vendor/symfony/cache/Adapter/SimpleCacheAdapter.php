@@ -8,13 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Psr\SimpleCache\CacheInterface;
-use Symfony\Component\Cache\PruneableInterface;
-use Symfony\Component\Cache\Traits\ProxyTrait;
-
+use PrestaShop\Module\PsAccounts\Vendor\Psr\SimpleCache\CacheInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\PruneableInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Traits\ProxyTrait;
 /**
  * @author Nicolas Grekas <p@tchwork.com>
  */
@@ -24,19 +22,14 @@ class SimpleCacheAdapter extends AbstractAdapter implements PruneableInterface
      * @internal
      */
     const NS_SEPARATOR = '_';
-
     use ProxyTrait;
-
     private $miss;
-
     public function __construct(CacheInterface $pool, $namespace = '', $defaultLifetime = 0)
     {
         parent::__construct($namespace, $defaultLifetime);
-
         $this->pool = $pool;
         $this->miss = new \stdClass();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -44,11 +37,10 @@ class SimpleCacheAdapter extends AbstractAdapter implements PruneableInterface
     {
         foreach ($this->pool->getMultiple($ids, $this->miss) as $key => $value) {
             if ($this->miss !== $value) {
-                yield $key => $value;
+                (yield $key => $value);
             }
         }
     }
-
     /**
      * {@inheritdoc}
      */
@@ -56,7 +48,6 @@ class SimpleCacheAdapter extends AbstractAdapter implements PruneableInterface
     {
         return $this->pool->has($id);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -64,7 +55,6 @@ class SimpleCacheAdapter extends AbstractAdapter implements PruneableInterface
     {
         return $this->pool->clear();
     }
-
     /**
      * {@inheritdoc}
      */
@@ -72,7 +62,6 @@ class SimpleCacheAdapter extends AbstractAdapter implements PruneableInterface
     {
         return $this->pool->deleteMultiple($ids);
     }
-
     /**
      * {@inheritdoc}
      */

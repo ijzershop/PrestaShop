@@ -1,6 +1,6 @@
 <?php
 
-namespace Psr\Cache;
+namespace PrestaShop\Module\PsAccounts\Vendor\Psr\Cache;
 
 /**
  * Exception interface for invalid cache arguments.

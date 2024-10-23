@@ -8,11 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\LazyProxy\PhpDumper;
 
-namespace Symfony\Component\DependencyInjection\LazyProxy\PhpDumper;
-
-use Symfony\Component\DependencyInjection\Definition;
-
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\DependencyInjection\Definition;
 /**
  * Null dumper, negates any proxy code generation for any given service definition.
  *
@@ -27,9 +25,8 @@ class NullDumper implements DumperInterface
      */
     public function isProxyCandidate(Definition $definition)
     {
-        return false;
+        return \false;
     }
-
     /**
      * {@inheritdoc}
      */
@@ -37,7 +34,6 @@ class NullDumper implements DumperInterface
     {
         return '';
     }
-
     /**
      * {@inheritdoc}
      */

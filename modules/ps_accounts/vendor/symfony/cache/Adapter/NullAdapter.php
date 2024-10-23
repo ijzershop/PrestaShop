@@ -8,44 +8,33 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+namespace PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\Adapter;
 
-namespace Symfony\Component\Cache\Adapter;
-
-use Psr\Cache\CacheItemInterface;
-use Symfony\Component\Cache\CacheItem;
-
+use PrestaShop\Module\PsAccounts\Vendor\Psr\Cache\CacheItemInterface;
+use PrestaShop\Module\PsAccounts\Vendor\Symfony\Component\Cache\CacheItem;
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  */
 class NullAdapter implements AdapterInterface
 {
     private $createCacheItem;
-
     public function __construct()
     {
-        $this->createCacheItem = \Closure::bind(
-            function ($key) {
-                $item = new CacheItem();
-                $item->key = $key;
-                $item->isHit = false;
-
-                return $item;
-            },
-            $this,
-            CacheItem::class
-        );
+        $this->createCacheItem = \Closure::bind(function ($key) {
+            $item = new CacheItem();
+            $item->key = $key;
+            $item->isHit = \false;
+            return $item;
+        }, $this, CacheItem::class);
     }
-
     /**
      * {@inheritdoc}
      */
     public function getItem($key)
     {
         $f = $this->createCacheItem;
-
         return $f($key);
     }
-
     /**
      * {@inheritdoc}
      */
@@ -53,69 +42,60 @@ class NullAdapter implements AdapterInterface
     {
         return $this->generateItems($keys);
     }
-
     /**
      * {@inheritdoc}
      */
     public function hasItem($key)
     {
-        return false;
+        return \false;
     }
-
     /**
      * {@inheritdoc}
      */
     public function clear()
     {
-        return true;
+        return \true;
     }
-
     /**
      * {@inheritdoc}
      */
     public function deleteItem($key)
     {
-        return true;
+        return \true;
     }
-
     /**
      * {@inheritdoc}
      */
     public function deleteItems(array $keys)
     {
-        return true;
+        return \true;
     }
-
     /**
      * {@inheritdoc}
      */
     public function save(CacheItemInterface $item)
     {
-        return false;
+        return \false;
     }
-
     /**
      * {@inheritdoc}
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        return false;
+        return \false;
     }
-
     /**
      * {@inheritdoc}
      */
     public function commit()
     {
-        return false;
+        return \false;
     }
-
     private function generateItems(array $keys)
     {
         $f = $this->createCacheItem;
-
         foreach ($keys as $key) {
-            yield $key => $f($key);
+            (yield $key => $f($key));
         }
     }
 }

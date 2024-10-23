@@ -1,7 +1,5 @@
 <?php
-
 use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
-
 class Cart extends CartCore
 {
     public static $definition = array(
@@ -30,12 +28,10 @@ class Cart extends CartCore
         ),
     );
     public $added_to_order;
-
     public const ONLY_DISCOUNTS_NO_CALCULATION = 9;
     public const ONLY_REMAINDER_OF_DISCOUNTS = 10;
     public const ONLY_REMAINDER_UNTIL_STORE_DISCOUNT = 11;
     public const ONLY_PRODUCTS_NO_DISCOUNTS = 12;
-
     public
     function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
@@ -66,7 +62,6 @@ class Cart extends CartCore
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;
     }
-
     public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
     {
         $cache_id = (int)(is_object($default_country) ? $default_country->id : 0) . '-' . (int)$dontAutoSelectOptions;
@@ -128,7 +123,6 @@ class Cart extends CartCore
         static::$cacheDeliveryOption[$cache_id] = $delivery_option;
         return $delivery_option;
     }
-
     public
     function getPackageShippingCost(
         $id_carrier = null,
@@ -374,8 +368,6 @@ class Cart extends CartCore
         Cache::store($cache_id, $shipping_cost);
         return $shipping_cost;
     }
-
-
     public function  getOrderTotal(
         $withTaxes = true,
         $type = Cart::BOTH,
@@ -387,11 +379,9 @@ class Cart extends CartCore
         if ((int) $id_carrier <= 0) {
             $id_carrier = null;
         }
-
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
         }
-
         $type = (int) $type;
         $allowedTypes = [
             Cart::ONLY_PRODUCTS,
@@ -409,8 +399,6 @@ class Cart extends CartCore
         if (!in_array($type, $allowedTypes)) {
             throw new \Exception('Invalid calculation type: ' . $type);
         }
-
-
         if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
             return 0;
         }
@@ -421,11 +409,9 @@ class Cart extends CartCore
         if ($virtual && $type == Cart::BOTH) {
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
-
         if (null === $products) {
             $products = $this->getProducts(false, false, null, true, $keepOrderPrices);
         }
-
         if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
             foreach ($products as $key => $product) {
                 if (!empty($product['is_virtual'])) {
@@ -434,7 +420,6 @@ class Cart extends CartCore
             }
             $type = Cart::ONLY_PRODUCTS;
         }
-
         if ($type == Cart::ONLY_PRODUCTS) {
             foreach ($products as $key => $product) {
                 if (!empty($product['is_gift'])) {
@@ -442,16 +427,13 @@ class Cart extends CartCore
                 }
             }
         }
-
         if (Tax::excludeTaxeOption()) {
             $withTaxes = false;
         }
-
         $cartRules = [];
         if (in_array($type, [Cart::BOTH, Cart::BOTH_WITHOUT_SHIPPING, Cart::ONLY_DISCOUNTS, Cart::ONLY_DISCOUNTS_NO_CALCULATION, Cart::ONLY_REMAINDER_OF_DISCOUNTS])) {
             $cartRules = $this->getTotalCalculationCartRules($type, $type == Cart::BOTH);
         }
-
         $computePrecision = Context::getContext()->getComputingPrecision();
         $calculator = $this->newCalculator($products, $cartRules, $id_carrier, $computePrecision, $keepOrderPrices);
         switch ($type) {
@@ -459,34 +441,28 @@ class Cart extends CartCore
                 $calculator->calculateRows();
                 $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialShippingFees();
-
                 break;
             case Cart::ONLY_WRAPPING:
                 $calculator->calculateRows();
                 $calculator->calculateFees();
                 $amount = $calculator->getFees()->getInitialWrappingFees();
-
                 break;
             case Cart::BOTH:
                 $calculator->processCalculation();
                 $amount = $calculator->getTotal();
-
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
                 $calculator->calculateRows();
                 $calculator->calculateCartRulesWithoutFreeShipping();
                 $amount = $calculator->getTotal(true);
-
                 break;
             case Cart::ONLY_PRODUCTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotal();
-
                 break;
             case Cart::ONLY_DISCOUNTS:
                 $calculator->processCalculation();
                 $amount = $calculator->getDiscountTotal();
-
                 break;
             case Cart::ONLY_DISCOUNTS_NO_CALCULATION:
                 $calculator->processCalculation();
@@ -495,7 +471,6 @@ class Cart extends CartCore
             case Cart::ONLY_PRODUCTS_NO_DISCOUNTS:
                 $calculator->calculateRows();
                 $amount = $calculator->getRowTotalWithoutDiscount();
-
                 break;
             case Cart::ONLY_REMAINDER_OF_DISCOUNTS:
                 $calculator->calculateRows();
@@ -503,35 +478,23 @@ class Cart extends CartCore
                 if ($discount->getTaxExcluded() > 0) {
                     $calculator->calculateRows();
                     $calculator->calculateFees();
-
                     $total = $calculator->getRowTotal();
                     $total->add($calculator->getFees()->getFinalShippingFees());
-
                     $amount = $total->sub($discount);
                 } else {
                     $amount = new AmountImmutable(0, 0);
                 }
-
                 break;
-
             default:
                 throw new \Exception('unknown cart calculation type : ' . $type);
         }
-
         $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
         if ($type == Cart::BOTH) {
             $value = max(0, $value);
         }
-
-
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-
-    /**
-     * @return AmountImmutable
-     *
-     * @throws \Exception
-     */
+    
     public function getDiscountTotal($calculator, $cart_rules)
     {
         $amount = new AmountImmutable();
@@ -543,12 +506,8 @@ class Cart extends CartCore
                 $amount = $amount->add(new AmountImmutable($cartRule['reduction_amount'],$cartRule['reduction_amount']/1.21));
             }
         }
-
-
         return $amount;
     }
-
-
     public function updateQty(
         $quantity,
         $id_product,
@@ -609,7 +568,6 @@ class Cart extends CartCore
         if (isset(self::$_totalWeight[$this->id])) {
             unset(self::$_totalWeight[$this->id]);
         }
-
         $data = [
             'cart' => $this,
             'product' => $product,
@@ -691,7 +649,6 @@ class Cart extends CartCore
                         $product_qty_by_id += (int)$cart_item['quantity'];
                     }
                 }
-
                 if (isset($result2['out_of_stock']) && !Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
                     if ((int) $quantity > $result2['quantity']) {
                         return false;
@@ -730,7 +687,6 @@ class Cart extends CartCore
             return true;
         }
     }
-
     public
     function deleteProduct(
         $id_product,
@@ -804,7 +760,6 @@ class Cart extends CartCore
         }
         return false;
     }
-
     public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
@@ -842,8 +797,6 @@ class Cart extends CartCore
         }
         return $ret;
     }
-
-
     public function checkQuantities($returnProductOnFailure = false)
     {
         $ssa = Module::getInstanceByName('singlestockattributespoco');
@@ -905,7 +858,6 @@ class Cart extends CartCore
         }
         return true;
     }
-
     public function getTotalBeforeNextAutoDiscount($withTaxes = true, $parts = 'all')
     {
         $cartRulesCheck = CartRule::getAutoAddToCartRules(Context::getContext(), true);
@@ -927,5 +879,4 @@ class Cart extends CartCore
                 break;
         }
     }
-
 }

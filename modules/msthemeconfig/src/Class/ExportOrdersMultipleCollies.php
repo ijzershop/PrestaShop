@@ -171,7 +171,7 @@ class ExportOrdersMultipleCollies
         $lane_2 = $this->packageLaneProfile2;
         $lane_3 = $this->packageLaneProfile3;
 
-        return match ($this->context->employee->id_profile) {
+        return match ((int)$this->context->employee->id_profile) {
             $lane_2 => $this->labelsFolder . '/lane_2',
             $lane_3 => $this->labelsFolder . '/lane_3',
             default => $this->labelsFolder . '/lane_1',

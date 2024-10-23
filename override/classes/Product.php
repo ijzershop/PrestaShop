@@ -340,9 +340,6 @@ class Product extends ProductCore {
 
 
 
-    /**
-     * Add empty modal after footer for wizard
-     */
     public static function getBasicDynamicProductValue($params, $id_module, $context)
     {
         $id_lang = $context->language->id;
@@ -412,7 +409,6 @@ class Product extends ProductCore {
             $row['packedProducts'] = Pack::getItemTable($row['id_product'], $id_lang);
 
             foreach ($row['packedProducts'] as $key => $pack){
-//                dd($pack);
                 $packItemAttributes =  Product::getAttributesParams($pack['id_product'], $pack['id_product_attribute_item']);
 
                 if(count($packItemAttributes) > 0){

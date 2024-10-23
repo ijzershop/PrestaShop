@@ -195,11 +195,10 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
     {
         $store_product = $request->get('product');
         $supplier_price = $request->get('selected_formule_item');
-        $formula = $request->get('formula');
-        $sup_formula = $request->get('sup_formula');
-        $incr_formula = $request->get('incr_formula');
+        $formula = str_replace(',', '.', $request->get('formula'));
+        $sup_formula = str_replace(',', '.', $request->get('sup_formula'));
+        $incr_formula = str_replace(',', '.', $request->get('incr_formula'));
         $supplier_id = $request->get('row');
-
 
         $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
         $priceMod = $repository->findOneById($supplier_id);
@@ -387,6 +386,7 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 return Product::getPriceStatic($id_product, false, null, 2);
             }
         ];
+
         $result = preg_replace_callback_array($patterns, $formula);
 
 
@@ -459,13 +459,11 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
                 LEFT JOIN `' . _DB_PREFIX_ . 'feature_value_lang` fvl ON (fp.id_feature_value = fvl.id_feature_value)
                 WHERE fp.id_product = ' . (int)$id_product . ' AND fp.id_feature = ' . (int)$id_feature
         );
-
         if (empty($featureValue)) {
             return 0;
         }
 
-        return (float)$featureValue[0]['value'];
+        return (float)str_replace(",",".", $featureValue[0]['value']);
     }
-
-
+    
 }

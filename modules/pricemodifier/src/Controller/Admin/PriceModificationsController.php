@@ -215,17 +215,15 @@ class PriceModificationsController extends FrameworkBundleAdminController
         try {
 
             foreach ($data as $i => $item) {
-
-
                 $store_product = $item['store_product'];
                 $supplier_price = $item['supplier_price'] ?? "";
-                $formula = $item['formula'];
-                $incr_formula = $item['increment_formula'];
+                $formula = str_replace(',','.', $item['formula']);
+                $incr_formula = str_replace(',','.', $item['increment_formula']);
                 $active = $item['active'] ?? 0;
-                $basisPrijs = $item['basis_prijs'] ?? 0;
-                $gewicht = $item['gewicht'] ?? 0;
-                $gewichtPerMeter = $item['gewicht_per_kilo'] ?? 0;
-                $handelsLengte = $item['handels_lengte'] ?? 0;
+                $basisPrijs = str_replace(',','.', $item['basis_prijs']) ?? 0;
+                $gewicht = str_replace(',','.', $item['gewicht']) ?? 0;
+                $gewichtPerMeter = str_replace(',','.', $item['gewicht_per_kilo']) ?? 0;
+                $handelsLengte = str_replace(',','.', $item['handels_lengte']) ?? 0;
 
                 $priceMod = $repository->findOneById($item['id']);
 
@@ -503,16 +501,16 @@ class PriceModificationsController extends FrameworkBundleAdminController
 
     public function updateProductAction($price_modificationId, Request $request)
     {
-        $basisPrijs = $request->get('basis_prijs');
-        $gewicht = $request->get('gewicht');
-        $gewichtPerMeter = $request->get('gewicht_per_kilo');
-        $handelsLengte = $request->get('handels_lengte');
 
+        $basisPrijs = str_replace(',','.', $request->get('basis_prijs'));
+        $gewicht = str_replace(',','.', $request->get('gewicht'));
+        $gewichtPerMeter = str_replace(',','.', $request->get('gewicht_per_kilo'));
+        $handelsLengte = str_replace(',','.', $request->get('handels_lengte'));
 
         $store_product = $request->get('store_product');
         $supplier_price = $request->get('supplier_price');
-        $formula = $request->get('formula');
-        $incr_formula = $request->get('increment_formula');
+        $formula = str_replace(',','.', $request->get('formula'));
+        $incr_formula = str_replace(',','.', $request->get('increment_formula'));
         $active = $request->get('active');
         $supplier_id = $price_modificationId;
 
@@ -528,21 +526,20 @@ class PriceModificationsController extends FrameworkBundleAdminController
             $priceMod->setIdStoreProduct((int)$store_product);
         }
 
-        // $supData = $priceMod->getSupplierData();
-        // if(is_object($supData['prices'])){
-        //     $supData['prices']->{'basis_prijs'} = $basisPrijs;
-        //     $supData['attributes']->{'gewicht'} = $gewicht;
-        //     $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
-        //     $supData['attributes']->{'handelslengte'} = $handelsLengte;
-        // } else {
+         $supData = $priceMod->getSupplierData();
+         if(is_object($supData['prices'])){
+             $supData['prices']->{'basis_prijs'} = $basisPrijs;
+             $supData['attributes']->{'gewicht'} = $gewicht;
+             $supData['attributes']->{'kilo_per_meter'} = $gewichtPerMeter;
+             $supData['attributes']->{'handelslengte'} = $handelsLengte;
+         } else {
 
-        //     $supData['prices']['basis_prijs'] = $basisPrijs;
-        //     $supData['attributes']['gewicht'] = $gewicht;
-        //     $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
-        //     $supData['attributes']['handelslengte'] = $handelsLengte;
-        // }
-        // $priceMod->setSupplierData(json_encode($supData));
-
+             $supData['prices']['basis_prijs'] = $basisPrijs;
+             $supData['attributes']['gewicht'] = $gewicht;
+             $supData['attributes']['kilo_per_meter'] = $gewichtPerMeter;
+             $supData['attributes']['handelslengte'] = $handelsLengte;
+         }
+         $priceMod->setSupplierData(json_encode($supData));
 
         if ($supplier_price != "" && $store_product > 0) {
             $storePrice = Product::getPriceStatic((int)$store_product, false, null, 6);

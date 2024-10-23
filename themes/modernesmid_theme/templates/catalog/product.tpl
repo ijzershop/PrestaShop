@@ -169,7 +169,7 @@
                     {hook h='displayProductSawAndCutButtons' product=$product}
                   </div>
 
-                    {if !in_array((int)$category->id_category, Context::getContext()->internal_product_categories)) }
+                    {if !in_array((int)$category->id_category, Context::getContext()->internal_product_categories) }
                   <div class="cart-related-products mt-2 mb-2 text-black col-12">
                     <div class="card-body bg-light text-bold">
                           {include file="themes/modernesmid_theme/modules/ps_crossselling/views/templates/hook/ps_crossselling_selectbox.tpl" category=$category}

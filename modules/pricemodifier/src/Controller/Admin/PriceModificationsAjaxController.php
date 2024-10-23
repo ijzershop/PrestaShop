@@ -465,5 +465,5 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
 
         return (float)str_replace(",",".", $featureValue[0]['value']);
     }
-    
+
 }

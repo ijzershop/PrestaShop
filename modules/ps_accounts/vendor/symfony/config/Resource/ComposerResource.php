@@ -58,7 +58,7 @@ class ComposerResource implements SelfCheckingResourceInterface, \Serializable
         $this->vendors = \unserialize($serialized);
     }
 
-    
+
     private static function refresh()
     {
         self::$runtimeVendors = [];

@@ -136,16 +136,7 @@
 
 
                   <span class="product-price" style="line-height: .7rem;">
-                  {if $product.price_reduction_after_cartrule_reduction_without_tax > 0}
-                    <span class="regular-price"
-                          data-product-id="{$product.id_product}">
-                        {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
-                          {Context::getContext()->currentLocale->formatPrice((float)(float)$product.price_with_reduction*(int)$product.quantity , 'EUR')}
-                        {else}
-                          {Context::getContext()->currentLocale->formatPrice((float)Product::getPriceStatic($product.id_product, false)*(int)$product.quantity, 'EUR')}
-                        {/if}
-                    </span>
-                  {/if}
+ 
                   <span class="inclusive-price"
                         data-product-id="{$product.id_product}">
                     {if Context::getContext()->cookie->price_vat_settings_incl === "true"}

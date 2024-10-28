@@ -44,19 +44,21 @@ class ComposerResource implements SelfCheckingResourceInterface, \Serializable
         return \array_values(self::$runtimeVendors) === \array_values($this->vendors);
     }
     /**
-     * @internal
+     * @return string
      */
     public function serialize()
     {
         return \serialize($this->vendors);
     }
     /**
-     * @internal
+     * @param string $serialized
      */
     public function unserialize($serialized)
     {
         $this->vendors = \unserialize($serialized);
     }
+
+    
     private static function refresh()
     {
         self::$runtimeVendors = [];
@@ -69,5 +71,19 @@ class ComposerResource implements SelfCheckingResourceInterface, \Serializable
                 }
             }
         }
+    }
+    /**
+     * @return array
+     */
+    public function __serialize(): array
+    {
+        return ['vendors' => $this->vendors];
+    }
+    /**
+     * @param array $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->vendors = $data['vendors'];
     }
 }

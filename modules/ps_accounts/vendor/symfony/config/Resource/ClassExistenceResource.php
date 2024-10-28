@@ -101,21 +101,44 @@ class ClassExistenceResource implements SelfCheckingResourceInterface, \Serializ
      */
     public function serialize()
     {
-        if (null === $this->exists) {
-            $this->isFresh(0);
-        }
-        return \serialize([$this->resource, $this->exists]);
+        return $this->__serialize();
     }
     /**
      * @internal
      */
-    public function unserialize($serialized)
+    public function unserialize(string $serialized): void
     {
-        list($this->resource, $this->exists) = \unserialize($serialized);
-        if (\is_bool($this->exists)) {
+        $this->__unserialize((array)$serialized);
+    }
+
+    /**
+     * @return string
+     */
+    public function __serialize(): array
+    {
+        if (null === $this->exists) {
+            $this->isFresh(0);
+        }
+
+        return [
+            'resource' => $this->resource,
+            'exists' => $this->exists,
+        ];
+    }
+
+    /**
+     * @param array $data
+     */
+    public function __unserialize(array $data): void
+    {
+        $this->resource = $data['resource'];
+        $this->exists = $data['exists'];
+
+        if (is_bool($this->exists)) {
             $this->exists = [$this->exists, null];
         }
     }
+
     /**
      * Throws a reflection exception when the passed class does not exist but is required.
      *

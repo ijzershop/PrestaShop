@@ -235,6 +235,9 @@ class SeoExpert extends Module
                 $exprow = explode(' (', $row['name']);
                 if(is_array($exprow)){
                     $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
+                    if(!is_array(self::$lang_cache)){
+                        self::$lang_cache = [];
+                    }
                     self::$lang_cache[$row['iso_code']] = [
                         'id' => (int) $row['id_lang'],
                         'title' => trim($exprow[0]),

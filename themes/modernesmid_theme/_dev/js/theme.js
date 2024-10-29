@@ -318,92 +318,6 @@ $(function () {
     event.stopImmediatePropagation();
   });
 
-// //Header shopping cart button
-//   $(document).on('click', 'div.ajax_cart_bag .top-header-shoppingcart, .nav-link.top-header-shoppingcart', function (event) {
-//     event.preventDefault();
-//     let shoppingCartSidePanelElem = $('#shoppingcart-side-panel');
-//
-//     if (shoppingCartSidePanelElem.hasClass('d-none')) {
-//
-//
-//       $('html').css({
-//         'overflow-x': 'hidden',
-//         'overflow-y': 'hidden',
-//       });
-//       if ($('#main-menu-bar').hasClass('is-sticky')) {
-//         var paddingTop = $('#main-menu-bar').height();
-//       } else {
-//         var paddingTop = 0;
-//       }
-//       shoppingCartSidePanelElem.removeClass("d-none");
-//       shoppingCartSidePanelElem.css({'margin-top': paddingTop, 'display': 'block'});
-//
-//       const listHeight = calcShoppingCartListItemsColumnHeight(paddingTop);
-//       // console.log([paddingTop,parseInt(paddingTop), listHeight]);
-//       document.getElementById('shoppingcart-list-items').style.height = listHeight;
-//
-//       var ulClientHeight = 0;
-//       if (document.getElementsByClassName('small_cart_product_list').length > 0 && document.getElementsByClassName('small_cart_product_list')[0]) {
-//         ulClientHeight = document.getElementsByClassName('small_cart_product_list')[0].clientHeight + 15;
-//       }
-//       const clientHeight = document.getElementById('shoppingcart-list-items').clientHeight;
-//
-//       if (ulClientHeight > clientHeight) {
-//         document.getElementById('shoppingcart-list-items').style.overflowY = 'scroll';
-//         document.getElementById('shoppingcart-list-items').style.overflowX = 'hidden';
-//       } else {
-//         document.getElementById('shoppingcart-list-items').style.overflowY = 'hidden';
-//         document.getElementById('shoppingcart-list-items').style.overflowX = 'hidden';
-//       }
-//       $('.cart_body').css({
-//         'opacity': '1',
-//         'z-index': '1500',
-//       });
-//     } else {
-//       $('html').css({
-//         'overflow-x': 'hidden',
-//         'overflow-y': 'scroll',
-//       });
-//       document.getElementById('shoppingcart-list-items').style.overflowX = 'hidden';
-//       document.getElementById('shoppingcart-list-items').style.overflowY = 'hidden';
-//       shoppingCartSidePanelElem.addClass('d-none');
-//       $('.cart_body').css({
-//         opacity: '0',
-//         'z-index': '-1',
-//       });
-//     }
-//     event.stopImmediatePropagation();
-//   });
-//
-//   $(window).on('resize', function (e) {
-//     if (!$('#shoppingcart-side-panel').hasClass('d-none')) {
-//       $('#shoppingcart-list-items').css({
-//         'overflow-x': 'hidden',
-//         'overflow-y': 'scroll',
-//       });
-//       var ulClientHeight = 0;
-//       if (document.getElementsByClassName('small_cart_product_list').length > 0 && document.getElementsByClassName('small_cart_product_list')[0]) {
-//         ulClientHeight = document.getElementsByClassName('small_cart_product_list')[0].clientHeight + 15;
-//       }
-//       var listHeight = 0;
-//       if (document.getElementById('shoppingcart-list-items') !== null && document.getElementById('shoppingcart-list-items')[0]) {
-//         listHeight = document.getElementById('shoppingcart-list-items').clientHeight;
-//       }
-//
-//       if (listHeight < ulClientHeight) {
-//         $('#shoppingcart-list-items').css({
-//           'overflow-x': 'hidden',
-//           'overflow-y': 'scroll',
-//         });
-//       } else {
-//         $('#shoppingcart-list-items').css({
-//           'overflow-x': 'hidden',
-//           'overflow-y': 'hidden',
-//         });
-//       }
-//     }
-//     e.stopPropagation();
-//   });
 
   $('#menu-side-panel .menu-title  a.menu-chevron-close').on('click', function (event) {
     event.preventDefault();
@@ -873,77 +787,6 @@ $(function () {
       updateHeaderCart(prestashop.summaryDetails);
     }
 
-    // const getCartViewUrl = $('.js-cart').data('refresh-url');
-    // if (!getCartViewUrl) {
-    //   return;
-    // }
-    //
-    // var requestData = {};
-    // if (event && event.reason) {
-    //   if (event.reason.idProductAttribute !== undefined) {
-    //     requestData = {
-    //       id_product_attribute: event.reason.idProductAttribute,
-    //       id_product: event.reason.idProduct,
-    //     };
-    //   } else {
-    //     requestData = {
-    //       id_product_attribute: event.reason.id_product_attribute,
-    //       id_product: event.reason.id_product,
-    //     };
-    //   }
-    // }
-    // $.post(getCartViewUrl, requestData).then(function (resp) {
-    //   console.log(resp);
-    //
-    //   const product = $('a[data-product-id="' + requestData.id_product + '"]');
-    //   showAddedToCartGlow(product);
-    //   if (resp.cart_detailed_totals !== undefined) {
-    //     $('.cart-detailed-totals').replaceWith(resp.cart_detailed_totals);
-    //     $('.cart-summary-items-subtotal').replaceWith(resp.cart_summary_items_subtotal);
-    //     $('.cart-summary-subtotals-container').replaceWith(resp.cart_summary_subtotals_container);
-    //     $('.cart-summary-totals').replaceWith(resp.cart_summary_totals);
-    //     $('.cart-detailed-actions').replaceWith(resp.cart_detailed_actions);
-    //     $('.cart-voucher').replaceWith(resp.cart_voucher);
-    //     $('.cart-overview').replaceWith(resp.cart_detailed);
-    //
-    //     $('#product_customization_id').val(0);
-    //
-    //     $('.js-cart-line-product-quantity').each(function (index, input) {
-    //       const $input = $(input);
-    //       $input.attr('value', $input.val());
-    //     });
-    //
-    //     if ($('.js-cart-payment-step-refresh').length) {
-    //       // we get the refresh flag : on payment step we need to refresh page to be sure
-    //       // amount is correctly updated on payment modules
-    //       refreshCheckoutPage();
-    //     }
-    //   }
-    //   // else { // normal refresh cart
-    //   //   $('#shoppingcart-side-panel').html(resp.modal);
-    //   //   $('.cart_details_toggle').on('click', function (event) {
-    //   //     const checked = $(this).prop('checked');
-    //   //     if (checked) {
-    //   //       $('.cart_price_details').show();
-    //   //     } else {
-    //   //       $('.cart_price_details').hide();
-    //   //     }
-    //   //     const listHeight = calcShoppingCartListItemsColumnHeight();
-    //   //     document.getElementById('shoppingcart-list-items').style.height = listHeight;
-    //   //   });
-    //   // }
-    //
-    //   prestashop.emit('updatedCart', {
-    //     eventType: 'updateCart',
-    //     resp: resp,
-    //   });
-    // }).fail(function (resp) {
-    //   prestashop.emit('handleError', {
-    //     eventType: 'updateCart',
-    //     resp: resp,
-    //   });
-    // });
-
     $('.info-icon-with-showhide').on('click', function (event) {
       event.preventDefault();
       const id = $(this).attr('data-id');
@@ -1065,244 +908,12 @@ $(function () {
     return citties;
   }
 
-  // // address forms
-  // var timeout;
-  // const delay = 500;
-  // //Api address check shipping
-  // $(document.body).on('keyup change input :-webkit-autofill', '#customer_address_form [name="postcode"], #customer_address_form [name="house_number"], #customer_address_form [name="address1"], #customer_address_form [name="house_number_extension"]', function (event) {
-  //   event.preventDefault();
-  //
-  //   if (event.currentTarget.name === 'postcode') {
-  //     if (event.currentTarget.value.length > 4) {
-  //       $('[name="postcode"]').val(event.currentTarget.value.replace(/(\d{4})/g, '$1 ').replace(/  +/g, ' '));
-  //     }
-  //   }
-  //
-  //   if (timeout) {
-  //     clearTimeout(timeout);
-  //   }
-  //   timeout = setTimeout(function () {
-  //     const postcode = $('[name="postcode"]').val().replace(' ', '');
-  //     const houseNumber = $('[name="house_number"]').val().replace(' ', '');
-  //     const extension = $('[name="house_number_extension"]').val().replace(' ', '');
-  //     const street = encodeURIComponent($('[name="address1"]').val());
-  //     const id_country = $('[name="id_country"]').val().replace(' ', '');
-  //     if (postcode.length > 3 || houseNumber.length > 0) {
-  //       validateAddressApi(postcode, street, houseNumber, extension, id_country, event);
-  //     }
-  //     return false;
-  //   }, delay);
-  // });
-
-  // //Api address check payment
-  // $(document.body).on('keyup change input :-webkit-autofill', '#customer_address_form [name="shipping_address[postcode]"], #customer_address_form [name="shipping_address[house_number]"], #customer_address_form [name="shipping_address[address1]"], #customer_address_form [name="shipping_address[house_number_extension]"]', function(event){
-  //   event.preventDefault();
-  //
-  //   if (event.currentTarget.name === 'postcode') {
-  //     if (event.currentTarget.value.length > 4) {
-  //       $('[name="shipping_address[postcode]"]').val(event.currentTarget.value.replace(/(\d{4})/g, '$1 ').replace(/  +/g, ' '));
-  //     }
-  //   }
-  //
-  //   if (timeout) {
-  //     clearTimeout(timeout);
-  //   }
-  //   timeout = setTimeout(function(){
-  //     const postcode = $('[name="shipping_address[postcode]"]').val().replace(' ', '');
-  //     const houseNumber = $('[name="shipping_address[house_number]"]').val().replace(' ', '');
-  //     const extension = $('[name="shipping_address[house_number_extension]"]').val().replace(' ', '');
-  //     // const street = encodeURIComponent($('[name="shipping_address[address1]"]').val());
-  //     const street = '';
-  //     const id_country = $('[name="shipping_address[id_country]"]').val().replace(' ', '');
-  //     if (postcode.length > 3 || houseNumber.length > 0) {
-  //       validateAddressApi(postcode, street, houseNumber, extension, id_country, "shipping_address");
-  //     }
-  //     return false;
-  //   }, delay);
-  // });
-
   $(document.body).on('click', '.selectStreetAutoFill', function (event) {
     event.preventDefault();
     const streetName = $(this).text();
     $('[name="address1"]').val(streetName).removeClass('is-invalid').addClass('was-validated is-valid');
     $('#suggesstion-box-street').html('');
   });
-
-
-  // function validateAddressApi(postcode, street, houseNumber, extension, country, event) {
-  //   let postC = postcode.replace(' ', '');
-  //   let houseN = houseNumber.replace(' ', '');
-  //   if (extension) {
-  //     extension = extension.replace(' ', '');
-  //   }
-  //
-  //   $.ajax({
-  //     url: '/module/msthemeconfig/ajax',
-  //     type: 'GET',
-  //     dataType: 'json',
-  //     data: {
-  //       _token: prestashop.static_token,
-  //       postcode: postcode,
-  //       houseNumber: houseNumber,
-  //       extension: extension,
-  //       street: street,
-  //       id_country: country,
-  //       ajax: true,
-  //     },
-  //   })
-  //     .done(function (e) {
-  //       let isValidForConfirm = false;
-  //       $('.address-error-msg').text(null);
-  //
-  //       if (e.valid != false && e.address.countryCode === 'NL') { // is een nederlands adres
-  //
-  //         $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //
-  //
-  //         if (e.address.settlement !== undefined) {
-  //           $('[name="city"]').val(e.address.settlement).removeClass('is-invalid').addClass('was-validated is-valid');
-  //         }
-  //
-  //         if (e.address.street != 'undefined') {
-  //           $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
-  //           isValidForConfirm = true;
-  //         } else {
-  //           $('[name="address1"]').val('').removeClass('was-validated is-valid').addClass('is-invalid');
-  //           isValidForConfirm = false;
-  //         }
-  //
-  //         if ($('[name="house_number"]').val().length > 0) {
-  //           $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //           $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //           isValidForConfirm = true;
-  //         } else {
-  //           $('[name="house_number"]').addClass('is-invalid');
-  //           $('[name="house_number_extension"]').addClass('is-invalid');
-  //           isValidForConfirm = false;
-  //         }
-  //
-  //
-  //       } else if (e.valid !== false && e.address.countryCode === 'BE') {
-  //         if (e.address.settlement !== undefined) {
-  //           $('[name="city"]').val(e.address.settlement).removeClass('is-invalid').addClass('was-validated is-valid');
-  //         }
-  //         $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
-  //         isValidForConfirm = true;
-  //
-  //         // is een belgisch adres
-  //         $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //
-  //         $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //
-  //         $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //
-  //
-  //       }
-  //
-  //
-  //
-  //         // else if (e.valid != false && e.address.length == 1 && e.address[0].hasOwnProperty('street_nl')) {
-  //         //
-  //         //
-  //         //   $('[name="address1"]').val(e.address.street).removeClass('is-invalid').addClass('was-validated is-valid');
-  //         //   if ($('[name="house_number"]').val().length > 0) {
-  //         //     $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         //     $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         //     isValidForConfirm = true;
-  //         //   } else {
-  //         //     $('[name="house_number"]').addClass('is-invalid');
-  //         //
-  //         //     $('[name="house_number_extension"]').addClass('is-invalid');
-  //         //     isValidForConfirm = false;
-  //         //   }
-  //         //   // is een belgisch adres
-  //         // } else if (e.valid != false && e.address.length > 1) {
-  //         //   isValidForConfirm = false;
-  //         //   var htmlList = '<ul>';
-  //         //   for (var i = 0; i < e.address.length; i++) {
-  //         //     htmlList += '<li class="selectStreetAutoFill">' + e.address[i].street + '</li>';
-  //         //   }
-  //         //   htmlList += '</ul>';
-  //         //   $('#suggesstion-box-street').html(htmlList);
-  //         //   // is een belgisch adres
-  //         // } else {
-  //         //   if (e.msg == 'Fetching address failed') {
-  //         //     $('[name="address1"]').val('').addClass('is-invalid').removeClass('was-validated is-valid');
-  //         //     isValidForConfirm = false;
-  //         //   }
-  //         //
-  //         //   if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field !== undefined) {
-  //         //     isValidForConfirm = false;
-  //         //   }
-  //         //   $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         //
-  //         //   $('[name="house_number"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-  //         //   $('[name="house_number_extension"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-  //         //   $('[name="address1"]').removeClass('is-invalid').removeClass('was-validated is-valid');
-  //         //
-  //         //   $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         //
-  //         //   $('[name="city"]').removeClass('is-invalid').addClass('is-valid');
-  //         //
-  //         //   if (e.msg !== 'ok') {
-  //         //     if (e.msg !== null && e.msg.hasOwnProperty('field') && e.msg.field) {
-  //         //       if (e.msg.field === 'house_number') {
-  //         //         $('[name="house_number_extension"]').removeClass('is-valid').addClass('is-invalid');
-  //         //         $('[name="address1"]').removeClass('is-valid').addClass('is-invalid');
-  //         //         $('[name="address1"]').siblings('.address-error-msg').text(null).text('Het huisnummer kan niet gevonden worden mogelijk is de straat onjuist');
-  //         //       }
-  //         //       $('[name="' + e.msg.field + '"]').removeClass('is-valid').addClass('is-invalid');
-  //         //       $('[name="' + e.msg.field + '"]').siblings('.address-error-msg').text(null).text(e.msg.msg);
-  //         //       isValidForConfirm = false;
-  //         //     }
-  //       //}
-  //       else if (e.msg === 'ok' && e.valid) {
-  //         $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //
-  //         if ($('[name="house_number"]').val().length > 0) {
-  //           $('[name="house_number"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //           $('[name="house_number_extension"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         } else {
-  //           $('[name="house_number"]').addClass('is-invalid');
-  //           $('[name="house_number_extension"]').addClass('is-invalid');
-  //         }
-  //         $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="address1"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         isValidForConfirm = true;
-  //       }
-  //       // }
-  //
-  //       if (isValidForConfirm) {
-  //         disEnConfirmButtonAddress(false);
-  //         $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="postcode"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="city"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //         $('[name="id_country"]').removeClass('is-invalid').addClass('was-validated is-valid');
-  //       } else {
-  //         disEnConfirmButtonAddress(true);
-  //
-  //         $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //         $('[name="postcode"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //         $('[name="city"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //         $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //       }
-  //     }).fail(function (e) {
-  //     disEnConfirmButtonAddress(true);
-  //     $('[name="address1"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="house_number"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="house_number_extension"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="postcode"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="city"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //     $('[name="id_country"]').addClass('is-invalid').removeClass('was-validated is-valid');
-  //   });
-  //
-  //   event.stopImmediatePropagation();
-  // }
 
 
   function disEnConfirmButtonAddress(disable) {
@@ -1331,16 +942,16 @@ $(function () {
       $('#add2order-msg').show();
     }
   });
-
-  $(document).on('click', 'button[name="confirmDeliveryOption"]', function (event) {
-    if ($('input[type=radio]:checked').hasClass('add2order')) {
-      if ($('#added_to_order').val().length <= 0) {
-        event.preventDefault();
-        htmlBlock = '<div class="alert alert-danger" role="alert"><strong>Er is geen bestelling geselecteerd!</strong> Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode</div>';
-        $('#desired_reference_error').html(htmlBlock);
-      }
-    }
-  });
+  //
+  // $(document).on('click', 'button[name="confirmDeliveryOption"]', function (event) {
+  //   event.stopImmediatePropagation();
+  //   if ($('input[type=radio]:checked').hasClass('add2order')) {
+  //     if ($('#added_to_order').val().length <= 0) {
+  //       htmlBlock = '<div class="alert alert-danger" role="alert"><strong>Er is geen bestelling geselecteerd!</strong> Zoek eerst een nog lopende bestelling of selecteer een andere verzendmethode</div>';
+  //       $('#desired_reference_error').html(htmlBlock);
+  //     }
+  //   }
+  // });
 
   function searchForAddToOrder(event) {
     event.preventDefault();
@@ -1349,7 +960,7 @@ $(function () {
     if (typeof url === 'undefined') {
       var url = '/index.php?fc=module&module=addtoorder&controller=ajax&id_lang=1';
     }
-
+console.log('search For Add To Order')
     $.ajax({
       url: url,
       type: 'GET',
@@ -1399,19 +1010,6 @@ $(function () {
           $('#desired_reference').addClass('is-invalid');
         }
 
-        $('#searchOrderByReferenceAgain').on('click', function (event) {
-          event.stopImmediatePropagation();
-          $('#order_number_show').hide();
-          $('#added_to_order').val(null);
-          $('#order_number_show_block').html('');
-          $('#order_number_validate').show();
-        });
-
-        $('.info-icon-add-to-order').on('click', function (event) {
-          event.preventDefault();
-          const block = $(this).attr('data-id');
-          $('#' + block).toggle();
-        });
       })
       .fail(function (e) {
         // console.log(['error', e]);
@@ -1422,7 +1020,24 @@ $(function () {
   // toevoegen aan order check
   // test reference failing: YS-53931, success: YS-53936, YS-53935
   $(document).on('click', '#search_order_for_shipping', function (event) {
+    event.stopImmediatePropagation();
     return searchForAddToOrder(event);
+  });
+
+
+
+  $(document).on('click','#searchOrderByReferenceAgain', function(event) {
+    event.stopImmediatePropagation();
+    $('#order_number_show').hide();
+    $('#added_to_order').val(null);
+    $('#order_number_show_block').html('');
+    $('#order_number_validate').show();
+  });
+
+  $(document).on('click','.info-icon-add-to-order',  function (event) {
+    event.preventDefault();
+    const block = $(this).attr('data-id');
+    $('#' + block).toggle();
   });
 
 

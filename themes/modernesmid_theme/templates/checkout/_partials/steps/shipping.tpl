@@ -77,7 +77,7 @@
                   <div class="row delivery-option js-delivery-option pb-0 {if $delivery_option == $carrier_id} selected {/if} {if  isset($added_to_order_msg) && $added_to_order_msg.field == $delivery_option}border-danger{/if}">
                     <div class="col-sm-1 text-center p-2 p-md-0">
                       <span class="custom-radio float-xs-left">
-                        <input type="radio" name="delivery_option[{$id_address}]" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
+                        <input type="radio" name="delivery_option[{$id_address}]" class="add2order" id="delivery_option_{$carrier.id}" value="{$carrier_id}"{if $delivery_option == $carrier_id} checked{/if}>
                         <span></span>
                       </span>
                     </div>

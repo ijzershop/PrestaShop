@@ -231,14 +231,7 @@ class SeoExpert extends Module
         if (self::$lang_cache === null || empty(self::$lang_cache)) {
             foreach ($languages as &$row) {
                 $exprow = explode(' (', $row['name']);
-<<<<<<< HEAD
-                $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
-                self::$lang_cache[$row['iso_code']] = [
-                    'id' => (int) $row['id_lang'],
-                    'title' => trim($exprow[0]),
-                    'subtitle' => $subtitle,
-                ];
-=======
+
                 if(is_array($exprow)){
                     $subtitle = (isset($exprow[1]) ? trim(Tools::substr($exprow[1], 0, -1)) : '');
                     if(!is_array(self::$lang_cache)){
@@ -256,7 +249,6 @@ class SeoExpert extends Module
                         'subtitle' => 'Dutch',
                     ];
                 }
->>>>>>> caab7f1b8888768ae290c63e1d7133305b4b8343
             }
             // Cache Data
             TinyCache::setCache('language_' . (int) $this->context->shop->id, self::$lang_cache);

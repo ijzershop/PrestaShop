@@ -253,9 +253,18 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         } else {
             $data = json_decode($result);
             if (!is_null($data)) {
+
                 if (isset($data->errors)) {
                     $returnedAddressMsg = $this->getMatchingMessage(strtolower($data->error_id));
                     $returnedAddress = [];
+                } elseif (strtolower($street) !== strtolower($data->street)) {
+                    $returnedAddressMsg = 'De ingevoerde straat komt niet overeen met de postcode';
+                    $returnedAddress = [];
+                    $valid = false;
+                } elseif (strtolower($city) !== strtolower($data->settlement)) {
+                    $returnedAddressMsg = 'De ingevoerde stad komt niet overeen met de postcode';
+                    $returnedAddress = [];
+                    $valid = false;
                 } else {
                     $returnedAddressMsg = 'ok';
                     $returnedAddress = (array)$data;
@@ -266,16 +275,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $returnedAddressMsg = 'Fetching address failed';
                 $returnedAddress = [];
             }
-
-//
-//            if ($this->testCountry($id_country) == 'be' && !empty($street)) {
-//                $streetData = $this->fetchStreetForBelgicAddress($city, $postcode, $street);
-//                if (isset($streetData[0]->street)) {
-//                    $returnedAddress[0]->street = $streetData[0]->street;
-//                }
-//            }
-
-
+            
             header('Content-Type: application/json');
             die(json_encode(['address' => $returnedAddress, 'msg' => $returnedAddressMsg, 'valid' => $valid]));
         }

@@ -22,6 +22,8 @@ public $shippingFieldError;
         if(isset($requestParams['delivery_option']) && !is_null($requestParams['delivery_option'])){
             $delivery_option = (int)reset($requestParams['delivery_option']);
         }
+
+//        dd((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD'),$delivery_option, $requestParams['added_to_order'], $_POST, $_GET);
         if((int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == $delivery_option || (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD') == (int)$this->context->cart->id_carrier){
             if(isset($requestParams['added_to_order'])){
                 if($requestParams['added_to_order'] === ''){
@@ -31,15 +33,17 @@ public $shippingFieldError;
                 }
                 $this->context->cart->added_to_order = $requestParams['added_to_order'];
                 $this->context->cart->update();
-            } else {
-                  $this->getCheckoutProcess()->setHasErrors(true);
-                  $this->setAddedToOrderValidationMsg('Er is geen order referentie geselecteerd waaraan u deze bestelling wilt toevoegen!',$delivery_option, 'error');
-                  return false;
             }
-        } else {
-            $this->context->cart->added_to_order = null;
-            $this->context->cart->update();
+//            else {
+//                  $this->getCheckoutProcess()->setHasErrors(true);
+//                  $this->setAddedToOrderValidationMsg('Er is geen order referentie geselecteerd waaraan u deze bestelling wilt toevoegen!',$delivery_option, 'error');
+//                  return false;
+//            }
         }
+//        else {
+//            $this->context->cart->added_to_order = null;
+//            $this->context->cart->update();
+//        }
         if (isset($requestParams['delivery_message'])) {
             $this->getCheckoutSession()->setMessage($requestParams['delivery_message']);
         }

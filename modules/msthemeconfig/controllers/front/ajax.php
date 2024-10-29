@@ -275,7 +275,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $returnedAddressMsg = 'Fetching address failed';
                 $returnedAddress = [];
             }
-            
+
             header('Content-Type: application/json');
             die(json_encode(['address' => $returnedAddress, 'msg' => $returnedAddressMsg, 'valid' => $valid]));
         }

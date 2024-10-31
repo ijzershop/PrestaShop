@@ -15,6 +15,7 @@ namespace Modernesmid\Module\Pricemodifier\Controller\Admin;
 use Context;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Exception;
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Command\ToggleIsActivePriceModificationCommand;
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Exception\CannotToggleActivePriceModificationStatusException;
 use Modernesmid\Module\Pricemodifier\Domain\PriceModification\Exception\PriceModificationException;
@@ -580,6 +581,78 @@ class PriceModificationsController extends FrameworkBundleAdminController
         );
 
         return $this->redirectToRoute('modernesmid_pricemodifier_price_modification_index');
+    }
+
+
+    public function updateModalProductAction($price_modificationId, Request $request)
+    {
+
+
+
+        $supplier_id = $price_modificationId;
+
+        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
+        $priceMod = $repository->findOneById($supplier_id);
+
+        $requestParams = $request->query->all();
+        $supData = $priceMod->getSupplierData();
+        foreach ($requestParams as $name => $param) {
+            if(str_contains($name, 'row_id')){
+                continue;
+            }
+
+            if(str_contains($name, 'supplierPrices')){
+                $strippedName = strtolower(str_replace('supplierPrices', '', $name));
+                $param = (float)str_replace(',', '.', (string)$param);
+                $param = $param > 0 ? $param : "";
+                if(is_object($supData['prices'])){
+                    $supData['prices']->{$strippedName} = $param;
+                } else {
+                    $supData['prices'][$strippedName] =  $param;
+                }
+            }
+
+            if(str_contains($name, 'supplierAttributes')){
+                $strippedName = strtolower(str_replace('supplierAttributes', '', $name));
+
+                if(in_array($strippedName, ['gewicht', 'handelslengte','kilo_per_meter'])){
+                    $param = (float)str_replace(',', '.', (string)$param);
+                    $param = $param > 0 ? $param : "";
+                }
+
+                if(is_object($supData['attributes'])){
+                    $supData['attributes']->{$strippedName} = $param;
+                } else {
+                    $supData['attributes'][$strippedName] = $param;
+                }
+            }
+        }
+
+        $priceMod->setSupplierData(json_encode($supData));
+
+        try {
+            /** @var EntityManagerInterface $em */
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->persist($priceMod);
+            $em->flush();
+
+
+        } catch (Exception $e) {
+            return $this->json([
+                'status' => 'error',
+                'message' => $this->trans(
+                    'Failed to update product %price_modification%',
+                    'Modules.Pricemodifier.Admin',
+                    ['%price_modification%' => $priceMod->getNameSupplier()]
+                )],500);
+        }
+        return $this->json([
+            'status' => 'success',
+            'message' => $this->trans(
+                'Updated product %price_modification%',
+                'Modules.Pricemodifier.Admin',
+                ['%price_modification%' => $priceMod->getNameSupplier()]
+            )],200);
     }
 
     /**

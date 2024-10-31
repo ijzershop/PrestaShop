@@ -960,7 +960,7 @@ $(function () {
     if (typeof url === 'undefined') {
       var url = '/index.php?fc=module&module=addtoorder&controller=ajax&id_lang=1';
     }
-console.log('search For Add To Order')
+
     $.ajax({
       url: url,
       type: 'GET',
@@ -1021,7 +1021,9 @@ console.log('search For Add To Order')
   // test reference failing: YS-53931, success: YS-53936, YS-53935
   $(document).on('click', '#search_order_for_shipping', function (event) {
     event.stopImmediatePropagation();
-    return searchForAddToOrder(event);
+    console.log(event);
+    searchForAddToOrder(event);
+    return false;
   });
 
 

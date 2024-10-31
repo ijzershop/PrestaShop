@@ -105,6 +105,8 @@ $(document).ready(() => {
   $('#payment-confirmation button[type="submit"]').on('click', function (e) {
     e.stopImmediatePropagation();
 
+    console.log([$('.delivery-option input[type="radio"]:checked').val(),$('#added_to_order').val(), $('#checkout-delivery-step')]);
+
     if ($('.delivery-option input[type="radio"]:checked').val() === '8,' && ($('#added_to_order').length === 0 || $('#added_to_order').val().length <= 0)) {
       $('#checkout-delivery-step').trigger('click');
       let htmlBlock = '<div class="error-text alert-danger p-2" role="alert"><strong>Er is geen bestelling geselecteerd!</strong><br/> ' +

@@ -185,7 +185,7 @@
                     </script>
                     <div class="input-group mb-2">
                       <input type="text" class="form-control {if  isset($added_to_order_msg) && $added_to_order_msg.field == $delivery_option}{$added_to_order_msg.class}{/if}" id="desired_reference" placeholder="YS-000000">
-                      <input type="hidden" name="added_to_order" id="added_to_order" value="">
+                      <input type="hidden" name="added_to_order" id="added_to_order" value="{Context::getContext()->cart->added_to_order}">
                       <div class="input-group-append">
                         <button id="search_order_for_shipping" class="btn btn-sm btn-success"><i class="fasl fa-magnifying-glass"></i></button>
                       </div>

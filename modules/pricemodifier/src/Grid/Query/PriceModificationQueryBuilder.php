@@ -20,6 +20,9 @@ use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
+/**
+ *
+ */
 class PriceModificationQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**

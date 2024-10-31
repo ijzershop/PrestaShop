@@ -155,13 +155,6 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
                     'sortable' => false,
                 ])
             )
-            ->add((new DataColumn('store_price'))
-                ->setName($this->trans('Huidige winkelprijs', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id',
-                    'sortable' => false,
-                ])
-            )
             ->add((new DataColumn('new_price'))
                 ->setName($this->trans('Winkel prijs na update', [], 'Admin.Global'))
                 ->setOptions([

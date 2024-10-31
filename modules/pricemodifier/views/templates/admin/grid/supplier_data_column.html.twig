@@ -1,22 +1,78 @@
-<table class="table table-condensed table-striped mb-1" style="min-width:300px; ">
+<table class="table table-condensed table-dark mb-1" style="min-width:400px; ">
   <tr>
-    <th colspan="2" style="min-width: 45%;">Type</th>
-    <th>Prijs</th>
+    <th colspan="2" style="min-width: 50%;">Type</th>
+    <th class="text-center" style="min-width: 15%;">Code</th>
+    <th>Prijs
+      <button type="button"
+              data-rowid="{{ record.id }}"
+              data-supplier-url="/admin-dev/index.php/modules/pricemodifier/price_modifications/{{ record.id }}/update-product"
+              /// Represents the article group of the supplier data for the current record.
+              data-supplier-attributes-artikel_groep="{% if record.supplier_data.attributes.artikel_groep is defined %}{{ record.supplier_data.attributes.artikel_groep }}{%  endif %}"
+              data-supplier-attributes-artikel_nummer="{% if record.supplier_data.attributes.artikel_nummer is defined %}{{ record.supplier_data.attributes.artikel_nummer }}{%  endif %}"
+              data-supplier-attributes-barcode="{% if record.supplier_data.attributes.barcode is defined %}{{ record.supplier_data.attributes.barcode }}{%  endif %}"
+              data-supplier-attributes-diameter="{% if record.supplier_data.attributes.diameter is defined %}{{ record.supplier_data.attributes.diameter }}{%  endif %}"
+              data-supplier-attributes-gewicht="{% if record.supplier_data.attributes.gewicht is defined %}{{ record.supplier_data.attributes.gewicht }}{%  endif %}"
+              data-supplier-attributes-handelslengte="{% if record.supplier_data.attributes.handelslengte is defined %}{{ record.supplier_data.attributes.handelslengte }}{%  endif %}"
+              data-supplier-attributes-kilo_per_meter="{% if record.supplier_data.attributes.kilo_per_meter is defined %}{{ record.supplier_data.attributes.kilo_per_meter }}{%  endif %}"
+              data-supplier-attributes-korting="{% if record.supplier_data.attributes.korting is defined %}{{ record.supplier_data.attributes.korting }}{%  endif %}"
+              data-supplier-attributes-kwaliteit="{% if record.supplier_data.attributes.kwaliteit is defined %}{{ record.supplier_data.attributes.kwaliteit }}{%  endif %}"
+              data-supplier-attributes-min_afname="{% if record.supplier_data.attributes.min_afname is defined %}{{ record.supplier_data.attributes.min_afname }}{%  endif %}"
+              data-supplier-attributes-nieuw_artikel="{% if record.supplier_data.attributes.nieuw_artikel is defined %}{{ record.supplier_data.attributes.nieuw_artikel }}{%  endif %}"
+              data-supplier-attributes-oud_artikel="{% if record.supplier_data.attributes.oud_artikel is defined %}{{ record.supplier_data.attributes.oud_artikel }}{%  endif %}"
+              data-supplier-attributes-uitvoering="{% if record.supplier_data.attributes.uitvoering is defined %}{{ record.supplier_data.attributes.uitvoering }}{%  endif %}"
+              data-supplier-prices-basis_prijs="{% if record.supplier_data.prices.basis_prijs is defined %}{{ record.supplier_data.prices.basis_prijs }}{%  endif %}"
+              data-supplier-prices-bruto_prijs_per_stuk="{% if record.supplier_data.prices.bruto_prijs_per_stuk is defined %}{{ record.supplier_data.prices.bruto_prijs_per_stuk }}{%  endif %}"
+              data-supplier-prices-haaks_zagen="{% if record.supplier_data.prices.haaks_zagen is defined %}{{ record.supplier_data.prices.haaks_zagen }}{%  endif %}"
+              data-supplier-prices-netto_prijs_per_stuk="{% if record.supplier_data.prices.netto_prijs_per_stuk is defined %}{{ record.supplier_data.prices.netto_prijs_per_stuk }}{%  endif %}"
+              data-supplier-prices-prijs_per_meter="{% if record.supplier_data.prices.prijs_per_meter is defined %}{{ record.supplier_data.prices.prijs_per_meter }}{%  endif %}"
+              data-supplier-prices-prijs_tot_100="{% if record.supplier_data.prices.prijs_tot_100 is defined %}{{ record.supplier_data.prices.prijs_tot_100 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_1000="{% if record.supplier_data.prices.prijs_tot_1000 is defined %}{{ record.supplier_data.prices.prijs_tot_1000 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_150="{% if record.supplier_data.prices.prijs_tot_150 is defined %}{{ record.supplier_data.prices.prijs_tot_150 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_200="{% if record.supplier_data.prices.prijs_tot_200 is defined %}{{ record.supplier_data.prices.prijs_tot_200 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_250="{% if record.supplier_data.prices.prijs_tot_250 is defined %}{{ record.supplier_data.prices.prijs_tot_250 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_300="{% if record.supplier_data.prices.prijs_tot_300 is defined %}{{ record.supplier_data.prices.prijs_tot_300 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_500="{% if record.supplier_data.prices.prijs_tot_500 is defined %}{{ record.supplier_data.prices.prijs_tot_500 }}{%  endif %}"
+              data-supplier-prices-prijs_tot_75="{% if record.supplier_data.prices.prijs_tot_75 is defined %}{{ record.supplier_data.prices.prijs_tot_75 }}{%  endif %}"
+              data-supplier-prices-prijs_vanaf_1000="{% if record.supplier_data.prices.prijs_vanaf_1000 is defined %}{{ record.supplier_data.prices.prijs_vanaf_1000 }}{%  endif %}"
+              data-supplier-prices-prijs_vanaf_300="{% if record.supplier_data.prices.prijs_vanaf_300 is defined %}{{ record.supplier_data.prices.prijs_vanaf_300 }}{%  endif %}"
+              data-supplier-prices-prijs_vanaf_500="{% if record.supplier_data.prices.prijs_vanaf_500 is defined %}{{ record.supplier_data.prices.prijs_vanaf_500 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_1="{% if record.supplier_data.prices.staffel_prijs_1 is defined %}{{ record.supplier_data.prices.staffel_prijs_1 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_2="{% if record.supplier_data.prices.staffel_prijs_2 is defined %}{{ record.supplier_data.prices.staffel_prijs_2 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_3="{% if record.supplier_data.prices.staffel_prijs_3 is defined %}{{ record.supplier_data.prices.staffel_prijs_3 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_4="{% if record.supplier_data.prices.staffel_prijs_4 is defined %}{{ record.supplier_data.prices.staffel_prijs_4 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_5="{% if record.supplier_data.prices.staffel_prijs_5 is defined %}{{ record.supplier_data.prices.staffel_prijs_5 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_6="{% if record.supplier_data.prices.staffel_prijs_6 is defined %}{{ record.supplier_data.prices.staffel_prijs_6 }}{%  endif %}"
+              data-supplier-prices-staffel_prijs_7="{% if record.supplier_data.prices.staffel_prijs_7 is defined %}{{ record.supplier_data.prices.staffel_prijs_7 }}{%  endif %}"
+              data-supplier-prices-stralen_menieen_per_100="{% if record.supplier_data.prices.stralen_menieen_per_100 is defined %}{{ record.supplier_data.prices.stralen_menieen_per_100 }}{%  endif %}"
+              data-supplier-prices-stralen_menieen_per_meter="{% if record.supplier_data.prices.stralen_menieen_per_meter is defined %}{{ record.supplier_data.prices.stralen_menieen_per_meter }}{%  endif %}"
+              data-supplier-prices-stralen_per_100="{% if record.supplier_data.prices.stralen_per_100 is defined %}{{ record.supplier_data.prices.stralen_per_100 }}{%  endif %}"
+              data-supplier-prices-stralen_per_meter="{% if record.supplier_data.prices.stralen_per_meter is defined %}{{ record.supplier_data.prices.stralen_per_meter }}{%  endif %}"
+              data-supplier-prices-verven_per_m1="{% if record.supplier_data.prices.verven_per_m1 is defined %}{{ record.supplier_data.prices.verven_per_m1 }}{%  endif %}"
+              class="btn btn-sm btn-primary p-0 float-right showPriceModificationRowModal">
+        <span class="material-icons">edit</span>
+      </button>
+    </th>
   </tr>
-  {% if record.supplier_data.prices.haaks_zagen is defined and record.file_supplier != "HANDMATIG" %}
+
+
+  {# Start Top Tabel #}
+
+
+  {% if record.supplier_data.prices.haaks_zagen is defined and record.selected_supplier_price == 'haaks_zagen' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.haaks_zagen == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %} type="radio"
                class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}"
                data-type="haaks_zagen" data-value="{{ record.supplier_data.prices.haaks_zagen }}"/>
       </td>
-      <td>Haaks Zagen
+      <td>Leverancier - Haaks Zagen
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.haaks_zagen|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_75 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_75 is defined and record.selected_supplier_price == 'prijs_tot_75' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_75 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_75' %}checked{% endif %} type="radio"
@@ -24,14 +80,15 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_75 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 75
+      <td>Leverancier - Prijs tot 75
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>
         € {{ record.supplier_data.prices.prijs_tot_75 |number_format(2, ',', '.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_100 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_100 is defined and record.selected_supplier_price == 'prijs_tot_100' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_100 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_100' %}checked{% endif %} type="radio"
@@ -39,14 +96,15 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_100 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 100
+      <td>Leverancier - Prijs tot 100
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>
         € {{ record.supplier_data.prices.prijs_tot_100 |number_format(2, ',', '.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_150 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_150 is defined and record.selected_supplier_price == 'prijs_tot_150' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_150 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_150' %}checked{% endif %} type="radio"
@@ -54,13 +112,14 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_150 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 150
+      <td>Leverancier - Prijs tot 150
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_tot_150|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_200 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_200 is defined and record.selected_supplier_price == 'prijs_tot_200' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_200 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_200' %}checked{% endif %} type="radio"
@@ -68,14 +127,15 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_200 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 200
+      <td>Leverancier - Prijs tot 200
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>
         € {{ record.supplier_data.prices.prijs_tot_200 |number_format(2, ',', '.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_250 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_250 is defined and record.selected_supplier_price == 'prijs_tot_250' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_250 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_250' %}checked{% endif %} type="radio"
@@ -83,13 +143,14 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_250 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 250
+      <td>Leverancier - Prijs tot 250
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_tot_250|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_300 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_300 is defined and record.selected_supplier_price == 'prijs_tot_300' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_300 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_300' %}checked{% endif %} type="radio"
@@ -97,14 +158,15 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_300 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 300
+      <td>Leverancier - Prijs tot 300
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_tot_300|number_format(2,',','.') }}
 
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_500 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_500 is defined and record.selected_supplier_price == 'prijs_tot_500' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_500 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_500' %}checked{% endif %} type="radio"
@@ -112,13 +174,14 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_500 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 500
+      <td>Leverancier - Prijs tot 500
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_tot_500|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_vanaf_500 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_vanaf_500 is defined and record.selected_supplier_price == 'prijs_vanaf_500' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_vanaf_500 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_vanaf_500' %}checked{% endif %} type="radio"
@@ -126,14 +189,15 @@
                data-value="{{ record.supplier_data.prices.prijs_vanaf_500 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs vanaf 500
+      <td>Leverancier - Prijs vanaf 500
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>
         € {{ record.supplier_data.prices.prijs_vanaf_500 |number_format(2, ',', '.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.verven_per_m1 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.verven_per_m1 is defined and record.selected_supplier_price == 'verven_per_m1' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.verven_per_m1 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'verven_per_m1' %}checked{% endif %} type="radio"
@@ -141,13 +205,14 @@
                data-value="{{ record.supplier_data.prices.verven_per_m1 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Verven p/m1
+      <td>Leverancier - Verven p/m1
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.verven_per_m1|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_tot_1000 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_tot_1000 is defined and record.selected_supplier_price == 'prijs_tot_1000' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_tot_1000 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_tot_1000' %}checked{% endif %} type="radio"
@@ -155,13 +220,14 @@
                data-value="{{ record.supplier_data.prices.prijs_tot_1000 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs tot 1000
+      <td>Leverancier - Prijs tot 1000
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_tot_1000|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_per_meter is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_per_meter is defined and record.selected_supplier_price == 'prijs_per_meter' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_per_meter == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_per_meter' %}checked{% endif %} type="radio"
@@ -169,13 +235,14 @@
                data-value="{{ record.supplier_data.prices.prijs_per_meter }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs p/m
+      <td>Leverancier - Prijs p/m
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_per_meter|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_vanaf_300 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_vanaf_300 is defined and record.selected_supplier_price == 'prijs_vanaf_300' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_vanaf_300 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_vanaf_300' %}checked{% endif %} type="radio"
@@ -183,13 +250,14 @@
                data-value="{{ record.supplier_data.prices.prijs_vanaf_300 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs vanaf 300
+      <td>Leverancier - Prijs vanaf 300
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_vanaf_300|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.stralen_per_100 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.stralen_per_100 is defined and record.selected_supplier_price == 'stralen_per_100' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.stralen_per_100 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'stralen_per_100' %}checked{% endif %} type="radio"
@@ -197,13 +265,14 @@
                data-value="{{ record.supplier_data.prices.stralen_per_100 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Stralen per 100
+      <td>Leverancier - Stralen per 100
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.stralen_per_100|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.prijs_vanaf_1000 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.prijs_vanaf_1000 is defined and record.selected_supplier_price == 'prijs_vanaf_1000' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.prijs_vanaf_1000 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'prijs_vanaf_1000' %}checked{% endif %} type="radio"
@@ -211,13 +280,14 @@
                data-value="{{ record.supplier_data.prices.prijs_vanaf_1000 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Prijs vanaf 1000
+      <td>Leverancier - Prijs vanaf 1000
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.prijs_vanaf_1000|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.stralen_per_meter is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.stralen_per_meter is defined and record.selected_supplier_price == 'stralen_per_meter' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.stralen_per_meter == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'stralen_per_meter' %}checked{% endif %} type="radio"
@@ -225,13 +295,14 @@
                data-value="{{ record.supplier_data.prices.stralen_per_meter }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Stralen p/m
+      <td>Leverancier - Stralen p/m
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.stralen_per_meter|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.stralen_menieen_per_100 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.stralen_menieen_per_100 is defined and record.selected_supplier_price == 'stralen_menieen_per_100' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.stralen_menieen_per_100 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'stralen_menieen_per_100' %}checked{% endif %} type="radio"
@@ -239,13 +310,14 @@
                data-value="{{ record.supplier_data.prices.stralen_menieen_per_100 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Stralen & Menieën per 100
+      <td>Leverancier - Stralen & Menieën per 100
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.stralen_menieen_per_100|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.stralen_menieen_per_meter is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.stralen_menieen_per_meter is defined and record.selected_supplier_price == 'stralen_menieen_per_meter' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.stralen_menieen_per_meter == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'stralen_menieen_per_meter' %}checked{% endif %} type="radio"
@@ -253,13 +325,14 @@
                data-value="{{ record.supplier_data.prices.stralen_menieen_per_meter }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Stralen & Menieën p/m
+      <td>Leverancier - Stralen & Menieën p/m
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.stralen_menieen_per_meter|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.bruto_prijs_per_stuk is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.bruto_prijs_per_stuk is defined and record.selected_supplier_price == 'bruto_prijs_per_stuk' and record.file_supplier != "HANDMATIG" %}
     {# Indi prijs regels #}
     <tr style="{% if record.supplier_data.prices.bruto_prijs_per_stuk == "" %}display:none;{% endif %}">
       <td>
@@ -268,13 +341,14 @@
                data-value="{{ record.supplier_data.prices.bruto_prijs_per_stuk }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Bruto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
+      <td>Leverancier - Bruto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.bruto_prijs_per_stuk|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.netto_prijs_per_stuk is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.netto_prijs_per_stuk is defined and record.selected_supplier_price == 'netto_prijs_per_stuk' and record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.netto_prijs_per_stuk == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'netto_prijs_per_stuk' %}checked{% endif %} type="radio"
@@ -282,25 +356,14 @@
                data-value="{{ record.supplier_data.prices.netto_prijs_per_stuk }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Netto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
+      <td>Leverancier - Netto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.netto_prijs_per_stuk|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.basis_prijs is defined  and record.file_supplier == "HANDMATIG" %}
-    <tr>
-
-      <td colspan="2" style="min-width: 45%;">Inkoop Prijs
-        <div style="display: none;">
-        <input checked type="radio"
-               class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}"
-               data-type="basis_prijs" data-value="{{ record.supplier_data.prices.basis_prijs }}"/>
-        </div>
-      </td>
-      <td><input type="text" class="form-control basis-prijs-input" data-id="{{ record.id }}" data-name="basis_prijs" value="{{ record.supplier_data.prices.basis_prijs }}"/></td>
-    </tr>
-  {% elseif record.supplier_data.prices.basis_prijs is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.basis_prijs is defined and record.selected_supplier_price == 'basis_prijs' %}
     {#  MCB prijsregel #}
     <tr style="{% if record.supplier_data.prices.basis_prijs == "" %}display:none;{% endif %}">
       <td>
@@ -308,13 +371,14 @@
                class="selected_formule_item form-radio basis-prijs-input" data-type="basis_prijs"
                data-value="{{ record.supplier_data.prices.basis_prijs }}" name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Basis prijs
+      <td>Leverancier - Basis prijs
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.basis_prijs|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_1 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_1 is defined and record.selected_supplier_price == 'staffel_prijs_1' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_1 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_1' %}checked{% endif %} type="radio"
@@ -322,13 +386,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_1 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_1 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_1 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_1|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_2 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_2 is defined and record.selected_supplier_price == 'staffel_prijs_2' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_2 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_2' %}checked{% endif %} type="radio"
@@ -336,13 +401,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_2 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_2 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_2 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_2|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_3 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_3 is defined and record.selected_supplier_price == 'staffel_prijs_3' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_3 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_3' %}checked{% endif %} type="radio"
@@ -350,13 +416,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_3 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_3 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_3 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_3|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_4 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_4 is defined and record.selected_supplier_price == 'staffel_prijs_4' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_4 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_4' %}checked{% endif %} type="radio"
@@ -364,13 +431,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_4 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_4 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_4 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_4|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_5 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_5 is defined and record.selected_supplier_price == 'staffel_prijs_5' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_5 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_5' %}checked{% endif %} type="radio"
@@ -378,13 +446,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_5 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_5 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_5 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_5|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_6 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_6 is defined and record.selected_supplier_price == 'staffel_prijs_6' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_6 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_6' %}checked{% endif %} type="radio"
@@ -392,13 +461,14 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_6 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_6 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_6 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_6|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
-  {% if record.supplier_data.prices.staffel_prijs_7 is defined and record.file_supplier != "HANDMATIG" %}
+  {% if record.supplier_data.prices.staffel_prijs_7 is defined and record.selected_supplier_price == 'staffel_prijs_7' and  record.file_supplier != "HANDMATIG" %}
     <tr style="{% if record.supplier_data.prices.staffel_prijs_7 == "" %}display:none;{% endif %}">
       <td>
         <input {% if record.selected_supplier_price == 'staffel_prijs_7' %}checked{% endif %} type="radio"
@@ -406,113 +476,557 @@
                data-value="{{ record.supplier_data.prices.staffel_prijs_7 }}"
                name="selected_formule_item_{{ record.id }}"/>
       </td>
-      <td>Staffel {{ record.supplier_data.prices.staffel_aantal_7 }}<sub>kg</sub>
+      <td>Leverancier - Staffel {{ record.supplier_data.prices.staffel_aantal_7 }}<sub>kg</sub>
       </td>
+      <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
       <td>€ {{ record.supplier_data.prices.staffel_prijs_7|number_format(2,',','.') }}
       </td>
     </tr>
   {% endif %}
+  {% if record.supplier_data.attributes.gewicht is defined %}
+    <tr style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">
+      <td colspan="2">Gewicht</td>
+      <td class="text-center"><span class="font-weight-bold">{GHL}</span></td>
+      <td>{{ record.supplier_data.attributes.gewicht }} <sub>Kg</sub></td>
+    </tr>
+  {% endif %}
+  {% if record.supplier_data.attributes.kilo_per_meter is defined %}
+    <tr style="{% if record.supplier_data.attributes.kilo_per_meter == "" %}display:none;{% endif %}">
+      <td colspan="2">Leverancier - Kilo p/m</td>
+      <td class="text-center"><span class="font-weight-bold">{GML}</span></td>
+      <td>{{ record.supplier_data.attributes.kilo_per_meter }} <sub>Kg</sub></td>
+    </tr>
+  {% endif %}
+  {% if record.supplier_data.attributes.handelslengte is defined %}
+    <tr style="{% if record.supplier_data.attributes.handelslengte == "" %}display:none;{% endif %}">
+      <td colspan="2">Leverancier - Handelslengte</td>
+      <td class="text-center"><span class="font-weight-bold">{HL}</span></td>
+      <td>{{ record.supplier_data.attributes.handelslengte }} <sub>Meter</sub></td>
+    </tr>
+  {% endif %}
+
+  <tr>
+    <td colspan="2">Webshop - prijs</td>
+    <td class="text-center"><span class="font-weight-bold">{PW}</span></td>
+    <td>{{ record.db_prijs }}</td>
+  </tr>
+  <tr>
+    <td colspan="2">Webshop - Handelslengte</td>
+    <td class="text-center"><span class="font-weight-bold">{HW}</span></td>
+    <td>{{ record.db_handelslengte }}</td>
+  </tr>
+  <tr>
+    <td colspan="2">Webshop - Gewicht</td>
+    <td class="text-center"><span class="font-weight-bold">{GW}</span></td>
+    <td>{{ record.db_gewicht }}</td>
+  </tr>
 </table>
 
 <div class="w-100">
-  <a class="open-attributes-table" data-toggle="collapse" href="#attributes_table_{{ record.id }}" role="button"
-     aria-expanded="false" aria-controls="collapseExample">Attributen Tonen/Verbergen</a>
+  <a class="open-attributes-table btn btn-sm btn-default" data-toggle="collapse" href="#attributes_table_{{ record.id }}" role="button"
+     aria-expanded="false" aria-controls="collapseExample">Extra waarden</a>
 </div>
 <div id="attributes_table_{{ record.id }}" class="collapse">
-  <table style="min-width:300px;">
-    {% if record.supplier_data.attributes.gewicht is defined  and record.file_supplier == "HANDMATIG" %}
-      <tr>
-        <td style="min-width: 45%;">Gewicht (Kg)</td>
-        <td><input type="text" class="form-control gewicht-input" data-id="{{ record.id }}" data-name="gewicht" value="{{ record.supplier_data.attributes.gewicht }}"/> </td>
-      </tr>
-    {% elseif record.supplier_data.attributes.gewicht is defined and record.file_supplier != "HANDMATIG" %}
-      <tr style="{% if record.supplier_data.attributes.gewicht == "" %}display:none;{% endif %}">
-        <td>Gewicht</td>
-        <td>{{ record.supplier_data.attributes.gewicht }} <sub>Kg</sub></td>
-      </tr>
-    {% endif %}
-    {% if record.supplier_data.attributes.kilo_per_meter is defined  and record.file_supplier == "HANDMATIG" %}
-      <tr>
-        <td style="min-width: 45%;">Kilo per meter (Kg)</td>
-        <td><input type="text" class="form-control kilo-per-meter-input" data-id="{{ record.id }}" data-name="kilo_per_meter" value="{{ record.supplier_data.attributes.kilo_per_meter }}"/></td>
-      </tr>
-    {% elseif record.supplier_data.attributes.kilo_per_meter is defined and record.file_supplier != "HANDMATIG" %}
-      <tr style="{% if record.supplier_data.attributes.kilo_per_meter == "" %}display:none;{% endif %}">
-        <td>Kilo per meter</td>
-        <td>{{ record.supplier_data.attributes.kilo_per_meter }} <sub>Kg</sub></td>
+  <table style="min-width:400px;">
+<tr>
+    <th colspan="2" style="min-width: 50%;">Type</th>
+    <th class="text-center" style="min-width: 15%;">Code</th>
+    <th>Prijs</th>
+</tr>
+    {# Start Onder Tabel #}
+    {% if record.supplier_data.prices.haaks_zagen is defined and record.selected_supplier_price != 'haaks_zagen' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.haaks_zagen == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'haaks_zagen' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" name="selected_formule_item_{{ record.id }}"
+                 data-type="haaks_zagen" data-value="{{ record.supplier_data.prices.haaks_zagen }}"/>
+        </td>
+        <td>Haaks Zagen
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.haaks_zagen|number_format(2,',','.') }}
+        </td>
       </tr>
     {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_75 is defined and record.selected_supplier_price != 'prijs_tot_75' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_75 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_75' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_75"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_75 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 75
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>
+          € {{ record.supplier_data.prices.prijs_tot_75 |number_format(2, ',', '.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_100 is defined and record.selected_supplier_price != 'prijs_tot_100' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_100 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_100' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_100"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_100 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 100
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>
+          € {{ record.supplier_data.prices.prijs_tot_100 |number_format(2, ',', '.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_150 is defined and record.selected_supplier_price != 'prijs_tot_150' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_150 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_150' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_150"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_150 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 150
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_tot_150|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_200 is defined and record.selected_supplier_price != 'prijs_tot_200' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_200 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_200' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_200"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_200 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 200
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>
+          € {{ record.supplier_data.prices.prijs_tot_200 |number_format(2, ',', '.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_250 is defined and record.selected_supplier_price != 'prijs_tot_250' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_250 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_250' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_250"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_250 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 250
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_tot_250|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_300 is defined and record.selected_supplier_price != 'prijs_tot_300' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_300 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_300' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_300"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_300 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 300
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_tot_300|number_format(2,',','.') }}
+
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_500 is defined and record.selected_supplier_price != 'prijs_tot_500' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_500 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_500' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_500"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_500 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 500
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_tot_500|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_vanaf_500 is defined and record.selected_supplier_price != 'prijs_vanaf_500' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_vanaf_500 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_vanaf_500' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_vanaf_500"
+                 data-value="{{ record.supplier_data.prices.prijs_vanaf_500 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs vanaf 500
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>
+          € {{ record.supplier_data.prices.prijs_vanaf_500 |number_format(2, ',', '.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.verven_per_m1 is defined and record.selected_supplier_price != 'verven_per_m1' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.verven_per_m1 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'verven_per_m1' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="verven_per_m1"
+                 data-value="{{ record.supplier_data.prices.verven_per_m1 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Verven p/m1
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.verven_per_m1|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_tot_1000 is defined and record.selected_supplier_price != 'prijs_tot_1000' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_tot_1000 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_tot_1000' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_tot_1000"
+                 data-value="{{ record.supplier_data.prices.prijs_tot_1000 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs tot 1000
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_tot_1000|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_per_meter is defined and record.selected_supplier_price != 'prijs_per_meter' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_per_meter == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_per_meter' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_per_meter"
+                 data-value="{{ record.supplier_data.prices.prijs_per_meter }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs p/m
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_per_meter|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_vanaf_300 is defined and record.selected_supplier_price != 'prijs_vanaf_300' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_vanaf_300 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_vanaf_300' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_vanaf_300"
+                 data-value="{{ record.supplier_data.prices.prijs_vanaf_300 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs vanaf 300
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_vanaf_300|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.stralen_per_100 is defined and record.selected_supplier_price != 'stralen_per_100' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.stralen_per_100 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'stralen_per_100' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="stralen_per_100"
+                 data-value="{{ record.supplier_data.prices.stralen_per_100 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Stralen per 100
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.stralen_per_100|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.prijs_vanaf_1000 is defined and record.selected_supplier_price != 'prijs_vanaf_1000' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.prijs_vanaf_1000 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'prijs_vanaf_1000' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="prijs_vanaf_1000"
+                 data-value="{{ record.supplier_data.prices.prijs_vanaf_1000 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Prijs vanaf 1000
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.prijs_vanaf_1000|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.stralen_per_meter is defined and record.selected_supplier_price != 'stralen_per_meter' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.stralen_per_meter == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'stralen_per_meter' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="stralen_per_meter"
+                 data-value="{{ record.supplier_data.prices.stralen_per_meter }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Stralen p/m
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.stralen_per_meter|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.stralen_menieen_per_100 is defined and record.selected_supplier_price != 'stralen_menieen_per_100' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.stralen_menieen_per_100 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'stralen_menieen_per_100' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="stralen_menieen_per_100"
+                 data-value="{{ record.supplier_data.prices.stralen_menieen_per_100 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Stralen & Menieën per 100
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.stralen_menieen_per_100|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.stralen_menieen_per_meter is defined and record.selected_supplier_price != 'stralen_menieen_per_meter' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.stralen_menieen_per_meter == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'stralen_menieen_per_meter' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="stralen_menieen_per_meter"
+                 data-value="{{ record.supplier_data.prices.stralen_menieen_per_meter }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Stralen & Menieën p/m
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.stralen_menieen_per_meter|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.bruto_prijs_per_stuk is defined and record.selected_supplier_price != 'bruto_prijs_per_stuk' and record.file_supplier != "HANDMATIG" %}
+      {# Indi prijs regels #}
+      <tr style="{% if record.supplier_data.prices.bruto_prijs_per_stuk == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'bruto_prijs_per_stuk' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="bruto_prijs_per_stuk"
+                 data-value="{{ record.supplier_data.prices.bruto_prijs_per_stuk }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Bruto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.bruto_prijs_per_stuk|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.netto_prijs_per_stuk is defined and record.selected_supplier_price != 'netto_prijs_per_stuk' and record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.netto_prijs_per_stuk == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'netto_prijs_per_stuk' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="netto_prijs_per_stuk"
+                 data-value="{{ record.supplier_data.prices.netto_prijs_per_stuk }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Netto prijs per stuk <small>({{ record.supplier_data.attributes.eenheid }})</small>
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.netto_prijs_per_stuk|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.basis_prijs is defined and record.selected_supplier_price != 'basis_prijs' %}
+      {#  MCB prijsregel #}
+      <tr style="{% if record.supplier_data.prices.basis_prijs == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'basis_prijs' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio basis-prijs-input" data-type="basis_prijs"
+                 data-value="{{ record.supplier_data.prices.basis_prijs }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Basis prijs
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.basis_prijs|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_1 is defined and record.selected_supplier_price != 'staffel_prijs_1' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_1 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_1' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_1"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_1 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_1 }}<sub>kg</sub>
+        </td>
+        <td class="text-center"><span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_1|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_2 is defined and record.selected_supplier_price != 'staffel_prijs_2' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_2 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_2' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_2"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_2 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_2 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_2|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_3 is defined and record.selected_supplier_price != 'staffel_prijs_3' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_3 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_3' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_3"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_3 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_3 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_3|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_4 is defined and record.selected_supplier_price != 'staffel_prijs_4' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_4 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_4' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_4"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_4 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_4 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_4|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_5 is defined and record.selected_supplier_price != 'staffel_prijs_5' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_5 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_5' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_5"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_5 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_5 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_5|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_6 is defined and record.selected_supplier_price != 'staffel_prijs_6' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_6 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_6' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_6"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_6 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_6 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_6|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+    {% if record.supplier_data.prices.staffel_prijs_7 is defined and record.selected_supplier_price != 'staffel_prijs_7' and  record.file_supplier != "HANDMATIG" %}
+      <tr style="{% if record.supplier_data.prices.staffel_prijs_7 == "" %}display:none;{% endif %}">
+        <td>
+          <input {% if record.selected_supplier_price == 'staffel_prijs_7' %}checked{% endif %} type="radio"
+                 class="selected_formule_item form-radio" data-type="staffel_prijs_7"
+                 data-value="{{ record.supplier_data.prices.staffel_prijs_7 }}"
+                 name="selected_formule_item_{{ record.id }}"/>
+        </td>
+        <td>Staffel {{ record.supplier_data.prices.staffel_aantal_7 }}<sub>kg</sub>
+        </td>
+        <td> <span class="font-weight-bold">{PL}</span></td>
+        <td>€ {{ record.supplier_data.prices.staffel_prijs_7|number_format(2,',','.') }}
+        </td>
+      </tr>
+    {% endif %}
+
+
+    <tr>
+      <td colspan="4" style="background-color:#363a41;height:2px;border:0"></td>
+    </tr>
+
     {% if record.supplier_data.attributes.diameter is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.diameter == "" %}display:none;{% endif %}">
-        <td>Diameter</td>
-        <td>{{ record.supplier_data.attributes.diameter }} <sub>&#x2300;</sub></td>
+        <td colspan="2">Diameter</td>
+        <td colspan="2">{{ record.supplier_data.attributes.diameter }} <sub>&#x2300;</sub></td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.kwaliteit is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.kwaliteit == "" %}display:none;{% endif %}">
-        <td>Kwaliteit</td>
-        <td>{{ record.supplier_data.attributes.kwaliteit }}</td>
+        <td colspan="2">Kwaliteit</td>
+        <td colspan="2">{{ record.supplier_data.attributes.kwaliteit }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.uitvoering is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.uitvoering == "" %}display:none;{% endif %}">
-        <td>Uitvoering</td>
-        <td>{{ record.supplier_data.attributes.uitvoering }}</td>
-      </tr>
-    {% endif %}
-    {% if record.supplier_data.attributes.handelslengte is defined  and record.file_supplier == "HANDMATIG" %}
-      <tr>
-        <td style="min-width: 45%;">Handelslengte (M)</td>
-        <td><input type="text" class="form-control handelslengte-input" data-id="{{ record.id }}" data-name="handelslengte" value="{{ record.supplier_data.attributes.handelslengte }}"/></td>
-      </tr>
-    {% elseif record.supplier_data.attributes.handelslengte is defined and record.file_supplier != "HANDMATIG" %}
-      <tr style="{% if record.supplier_data.attributes.handelslengte == "" %}display:none;{% endif %}">
-        <td>Handelslengte</td>
-        <td>{{ record.supplier_data.attributes.handelslengte }} <sub>Meter</sub></td>
+        <td colspan="2">Uitvoering</td>
+        <td colspan="2">{{ record.supplier_data.attributes.uitvoering }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.min_afname is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.min_afname == "" %}display:none;{% endif %}">
-        <td>Minimale afname</td>
-        <td>{{ record.supplier_data.attributes.min_afname }}</td>
+        <td colspan="2">Minimale afname</td>
+        <td colspan="2">{{ record.supplier_data.attributes.min_afname }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.korting is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.korting == "" %}display:none;{% endif %}">
-        <td>Korting</td>
-        <td>{{ record.supplier_data.attributes.korting }}%</td>
+        <td colspan="2">Korting</td>
+        <td colspan="2">{{ record.supplier_data.attributes.korting }}%</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.artikel_groep is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.artikel_groep == "" %}display:none;{% endif %}">
-        <td>Artikelgroep</td>
-        <td>{{ record.supplier_data.attributes.artikel_groep }}</td>
+        <td colspan="2">Artikelgroep</td>
+        <td colspan="2">{{ record.supplier_data.attributes.artikel_groep }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.artikel_nummer is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.artikel_nummer == "" %}display:none;{% endif %}">
-        <td>Artikelnummer</td>
-        <td>{{ record.supplier_data.attributes.artikel_nummer }}</td>
+        <td colspan="2">Artikelnummer</td>
+        <td colspan="2">{{ record.supplier_data.attributes.artikel_nummer }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.barcode is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.barcode == "" %}display:none;{% endif %}">
-        <td>Barcode</td>
-        <td>{{ record.supplier_data.attributes.barcode }}</td>
+        <td colspan="2">Barcode</td>
+        <td colspan="2">{{ record.supplier_data.attributes.barcode }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.oud_artikel is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.oud_artikel == "" %}display:none;{% endif %}">
-        <td>Oud Artikel</td>
-        <td>{{ record.supplier_data.attributes.oud_artikel }}</td>
+        <td colspan="2">Oud Artikel</td>
+        <td colspan="2">{{ record.supplier_data.attributes.oud_artikel }}</td>
       </tr>
     {% endif %}
     {% if record.supplier_data.attributes.nieuw_artikel is defined and record.file_supplier != "HANDMATIG" %}
       <tr style="{% if record.supplier_data.attributes.nieuw_artikel == "" %}display:none;{% endif %}">
-        <td>Nieuw Artikel</td>
-        <td>{{ record.supplier_data.attributes.nieuw_artikel }}</td>
+        <td colspan="2">Nieuw Artikel</td>
+        <td colspan="2">{{ record.supplier_data.attributes.nieuw_artikel }}</td>
       </tr>
     {% endif %}
+
   </table>
 </div>
 

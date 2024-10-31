@@ -14,9 +14,12 @@
 {% block content_header %}
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/select2/dist/css/select2.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/views/css/price_modifications.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css') }}"/>
-  <link rel="stylesheet" href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/css/select.bootstrap4.css') }}"/>
+  <link rel="stylesheet"
+        href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-dt/css/jquery.dataTables.min.css') }}"/>
+  <link rel="stylesheet"
+        href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/css/buttons.bootstrap4.css') }}"/>
+  <link rel="stylesheet"
+        href="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/css/select.bootstrap4.css') }}"/>
   <link rel="stylesheet" href="{{ asset('../js/jquery/ui/jquery-ui.css') }}">
 {% endblock %}
 
@@ -31,7 +34,8 @@
     </div>
     <div class="col mb-3">
       <a class="btn btn-primary pointer float-right" id="page-header-missed-products-infoshowhide"
-         href="#show_hide_missed_products" title="Toggle info" data-toggle="collapse" role="button" aria-expanded="false">
+         href="#show_hide_missed_products" title="Toggle info" data-toggle="collapse" role="button"
+         aria-expanded="false">
         <i class="material-icons">info</i> Toggle missed products
       </a>
     </div>
@@ -50,7 +54,8 @@
             <p>De formules kunnen ingevoerd worden als een som, om de formule te testen hoeft deze niet opgeslagen
               worden. Doormiddel van het klikken op de knop naast het nieuw prijs veld word er een berekening gedaan op
               basis van de ingevoerde gegevens.
-              De gerenderde formule word getoond onder het formule vak, en de nieuwe berekende prijs word in het veld van
+              De gerenderde formule word getoond onder het formule vak, en de nieuwe berekende prijs word in het veld
+              van
               nieuwe prijs geladen.</p>
           </div>
         </div>
@@ -93,21 +98,22 @@
     <div class="collapse card p-2" id="show_hide_missed_products">
       <table id="missed-products-table" class="table w-100">
         <thead>
-          <tr>
-            <th>Id</th>
-            <th>Actief</th>
-            <th>Winkel Product</th>
-            <th>Huidige prijs</th>
-          </tr>
+        <tr>
+          <th>Id</th>
+          <th>Actief</th>
+          <th>Winkel Product</th>
+          <th>Huidige prijs</th>
+        </tr>
         </thead>
         <tbody>
-
         </tbody>
         <tfoot>
-        <th><input class="form-control" type="text" placeholder="Zoek id." /></th>
-        <th></th>
-        <th><input class="form-control" type="text" placeholder="Zoek naam shop" /></th>
-        <td></td>
+        <tr>
+          <th><input class="form-control" type="text" placeholder="Zoek id."/></th>
+          <th></th>
+          <th><input class="form-control" type="text" placeholder="Zoek naam shop"/></th>
+          <td></td>
+        </tr>
         </tfoot>
       </table>
     </div>
@@ -116,18 +122,20 @@
   <div class="col-12 col-lg-12 mt-2">
     <div class="card pb-3 pt-3 bg-primary">
       <div class="col-12 p-0 d-flex justify-content-center">
-        <form action="#" id="bulk-update-formula-form"  class="form-inline">
+        <form action="#" id="bulk-update-formula-form" class="form-inline">
           <div class="input-group">
             <div class="input-group-prepend">
               <label class="input-group-text" id="price-formula-bulk-label">Price Formula</label>
             </div>
-            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="price-formula-bulk-input" aria-describedby="price-formula-bulk-label">
+            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula"
+                   id="price-formula-bulk-input" aria-describedby="price-formula-bulk-label">
           </div>
           <div class="input-group">
             <div class="input-group-prepend">
               <label class="input-group-text" id="increment-formula-bulk-label">Increment Formula</label>
             </div>
-            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula" id="increment-formula-bulk-input" aria-describedby="increment-formula-bulk-label">
+            <input type="text" class="form-control" placeholder="...." aria-label="Price Formula"
+                   id="increment-formula-bulk-input" aria-describedby="increment-formula-bulk-label">
           </div>
           <div class="btn-group ml-2" role="group" aria-label="group">
             <button type="button" id="bulk-update-clear" class="btn btn-secondary">Clear</button>
@@ -138,23 +146,372 @@
     </div>
   </div>
 
-      {% block price_modifications_list_panel %}
-          <div class="col-12">
-            {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
-          </div>
+  <!-- Modal -->
+  <div class="modal fade" id="editPriceModificationRow" tabindex="-1" role="dialog"
+       aria-labelledby="editPriceModificationRowTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPriceModificationRowTitle">Wijzig leverancier waarden <span
+              id="product_name"></span></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-      {% endblock %}
+        <div class="modal-body">
+          <form action="" id="supplierUrl" name="editPriceModificationRowForm">
+            <input type="hidden" name="row_id" id="rowid" value="">
+              <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Prijzen</h5>
+                    <div class="card-text">Prijzen kunnen in de formule gebruikt worden door middel van <b>{PL}</b>.
+                      <br/> Er dient dan wel een prijs geselecteerd te zijn.
+                    </div>
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+
+                        <div class="form-group">
+                          <label for="supplierPricesBasis_prijs">Basis prijs</label>
+                          <input type="text" class="form-control" id="supplierPricesBasis_prijs" name="supplierPricesBasis_prijs"
+                                 placeholder="Basis prijs"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesBruto_prijs_per_stuk">Bruto prijs per stuk</label>
+                          <input type="text" class="form-control" id="supplierPricesBruto_prijs_per_stuk" name="supplierPricesBruto_prijs_per_stuk"
+                                 placeholder="Bruto prijs per stuk"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesNetto_prijs_per_stuk">Netto prijs p/s</label>
+                          <input type="text" class="form-control" id="supplierPricesNetto_prijs_per_stuk" name="supplierPricesNetto_prijs_per_stuk"
+                                 placeholder="Netto prijs p/s"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_per_meter">Prijs per meter</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_per_meter" name="supplierPricesPrijs_per_meter"
+                                 placeholder="Prijs per meter"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesHaaks_zagen">Haaks zagen</label>
+                          <input type="text" class="form-control" id="supplierPricesHaaks_zagen" name="supplierPricesHaaks_zagen"
+                                 placeholder="Haaks zagen"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesVerven_per_m1">Verven per m2</label>
+                          <input type="text" class="form-control" id="supplierPricesVerven_per_m1" name="supplierPricesVerven_per_m1"
+                                 placeholder="Verven per m2"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesStralen_per_meter">Stralen per meter</label>
+                          <input type="text" class="form-control" id="supplierPricesStralen_per_meter" name="supplierPricesStralen_per_meter"
+                                 placeholder="Stralen per meter"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStralen_per_100">Stralen per 100</label>
+                          <input type="text" class="form-control" id="supplierPricesStralen_per_100" name="supplierPricesStralen_per_100"
+                                 placeholder="Stralen per 100"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesStralen_menieen_per_meter">Stralen menieen per meter</label>
+                          <input type="text" class="form-control" id="supplierPricesStralen_menieen_per_meter" name="supplierPricesStralen_menieen_per_meter"
+                                 placeholder="Stralen menieen per meter"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStralen_menieen_per_100">Stralen menieen per 100</label>
+                          <input type="text" class="form-control" id="supplierPricesStralen_menieen_per_100" name="supplierPricesStralen_menieen_per_100"
+                                 placeholder="Stralen menieen per 100"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_200">Prijs tot 200</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_200" name="supplierPricesPrijs_tot_200"
+                                 placeholder="Prijs tot 200"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_300">Prijs tot 300</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_300" name="supplierPricesPrijs_tot_300"
+                                 placeholder="Prijs tot 300"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_100">Prijs tot 100</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_100" name="supplierPricesPrijs_tot_100"
+                                 placeholder="Prijs tot 100"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_200">Prijs tot 200</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_200" name="supplierPricesPrijs_tot_200"
+                                 placeholder="Prijs tot 200"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_300">Prijs tot 300</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_300" name="supplierPricesPrijs_tot_300"
+                                 placeholder="Prijs tot 300"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_500">Prijs tot 500</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_500" name="supplierPricesPrijs_tot_500"
+                                 placeholder="Prijs tot 500"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_1000">Prijs tot 1000</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_1000" name="supplierPricesPrijs_tot_1000"
+                                 placeholder="Prijs tot 1000"/>
+                        </div>
+
+
+                      </div>
+                      <div class="col-12 col-md-6">
+
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_1">Staffel prijs 1</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_1" name="supplierPricesStaffel_prijs_1"
+                                 placeholder="Staffel prijs 1"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_2">Staffel prijs 2</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_2" name="supplierPricesStaffel_prijs_2"
+                                 placeholder="Staffel prijs 2"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_3">Staffel prijs 3</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_3" name="supplierPricesStaffel_prijs_3"
+                                 placeholder="Staffel prijs 3"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_4">Staffel prijs 4</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_4" name="supplierPricesStaffel_prijs_4"
+                                 placeholder="Staffel prijs 4"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_5">Staffel prijs 5</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_5" name="supplierPricesStaffel_prijs_5"
+                                 placeholder="Staffel prijs 5"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_6">Staffel prijs 6</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_6" name="supplierPricesStaffel_prijs_6"
+                                 placeholder="Staffel prijs 6"/>
+                        </div>
+                        <div class="form-group">
+                          <label for="supplierPricesStaffel_prijs_7">Staffel prijs 7</label>
+                          <input type="text" class="form-control" id="supplierPricesStaffel_prijs_7" name="supplierPricesStaffel_prijs_7"
+                                 placeholder="Staffel prijs 7"/>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_75">Prijs tot 75</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_75" name="supplierPricesPrijs_tot_75"
+                                 placeholder="Prijs tot 75"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_100">Prijs tot 100</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_100" name="supplierPricesPrijs_tot_100"
+                                 placeholder="Prijs tot 100"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_150">Prijs tot 150</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_150" name="supplierPricesPrijs_tot_150"
+                                 placeholder="Prijs tot 150"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_250">Prijs tot 250</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_250" name="supplierPricesPrijs_tot_250"
+                                 placeholder="Prijs tot 250"/>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_vanaf_300">Prijs vanaf 300</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_vanaf_300" name="supplierPricesPrijs_vanaf_300"
+                                 placeholder="Prijs vanaf 300"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_150">Prijs tot 150</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_150" name="supplierPricesPrijs_tot_150"
+                                 placeholder="Prijs tot 150"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_tot_250">Prijs tot 250</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_tot_250" name="supplierPricesPrijs_tot_250"
+                                 placeholder="Prijs tot 250"/>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_vanaf_300">Prijs vanaf 300</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_vanaf_300" name="supplierPricesPrijs_vanaf_300"
+                                 placeholder="Prijs vanaf 300"/>
+                        </div>
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_vanaf_500">Prijs vanaf 500</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_vanaf_500" name="supplierPricesPrijs_vanaf_500"
+                                 placeholder="Prijs vanaf 500"/>
+                        </div>
+
+
+
+                        <div class="form-group">
+                          <label for="supplierPricesPrijs_vanaf_1000">Prijs vanaf 1000</label>
+                          <input type="text" class="form-control" id="supplierPricesPrijs_vanaf_1000" name="supplierPricesPrijs_vanaf_1000"
+                                 placeholder="Prijs vanaf 1000"/>
+                        </div>
+
+
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+                <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Extra waarden</h5>
+                      <div class="row">
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label for="supplierAttributesHandelslengte">Handelslengte</label>
+                            <input type="text" class="form-control" id="supplierAttributesHandelslengte" name="supplierAttributesHandelslengte"
+                                   placeholder="Handelslengte"/>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="supplierAttributesKilo_per_meter">Kilo p/m</label>
+                            <input type="text" class="form-control" id="supplierAttributesKilo_per_meter" name="supplierAttributesKilo_per_meter"
+                                   placeholder="Kilo p/m"/>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="supplierAttributesGewicht">Gewicht</label>
+                            <input type="text" class="form-control" id="supplierAttributesGewicht" name="supplierAttributesGewicht"
+                                   placeholder="Gewicht"/>
+                          </div>
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                      <div class="card-body text-white bg-danger">
+                        <h5 class="card-title">Extra waarden- momenteel niet bruikbaar in de formules</h5>
+                        <div class="row">
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label for="supplierAttributesKorting">Korting</label>
+                              <input type="text" class="form-control" id="supplierAttributesKorting" name="supplierAttributesKorting"
+                                     placeholder="Korting"/>
+                            </div>
+
+                            <div class="form-group">
+                              <label for="supplierAttributesUitvoering">Uitvoering</label>
+                              <input type="text" class="form-control" id="supplierAttributesUitvoering" name="supplierAttributesUitvoering"
+                                     placeholder="Uitvoering"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesOud_artikel">Oud artikel</label>
+                              <input type="text" class="form-control" id="supplierAttributesOud_artikel" name="supplierAttributesOud_artikel"
+                                     placeholder="Oud artikel"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesNieuw_artikel">Nieuw artikel</label>
+                              <input type="text" class="form-control" id="supplierAttributesNieuw_artikel" name="supplierAttributesNieuw_artikel"
+                                     placeholder="Nieuw artikel"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesMin_afname">Min afname</label>
+                              <input type="text" class="form-control" id="supplierAttributesMin_afname" name="supplierAttributesMin_afname"
+                                     placeholder="Min afname"/>
+                            </div>
+
+
+                          </div>
+                          <div class="col-12 col-md-6">
+                            <div class="form-group">
+                              <label for="supplierAttributesKwaliteit">Kwaliteit</label>
+                              <input type="text" class="form-control" id="supplierAttributesKwaliteit" name="supplierAttributesKwaliteit"
+                                     placeholder="Kwaliteit"/>
+                            </div>
+
+
+                            <div class="form-group">
+                              <label for="supplierAttributesDiameter">Diameter</label>
+                              <input type="text" class="form-control" id="supplierAttributesDiameter" name="supplierAttributesDiameter"
+                                     placeholder="Diameter"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesBarcode">Barcode</label>
+                              <input type="text" class="form-control" id="supplierAttributesBarcode" name="supplierAttributesBarcode"
+                                     placeholder="Barcode"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesArtikel_nummer">Artikelnummer</label>
+                              <input type="text" class="form-control" id="supplierAttributesArtikel_nummer" name="supplierAttributesArtikel_nummer"
+                                     placeholder="Artikelnummer"/>
+                            </div>
+                            <div class="form-group">
+                              <label for="supplierAttributesArtikel_groep">Artikelgroep</label>
+                              <input type="text" class="form-control" id="supplierAttributesArtikel_groep" name="supplierAttributesArtikel_groep"
+                                     placeholder="Artikelgroep"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  </form>
+                </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuleren</button>
+          <button type="button" class="btn btn-primary submitPriceModificationRowUpdateForm">Opslaan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+      </div>
+
+
+
+
+  {% block price_modifications_list_panel %}
+    <div class="col-12">
+      {% include '@Modules/pricemodifier/views/templates/admin/grid/grid_panel.html.twig' with {'grid': price_modificationGrid} %}
+    </div>
+    </div>
+  {% endblock %}
 {% endblock %}
 {% block javascripts %}
   <script src="{{ asset('../modules/pricemodifier/node_modules/select2/dist/js/select2.js') }}"></script>
   <script src="{{ asset('../modules/pricemodifier/node_modules/chartist/dist/chartist.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.js') }}"></script>
+  <script
+    src="{{ asset('../modules/pricemodifier/node_modules/chartist-plugin-tooltips-updated/dist/chartist-plugin-tooltip.js') }}"></script>
   <script src="{{ asset('../modules/pricemodifier/views/js/barChartLabelPlugin.js') }}"></script>
   <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net/js/jquery.dataTables.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons/js/dataTables.buttons.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select/js/dataTables.select.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/js/select.bootstrap4.js') }}"></script>
-  <script src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js') }}"></script>
+  <script
+    src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons/js/dataTables.buttons.js') }}"></script>
+  <script
+    src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select/js/dataTables.select.js') }}"></script>
+  <script
+    src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-select-bs4/js/select.bootstrap4.js') }}"></script>
+  <script
+    src="{{ asset('../modules/pricemodifier/node_modules/datatables.net-buttons-bs4/js/buttons.bootstrap4.js') }}"></script>
 
 
 
@@ -184,10 +541,10 @@
 
 
     //revert changes from localstorage or clear field of they were empty
-    $(document).on('click', '#bulk-update-clear', function (e){
+    $(document).on('click', '#bulk-update-clear', function (e) {
 
       let bulkInputArray = localStorage.getItem('priceModifierBackup');
-      if(bulkInputArray == null){
+      if (bulkInputArray == null) {
         bulkInputArray = {};
       } else {
         bulkInputArray = JSON.parse(bulkInputArray);
@@ -197,19 +554,19 @@
         checkedItems.push(parseInt($(el).val()));
       });
 
-      for(let item in bulkInputArray) {
-          if(in_array(parseInt(bulkInputArray[item].id), checkedItems)){
-              let rowId = bulkInputArray[item].id;
-              let formula = bulkInputArray[item].formula;
-              let incrementFormula = bulkInputArray[item].increment_formula;
-              $('[name="formula_' + rowId + '"]').val(formula);
-              $('[name="increment_formula_' + rowId + '"]').val(incrementFormula);
-          }
+      for (let item in bulkInputArray) {
+        if (in_array(parseInt(bulkInputArray[item].id), checkedItems)) {
+          let rowId = bulkInputArray[item].id;
+          let formula = bulkInputArray[item].formula;
+          let incrementFormula = bulkInputArray[item].increment_formula;
+          $('[name="formula_' + rowId + '"]').val(formula);
+          $('[name="increment_formula_' + rowId + '"]').val(incrementFormula);
         }
+      }
     });
 
 
-    $(document).on('click', '#bulk-update-update', function (e){
+    $(document).on('click', '#bulk-update-update', function (e) {
       let formula = $('#price-formula-bulk-input').val();
       let increment = $('#increment-formula-bulk-input').val();
 
@@ -232,9 +589,32 @@
       let prevBackupString = localStorage.getItem('priceModifierBackup');
       let backupString = JSON.stringify(bulkInputArray);
 
-      if(prevBackupString !== backupString){
+      if (prevBackupString !== backupString) {
         localStorage.setItem('priceModifierBackup', JSON.stringify(bulkInputArray));
       }
+    });
+
+    $(document).on('click', '.showPriceModificationRowModal', function (e) {
+      let data = $(this).data();
+      for (const item in data) {
+        if(item === 'supplierUrl'){
+          $('#' + item).attr('action',data[item]);
+        } else {
+          $('#' + item).val(data[item]);
+        }
+      }
+      $('#editPriceModificationRow').modal('show');
+    });
+
+    $(document).on('click','.submitPriceModificationRowUpdateForm', function(){
+        let formData = $('form[name="editPriceModificationRowForm"]').serialize();
+        let rowid = $('form[name="editPriceModificationRowForm"] #rowid').val();
+        let url = '/admin-dev/index.php/modules/pricemodifier/price_modifications/'+rowid+'/update-modal-product';
+        $.post(url+'?'+formData).done(function (e) {
+          if(e.status !== 'error'){
+            $('#editPriceModificationRow').modal('hide');
+          }
+        });
     });
 
   </script>

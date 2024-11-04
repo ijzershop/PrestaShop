@@ -1,10 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="PS-233.13135.108">
-    <data-source name="ijzershop8@localhost" uuid="593ffc86-2638-45f8-b193-e6356e2920bf">
+  <component name="dataSourceStorageLocal" created-in="DB-242.21829.162">
+    <data-source name="Ijzershop (Local)" uuid="593ffc86-2638-45f8-b193-e6356e2920bf">
       <database-info product="MySQL" version="8.0.27" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-java-8.0.25 (Revision: 08be9e9b4cba6aa115f9b27b215887af40b159e0)" dbms="MYSQL" exact-version="8.0.27" exact-driver-version="8.0">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
+        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="ijzershop8" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="Ijzershop (LIVE)" uuid="1a200698-e9ab-4101-b09b-efcc4366212b">
+      <database-info product="MariaDB" version="10.11.8-MariaDB-cll-lve" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="3.3.3" dbms="MARIADB" exact-version="10.11.8" exact-driver-version="3.3">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>ijzershop812024</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <ssh-config-id>558d7269-86d0-43cc-a98d-4e711b2805c1</ssh-config-id>
+        <local-port>22</local-port>
+      </ssh-properties>
+    </data-source>
+    <data-source name="Ijzershop (Test)" uuid="dbeeadac-7c13-4048-b591-2989fe1662d2">
+      <database-info product="MariaDB" version="10.11.8-MariaDB-cll-lve" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="3.3.3" dbms="MARIADB" exact-version="10.11.8" exact-driver-version="3.3">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>ijzermlt2367</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <ssh-config-id>11f6f482-af65-4f5a-99cb-0cafa052ac0a</ssh-config-id>
+      </ssh-properties>
+    </data-source>
+    <data-source name="Dashboard (LIVE)" uuid="5b4a0618-1106-40b3-a84b-7bbbf5980e7b">
+      <database-info product="MariaDB" version="10.11.8-MariaDB-cll-lve" jdbc-version="4.2" driver-name="MariaDB Connector/J" driver-version="3.3.3" dbms="MARIADB" exact-version="10.11.8" exact-driver-version="3.3">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>msmidDash</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="msmid_dashboard" />
+        </introspection-scope>
+      </schema-mapping>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <ssh-config-id>8fb9f4b6-9f4d-42c4-8948-4d74e1280f12</ssh-config-id>
+      </ssh-properties>
+    </data-source>
+    <data-source name="Dashboard (Local)" uuid="1abcefaa-5788-4b79-ae66-abdf2eccb1e6">
+      <database-info product="MySQL" version="8.3.0" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.3.0" exact-driver-version="8.2">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
       <secret-storage>master_key</secret-storage>

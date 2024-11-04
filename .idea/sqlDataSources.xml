@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DdlMappings">
     <mapping uuid="a7fe3a8c-8bb5-4d9d-b4ae-888a654ac158" name="ijzershop8@localhost Mapping">
-      <data-sources db="593ffc86-2638-45f8-b193-e6356e2920bf" />
+      <data-sources db="593ffc86-2638-45f8-b193-e6356e2920bf" ddl="e5cf7f79-25f7-430c-8f3e-cd2b641f044e" />
       <scope>
         <node kind="schema" qname="ijzershop8" />
       </scope>

@@ -63,13 +63,13 @@
             <div id="block-category-inner" class="block-category-inner row">
                 <div class="col-12 col-sm-8">
                     {if $category.top_description}
-                        <div id="category-description" class="text-muted">{html_entity_decode($category.top_description) nofilter}</div>
+                        <div id="category-description" class="text-muted">{$category.top_description nofilter}</div>
                     {/if}
                 </div>
                 <div class="d-none d-sm-flex col-sm-4 pl-0">
-                    {if $category.image.large.url}
+                    {if isset($category.image.large.url) && $category.image.large.url}
                         <div class="category-cover text-center mx-auto">
-                            <img style="max-width: 225px;max-height: auto;"  class="mx-auto" src="{$link->getCatImageLink($category.link_rewrite, $category.id, 'category_default')}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
+                            <img style="max-width: 225px;max-height: 100%;"  class="mx-auto" src="{$link->getCatImageLink($category.link_rewrite, $category.id, 'category_default')}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
                         </div>
                     {/if}
                 </div>

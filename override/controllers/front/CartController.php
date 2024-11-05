@@ -183,6 +183,71 @@ class CartController extends CartControllerCore
 
         $removed = CartRule::autoRemoveFromCart();
         CartRule::autoAddToCart();
+
+
+
+    }
+
+
+
+
+    protected function updateCart()
+    {
+        // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
+        if (!Connection::isBot()
+            && !$this->errors
+            && !($this->context->customer->isLogged() && !$this->isTokenValid())
+        ) {
+            if (Tools::getIsset('add') || Tools::getIsset('update')) {
+                $this->processChangeProductInCart();
+                if(!$this->ajax){
+                    Tools::redirect(preg_replace ('/\?.+$/',  '', Tools::getCurrentUrl()));
+                }
+            } elseif (Tools::getIsset('delete')) {
+                $this->processDeleteProductInCart();
+                if(!$this->ajax){
+                    Tools::redirect(preg_replace ('/\?.+$/',  '', Tools::getCurrentUrl()));
+                }
+            } elseif (CartRule::isFeatureActive()) {
+                if (Tools::getIsset('addDiscount')) {
+                    if (!($code = trim(Tools::getValue('discount_name')))) {
+                        $this->errors[] = $this->trans(
+                            'You must enter a voucher code.',
+                            [],
+                            'Shop.Notifications.Error'
+                        );
+                    } elseif (!Validate::isCleanHtml($code)) {
+                        $this->errors[] = $this->trans(
+                            'The voucher code is invalid.',
+                            [],
+                            'Shop.Notifications.Error'
+                        );
+                    } else {
+                        $cartRule = new CartRule(CartRule::getIdByCode($code));
+                        if (Validate::isLoadedObject($cartRule)) {
+                            if ($error = $cartRule->checkValidity($this->context)) {
+                                $this->errors[] = $error;
+                            } else {
+                                $this->context->cart->addCartRule($cartRule->id);
+                            }
+                        } else {
+                            $this->errors[] = $this->trans(
+                                'This voucher does not exist.',
+                                [],
+                                'Shop.Notifications.Error'
+                            );
+                        }
+                    }
+                } elseif (($id_cart_rule = (int) Tools::getValue('deleteDiscount'))
+                    && Validate::isUnsignedId($id_cart_rule)
+                ) {
+                    $this->context->cart->removeCartRule($id_cart_rule);
+                    CartRule::autoAddToCart($this->context);
+                }
+            }
+        } elseif (!$this->isTokenValid() && Tools::getValue('action') !== 'show' && !Tools::getValue('ajax')) {
+            Tools::redirect('index.php');
+        }
     }
 
 }

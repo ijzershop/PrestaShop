@@ -1,26 +1,28 @@
 // admin-dev/themes/new-theme/js/pages/tax/index.js
 
-// 1. import the grid component
+// Grid Components
 import Grid from '@components/grid/grid';
+import SortingExtension from '@components/grid/extension/sorting-extension';
 import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
-import FormSubmitButton from '@components/form-submit-button';
-import SortingExtension from '@components/grid/extension/sorting-extension';
 import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitGridExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FiltersSubmitButtonEnablerExtension
-  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 
-import initPrestashopComponents from "@app/utils/init-components";
-import {forEach} from "lodash";
-import exports from "@node_modules/webpack";
-import forEachRuntime = exports.util.runtime.forEachRuntime;
+// UI Components
+import FormSubmitButton from '@components/form-submit-button';
+import initPrestashopComponents from '@app/utils/init-components';
+
+// Third Party
+import 'select2/dist/js/select2.min';
+import 'select2/dist/css/select2.min.css';
+
 const {$} = window;
-import 'select2/dist/js/select2.js';
-import 'select2/dist/css/select2.css';
+
+
 $(() => {
 // 2. initialize the grid component by providing grid id
   const offerIntegrationGrid = new Grid('oi_offer');

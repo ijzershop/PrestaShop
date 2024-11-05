@@ -162,7 +162,14 @@ module.exports = {
     chunkFilename: '[id].[hash:8].js',
   },
   stats: {
-    errorDetails: true
+    errorDetails: true,
+    warnings: false,
+    moduleTrace: false,
+    colors: true,
+    assets: true,
+    chunks: false,
+    modules: false,
+    children: false
   },
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],

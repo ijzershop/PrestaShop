@@ -351,6 +351,17 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
     public function calculateFormula($formula, $id_product, $priceMod, $supplier_price, $sup_formula=null, $incr_formula=null)
     {
         $supplierData = $priceMod->getSupplierData();
+        if(!isset($supplierData['prices'])){
+            return json_encode(['msg' => 'Er zijn geen leverancier waardes beschikbaar',
+                'total' => 0,
+                'sup_total' => 0,
+                'incr_total' => 0,
+                'supplier_price' => 0,
+                'generated_formula' => '',
+                'generated_sub_formula' => '',
+                'generated_incr_formula' => ''
+            ]);
+        }
 
         $prices = (array)$supplierData['prices'];
         $attributes = (array)$supplierData['attributes'];

@@ -101,3 +101,9 @@ Loader
 #missed-products-table_filter{
   display:none;
 }
+
+
+.table-dark {
+  color: #fff!important;
+  background-color: #363a41!important;
+}

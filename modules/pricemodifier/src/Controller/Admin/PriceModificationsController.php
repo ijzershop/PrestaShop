@@ -271,7 +271,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 /** @var EntityManagerInterface $em */
                 $em = $this->get('doctrine.orm.entity_manager');
                 $em->persist($priceMod);
-                $em->flush();
+                $em->flush($priceMod);
             }
 
 
@@ -424,7 +424,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 /** @var EntityManagerInterface $em */
                 $em = $this->get('doctrine.orm.entity_manager');
                 $em->persist($priceMod);
-                $em->flush();
+                $em->flush($priceMod);
             }
 
         } catch (Exception $e) {
@@ -457,24 +457,24 @@ class PriceModificationsController extends FrameworkBundleAdminController
         $store_product = $request->get('store_product');
         $newPrice = round((float)str_replace(',','.', $request->get('new_price') ?? 0), 6);
 
-        $supplier_id = $price_modificationId;
-        $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
-
-        $priceMod = $repository->findOneById($supplier_id);
-        $priceMod->setOldStorePrice((string)$newPrice);
-
-        $product = new Product((int)$store_product);
-        $productName = $product->name[$id_lang];
-        $product->price = $newPrice;
 
         try {
+            $supplier_id = $price_modificationId;
+            $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');
 
+            $priceMod = $repository->findOneById($supplier_id);
+            $priceMod->setOldStorePrice((string)$newPrice);
+
+            $product = new Product((int)$store_product);
+            $productName = $product->name[$id_lang];
+            $product->price = $newPrice;
             $product->update();
+
 
             /** @var EntityManagerInterface $em */
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($priceMod);
-            $em->flush();
+            $em->flush($priceMod);
 
 
         } catch (Exception $e) {
@@ -586,9 +586,6 @@ class PriceModificationsController extends FrameworkBundleAdminController
 
     public function updateModalProductAction($price_modificationId, Request $request)
     {
-
-
-
         $supplier_id = $price_modificationId;
 
         $repository = $this->get('modernesmid.module.pricemodifier.repository.price_modification_repository');

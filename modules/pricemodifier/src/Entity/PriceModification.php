@@ -311,8 +311,9 @@ class PriceModification
 
         $priceList = [];
         $array = ['date' => date('Y-m-d H:i:s'), 'price' => $old_store_price, 'xml_date'=> $this->getXmlUploadedAt()->format('Y-m-d H:i:s')];
+
         if(!is_null($this->old_store_price)) {
-            $priceList = json_decode($this->old_store_price);
+            $priceList = json_decode($this->old_store_price, true);
 
             if (json_last_error() === 0 && is_array($priceList)) {
                 array_unshift($priceList,  $array);
@@ -320,14 +321,13 @@ class PriceModification
                     array_unshift($priceList, $array);
             }
         } else {
-            array_unshift($priceList, $array);
+            $priceList[] = $array;
         }
-
-        if(is_countable($priceList) && count($priceList) > 10){
-            array_pop($priceList);
+        $elem = 0;
+        if(is_array($priceList) && count($priceList) > 9){
+            $elem = array_pop($priceList);
         }
         $this->old_store_price = json_encode($priceList);
-
         return $this;
     }
 

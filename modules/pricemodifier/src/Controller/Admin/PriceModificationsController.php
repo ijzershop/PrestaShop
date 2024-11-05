@@ -602,6 +602,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
                 $strippedName = strtolower(str_replace('supplierPrices', '', $name));
                 $param = (float)str_replace(',', '.', (string)$param);
                 $param = $param > 0 ? $param : "";
+
                 if(is_object($supData['prices'])){
                     $supData['prices']->{$strippedName} = $param;
                 } else {
@@ -631,7 +632,7 @@ class PriceModificationsController extends FrameworkBundleAdminController
             /** @var EntityManagerInterface $em */
             $em = $this->get('doctrine.orm.entity_manager');
             $em->persist($priceMod);
-            $em->flush();
+            $em->flush($priceMod);
 
 
         } catch (Exception $e) {

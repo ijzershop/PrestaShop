@@ -380,10 +380,13 @@ class PriceModification
     public function getSupplierData(): array
     {
         $supData = $this->supplier_data;
-        if(is_array($supData)){
+        if (is_array($supData)) {
             return $supData;
         }
-        return (array)json_decode($supData);
+        if (is_string($supData)) {
+            return (array)json_decode($supData, true);
+        }
+        return [];
     }
 
 

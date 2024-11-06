@@ -2801,9 +2801,18 @@ public function hookActionFrontControllerSetVariables(&$param): void
 
 
     /*
-     * Analitics hooks
+     * Save order state hook to add visibility
      */
-
+    /**
+     * @param $hookParams
+     */
+    public function hookActionObjectOrderStatusUpdateAfter($hookParams): void
+    {
+        dd(' after update');
+        if (!isset($hookParams['orderState'])) {
+            return;
+        }
+    }
 
 }
 

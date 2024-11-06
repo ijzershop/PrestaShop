@@ -2,6 +2,16 @@ services:
   _defaults:
     public: true
 
+
+  prestashop.core.form.choice_provider.order_state_by_id:
+    class: 'MsThemeConfig\Core\Form\ChoiceProvider\OrderStateByIdChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.order_state'
+      - '@PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator'
+      - '@translator'
+      - '@prestashop.adapter.legacy.configuration'
+
   prestashop.adapter.order.query_handler.get_order_for_viewing_handler:
     class: 'MsThemeConfig\Service\DmsAdminGetOrderForViewingHandler'
     arguments:

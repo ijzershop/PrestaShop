@@ -38,6 +38,8 @@
     {% set isBright = true %}
     {% for choice in updateOrderStatusActionBarForm.new_order_status_id.vars.choices %}
       {% if choice.value == updateOrderStatusActionBarForm.new_order_status_id.vars.data %}
+
+
         {% set backgroundColor = choice.attr['data-background-color'] %}
         {% set isBright = choice.attr['data-is-bright'] %}
       {% endif %}
@@ -49,6 +51,7 @@
         'style': 'border-color: {{ backgroundColor }}',
         'data-width': '300px'
       },
+      'choices': updateOrderStatusActionBarForm.new_order_status_id.vars.choices|filter(choice => choice.attr['visible_in_select_box']),
       'id': 'update_order_status_action_input',
     }) }}
     {#    </span> #}
@@ -129,6 +132,7 @@
   </form>
 
 
+</div>
 </div>
 
 <div class="col-12 pl-0 pr-0 navbar">
@@ -287,7 +291,7 @@
       $('#migrateOrder').on('click', function (event) {
         event.preventDefault();
         var customerEmail = $('#selectCustomerToMigrate').val().split('#');
-console.log(customerEmail,$('#selectCustomerToMigrate').val())
+
         var postdata = {
           customer_email: customerEmail[0],
           customer: customerEmail[1],

@@ -22,3 +22,4 @@ services:
         event: kernel.request,
         method: DmsOnKernelRequest,
       }
+

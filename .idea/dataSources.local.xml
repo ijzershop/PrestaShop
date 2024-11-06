@@ -11,10 +11,7 @@
       <user-name>root</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node kind="schema">
-            <name qname="ijzershop8" />
-            <name qname="ijzershop_muli" />
-          </node>
+          <node kind="schema" qname="ijzershop_muli" />
         </introspection-scope>
       </schema-mapping>
     </data-source>

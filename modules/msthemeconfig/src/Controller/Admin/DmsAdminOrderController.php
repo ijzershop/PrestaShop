@@ -208,6 +208,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
                 'new_order_status_id' => $orderForViewing->getHistory()->getCurrentOrderStatusId(),
             ]
         );
+
         $updateOrderStatusActionBarForm = $formFactory->createNamed(
             'update_order_status_action_bar',
             UpdateOrderStatusType::class,

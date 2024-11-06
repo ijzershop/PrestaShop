@@ -142,14 +142,12 @@ class AdminStatusesController extends AdminStatusesControllerCore
                 'align' => 'text-center',
                 'type' => 'bool',
                 'orderby' => false,
-                'search' => false,
+                'search' => true,
                 'class' => 'fixed-width-sm',
             ],
             'template' => [
-                'title' => $this->trans('Email template', [], 'Admin.Shopparameters.Feature'),
-                'align' => 'text-center',
-                'type' => 'bool',
-            ],
+                'title' => $this->trans('Email template', [], 'Admin.Shopparameters.Feature')
+            ]
         ];
     }
 

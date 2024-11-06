@@ -30,6 +30,7 @@ class OrderState extends OrderStateCore
                 'pdf_invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
                 'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
                 'visible_in_select_box' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+
                 /* Lang fields */
                 'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
                 'template' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64],

@@ -1,0 +1,12 @@
+[submodule "modules/addtoorder"]
+	path = modules/addtoorder
+	url = C:\\wampserver\\www\\ijzershop8.local\\modules\\addtoorder
+[submodule "modules/modernesmiddynamicproduct"]
+	path = modules/modernesmiddynamicproduct
+	url = C:\\wampserver\\www\\ijzershop8.local\\modules\\modernesmiddynamicproduct
+[submodule "modules/sawandcutmodule"]
+	path = modules/sawandcutmodule
+	url = C:\\wampserver\\www\\ijzershop8.local\\modules\\sawandcutmodule
+[submodule "modules/ps_shoppingcart"]
+	path = modules/ps_shoppingcart
+	url = C:\\wampserver\\www\\ijzershop8.local\\modules\\ps_shoppingcart

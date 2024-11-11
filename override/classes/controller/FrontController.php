@@ -47,8 +47,8 @@ class FrontController extends FrontControllerCore
         } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
             $this->context->smarty->assign('geoip_msg',
                 'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie.<br/>
-Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland & Belgie.
-Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door of wij leveren niet in uw land.
+Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland & Belgie.<br/>
+Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door of wij leveren niet in uw land.<br/>
 Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
         }
 

@@ -927,7 +927,7 @@ class FrontControllerCore extends Controller
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
                                 $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', [$record->country->name], 'Shop.Notifications.Warning');
+//                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', [$record->country->name], 'Shop.Notifications.Warning');
                             }
                         } else {
                             $hasBeenSet = !isset($this->context->cookie->iso_code_country);
@@ -958,11 +958,11 @@ class FrontControllerCore extends Controller
                     if (isset($record->country->name) && $record->country->name) {
                         $countryName = $record->country->name;
                     }
-                    $this->warning[] = $this->trans(
-                        'You cannot place a new order from your country (%s).',
-                        [$countryName],
-                        'Shop.Notifications.Warning'
-                    );
+//                    $this->warning[] = $this->trans(
+//                        'You cannot place a new order from your country (%s).',
+//                        [$countryName],
+//                        'Shop.Notifications.Warning'
+//                    );
                 }
             }
         }

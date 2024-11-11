@@ -137,8 +137,7 @@
                     {/block}
                   </div>
                   {/if}
-
-                  {if !Configuration::get('PS_CATALOG_MODE')}
+                  {if !$configuration.is_catalog}
                   {if Module::isEnabled('dynamicproduct') && Product::isDynamicProduct($product)}
                   {* dynamic product *}
                   {hook h="displayDynamicProductForm" product=$product}

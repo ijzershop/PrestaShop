@@ -183,12 +183,12 @@
 
 {if isset($geoip_msg) && !empty($geoip_msg)}
 <div class="container mt-2">
-  <div class="col-12 alert alert-warning alert-dismissible fade show" style="z-index:9999;" role="alert">
+  <div class="col-12 alert alert-warning alert-dismissible fade show" style="z-index:9999;position: absolute;top:10%;left:2em;right:2em;" role="alert">
     <h4 class="alert-heading"><i class="fasl fa-info-circle"></i> Uw locatie is niet zichtbaar of u besteld niet vanuit Nederland of Belgie!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
     <p>{$geoip_msg}</p>
-    <p class="mb-0">Hulp nodig of een offerte aanvragen? neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
+    <p class="mb-0">Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! Neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
   </div>
 </div>
 {/if}

@@ -28,27 +28,93 @@ class FrontController extends FrontControllerCore
         if (Module::isEnabled('wkwebp')
             && Configuration::get('WK_WEBP_ENABLE_MODULE')
             && Configuration::get('WK_WEBP_SHOW_SHOP_LOGO')) {
-                $filename = Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id);
-                $lastDotPosition = strrpos(Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id), '.');
-                if ($lastDotPosition !== false) {
-                    $filename = substr($filename, 0, $lastDotPosition);
-                }
+            $filename = Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id);
+            $lastDotPosition = strrpos(Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id), '.');
+            if ($lastDotPosition !== false) {
+                $filename = substr($filename, 0, $lastDotPosition);
+            }
             $shop['logo'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
-            'modules/wkwebp/views/img/store/'.$filename.'.webp';
+                'modules/wkwebp/views/img/store/'.$filename.'.webp';
             if (isset($shop['logo_details'])) {
                 $shop['logo_details']['src'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
-                'modules/wkwebp/views/img/store/'.$filename.'.webp';
+                    'modules/wkwebp/views/img/store/'.$filename.'.webp';
             }
         }
 
 
         if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default)) {
-                $this->context->country = $new_default;
-            } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
-                    $this->context->smarty->assign('geoip_msg',
-                        'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie. Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland. Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door. Maakt u gebruik van een VPN verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
-            }
+            $this->context->country = $new_default;
+        } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+            $this->context->smarty->assign('geoip_msg',
+                'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie.<br/>
+Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland & Belgie.
+Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door of wij leveren niet in uw land.
+Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
+        }
 
         return $shop;
     }
+
+
+
+    /**
+     * Geolocation management.
+     *
+     * @param Country $defaultCountry
+     *
+     * @return Country|false
+     */
+    protected function geolocationManagement($defaultCountry)
+    {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
+            /* Check if Maxmind Database exists */
+            if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
+                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
+                    $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+
+                    try {
+                        $record = $reader->city(Tools::getRemoteAddr());
+                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                        $record = null;
+                    }
+
+                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int) Country::getByIso(strtoupper($record->country->isoCode)) != 0) {
+                        if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
+                            if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
+                                $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
+                            } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
+                                $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
+                            }
+                        } else {
+                            $hasBeenSet = !isset($this->context->cookie->iso_code_country);
+                            $this->context->cookie->iso_code_country = strtoupper($record->country->isoCode);
+                        }
+                    }
+                }
+
+                if (isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $this->context->cookie->iso_code_country = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+                }
+
+                if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
+                    /* Update defaultCountry */
+                    if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country) {
+                        $defaultCountry = new Country($idCountry);
+                    }
+                    if (isset($hasBeenSet) && $hasBeenSet) {
+                        $this->context->cookie->id_currency = (int) ($defaultCountry->id_currency ? (int) $defaultCountry->id_currency : Currency::getDefaultCurrencyId());
+                    }
+
+                    return $defaultCountry;
+                } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
+                } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

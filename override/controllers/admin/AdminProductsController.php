@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class AdminProductsController extends AdminProductsControllerCore
 {
@@ -26,12 +26,12 @@ class AdminProductsController extends AdminProductsControllerCore
         }
 
         if (!Validate::isLoadedObject($product)) {
-            $files = array();
-            $files[0]['error'] = $this->trans('Cannot add image because product creation failed.', array(), 'Admin.Catalog.Notification');
+            $files = [];
+            $files[0]['error'] = $this->trans('Cannot add image because product creation failed.', [], 'Admin.Catalog.Notification');
         }
 
         $image_uploader = new HelperImageUploader($inputFileName);
-        $image_uploader->setAcceptTypes(array('jpeg', 'gif', 'png', 'jpg'))->setMaxSize($this->max_image_size);
+        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg', 'webp'])->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
 
         foreach ($files as &$file) {
@@ -39,7 +39,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $image->id_product = (int) ($product->id);
             $image->position = Image::getHighestPosition($product->id) + 1;
 
-			//Set the legend label when file contains techntabel to create technical image reference 
+			//Set the legend label when file contains techntabel to create technical image reference
             if(strrpos($file['name'], 'techntabel') != false){
                 $image->legend = $file['name'];
             }
@@ -50,11 +50,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 }
             }
 
-            if (!Image::getCover($image->id_product)) {
-                $image->cover = 1;
-            } else {
-                $image->cover = 0;
-            }
+            $image->cover = !Image::getCover($image->id_product);
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                 $file['error'] = $validate;
@@ -65,10 +61,10 @@ class AdminProductsController extends AdminProductsControllerCore
             }
 
             if (!$image->add()) {
-                $file['error'] = $this->trans('Error while creating additional image', array(), 'Admin.Catalog.Notification');
+                $file['error'] = $this->trans('Error while creating additional image', [], 'Admin.Catalog.Notification');
             } else {
                 if (!$new_path = $image->getPathForCreation()) {
-                    $file['error'] = $this->trans('An error occurred while attempting to create a new folder.', array(), 'Admin.Notifications.Error');
+                    $file['error'] = $this->trans('An error occurred while attempting to create a new folder.', [], 'Admin.Notifications.Error');
 
                     continue;
                 }
@@ -78,22 +74,22 @@ class AdminProductsController extends AdminProductsControllerCore
                 if (!ImageManager::resize($file['save_path'], $new_path . '.' . $image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
                         case ImageManager::ERROR_FILE_NOT_EXIST:
-                            $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', array(), 'Admin.Catalog.Notification');
+                            $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', [], 'Admin.Catalog.Notification');
 
                             break;
 
                         case ImageManager::ERROR_FILE_WIDTH:
-                            $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', array(), 'Admin.Catalog.Notification');
+                            $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', [], 'Admin.Catalog.Notification');
 
                             break;
 
                         case ImageManager::ERROR_MEMORY_LIMIT:
-                            $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', array(), 'Admin.Catalog.Notification');
+                            $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', [], 'Admin.Catalog.Notification');
 
                             break;
 
                         default:
-                            $file['error'] = $this->trans('An error occurred while copying the image.', array(), 'Admin.Catalog.Notification');
+                            $file['error'] = $this->trans('An error occurred while copying the image.', [], 'Admin.Catalog.Notification');
 
                             break;
                     }
@@ -101,32 +97,60 @@ class AdminProductsController extends AdminProductsControllerCore
                     continue;
                 } else {
                     $imagesTypes = ImageType::getImagesTypes('products');
+
+                    // Should we generate high DPI images?
                     $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
+                    /*
+                    * Let's resolve which formats we will use for image generation.
+                    *
+                    * In case of .jpg images, the actual format inside is decided by ImageManager.
+                    */
+                    $configuredImageFormats = SymfonyContainer::getInstance()->get(ImageFormatConfiguration::class)->getGenerationFormats();
+
                     foreach ($imagesTypes as $imageType) {
-                        if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '.' . $image->image_format, $imageType['width'], $imageType['height'], $image->image_format)) {
-                            $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+                        foreach ($configuredImageFormats as $imageFormat) {
+                            // For JPG images, we let Imagemanager decide what to do and choose between JPG/PNG.
+                            // For webp and avif extensions, we want it to follow our command and ignore the original format.
+                            $forceFormat = ($imageFormat !== 'jpg');
+                            if (!ImageManager::resize(
+                                $file['save_path'],
+                                $new_path . '-' . stripslashes($imageType['name']) . '.' . $imageFormat,
+                                $imageType['width'],
+                                $imageType['height'],
+                                $imageFormat,
+                                $forceFormat
+                            )) {
+                                $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
                             continue;
                         }
 
                         if ($generate_hight_dpi_images) {
-                            if (!ImageManager::resize($file['save_path'], $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $image->image_format, (int) $imageType['width'] * 2, (int) $imageType['height'] * 2, $image->image_format)) {
-                                $file['error'] = $this->trans('An error occurred while copying this image:', array(), 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
+                                if (!ImageManager::resize(
+                                    $file['save_path'],
+                                    $new_path . '-' . stripslashes($imageType['name']) . '2x.' . $imageFormat,
+                                    (int) $imageType['width'] * 2,
+                                    (int) $imageType['height'] * 2,
+                                    $imageFormat,
+                                    $forceFormat
+                                )) {
+                                    $file['error'] = $this->trans('An error occurred while copying this image:', [], 'Admin.Notifications.Error') . ' ' . stripslashes($imageType['name']);
 
                                 continue;
                             }
                         }
                     }
                 }
+                }
 
                 unlink($file['save_path']);
                 //Necesary to prevent hacking
                 unset($file['save_path']);
-                Hook::exec('actionWatermark', array('id_image' => $image->id, 'id_product' => $product->id));
+                Hook::exec('actionWatermark', ['id_image' => $image->id, 'id_product' => $product->id]);
 
                 if (!$image->update()) {
-                    $file['error'] = $this->trans('Error while updating the status.', array(), 'Admin.Notifications.Error');
+                    $file['error'] = $this->trans('Error while updating the status.', [], 'Admin.Notifications.Error');
 
                     continue;
                 }
@@ -134,7 +158,7 @@ class AdminProductsController extends AdminProductsControllerCore
                 // Associate image to shop from context
                 $shops = Shop::getContextListShopID();
                 $image->associateTo($shops);
-                $json_shops = array();
+                $json_shops = [];
 
                 foreach ($shops as $id_shop) {
                     $json_shops[$id_shop] = true;
@@ -154,7 +178,7 @@ class AdminProductsController extends AdminProductsControllerCore
         }
 
         if ($die) {
-            die(json_encode(array($image_uploader->getName() => $files)));
+            die(json_encode([$image_uploader->getName() => $files]));
         } else {
             return $files;
         }

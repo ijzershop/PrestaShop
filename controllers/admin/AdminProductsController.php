@@ -214,6 +214,7 @@ class AdminProductsControllerCore extends AdminController
      */
     public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
     {
+
         $orderByPriceFinal = (empty($orderBy) ? ($this->context->cookie->__get($this->table . 'Orderby') ? $this->context->cookie->__get($this->table . 'Orderby') : 'id_' . $this->table) : $orderBy);
         $orderWayPriceFinal = (empty($orderWay) ? ($this->context->cookie->__get($this->table . 'Orderway') ? $this->context->cookie->__get($this->table . 'Orderby') : 'ASC') : $orderWay);
         if ($orderByPriceFinal == 'price_final') {
@@ -221,7 +222,6 @@ class AdminProductsControllerCore extends AdminController
             $orderWay = 'ASC';
         }
         parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, $this->context->shop->id);
-
         /* update product quantity with attributes ...*/
         $nb = count($this->_list);
         if ($this->_list) {
@@ -267,6 +267,7 @@ class AdminProductsControllerCore extends AdminController
             $this->_list[$i]['price_final'] = $this->_list[$i]['price_tmp'];
             unset($this->_list[$i]['price_tmp']);
         }
+
     }
 
     protected function loadObject($opt = false)

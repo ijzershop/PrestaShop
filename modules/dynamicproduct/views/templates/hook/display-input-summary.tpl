@@ -59,6 +59,21 @@
                 {/foreach}
             {/if}
 
+            {if $input->canDisplayWeight()}
+                <br>
+                <span>
+          <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
+            {$input->getWeight()|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
+        </span>
+            {/if}
+
+            {if isset($params['show_price']) && $params['show_price'] || isset($show_price) && $show_price}
+                <br>
+                <span>
+          <strong>{l s='Price' mod='dynamicproduct'}:</strong>
+          {$price|escape:'htmlall':'UTF-8'}
+        </span>
+            {/if}
 
             {if $input->is_editable}
                 {assign var=show_edit value=(!isset($params['edit_button']) || $params['edit_button'] != false)}
@@ -112,21 +127,21 @@
         {/foreach}
     {/if}
 
-{*    {if $input->canDisplayWeight()}*}
-{*        <br>*}
-{*        <span>*}
-{*          <strong>{l s='Weight' mod='dynamicproduct'}:</strong>*}
-{*            {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}*}
-{*        </span>*}
-{*    {/if}*}
+    {if $input->canDisplayWeight()}
+        <br>
+        <span>
+          <strong>{l s='Weight' mod='dynamicproduct'}:</strong>
+            {$input->weight|floatval} {Configuration::get('PS_WEIGHT_UNIT')|escape:'htmlall':'UTF-8'}
+        </span>
+    {/if}
 
-{*    {if isset($params['show_price']) && $params['show_price'] || isset($show_price) && $show_price}*}
-{*        <br>*}
-{*        <span>*}
-{*          <strong>{l s='Price' mod='dynamicproduct'}:</strong>*}
-{*          {$price|escape:'htmlall':'UTF-8'}*}
-{*        </span>*}
-{*    {/if}*}
+    {if isset($params['show_price']) && $params['show_price'] || isset($show_price) && $show_price}
+        <br>
+        <span>
+          <strong>{l s='Price' mod='dynamicproduct'}:</strong>
+          {$price|escape:'htmlall':'UTF-8'}
+        </span>
+    {/if}
 
     {if $input->is_editable}
         {assign var=show_edit value=(!isset($params['edit_button']) || $params['edit_button'] != false)}

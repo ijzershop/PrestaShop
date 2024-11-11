@@ -126,11 +126,7 @@ class DynamicInput extends DynamicObject
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
         parent::__construct($id, $id_lang, $id_shop);
-        if($this->true_conditions == "[]"){
-            $this->true_conditions_array = json_decode($this->true_conditions, true);
-        } else {
-            $this->true_conditions_array = [];
-        }
+        $this->true_conditions_array = json_decode($this->true_conditions, true);
 
     }
 

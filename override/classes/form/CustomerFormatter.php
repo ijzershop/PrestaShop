@@ -158,15 +158,6 @@ class CustomerFormatter extends CustomerFormatterCore
                     'Shop.Forms.Labels'
                 ));
 
-//            $format['siret'] = (new FormField())
-//                ->setName('siret')
-//                ->setType('text')
-//                ->setLabel($this->translator->trans(
-//                    // Please localize this string with the applicable registration number type in your country. For example : "SIRET" in France and "Código fiscal" in Spain.
-//                    'Identification number',
-//                    [],
-//                    'Shop.Forms.Labels'
-//                ));
         }
 
         $format['email'] = (new FormField())
@@ -175,6 +166,18 @@ class CustomerFormatter extends CustomerFormatterCore
             ->setLabel(
                 $this->translator->trans(
                     'Email',
+                    [],
+                    'Shop.Forms.Labels'
+                )
+            )
+            ->setRequired(true);
+
+        $format['validate_email'] = (new FormField())
+            ->setName('validate_email')
+            ->setType('email')
+            ->setLabel(
+                $this->translator->trans(
+                    'Email Valideren',
                     [],
                     'Shop.Forms.Labels'
                 )

@@ -49,18 +49,6 @@
         {elseif $field.name != 'informer_identification'}
           {block "form_field"}
           {form_field field=$field}
-          {* Add email validation *}
-          {if $field.name == 'email' && (strpos($action, 'create_account') !== false || strpos($action, 'afrekenen') !== false || strpos($action, 'order') !== false || strpos($action, 'identiteit') !== false)}
-            {assign var="validate_email" value=true}
-          <div class="form-group row ">
-            <label class="col-md-3 form-control-label required">
-              Valideer E-mail
-            </label>
-            <div class="col-md-9">
-              <input class="form-control" name="validate_email" type="email" value="" required="required" autocomplete="off">
-            </div>
-          </div>
-          {/if}
           {/block}
         {/if}
       {/foreach}
@@ -82,74 +70,6 @@
   </form>
   {/block}
 
-{if $validate_email}
-{literal}
-<script type="text/javascript">
-  function toggleInput(valid=true, msg, target){
-        if(valid){
-          target.classList.add('is-valid');
-          target.classList.remove('is-invalid');
-          var helpBox = document.getElementById('help-text-input-'+target.name);
-          if(helpBox){
-            helpBox.remove();
-          }
-          var msgBox = '<div class="valid-feedback" id="help-text-input-'+target.name+'">'+msg+'</div>';
-        } else {
-          target.classList.add('is-invalid');
-          target.classList.remove('is-valid');
-          var helpBox = document.getElementById('help-text-input-'+target.name);
-          if(helpBox){
-            helpBox.remove();
-          }
-          var msgBox = '<div class="invalid-feedback" id="help-text-input-'+target.name+'">'+msg+'</div>';
-        }
-        target.insertAdjacentHTML('afterend',msgBox);
-  }
-  function validateEmailString(emailInput) {
-    var emailElem = emailInput[0];
-    var validateEmailElem = emailInput[1];
-    var regTestString = new RegExp("^[a-zA-Z0-9]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,15})$");
-    var submitBtn = document.getElementById('submitCreate');
-    if(submitBtn == undefined){
-      submitBtn = document.getElementsByName('continue')[0];
-    }
-    if(submitBtn == undefined){
-      submitBtn = document.getElementsByClassName('form-control-submit')[0];
-    }
-      if(regTestString.test(emailElem.value) && validateEmailElem.value != ''){
-        if(emailElem.value === validateEmailElem.value){
-          toggleInput(true, 'Email adres is correct',emailElem);
-          submitBtn.disabled = false;
-        } else {
-          toggleInput(false, 'De email addressen zijn niet hetzelfde',emailElem);
-          submitBtn.disabled = true;
-        }
-      }
-
-      if(regTestString.test(validateEmailElem.value) && emailElem.value != ''){
-        if(emailElem.value === validateEmailElem.value){
-          toggleInput(true, 'Email adres is gevalideerd',validateEmailElem);
-          submitBtn.disabled = false;
-        } else {
-          toggleInput(false, 'De email addressen zijn niet hetzelfde',validateEmailElem);
-          submitBtn.disabled = true;
-        }
-      }
-     }
-    var emailInput = [];
-    emailInput.push(document.getElementsByName('email')[0]);
-    emailInput.push(document.getElementsByName('validate_email')[0]);
-    for (var i = emailInput.length - 1; i >= 0; i--) {
-          emailInput[i].addEventListener('change', function(elem){
-            validateEmailString(emailInput);
-          });
-    }
-
-
-
-</script>
-{/literal}
-{/if}
 
 {block name='javascript_bottom'}
 <script type="text/javascript">

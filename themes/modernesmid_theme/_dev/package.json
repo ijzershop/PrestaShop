@@ -35,7 +35,6 @@
     "manrope": "^2.0.0",
     "material-design-icons-iconfont": "^5.0.1",
     "mini-css-extract-plugin": "^1.6.0",
-    "node-sass": "^7.0.0",
     "postcss-flexibility": "^1.0.2",
     "postcss-loader": "^6.1.1",
     "sass-loader": "^13.0.0",
@@ -57,6 +56,7 @@
     "papaparse": "^5.4.1",
     "popper.js": "^1.16.1",
     "resolve-url-loader": "^5.0.0",
+    "sass": "^1.80.6",
     "sprintf-js": "^1.1.2"
   }
 }

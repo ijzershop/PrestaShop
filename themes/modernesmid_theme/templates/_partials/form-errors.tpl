@@ -24,40 +24,13 @@
  *}
 {if $errors|count}
 {block name='form_errors'}
-<aside id="notifications">
-  <div class="row pl-1 pr-1 pt-1">
-
       {block name='notifications_error'}
-        <article style="z-index: 999999;" class="alert alert-danger col-12 p-1 m-0" role="alert" data-alert="danger">
-          <div class="row">
-            <div class="col-2 my-auto"><i class="fasl fa-warning w-100 fa-4x"></i></div>
-            <div class="col-10">
-              <div class="row">
-                <div class="col-12">
-                  <div class="alert-heading">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button></div>
-                  <ul class="list-unstyled mb-0">
-                    {foreach $errors as $error}
-                      <li><h5>{$error|nl2br nofilter}</h5></li>
-                    {/foreach}
-                  </ul>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
-                  <hr class="mt-1">
-                  <p class="contact-msg">Komt u er niet uit? Neem dan even contact met ons op. We helpen u graag verder.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
+        <div class="invalid-feedback">
+        {foreach $errors as $error}
+          {{$error}}
+        {/foreach}
+        </div>
       {/block}
-  </div>
-</aside>
-      {/block}
-
+{/block}
     {/if}
 

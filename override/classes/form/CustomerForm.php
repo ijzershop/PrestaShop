@@ -31,6 +31,48 @@ use ZxcvbnPhp\Zxcvbn;
 class CustomerForm extends CustomerFormCore
 {
     private $passwordRequired = true;
+    private $urls;
+
+    public function __construct(Smarty $smarty, Context $context, TranslatorInterface $translator, CustomerFormatter $formatter, CustomerPersister $customerPersister, array $urls)
+    {
+        parent::__construct($smarty, $context, $translator, $formatter, $customerPersister, $urls);
+    }
+
+
+    /**
+     * Insert data at position given the target key.
+     *
+     * @param array $array
+     * @param mixed $target_key
+     * @param mixed $insert_key
+     * @param mixed $insert_val
+     * @param bool $insert_after
+     * @param bool $append_on_fail
+     * @param array $out
+     * @return array
+     */
+    function addToFormFields(
+        array $array,
+              $target_key,
+              $insert_key,
+              $insert_val = null,
+              $insert_after = true,
+              $append_on_fail = false,
+              $out = [])
+    {
+        foreach ($array as $key => $value) {
+            if ($insert_after) $out[$key] = $value;
+            if ($key == $target_key) $out[$insert_key] = $insert_val;
+            if (!$insert_after) $out[$key] = $value;
+        }
+
+        if (!isset($array[$target_key]) && $append_on_fail) {
+            $out[$insert_key] = $insert_val;
+        }
+
+        return $out;
+    }
+
 
     public function validate()
     {
@@ -81,11 +123,11 @@ class CustomerForm extends CustomerFormCore
         }
 
         if ($this->getField('new_password') === null
-            || !empty($this->getField('new_password')->getValue())
-        ) {
+            || !empty($this->getField('new_password')->getValue())) {
             $passwordField = $this->getField('new_password') ?? $this->getField('password');
+
             if (!empty($passwordField->getValue()) || $this->passwordRequired) {
-                if (Validate::isAcceptablePasswordLength($passwordField->getValue()) === false) {
+                if (!empty($passwordField->getValue()) && Validate::isAcceptablePasswordLength($passwordField->getValue()) === false) {
                     $passwordField->addError($this->translator->trans(
                         'Password must be between %d and %d characters long',
                         [
@@ -130,9 +172,11 @@ class CustomerForm extends CustomerFormCore
                 }
             }
         }
-        $this->validateFieldsLengths();
-        $this->validateByModules();
 
+        if(!$this->validateFieldsLengths()){
+            return false;
+        }
+        $this->validateByModules();
         return true;
     }
     /**
@@ -172,6 +216,98 @@ class CustomerForm extends CustomerFormCore
             }
         }
     }
+
+
+    /**
+     * @return int|void
+     */
+    protected function validateFieldsLengths()
+    {
+        return $this->validateName('firstname') &&
+                $this->validateName('lastname') &&
+                $this->validateEmailAndMatchingEmailFields() &&
+                $this->validateFieldLength('email', 255, $this->getEmailMaxLengthViolationMessage()) &&
+                $this->validateFieldLength('firstname', 255, $this->getFirstNameMaxLengthViolationMessage()) &&
+                $this->validateFieldLength('lastname', 255, $this->getLastNameMaxLengthViolationMessage());
+    }
+
+    /**
+     * @param string $fieldName
+     * @param int $maximumLength
+     * @param string $violationMessage
+     */
+    protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
+    {
+        $emailField = $this->getField($fieldName);
+        if (strlen($emailField->getValue()) > $maximumLength) {
+            $emailField->addError($violationMessage);
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @param string $fieldName
+     */
+    private function validateName(string $fieldName): bool
+    {
+        $violationMessage = $this->translator->trans('This field is invalid.', [], 'Shop.Notifications.Error');
+
+        $field = $this->getField($fieldName);
+        $fieldValues = $field->getAvailableValues();
+
+        if(isset($fieldValues['comment'])) {
+            $violationMessage = $fieldValues['comment'];
+        }
+
+        $ok = Validate::isCustomerName($field->getValue());
+        if (!$ok) {
+            $field->addError($violationMessage);
+        }
+        $this->formFields[$fieldName] = $field;
+
+        return $ok;
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateEmailAndMatchingEmailFields(): bool
+    {
+        $violationMessageNoEmail = $this->translator->trans('Dit is geen email adres.', [], 'Shop.Notifications.Error');
+        $violationMessageMatch = $this->translator->trans('De email adressen komen niet overeen.', [], 'Shop.Notifications.Error');
+        $ok = true;
+        $fieldEmail = $this->getField('email');
+        $fieldEmailValidation = $this->getField('validate_email');
+
+
+        if(Validate::isEmail($fieldEmail->getValue())) {
+            if($fieldEmail->getValue() != $fieldEmailValidation->getValue()) {
+                $fieldEmail->addError($violationMessageMatch);
+                $ok = false;
+            }
+        } else {
+            $fieldEmail->addError($violationMessageNoEmail);
+            $ok = false;
+        }
+
+        if(Validate::isEmail($fieldEmailValidation->getValue())) {
+            if($fieldEmail->getValue() != $fieldEmailValidation->getValue()) {
+                $fieldEmailValidation->addError($violationMessageMatch);
+                $ok = false;
+            }
+        } else {
+            $fieldEmailValidation->addError($violationMessageNoEmail);
+            $ok = false;
+        }
+        $this->formFields['validate_email'] = $fieldEmailValidation;
+        $this->formFields['email'] = $fieldEmail;
+
+        return $ok;
+    }
+
+
 }
 
 ?>

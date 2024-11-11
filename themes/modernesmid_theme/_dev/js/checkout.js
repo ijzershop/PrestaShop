@@ -184,7 +184,6 @@ $(document).ready(() => {
   let order_place_confirmation = "Kloppen alle door u verstrekte gegevens?";
   let splchar_error = "Speciale karakters!<>,;?=+()@#°{}_$%: zijn niet toegestaan";
   let street_number_warning = "Het huisnummer in het adres ontbreekt. Weet u zeker dat u er geen heeft?";
-  let not_same_email = "De email adressen komen niet overeen!";
   let not_valid_phone = "Het telefoonnummer is onjuist!";
 
 
@@ -371,11 +370,6 @@ $(document).ready(() => {
     let emailElem = $('input[name="email"]');
     if ($(element).val() === '') {
       $(element).parent().append(inputMessage(required_error));
-    } else {
-      if (validateEmailElem.length > 0 && validateEmailElem.val() !== emailElem.val()) {
-        validateEmailElem.parent().append(inputMessage(not_same_email, 'text-warning'));
-        emailElem.parent().append(inputMessage(not_same_email, 'text-warning'));
-      }
     }
   }
 

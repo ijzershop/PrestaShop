@@ -183,8 +183,8 @@
 
 {if isset($geoip_msg) && !empty($geoip_msg)}
 <div class="container mt-2">
-  <div class="col-12 alert alert-warning alert-dismissible fade show" role="alert">
-    <h4 class="alert-heading"><i class="fasl fa-info-circle"></i> Uw locatie is niet zichtbaar!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+  <div class="col-12 alert alert-warning alert-dismissible fade show" style="z-index:9999;" role="alert">
+    <h4 class="alert-heading"><i class="fasl fa-info-circle"></i> Uw locatie is niet zichtbaar of u besteld niet vanuit Nederland of Belgie!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
     <p>{$geoip_msg}</p>

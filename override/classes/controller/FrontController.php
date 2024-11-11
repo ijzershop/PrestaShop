@@ -40,6 +40,15 @@ class FrontController extends FrontControllerCore
                 'modules/wkwebp/views/img/store/'.$filename.'.webp';
             }
         }
+
+
+        if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default)) {
+                $this->context->country = $new_default;
+            } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+                    $this->context->smarty->assign('geoip_msg',
+                        'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie. Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland. Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door. Maakt u gebruik van een VPN verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
+            }
+
         return $shop;
     }
 }

@@ -40,7 +40,13 @@
                   </button></h4>
                 <ul class="list-unstyled mb-0">
                   {foreach $notifications.error as $notif}
-                    <li>{$notif nofilter}</li>
+                      {if is_array($notif)}
+                        {foreach $notif as $line}
+                        <li>{$line}</li>
+                        {/foreach}
+                      {else}
+                        <li>{$notif nofilter}</li>
+                      {/if}
                   {/foreach}
                 </ul>
                 </div>
@@ -71,7 +77,13 @@
                     </button></h4>
                   <ul class="list-unstyled mb-0">
                     {foreach $notifications.warning as $notif}
-                      <li>{$notif nofilter}</li>
+                      {if is_array($notif)}
+                        {foreach $notif as $line}
+                        <li>{$line}</li>
+                        {/foreach}
+                      {else}
+                        <li>{$notif nofilter}</li>
+                      {/if}
                     {/foreach}
                   </ul>
                 </div>
@@ -102,7 +114,13 @@
                     </button></h4>
                   <ul class="list-unstyled mb-0">
                     {foreach $notifications.success as $notif}
-                      <li>{$notif nofilter}</li>
+                        {if is_array($notif)}
+                          {foreach $notif as $line}
+                        <li>{$line}</li>
+                          {/foreach}
+                      {else}
+                        <li>{$notif nofilter}</li>
+                      {/if}
                     {/foreach}
                   </ul>
                 </div>
@@ -135,7 +153,13 @@
                     </button></h4>
                   <ul class="list-unstyled mb-0">
                     {foreach $notifications.info as $notif}
-                      <li>{$notif nofilter}</li>
+                        {if is_array($notif)}
+                          {foreach $notif as $line}
+                        <li>{$line}</li>
+                          {/foreach}
+                      {else}
+                        <li>{$notif nofilter}</li>
+                      {/if}
                     {/foreach}
                   </ul>
                 </div>

@@ -406,15 +406,13 @@ class DynamicProvider
     public function getCurrentProductID(): int
     {
         $id_product = (int)\Tools::getValue('id_product');
-
         if ($id_product) {
             return $id_product;
         }
-        global $kernel;
 
+        global $kernel;
         $requestStack = $kernel->getContainer()->get('request_stack');
         $request = $requestStack->getCurrentRequest();
-
         if ($request) {
             return (int)$request->get('id');
         }
@@ -502,4 +500,43 @@ class DynamicProvider
         return $this->formatPrice($this->convertPrice($price));
     }
 
+    /**
+     * @param $id_product
+     * @return array|array[]
+     */
+    public function getCountries($id_product, $check_country_field_exists = true)
+    {
+        if ($check_country_field_exists) {
+            $row = \Db::getInstance()->getRow(
+                'SELECT type FROM ' . _DB_PREFIX_ . 'dynamicproduct_field 
+            WHERE id_product = ' . (int)$id_product . ' AND type = ' . _DP_COUNTRY_
+            );
+            if (!$row) {
+                $row = \Db::getInstance()->getRow(
+                    'SELECT f.type FROM ' . _DB_PREFIX_ . 'dynamicproduct_common_field cf
+                    JOIN ' . _DB_PREFIX_ . 'dynamicproduct_field f ON f.id_field = cf.id_field
+                    WHERE cf.id_product = ' . (int)$id_product . ' AND f.type = ' . _DP_COUNTRY_
+                );
+            }
+            if (!$row) {
+                return [];
+            }
+        }
+
+        $countries = \Country::getCountries($this->context->language->id, true, false, false);
+        $countries_list = array_values(array_map(function ($country) {
+            return [
+                'id' => $country['id_country'],
+                'iso_code' => $country['iso_code'],
+                'name' => $country['name'],
+            ];
+        }, $countries));
+
+        // Sort countries by name
+        usort($countries_list, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+
+        return $countries_list;
+    }
 }

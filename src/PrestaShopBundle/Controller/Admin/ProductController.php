@@ -285,6 +285,7 @@ class ProductController extends FrameworkBundleAdminController
         $sortOrder = 'asc',
         $view = 'full'
     ) {
+
         if (!$this->isGranted(PageVoter::READ, self::PRODUCT_OBJECT)) {
             return $this->redirect('admin_dashboard');
         }
@@ -356,6 +357,7 @@ class ProductController extends FrameworkBundleAdminController
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         ];
+
         if ($view !== 'full') {
             return $this->render(
                 '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',

@@ -48,7 +48,7 @@
       {if $field.type === 'select'}
 
         {block name='form_field_item_select'}
-          <select class="form-control form-control-select " name="{$field.name}" {if $field.required}required{/if}>
+          <select class="form-control form-control-select {if !empty($field.errors)}is-invalid{/if}" name="{$field.name}" {if $field.required}required{/if}>
             <option value disabled selected>{l s='-- please choose --' d='Shop.Forms.Labels'}</option>
             {foreach from=$field.availableValues item="label" key="value"}
               <option value="{$value}" {if $value eq $field.value} selected {/if}>{$label}</option>
@@ -60,7 +60,7 @@
 
         {block name='form_field_item_country'}
           <select
-          class="form-control form-control-select js-country "
+          class="form-control form-control-select js-country {if !empty($field.errors)}is-invalid{/if}"
           name="{$field.name}"
           {if $field.required}required{/if}
           >
@@ -78,7 +78,7 @@
             <label class="radio-inline">
               <span class="custom-radio">
                 <input
-                  class=""
+                  class="{if !empty($field.errors)}is-invalid{/if}"
                   name="{$field.name}"
                   type="radio"
                   value="{$value}"
@@ -95,7 +95,7 @@
       {elseif $field.type === 'checkbox'}
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox form-check form-check-inline">
-            <input style="position: absolute;top:4px;" id="{$field.name}_input" name="{$field.name}" class="form-check-input  " type="checkbox" value="1" {if $field.value|| in_array($field.name, ['customer_privacy','psgdpr'])}checked="checked"{/if} {if $field.required}required{/if}>
+            <input style="position: absolute;top:4px;" id="{$field.name}_input" name="{$field.name}" class="form-check-input  {if !empty($field.errors)}is-invalid{/if}" type="checkbox" value="1" {if $field.value|| in_array($field.name, ['customer_privacy','psgdpr'])}checked="checked"{/if} {if $field.required}required{/if}>
             <label for="{$field.name}_input" class="form-check-label">{$field.label nofilter}</label>
           </span>
         {/block}
@@ -103,7 +103,7 @@
       {elseif $field.type === 'date'}
 
         {block name='form_field_item_date'}
-          <input name="{$field.name}" class="form-control  " type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
+          <input name="{$field.name}" class="form-control {if !empty($field.errors)}is-invalid{/if} " type="date" value="{$field.value}" placeholder="{if isset($field.availableValues.placeholder)}{$field.availableValues.placeholder}{/if}">
           {if isset($field.availableValues.comment)}
             <span class="form-control-comment">
               {$field.availableValues.comment}
@@ -136,9 +136,9 @@
       {elseif $field.type === 'password'}
 
         {block name='form_field_item_password'}
-          <div class="input-group js-parent-focus">
+          <div class="input-group js-parent-focus {if !empty($field.errors)}is-invalid{/if}">
             <input
-              class="form-control js-child-focus js-visible-password"
+              class="form-control js-child-focus js-visible-password {if !empty($field.errors)}is-invalid{/if}"
               name="{$field.name}"
               title="{l s='At least 5 characters long' d='Shop.Forms.Help'}"
               type="password"
@@ -148,8 +148,8 @@
               {if $field.required}required{/if}
             >
             <span class="input-group-append">
-              <button style="font-size: 1.2rem;background-color:#fff;border:1px solid rgba(0,0,0,.25);"
-                class="input-group-text h5 text-muted btn btn-link border-left-0"
+              <button
+                class="btn btn-outline-secondary"
                 type="button"
                 data-action="show-password"
                 data-text-show="<i class='fasl fa-eye pr-1'></i>"
@@ -163,7 +163,7 @@
 
         {block name='form_field_item_other'}
           <input
-            class="form-control "
+            class="form-control {if !empty($field.errors)}is-invalid{/if}"
             name="{$field.name}"
             type="{$field.type}"
             value="{$field.value}"
@@ -171,11 +171,6 @@
             {if $field.maxLength}maxlength="{$field.maxLength}"{/if}
             {if $field.required}required{/if}
           >
-{*          {if isset($field.availableValues.comment)}*}
-{*            <span class="form-control-comment">*}
-{*              {$field.availableValues.comment}*}
-{*            </span>*}
-{*          {/if}*}
         {/block}
 
       {/if}

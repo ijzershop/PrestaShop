@@ -1021,7 +1021,6 @@ $(function () {
   // test reference failing: YS-53931, success: YS-53936, YS-53935
   $(document).on('click', '#search_order_for_shipping', function (event) {
     event.stopImmediatePropagation();
-    console.log(event);
     searchForAddToOrder(event);
     return false;
   });

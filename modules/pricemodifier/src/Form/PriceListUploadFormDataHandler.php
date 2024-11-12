@@ -139,7 +139,6 @@ class PriceListUploadFormDataHandler implements FormDataHandlerInterface
             $converter = new ConvertUploadedFile();
             $xmlDataFile = $converter->readFile($fileNameWithPath, $supplier);
 
-
         try {
 
                 $namesList = [];

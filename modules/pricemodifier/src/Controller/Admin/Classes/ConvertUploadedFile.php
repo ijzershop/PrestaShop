@@ -1659,7 +1659,7 @@ class ConvertUploadedFile
                     }
                 }
 
-                #merk
+                #artikelgroep
                 if ($index == 'G' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['artikel_groep'] = $cell_data;
@@ -1667,64 +1667,64 @@ class ConvertUploadedFile
                 }
 
                 #bruto prijs
-                if ($index == 'I' && $rowIndex > 2) {
+                if ($index == 'H' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['bruto_prijs_per_stuk'] = filter_var(str_replace(',', '.', $cell_data), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                     }
                 }
 
                 #korting
-                if ($index == 'J' && $rowIndex > 2) {
+                if ($index == 'I' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['korting'] = $cell_data;
                     }
                 }
 
                 #netto prijs
-                if ($index == 'K' && $rowIndex > 2) {
+                if ($index == 'J' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['netto_prijs_per_stuk'] = filter_var(str_replace(',', '.', $cell_data), FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
                     }
                 }
 
                 #Min afname
-                if ($index == 'M' && $rowIndex > 2) {
+                if ($index == 'L' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['min_afname'] = $cell_data;
                     }
                 }
 
-                #Aantal per verpakking
-                if ($index == 'N' && $rowIndex > 2) {
-                    if(strlen($cell_data) > 0) {
-                        $new_row_data['aantal_per_verpakking'] = $cell_data;
-                    }
-                }
+//                #Aantal per verpakking
+//                if ($index == 'O' && $rowIndex > 2) {
+//                    if(strlen($cell_data) > 0) {
+//                        $new_row_data['aantal_per_verpakking'] = $cell_data;
+//                    }
+//                }
 
-                #Gewicht
-                if ($index == 'Q' && $rowIndex > 2) {
-                    if(strlen($cell_data) > 0) {
-                        $new_row_data['gewicht'] = $cell_data;
-                    }
-                }
-
+//                #Gewicht
+//                if ($index == 'Q' && $rowIndex > 2) {
+//                    if(strlen($cell_data) > 0) {
+//                        $new_row_data['gewicht'] = $cell_data;
+//                    }
+//                }
+//
 
                 #nieuw artikel nummer
-                if ($index == 'R' && $rowIndex > 2) {
+                if ($index == 'M' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['nieuw_artikel'] = $cell_data;
                     }
                 }
 
                 #oud artikel nummer
-                if ($index == 'S' && $rowIndex > 2) {
+                if ($index == 'N' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['oud_artikel'] = $cell_data;
                     }
                 }
 
                 #eenheid
-                if ($index == 'T' && $rowIndex > 2) {
+                if ($index == 'O' && $rowIndex > 2) {
                     if(strlen($cell_data) > 0) {
                         $new_row_data['eenheid'] = $cell_data;
                     }

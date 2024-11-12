@@ -49,16 +49,21 @@ class FrontController extends FrontControllerCore
         $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
         $record = $reader->city(Tools::getRemoteAddr());
 
-            $countryText = $this->trans('Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door.', [], 'Shop.Theme.Global');
-            if (isset($record->country->name) && $record->country->name) {
-                $countryText = $this->trans('Wij leveren dus niet in', [], 'Shop.Theme.Global').' '.$record->country->name;
 
+            $countryText = $this->trans('Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door.', [], 'Shop.Theme.Global');
+            if (isset($record->country->isoCode) && $record->country->isoCode) {
+                $countryName = '';
+                $countryId = Country::getByIso($record->country->isoCode);
+                if(!empty($countryId)){
+                    $countryName = Country::getNameById($countryId, $this->context->language->id);
+                }
+                $countryText = $this->trans('Wij leveren niet in', [], 'Shop.Theme.Global').' '.$countryName.'. ';
             }
 
-            $this->context->smarty->assign('geoip_msg','Voor extra beveiliging van de webshop maken wij gebruik van geolocatie.<br/>
-Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/>
-'.$countryText.'<br/>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.');
-        }
+            $this->context->smarty->assign('geoip_msg','<div class="text-center">Wij leveren alleen binnen Nederland en Belgie. Om dit extra te beveiliging maken wij gebruik van geolocatie.<br/>
+                Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/>
+                <h5>'.$countryText.'</h5>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.</div>');
+                        }
 
         return $shop;
     }

@@ -188,7 +188,7 @@
     <span aria-hidden="true">&times;</span>
   </button>
     <p>{$geoip_msg nofilter}
-      Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! Neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
+      Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! <br/>Neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
   </div>
 </div>
 {/if}

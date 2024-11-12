@@ -64,7 +64,7 @@ Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit 
      *
      * @return Country|false
      */
-    protected function geolocationManagement($defaultCountry)
+    public function geolocationManagement($defaultCountry)
     {
         if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
             /* Check if Maxmind Database exists */

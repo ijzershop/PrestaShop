@@ -187,8 +187,8 @@
     <h4 class="alert-heading w-100 text-center"><i class="fasl fa-info-circle"></i> Wij leveren alleen binnen Nederland en Belgie!</h4><button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
-    <p>{$geoip_msg nofilter}</p>
-    <p class="mb-0">Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! Neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
+    <p>{$geoip_msg nofilter}
+      Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! Neem dan contact met ons op via het <a href="{Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '')}"><i class="fasl fa-chevron-right"></i> Offerte formulier</a></p>
   </div>
 </div>
 {/if}

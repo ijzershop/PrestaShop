@@ -46,8 +46,8 @@ class FrontController extends FrontControllerCore
             $this->context->country = $new_default;
         } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
 
-            $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
-            $record = $reader->city(Tools::getRemoteAddr());
+        $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+        $record = $reader->city(Tools::getRemoteAddr());
 
 
             $countryText = $this->trans('Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door.', [], 'Shop.Theme.Global');
@@ -60,10 +60,10 @@ class FrontController extends FrontControllerCore
                 $countryText = $this->trans('Wij leveren niet in', [], 'Shop.Theme.Global').' '.$countryName.'. ';
             }
 
-            $this->context->smarty->assign('geoip_msg','<div class="text-center">Wij leveren alleen binnen Nederland en Belgie. Om dit extra te beveiliging maken wij gebruik van geolocatie.<br/>
-                Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/>
+            $this->context->smarty->assign('geoip_msg','<div class="text-center">Ter extra beveiliging maken wij gebruik van geolocatie.<br/>
+                Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/><br/>
                 <h5>'.$countryText.'</h5>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.</div>');
-        }
+                        }
 
         return $shop;
     }

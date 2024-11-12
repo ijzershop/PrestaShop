@@ -45,6 +45,15 @@ class FrontController extends FrontControllerCore
         if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default)) {
             $this->context->country = $new_default;
         } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+
+        $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+        $record = $reader->city(Tools::getRemoteAddr());
+ 
+// dd($record->city);
+
+        // if(isset()
+        
+
             $this->context->smarty->assign('geoip_msg',
                 'Voor extra beveiliging van de webshop maken wij gebruik van geolocatie.<br/>
 Hiermee is de bestel optie alleen beschikbaar voor klanten uit Nederland & Belgie.<br/>
@@ -64,12 +73,12 @@ Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit 
      *
      * @return Country|false
      */
-    protected function geolocationManagement($defaultCountry)
+    public function geolocationManagement($defaultCountry)
     {
         if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
-                if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
+                if (!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
 
                     try {
@@ -113,6 +122,8 @@ Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit 
                 }
             }
         }
+
+        $this->context->cookie->is_restricted_country = $this->restrictedCountry;
 
         return false;
     }

@@ -62,7 +62,13 @@ class FrontController extends FrontControllerCore
 
             $this->context->smarty->assign('geoip_msg','<div class="text-center">Ter extra beveiliging maken wij gebruik van geolocatie.<br/>
                 Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/><br/>
-                <h5>'.$countryText.'</h5>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.</div>');
+                <h5>'.$countryText.'</h5>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.<br/>
+                Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! <br/>Neem dan contact met ons op via het
+                <a href="'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',
+                    $this->context->language->id,
+                    $this->context->shop->id_shop_group,
+                    $this->context->shop->id, '').'">
+                <i class="fasl fa-chevron-right"></i> Offerte formulier</a></div>');
                         }
 
         return $shop;

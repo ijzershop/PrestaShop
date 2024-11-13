@@ -93,18 +93,25 @@ class Product extends ProductCore {
         $firstDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
         $secondDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_SECOND', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
         $thirdDiscountRule = Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_THIRD', $context->language->id, $context->shop->id_shop_group, $context->shop->id_shop);
-        foreach ($cartRules as $rule){
+        $isValidForCartRule = false;
+        if($cartRules) {
 
-            $ruleId = (int)$rule['id_cart_rule'];
-            if(in_array($ruleId, [158 ,$firstDiscountRule ,$secondDiscountRule ,$thirdDiscountRule])){
-                $cartRule = new CartRule($ruleId);
-                if($cartRule->priority <= $prio){
-                    $prio = $cartRule->priority;
-                    $cartReductionPercent = (float)$cartRule->reduction_percent;
+
+            foreach ($cartRules as $rule) {
+
+                $ruleId = (int)$rule['id_cart_rule'];
+                if (in_array($ruleId, [158, $firstDiscountRule, $secondDiscountRule, $thirdDiscountRule])) {
+                    $cartRule = new CartRule($ruleId);
+                    if ($cartRule->priority <= $prio) {
+                        $prio = $cartRule->priority;
+                        $cartReductionPercent = (float)$cartRule->reduction_percent;
+                        $rule = $cartRule;
+                    }
                 }
             }
-        }
 
+            $isValidForCartRule = self::checkCartRuleValidForProduct($rule, $result);
+        }
         if (isset($row['quantity_wanted'])) {
             $quantity = max((int) $row['minimal_quantity'], (int) $row['quantity_wanted']);
         } elseif (isset($row['cart_quantity'])) {
@@ -123,9 +130,31 @@ class Product extends ProductCore {
             false,
             $quantity
         );
+
         $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
 
-        $result['price_after_cartrule_reduction_without_tax'] = $spec_price - $specific_price_reduction;
+        if($isValidForCartRule){
+            $result['price_after_cartrule_reduction_without_tax'] = $spec_price - $specific_price_reduction;
+        } else {
+            $result['price_after_cartrule_reduction_without_tax'] = $spec_price;
+        }
+
+        $spec_price = Product::getPriceStatic(
+            (int) $result['id_product'],
+            false,
+            $id_product_attribute,
+            6,
+            null,
+            false,
+            false,
+            $quantity
+        );
+        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
+        if($isValidForCartRule) {
+            $result['price_reduction_after_cartrule_reduction_with_tax'] = $specific_price_reduction * 1.21;
+        } else {
+            $result['price_reduction_after_cartrule_reduction_with_tax'] = 0;
+        }
 
         $spec_price = Product::getPriceStatic(
             (int) $result['id_product'],
@@ -139,7 +168,11 @@ class Product extends ProductCore {
         );
         $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
 
-        $result['price_reduction_after_cartrule_reduction_with_tax'] = $specific_price_reduction*1.21;
+        if($isValidForCartRule) {
+            $result['price_reduction_after_cartrule_reduction_without_tax'] = $specific_price_reduction;
+        } else {
+            $result['price_reduction_after_cartrule_reduction_without_tax'] = 0;
+        }
 
         $spec_price = Product::getPriceStatic(
             (int) $result['id_product'],
@@ -153,23 +186,11 @@ class Product extends ProductCore {
         );
         $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
 
-        $result['price_reduction_after_cartrule_reduction_without_tax'] = $specific_price_reduction;
-
-        $spec_price = Product::getPriceStatic(
-            (int) $result['id_product'],
-            false,
-            $id_product_attribute,
-            6,
-            null,
-            false,
-            false,
-            $quantity
-        );
-        $specific_price_reduction = ($spec_price * $cartReductionPercent) / 100;
-
-        $result['price_after_cartrule_reduction_with_tax'] = ($spec_price - $specific_price_reduction) * 1.21;
-
-
+        if($isValidForCartRule) {
+            $result['price_after_cartrule_reduction_with_tax'] = ($spec_price - $specific_price_reduction) * 1.21;
+        } else {
+            $result['price_after_cartrule_reduction_with_tax'] = $spec_price*1.21;
+        }
         $module = Module::getInstanceByName('dynamicproduct');
         if (Module::isEnabled('dynamicproduct') && $module->provider->isAfter1730()) {
             $id_product = (int) $result['id_product'];
@@ -191,11 +212,29 @@ class Product extends ProductCore {
             }
         }
 
-
-
-
         return $result;
     }
+
+    public static function checkCartRuleValidForProduct($rule, $product){
+        $productRuleGroups = $rule->getProductRuleGroups();
+        $ok = false;
+        if($productRuleGroups){
+            foreach ($productRuleGroups as $key => $productRuleGroup){
+                if(isset($productRuleGroups[$key]['product_rules'][$key])){
+                    $data = $productRuleGroups[$key]['product_rules'][$key];
+
+                    if($data['type'] == 'categories' && count($data['values']) > 0){
+                        if(in_array($product['id_category_default'], $data['values'])){
+                            $ok = true;
+                        }
+                    }
+                }
+            }
+        }
+        return $ok;
+    }
+
+
 
     public function getAttributesGroups($id_lang, $id_product_attribute = null)
     {

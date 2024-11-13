@@ -405,6 +405,7 @@ class Ps_Creditpayment extends PaymentModule
         curl_setopt_array($curlCard, array(
             CURLOPT_URL => "https://api.informer.eu/v1/" . $url,
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_FOLLOWLOCATION => true,
@@ -415,6 +416,8 @@ class Ps_Creditpayment extends PaymentModule
         ));
         $info = curl_getinfo($curlCard);
         $response = curl_exec($curlCard);
+
+
         if (!curl_errno($curlCard)) {
             $returnData = json_decode($response);
 

@@ -19,6 +19,7 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
         $customers = array();
         $creditGroup = new Group(Configuration::get('MSTHEMECONFIG_EMPLOYEE_CUSTOMER_CREDIT_GROUP',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), Context::getContext()->language->id, Context::getContext()->shop->id);
         $customersWithGroup = $creditGroup->getCustomers();
+
         $is_balie_employee = Context::getContext()->is_counter_customer;
         $add_to_list = false;
         if($is_balie_employee){
@@ -45,7 +46,7 @@ class ps_creditpaymentAjaxModuleFrontController extends ModuleFrontController
 
 
         $sql = '
-		SELECT cg.`id_customer` as id, CONCAT(c.company, " - ",c.firstname, " ", c.lastname, " / ",c.email) as text
+		SELECT cg.`id_customer` as id, CONCAT(COALESCE(`c`.`company`,""), " - ",COALESCE(`c`.`firstname`,"") , " ", COALESCE(`c`.`lastname`,"") , " / ",COALESCE(`c`.`email`,"") ) as text
 		FROM `' . _DB_PREFIX_ . 'customer_group` cg
 		LEFT JOIN `' . _DB_PREFIX_ . 'customer` c ON (cg.`id_customer` = c.`id_customer`)
 		WHERE cg.`id_group` = ' . $customersGroup . '

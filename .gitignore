@@ -1,7 +1,4 @@
 # Cache, temp and personal files
-.htaccess
-/.htaccess
-/.htpasswd
 *.log
 npm-debug.log.*
 .sass-cache/
@@ -221,3 +218,4 @@ google_dumps/
 themes/modernesmid_theme/assets/cache/
 .idea/
 dynamicproduct/cache/
+!/modules/pricemodifier/src/Grid/Definition/Data/PriceModificationDataFactory.php

@@ -2271,6 +2271,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_HTTPHEADER => $headers,
@@ -2278,7 +2279,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
         ]);
         $info = curl_getinfo($curlCard);
         $response = curl_exec($curlCard);
-
         if (!curl_errno($curlCard)) {
             $returnData = json_decode($response);
             $arrayList = [];

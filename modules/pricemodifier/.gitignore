@@ -17,7 +17,6 @@ config_*.xml
 /views/js/app.js.map
 /views/js/front.js
 /views/js/front.js.LICENSE.txt
-/views/img/pricemodifier.png
 
 ### Composer ###
 composer.phar
@@ -303,3 +302,4 @@ $RECYCLE.BIN/
 # CS Fixer
 .php_cs.cache
 .php-cs-fixer.cache
+!/src/Grid/Definition/Data/PriceModificationDataFactory.php

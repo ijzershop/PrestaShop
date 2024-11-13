@@ -29,6 +29,7 @@
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
+      <path value="$PROJECT_DIR$/modules/pricemodifier/src" />
       <path value="$APPLICATION_HOME_DIR$/external_plugins/PHPStorm-CC-PrestaShop-master" />
       <path value="$PROJECT_DIR$/modules/ps_creditpayment/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/service-contracts" />

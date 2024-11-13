@@ -714,7 +714,7 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
     private function addProjectAndEmployeeToMessages($order, $customer_thread_id){
         $projectMessage = '';
         if(!empty($this->context->cookie->on_credit_reference)){
-            $projectMessage = $projectMessage = strip_tags('Ref: '. $this->context->cookie->on_credit_reference.'<br>', '<br>');
+            $projectMessage = strip_tags('Ref: '. $this->context->cookie->on_credit_reference.'<br>', '<br>');
             $this->context->cookie->on_credit_reference = '';
         }
 
@@ -766,13 +766,14 @@ class Ps_CreditpaymentValidationModuleFrontController extends ModuleFrontControl
             $customer_thread_id = $customer_thread->id;
         }
 
-        $customer_message = new CustomerMessage();
-        $customer_message->id_customer_thread = $customer_thread_id;
-        $customer_message->id_employee = 0;
-        $customer_message->message = $projectMessage . $customerMessage;
-        $customer_message->private = 0;
-        $customer_message->add();
-
+        if((Validate::isCleanHtml($customerMessage) && $customerMessage != '') && (Validate::isCleanHtml($projectMessage) && $projectMessage != '')) {
+            $customer_message = new CustomerMessage();
+            $customer_message->id_customer_thread = $customer_thread_id;
+            $customer_message->id_employee = 0;
+            $customer_message->message = $projectMessage . $customerMessage;
+            $customer_message->private = 0;
+            $customer_message->add();
+        }
         return true;
     }
 

@@ -266,7 +266,6 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
         $sqlProducts->where('c.level_depth > 1');
         $sqlProducts->where('p.id_category_default != '.$customCategory);
         $sqlProducts->orderBy('cl.`name` ASC');
-        $sqlProducts->limit('1500');
 
         $products = Db::getInstance()->executeS($sqlProducts);
         uasort($products, function ($x, $y) {
@@ -283,13 +282,14 @@ class PriceModificationGridDefinitionFactory extends AbstractGridDefinitionFacto
         $sqlCategories->where('c.level_depth > 1');
         $sqlProducts->where('p.id_category_default != '.$customCategory);
         $sqlCategories->orderBy('cl.`name` ASC');
-        $sqlCategories->limit('1500');
+
         $categories = Db::getInstance()->executeS($sqlCategories);
 
         uasort($categories, function ($x, $y) {
             return $x['text'] <=> $y['text'];
         });
-        $categoryList = array_combine(array_column($categories,'text'), array_column($categories,'id'));
+
+        $categoryList = array_unique(array_combine(array_column($categories,'text'), array_column($categories,'id')));
 
         return (new FilterCollection())
             ->add((new Filter('id', TextType::class))

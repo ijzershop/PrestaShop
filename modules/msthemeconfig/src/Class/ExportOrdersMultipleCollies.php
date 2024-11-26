@@ -428,8 +428,8 @@ class ExportOrdersMultipleCollies
 
                     if ($collieType == 'COL') {
                         $collieRow->lengte = 200;
-                        $collieRow->breedte = 17;
-                        $collieRow->hoogte = 23;
+                        $collieRow->breedte = 14;
+                        $collieRow->hoogte = 14;
                     } elseif ($collieType == 'MP') {
                         $collieRow->lengte = 100;
                         $collieRow->breedte = 50;

@@ -26,10 +26,13 @@
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class CustomerLoginFormCore extends AbstractForm
-{
+/**
+ *
+ */
+class CustomerLoginForm extends CustomerLoginFormCore {
+
     private $context;
-    private $urls;
+    public $urls;
 
     protected $template = 'customer/_partials/login-form.tpl';
 
@@ -37,6 +40,7 @@ class CustomerLoginFormCore extends AbstractForm
      * @var InternationalizedDomainNameConverter
      */
     private $IDNConverter;
+
 
     public function __construct(
         Smarty $smarty,
@@ -47,10 +51,11 @@ class CustomerLoginFormCore extends AbstractForm
     ) {
         parent::__construct(
             $smarty,
+            $context,
             $translator,
-            $formatter
+            $formatter,
+            $urls
         );
-
         $this->context = $context;
         $this->translator = $translator;
         $this->formatter = $formatter;
@@ -61,6 +66,11 @@ class CustomerLoginFormCore extends AbstractForm
         $this->IDNConverter = new InternationalizedDomainNameConverter();
     }
 
+
+    /**
+     * @return bool
+     * @throws PrestaShopException
+     */
     public function submit()
     {
         if ($this->validate()) {
@@ -82,55 +92,58 @@ class CustomerLoginFormCore extends AbstractForm
                 );
 
                 if (isset($authentication->active) && !$authentication->active) {
-                    $this->errors['email'][] = $this->translator->trans('Your account isn\'t available at this time, please contact us', [], 'Shop.Notifications.Error');
+                    Context::getContext()->controller->errors['email'][] = Context::getContext()->getTranslator()->trans('Your account isn\'t available at this time, please contact us', [], 'Shop.Notifications.Error');
                 } elseif (!$authentication || !$customer->id || $customer->is_guest) {
                     if(!$authentication){
-                        $this->errors['email'][] = $this->translator->trans('De combinatie email adres en wachtwoord is onjuist!', [], 'Shop.Notifications.Error');
-                        $this->errors['password'][] = $this->translator->trans('De combinatie email adres en wachtwoord is onjuist!', [], 'Shop.Notifications.Error');
+                        Context::getContext()->controller->errors['email'][] = Context::getContext()->getTranslator()->trans('De combinatie email adres en wachtwoord is onjuist!', [], 'Shop.Notifications.Error');
                     } else {
-                        $this->errors['email'][] = $this->translator->trans('Authentication failed.', [], 'Shop.Notifications.Error');
+                        Context::getContext()->controller->errors['email'][] = Context::getContext()->getTranslator()->trans('Authentication failed.', [], 'Shop.Notifications.Error');
                     }
                 } else {
-                    $this->context->updateCustomer($customer);
+                    Context::getContext()->updateCustomer($customer);
 
-                    Hook::exec('actionAuthentication', ['customer' => $this->context->customer]);
+                    Hook::exec('actionAuthentication', ['customer' => Context::getContext()->customer]);
                 }
             } else {
-                $this->errors['email'][] = $this->translator->trans('Dit email adres is niet gevonden in ons klantbestand', [], 'Shop.Notifications.Error');
+                Context::getContext()->controller->errors['email'][] = Context::getContext()->getTranslator()->trans('Dit email adres is niet gevonden in ons klantbestand', [], 'Shop.Notifications.Error');
             }
         }
 
 
-        return !$this->hasErrors();
-    }
 
-    public function fillWith(array $params = [])
-    {
-        if (!empty($params['email'])) {
-            // In some cases, browsers convert non ASCII chars (from input type="email") to "punycode",
-            // we need to convert it back
-            $params['email'] = $this->IDNConverter->emailToUtf8($params['email']);
+        if(!Context::getContext()->controller->errors){
+            return Context::getContext()->controller->redirectWithNotifications($this->urls['authentication']);
         }
 
-        return parent::fillWith($params);
+        return $this->hasErrors();
     }
 
+
+    /**
+     * @return array
+     */
     public function getTemplateVariables()
     {
         if (!$this->formFields) {
             $this->formFields = $this->formatter->getFormat();
         }
 
+        array_merge($this->errors, Context::getContext()->controller->errors);
+
         return [
             'action' => $this->action,
             'urls' => $this->urls,
             'formFields' => array_map(
                 function (FormField $field) {
+                    $errors = $field->getErrors();
+                    if (!is_null($errors)) {
+                        $field->setErrors($errors);
+                    }
                     return $field->toArray();
                 },
                 $this->formFields
             ),
-            'errors' => $this->getErrors(),
+            'errors' => $this->errors,
         ];
     }
 }

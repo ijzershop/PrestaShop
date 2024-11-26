@@ -83,6 +83,8 @@ class AuthControllerCore extends FrontController
                 return $this->redirectWithNotifications($this->authRedirection);
             }
 
+
+
             // go home
             return $this->redirectWithNotifications(__PS_BASE_URI__);
         }

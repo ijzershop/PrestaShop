@@ -360,7 +360,7 @@ class PaymentData implements JsonSerializable
         $this->email = $email;
     }
 
-    public function jsonSerialize() :mixed
+    public function jsonSerialize(): mixed
     {
         $result = [
             'amount' => [

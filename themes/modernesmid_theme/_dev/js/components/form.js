@@ -40,13 +40,12 @@ export default class Form {
   }
 
   togglePasswordVisibility() {
-    $('button[data-action="show-password"]').on('click', function () {
-      const elm = $(this).closest('.input-group').children('input.js-visible-password');
-
+    $(document).on('click','button[data-action="show-password"]', function () {
+      let elm = $(this).closest('.input-group').children('input.js-visible-password');
       if (elm.attr('type') === 'password') {
         elm.attr('type', 'text');
         $(this).text($(this).data('textHide'));
-      } else {
+      } else if(elm.attr('type') === 'text') {
         elm.attr('type', 'password');
         $(this).text($(this).data('textShow'));
       }

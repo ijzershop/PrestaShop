@@ -11,6 +11,7 @@ use CMS;
 use Context;
 use Db;
 use Feature;
+use FeatureValue;
 use Group;
 use OrderState;
 use PrestaShopCollection;
@@ -536,6 +537,14 @@ class ModernAjax
                 $dataArray['KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS'] = $this->getSelect2SelectedOptions(Configuration::get('KOOPMANORDEREXPORT_SELECT_WAITING_STOCK_STATUS' , $this->idLang, $this->idShopGroup, $this->idShop,  "9"),'order_states');
                 $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES'] = Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES' , $this->idLang, $this->idShopGroup, $this->idShop,  "'12/25/2023', '01/01/2023'");
                 $dataArray['MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME'] =  Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', $this->idLang, $this->idShopGroup, $this->idShop,  '16:00:00');
+
+                $dataArray['MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE', $this->idLang, $this->idShopGroup, $this->idShop,  '0'), 'features');
+                $dataArray['MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ENVELOPE'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ENVELOPE', $this->idLang, $this->idShopGroup, $this->idShop,  '0'), 'feature_values');
+                $dataArray['MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_PLAAT'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_PLAAT', $this->idLang, $this->idShopGroup, $this->idShop,  '0'), 'feature_values');
+                $dataArray['MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ONE_METER'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ONE_METER', $this->idLang, $this->idShopGroup, $this->idShop,  '0'), 'feature_values');
+                $dataArray['MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_TWO_METER'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_TWO_METER', $this->idLang, $this->idShopGroup, $this->idShop,  '0'), 'feature_values');
+
+
                 break;
             case 'sell':
                 $dataArray['MSTHEMECONFIG_DISCOUNT_RULE_FIRST'] =  $this->getSelect2SelectedOptions(Configuration::get('MSTHEMECONFIG_DISCOUNT_RULE_FIRST', $this->idLang, $this->idShopGroup, $this->idShop,  0),'discounts');
@@ -704,6 +713,30 @@ class ModernAjax
                     $list = $this->sortSearchResult($featuresList);
                 } else {
                     $list = $featuresList;
+                }
+                return JsonResponse::fromJsonString(json_encode($list));
+            case 'feature_values':
+                $collieFeature = Configuration::get('MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE', $this->idLang, $this->idShopGroup, $this->idShop, 51);
+
+                $featureValues = FeatureValue::getFeatureValuesWithLang($this->idLang, $collieFeature);
+                $featureValuesList = [];
+                $featureValuesList['results'] = [];
+
+
+                foreach ($featureValues as $featureValue) {
+                    $title = $featureValue['value'];
+                    $id = $featureValue['id_feature_value'];
+                    if (!empty($search)) {
+                        if (!preg_match('(' . strtolower($search) . ')', strtolower($title))) {
+                            continue;
+                        }
+                    }
+                    $featureValuesList['results'][] = ['id' => $id, 'text' => $title];
+                }
+                if($sort){
+                    $list = $this->sortSearchResult($featureValuesList);
+                } else {
+                    $list = $featureValuesList;
                 }
                 return JsonResponse::fromJsonString(json_encode($list));
 

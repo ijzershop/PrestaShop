@@ -318,7 +318,7 @@
       </label>
       <div class="col-xs-8">
         <select name="KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER"
-                class="w-100 form-control select2-data-input" data-type="order_states"
+                class="w-100 form-control select2-data-input" data-type="carriers"
                 id="KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER">
           {{ KOOPMANORDEREXPORT_SELECT_PICKUP_CARRIER|raw }}
         </select>
@@ -593,8 +593,99 @@
         </p>
       </div>
     </div>
-    </div>
 
+
+
+
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 required text-right">
+          Collie type Feature
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE"
+                  class="w-100 form-control select2-data-input" data-type="features"
+                  id="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE">
+            {{ MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_FEATURE|raw }}
+          </select>
+          <p class="help-block">
+            Choose the feature for collie type choices
+          </p>
+        </div>
+      </div>
+
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 required text-right">
+          Collie type voor envelope
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ENVELOPE"
+                  class="w-100 form-control select2-data-input" data-type="feature_values"
+                  id="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ENVELOPE">
+            {{ MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ENVELOPE|raw }}
+          </select>
+          <p class="help-block">
+            Choose the feature for which packaging type the product is send in.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 required text-right">
+          Collie type voor plaat
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_PLAAT"
+                  class="w-100 form-control select2-data-input" data-type="feature_values"
+                  id="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_PLAAT">
+            {{ MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_PLAAT|raw }}
+          </select>
+          <p class="help-block">
+            Choose the feature for which packaging type the product is send in.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 required text-right">
+          Collie type voor 1 meter
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ONE_METER"
+                  class="w-100 form-control select2-data-input" data-type="feature_values"
+                  id="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ONE_METER">
+            {{ MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_ONE_METER|raw }}
+          </select>
+          <p class="help-block">
+            Choose the feature for which packaging type the product is send in.
+          </p>
+        </div>
+      </div>
+
+
+
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 required text-right">
+          Collie type voor 2 meter
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_TWO_METER"
+                  class="w-100 form-control select2-data-input" data-type="feature_values"
+                  id="MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_TWO_METER">
+            {{ MSTHEMECONFIG_SHIPPING_COLLIE_TYPE_TWO_METER|raw }}
+          </select>
+          <p class="help-block">
+            Choose the feature for which packaging type the product is send in.
+          </p>
+        </div>
+      </div>
+
+
+
+
+
+    </div>
   </div>
 </div>
 

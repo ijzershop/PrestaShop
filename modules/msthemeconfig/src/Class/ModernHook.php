@@ -2635,14 +2635,30 @@ public function hookActionFrontControllerSetVariables(&$param): void
         $searchQueryBuilder->addSelect('cu.email as email');
         $searchQueryBuilder->addSelect('a.postcode as postcode');
         $searchQueryBuilder->addSelect('SUM(od.product_weight * od.product_quantity) as total_order_weight');
-        $searchQueryBuilder->addSelect('GROUP_CONCAT(od.product_weight) as product_weight');
-        $searchQueryBuilder->addSelect('GROUP_CONCAT(od.product_quantity) as product_quantity');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(COALESCE(od.product_weight * od.product_quantity, 0)) as product_weight');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(COALESCE(od.product_quantity, 0)) as product_quantity');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(COALESCE(fvl.id_feature_value,0)) as shipping_values');
+        $searchQueryBuilder->addSelect('GROUP_CONCAT(COALESCE(fvl.value,"Leeg")) as shipping_value_names');
         $searchQueryBuilder->addSelect('oc.tracking_number as shipping_number');
         $searchQueryBuilder->leftJoin(
             'o',
             '`' . pSQL(_DB_PREFIX_) . 'order_detail`',
             'od',
             'o.`id_order` = od.`id_order`'
+        );
+
+        $searchQueryBuilder->leftJoin(
+            'od',
+            '`' . pSQL(_DB_PREFIX_) . 'feature_product`',
+            'fp',
+            'od.`product_id` = fp.`id_product` AND fp.`id_feature` = 51'
+        );
+
+        $searchQueryBuilder->leftJoin(
+            'fp',
+            '`' . pSQL(_DB_PREFIX_) . 'feature_value_lang`',
+            'fvl',
+            'fp.`id_feature_value` = fvl.`id_feature_value` AND fvl.`id_lang` = '. $this->context->language->id
         );
 
         $searchQueryBuilder->leftJoin(
@@ -2653,7 +2669,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
         );
 
         $searchQueryBuilder->groupBy('o.id_order');
-
         $countQueryBuilder = $params['count_query_builder'];
         $countQueryBuilder->addSelect('o.added_to_order as added_to_order');
         $countQueryBuilder->addSelect('cu.email as email');

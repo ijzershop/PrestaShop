@@ -289,7 +289,7 @@ class MsThemeConfig extends Module
             'actionDispatcherAfter',
             'actionFrontControllerSetMedia',
             'actionListMailThemes',
-            'actionOrderGridDefinitionModifier',
+            'actionOrderGridDataModifier',
             'actionOrderGridQueryBuilderModifier',
             'actionOrderStatusPostUpdate',
             'actionProductSearchProviderRunQueryAfter',
@@ -968,6 +968,16 @@ class MsThemeConfig extends Module
         $hookClass->hookActionOrderGridDefinitionModifier($params);
     }
 
+
+        /**
+     * @param $params
+     * @throws PrestaShopException
+     */
+    public function hookActionOrderGridDataModifier($params): void
+    {
+        $hookClass = $this->getModernHooks();
+        $hookClass->hookActionOrderGridDataModifier($params);
+    }
 
         /**
      * @param $params

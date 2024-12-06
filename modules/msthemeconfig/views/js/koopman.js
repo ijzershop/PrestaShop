@@ -229,8 +229,8 @@ $(function () {
   //   *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
   //   *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
   //   *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
-  //   *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = 2-meter-smaller
-  //   *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
+  //   *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = collie-smaller
+  //   *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = collie-larger
   //   *
   //   */
   //   if (type !== -1) {
@@ -244,10 +244,10 @@ $(function () {
   //       case '1-meter':
   //         gewicht = 15;
   //         break;
-  //       case '2-meter-smaller':
+  //       case 'collie-smaller':
   //         gewicht = 20;
   //         break;
-  //       case '2-meter-larger':
+  //       case 'collie-larger':
   //         gewicht = 30;
   //         break;
   //     }
@@ -293,8 +293,8 @@ $(function () {
     *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
     *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
     *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
-    *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = 2-meter-smaller
-    *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = 2-meter-larger
+    *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = collie-smaller
+    *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = collie-larger
     */
 
     if (type !== -1) {
@@ -308,10 +308,10 @@ $(function () {
         case '1-meter':
           gewicht = 15;
           break;
-        case '2-meter-smaller':
+        case 'collie-smaller':
           gewicht = 20;
           break;
-        case '2-meter-larger':
+        case 'collie-larger':
           gewicht = 30;
           break;
       }
@@ -373,45 +373,9 @@ $(function () {
 
   });
 
-
-//   Nieuwe opzet label print kolom
-//
-//   //   minus button
-//   $(document).on('click', '[name="package_size_minus"]', function () {
-//     let orderId = $(this).attr('data-row-id');
-//     let selectBox = $('[name="package_size"][data-row-id="' + orderId + '"]')[0];
-//     let index = selectBox.selectedIndex;
-//
-//     if (index > 0) {
-//       selectBox.selectedIndex = index - 1;
-//     }
-//
-//     let selectedWeightValue = parseInt(selectBox.value);
-//
-//     if (selectedWeightValue > 0) {
-//       $('.collie-selection[data-row-id="' + orderId + '"]').attr('data-order-weight', selectedWeightValue)
-//     }
-//   });
-//
-//   //   plus button
-//   $(document).on('click', '[name="package_size_plus"]', function () {
-//     let orderId = $(this).attr('data-row-id');
-//     let selectBox = $('[name="package_size"][data-row-id="' + orderId + '"]')[0];
-//     let index = selectBox.selectedIndex;
-//
-//     if (index < 20) {
-//       selectBox.selectedIndex = index + 1;
-//     }
-//     let selectedWeightValue = parseInt(selectBox.value);
-//
-//     if (selectedWeightValue > 0) {
-//       $('.collie-selection[data-row-id="' + orderId + '"]').attr('data-order-weight', selectedWeightValue)
-//     }
-//   });
-
-
   const MAX_PACKAGE_WEIGHT = 23;
   const VOLUME_MULTIPLIER = 250;
+  const PALLET_THRESHOLD = 150;
   const MINI_PALLET_THRESHOLD = 150;
   const EURO_PALLET_THRESHOLD = 250;
   const ENVELOPE_WIDTH = 0.30;
@@ -424,14 +388,16 @@ $(function () {
   const METER_LENGTH = 1;
   const MIN_METER_HEIGHT = 0.05;
   const METER_2_WIDTH = 0.25;
-  const METER_2_LENGTH = 2;
+  const METER_2_LENGTH = 1;
   const MIN_METER_2_HEIGHT = 0.05;
+  const COLLIE_WIDTH_THRESHOLD = 0.7;
+  const COLLIE_HEIGHT_THRESHOLD = 0.7;
 
   // Berekend in meter voor prijs, centimeters op het label: lengte * breedte * hoogte * 250
   let calculateVolumeSize = function (weight, type) {
 
-    if (!['envelope', 'plaat', '1-meter', '2-meter','euro-pallet','mini-pallet'].includes(type)) {
-      type = '2-meter';
+    if (!['envelope', 'plaat', '1-meter', '2-meter', 'pallet'].includes(type)) {
+      type = 'collie';
     }
 
     if (weight <= 0) {
@@ -464,7 +430,7 @@ $(function () {
         packageSize.length = ENVELOPE_LENGTH;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = ENVELOPE_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (ENVELOPE_LENGTH*100).toString() + '<sub>cm</sub> x ' + (packageSize.width*100).toFixed(2).toString() + '<sub>cm</sub> x ' + (volumeHeight*100).toFixed(2).toString() + '<sub>cm</sub>';
+        packageSize.volumeSize = (ENVELOPE_LENGTH*100).toString() + ' x ' + (packageSize.width*100).toFixed(2).toString() + ' x ' + (volumeHeight*100).toFixed(2).toString() + '';
         packageSize.formula = ENVELOPE_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case 'plaat':
@@ -484,7 +450,7 @@ $(function () {
         packageSize.length = PLAAT_LENGTH;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = PLAAT_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (PLAAT_LENGTH*100).toString() + '<sub>cm</sub> x ' + (packageSize.width*100).toFixed(2).toString() + '<sub>cm</sub> x ' + (volumeHeight*100).toFixed(2).toString() + '<sub>cm</sub>';
+        packageSize.volumeSize = (PLAAT_LENGTH*100).toString() + ' x ' + (packageSize.width*100).toFixed(2).toString() + ' x ' + (volumeHeight*100).toFixed(2).toString() + '';
         packageSize.formula = PLAAT_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '1-meter':
@@ -503,7 +469,7 @@ $(function () {
         packageSize.length = METER_LENGTH;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = METER_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (METER_LENGTH*100).toString() + '<sub>cm</sub> x ' + (packageSize.width*100).toFixed(2).toString() + '<sub>cm</sub> x ' + (volumeHeight*100).toFixed(2).toString() + '<sub>cm</sub>';
+        packageSize.volumeSize = (METER_LENGTH*100).toString() + ' x ' + (packageSize.width*100).toFixed(2).toString() + ' x ' + (volumeHeight*100).toFixed(2).toString() + '';
         packageSize.formula = METER_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '2-meter':
@@ -522,7 +488,7 @@ $(function () {
         packageSize.length = METER_2_LENGTH;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = METER_2_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (METER_2_LENGTH*100).toString() + '<sub>cm</sub> x ' + (packageSize.width*100).toFixed(2).toString() + '<sub>cm</sub> x ' + (volumeHeight*100).toFixed(2).toString() + '<sub>cm</sub>';
+        packageSize.volumeSize = (METER_2_LENGTH*100).toString() + ' x ' + (packageSize.width*100).toFixed(2).toString() + ' x ' + (volumeHeight*100).toFixed(2).toString() + '';
         packageSize.formula = METER_2_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
     }
@@ -530,10 +496,10 @@ $(function () {
     return packageSize;
   }
 
-  let updatePackageVolumes = function(qty, weight, collieType, collieTypeId){
+  let updatePackageVolumes = function (qty, weight, collieType, collieTypeId) {
     let collieStorageString = localStorage.getItem('current-collie-list');
     let selectedCollies = {};
-    if(collieStorageString){
+    if (collieStorageString) {
       let collieList = JSON.parse(collieStorageString);
       let newList = updateCollieItemList(weight, collieType, collieTypeId, collieList, qty, true);
 
@@ -541,11 +507,13 @@ $(function () {
       let totalQty = 0;
       let totalVolumeWeight = 0;
       for (let key in newList) {
+
+
+
         if (newList[key]['qty'] > 0) {
           totalQty += newList[key]['qty'];
           totalVolumeWeight += newList[key]['weight'];
-          tableData += '<tr><td>' + newList[key]['name'] + '</td>' +
-            '<td class="text-center">' + newList[key]['qty'] + '</td>' +
+          tableData += '<tr><td>' + newList[key]['display_name'] + '</td>' +
             '<td><b>' + newList[key]['volumeSize'] + '</b> || ( <i>' + newList[key]['volumeFormula'] + ' = ' + newList[key]['volumeWeight'].toFixed(4) + '</i> )</td>' +
             '<td class="text-center">' + newList[key]['weight'].toFixed(2) + '</td></tr>';
 
@@ -563,12 +531,10 @@ $(function () {
       // Replace all double quotes with single quotes using string replace
       selectedCollies = JSON.stringify(selectedCollies).replace(/"/g, "'");
       $('#selected_collie_values').val(selectedCollies);
-      // console.log(selectedCollies);
       let htmlFooter = '<div class="row m-0 collie-type-footer"><div class="col-8"><table class="table table-condensed w-100">' +
-        '<thead><tr><th>Type</th><th class="text-center">Aantal</th><th>Formaat</th><th class="text-center">Gewicht</th></tr></thead><tbody>' + tableData + '</tbody>' +
-        '<tfoot style="border-top: 2px solid" class="border-dark"><tr><th>Totaal pakketten</th><td class="text-center">' + totalQty + '</td><th>Totaal gewicht</th><td class="text-center">' + totalVolumeWeight.toFixed(2) + '</td></tr></tfoot></table>' +
+        '<thead><tr><th>Type</th><th colspan="2">Formaat</th><th class="text-center">Gewicht</th></tr></thead><tbody>' + tableData + '</tbody>' +
+        '<tfoot style="border-top: 2px solid" class="border-dark"><tr><th>Totaal pakketten</th><td colspan="2" class="text-center">' + totalQty + '</td><th class="text-right">Totaal gewicht</th><td class="text-center">' + totalVolumeWeight.toFixed(2) + '</td></tr></tfoot></table>' +
         '</div><div class="col-4">' +
-        '<label><input type="checkbox" name="split_or_move"/>Deel collie gewicht</label>' +
         '<input type="hidden" value="'+ selectedCollies + '" name="selected_collie_values" id="selected_collie_values"><button class="btn btn-primary w-100 print-button">Print</button></div> ' + '</div> ';
 
       $('.fancybox-inner .collie-type-footer-parent').html(htmlFooter);
@@ -579,39 +545,15 @@ $(function () {
 
 
   let switchCollieType = function(boxId, type){
-    let splitOrMove = $('[name="split_or_move"]').is(':checked');
     let parentElemChecked = $('[name="parent-collie"]:checked');
     let data = parentElemChecked.data();
     let parentElem = $('.collie-input[data-name="'+data.name+'"]');
     let childElem = $('.collie-input[data-name="'+boxId+'"]');
-    if(splitOrMove){ //split collie weight
-      let parentValueArray = parentElem.val().split('x');
-      let childValueArray = childElem.val().split('x');
 
-      if(type === 'plus') {
-        let total = parseInt(parentValueArray[0]);
-        let weight = parseFloat(parentValueArray[1].replace('Kg',''));
-
-        if(total === 1){
-          weight = weight/2;
-          total = total+1;
-        }
-
-        let newChildValue = 1 + 'x' + weight.toFixed(2) + 'Kg';
-        let newParentValue = (total-1) + 'x' + weight.toFixed(2) + 'Kg'
-
-        parentElem.val(newParentValue);
-        childElem.val(newChildValue);
-
-      } else {
-
-      }
-    } else { //move all collies
-      let parentVal = parentElem.val();
-      let childVal = childElem.val();
-      parentElem.val(childVal);
-      childElem.val(parentVal);
-    }
+    let parentVal = parentElem.val();
+    let childVal = childElem.val();
+    parentElem.val(childVal);
+    childElem.val(parentVal);
   }
 
 let updateCollieListWs = function(){
@@ -652,14 +594,12 @@ let updateCollieListWs = function(){
       if((newWeight >= EURO_PALLET_THRESHOLD && boxId === 'euro-pallet') || (newWeight < EURO_PALLET_THRESHOLD && newWeight >= MINI_PALLET_THRESHOLD && boxId === 'mini-pallet')){
         qtyWeightArray[1] = newWeight;
         qtyWeightArray[0] = qty + 1;
-        input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+        input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
       } else {
         qtyWeightArray[1] = (qty*weight)/(qty+1);
         qtyWeightArray[0] = qty + 1;
-        input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+        input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
       }
-
-      // updatePackageVolumes(qtyWeightArray[0], qtyWeightArray[1]*qtyWeightArray[0], boxId, 0);
     }
 
     //Minus button click
@@ -667,20 +607,19 @@ let updateCollieListWs = function(){
       //Calculate new weight
       let newWeight = (qty*weight)/(qty-1);
 
-      //Check if new weight is within allowed weight range for plaat, envelope, 1-meter, 2-meter
-      if(newWeight <= MAX_PACKAGE_WEIGHT && ['plaat', 'envelope', '1-meter', '2-meter'].indexOf(boxId) > -1) {
+      //Check if new weight is within allowed weight range for plaat, envelope, 1-meter, collie
+      if(newWeight <= MAX_PACKAGE_WEIGHT && ['plaat', 'envelope', '1-meter', 'collie'].indexOf(boxId) > -1) {
         qtyWeightArray[1] = newWeight;
         qtyWeightArray[0] = qty - 1;
-        input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+        input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
       } else{
       //Check if new weight is within allowed weight range for euro pallet or mini pallet
         if(newWeight < 1000){
           qtyWeightArray[1] = newWeight;
           qtyWeightArray[0] = qty - 1;
-          input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+          input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
         }
       }
-      // updatePackageVolumes(qtyWeightArray[0], qtyWeightArray[1]*qtyWeightArray[0], boxId, 0);
     }
 
     updateCollieListWs();
@@ -698,18 +637,18 @@ let updateCollieListWs = function(){
     let weight = parseFloat(qtyWeightArray[1]);
     let qty = parseInt(qtyWeightArray[0]);
     //Plus button click and check max weight
-    if (type === 'plus' && weight < MAX_PACKAGE_WEIGHT && ['plaat', 'envelope', '1-meter', '2-meter'].indexOf(boxId) > -1) {
+    if (type === 'plus' && weight < MAX_PACKAGE_WEIGHT && ['plaat', 'envelope', '1-meter', 'collie'].indexOf(boxId) > -1) {
       let updatedWeight = weight + 0.1;
       qtyWeightArray[1] = (qty*updatedWeight)/qty;
       qtyWeightArray[0] = qty;
-      input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+      input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
     } else {
       //Check if new weight is within allowed weight range for euro pallet or mini pallet
       let updatedWeight = weight + 0.1;
       if(updatedWeight < 1000) {
         qtyWeightArray[1] = updatedWeight;
         qtyWeightArray[0] = qty;
-        input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+        input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
       }
     }
 
@@ -717,51 +656,46 @@ let updateCollieListWs = function(){
       let updatedWeight = weight - 0.1;
       qtyWeightArray[1] = (qty*updatedWeight)/qty;
       qtyWeightArray[0] = qty;
-      input.val(qtyWeightArray[0] + ' x ' + qtyWeightArray[1].toFixed(2) + 'Kg');
+      input.val(qtyWeightArray[0] + 'x' + qtyWeightArray[1].toFixed(2) + 'Kg');
     }
 
 
     updateCollieListWs();
   });
 
-  let htmlCollieChoiceBlock = function (data, rowId) {
-    let checked;
-
+  let htmlCollieChoiceBlock = function (totalWeight, totalQty=1) {
     let value = '...';
-    if (data.qty > 0) {
-      value = data.qty;
+    if (totalQty > 0) {
+      value = totalQty;
     }
 
-    if (data.weight > 0) {
-      checked = 'checked';
-      value += ' x ' + (data.weight / data.qty).toFixed(2) + 'Kg';
-    } else {
-      checked = '';
+    if (totalWeight > 0) {
+      value += 'x' + (totalWeight / totalQty).toFixed(2) + 'Kg';
     }
 
-    return '      <div class="col-4">' +
+    return '      <div class="w-100">' +
       '        <div class="card" style="border:2px solid #0c3b44;">' +
-      '          <div class="card-header text-white bg-primary text-center font-weight-bold h2">' + data.display_name + '<input type="radio" name="parent-collie" title="Parent Collie" data-name="'+data.name+'" class="parent-collie float-right"  '+checked+'> </div>' +
+      '          <div class="card-header text-white bg-primary text-center font-weight-bold h2">Parkietten</div>' +
       '          <div class="card-body">' +
       '          <div class="row">' +
       '          <div class="col-12 pb-1">' +
-      '            <button class="btn btn-success w-100 qty-button" data-type="plus" data-row-id="'+rowId+'" data-name="'+data.name+'" type="button">+</button>' +
+      '            <button class="btn btn-success w-100 qty-button" data-type="plus" type="button">+</button>' +
       '          </div>' +
       '          </div>' +
       '            <div class="row">' +
       '            <div class="input-group mb-1 col-12">' +
       '              <div class="input-group-prepend">' +
-      '                <button class="btn btn-outline-secondary qty-weight-button" data-type="minus" data-row-id="'+rowId+'" data-name="'+data.name+'" type="button">-</button>' +
+      '                <button class="btn btn-outline-secondary qty-weight-button" data-type="minus" type="button">-</button>' +
       '              </div>' +
-      '              <input type="text" class="form-control text-center collie-input" data-row-id="'+rowId+'" data-name="'+data.name+'" aria-label="" value="' + value + '">' +
+      '              <input type="text" class="form-control text-center collie-input" aria-label="" value="' + value + '">' +
       '              <div class="input-group-append">' +
-      '                <button class="btn btn-outline-secondary qty-weight-button" data-type="plus" data-row-id="'+rowId+'" data-name="'+data.name+'">+</button>' +
+      '                <button class="btn btn-outline-secondary qty-weight-button" data-type="plus">+</button>' +
       '              </div>' +
       '            </div>' +
       '            </div>' +
       '            <div class="row">' +
       '             <div class="col-12">' +
-      '            <button class="btn btn-success w-100 qty-button" data-type="minus" data-row-id="'+rowId+'" data-name="'+data.name+'" type="button">-</button>' +
+      '            <button class="btn btn-success w-100 qty-button" data-type="minus" type="button">-</button>' +
       '          </div>' +
       '            </div>' +
       '          </div>' +
@@ -777,9 +711,9 @@ let updateCollieListWs = function(){
   let updateCollieItemList = function (weight, collieType, collieTypeId, items, qty=0, update=false) {
     let packageSize = '';
 
-    let collyName = collieType.toLowerCase().replace(' ', '-');
+    let collieName = collieType.toLowerCase().replace(' ', '-');
 
-    switch (collyName) {
+    switch (collieName) {
       case 'plaat':
         if(update){
           items['plaat']['weight'] = weight;
@@ -901,6 +835,25 @@ let updateCollieListWs = function(){
         items['mini-pallet']['volumeSize'] =  '60 x 50 x 120';
         items['mini-pallet']['volumeFormula'] = '';
         break;
+        case 'pallet':
+        if(update){
+          items['pallet']['weight'] = weight;
+        } else {
+          items['pallet']['weight'] += weight;
+        }
+        if(qty > 0) {
+          items['pallet']['qty'] = qty;
+        } else {
+          items['pallet']['qty'] = calculateCollieTotal(items['pallet']['weight'], 1000);
+        }
+        items['pallet']['volumeWidth'] = 1.00;
+        items['pallet']['volumeHeight'] = 2.20;
+        items['pallet']['volumeLength'] = 2.00;
+        items['pallet']['volumeMultiplier'] = 0;
+        items['pallet']['volumeWeight'] = items['pallet']['weight']/items['pallet']['qty'];
+        items['pallet']['volumeSize'] =  '100 x 200 x 220';
+        items['pallet']['volumeFormula'] = '';
+        break;
       default:
         if(update){
           items['2-meter']['weight'] = weight;
@@ -921,6 +874,106 @@ let updateCollieListWs = function(){
     return items;
   }
 
+let checkActive = function(collieTypeId, item){
+    if(collieTypeId === item){
+      return 'active';
+    } else {
+      return  '';
+    }
+}
+
+  let typeSelectBox = function(collieType, collieTypeId, collieRow) {
+    let html = '';
+
+    html += '<nav class="collie-nav" aria-label="" id="collieTypeSelect_' + collieTypeId + '"><ul class="pagination pagination-lg mb-0">';
+    html += '<li class="page-item '+ checkActive(collieType, 'envelope') +'"><a class="page-link" href="#" alt="Envelop"><img src="/upload/envelope-sharp-thin.svg" alt="Envelop"></a></li>';
+    html += '<li class="page-item '+ checkActive(collieType, 'plaat') +'"><a class="page-link" href="#" alt="Plaat"><img src="/upload/rectangle-wide-sharp-thin.svg" alt="Plaat"></a></li>';
+    html += '<li class="page-item '+ checkActive(collieType, '1-meter') +'"><a class="page-link" href="#" alt="1 Meter"><img src="/upload/1m.svg" alt="Plaat"></a></li>';
+    html += '<li class="page-item '+ checkActive(collieType, '2-meter') +'"><a class="page-link" href="#" alt="2 Meter"><img src="/upload/2m.svg" alt="Plaat"></a></li>';
+    html += '</ul></nav>';
+
+    return html;
+  }
+
+  let renderTableBlock = function (newList, selectedCollies, rowId) {
+    let html = '<div class="row m-0"><a type="#" class="fancybox-item fancybox-close" href="javascript:jQuery.fancybox.close();"></a>';
+    let tableData = '';
+    let totalQty = 0;
+    let totalVolumeWeight = 0;
+    for (let key in newList) {
+      if (newList[key]['qty'] > 0) {
+        totalQty += newList[key]['qty'];
+        totalVolumeWeight += newList[key]['weight'];
+        let qty = newList[key]['qty'];
+        while (qty > 0) {
+          tableData += '<tr><td>' + typeSelectBox(newList[key]['name'], newList[key]['display_name'], rowId) + '</td>' +
+            '<td colspan="2"><b style="cursor: pointer" title="' + newList[key]['volumeFormula'] + ' = ' + newList[key]['volumeWeight'].toFixed(4) + '">' + newList[key]['volumeSize'] + '</b></td>' +
+            '<td class="text-center">' + (newList[key]['weight']/newList[key]['qty']).toFixed(2) + '</td></tr>';
+          qty--;
+        }
+
+        let newLine = {};
+        newLine['name'] = newList[key]['name'].toString();
+        newLine['qty'] = newList[key]['qty'].toString();
+        newLine['width'] = (newList[key]['volumeWidth'] * 100).toFixed(2);
+        newLine['height'] = (newList[key]['volumeHeight'] * 100).toFixed(2);
+        newLine['length'] = (newList[key]['volumeLength'] * 100).toFixed(2);
+        newLine['weight'] = newList[key]['volumeWeight'].toFixed(2);
+        Object.assign(selectedCollies, newLine);
+      }
+    }
+
+    html += '<table class="table table-condensed w-100">' +
+      '<thead><tr><th class="text-center">Type</th><th colspan="2">Formaat</th><th class="text-center">Gewicht</th></tr></thead>' +
+      '<tbody>' + tableData + '</tbody>' +
+      '<tfoot><tr class="footer">' +
+      '<td>' +
+      '<div class="col">' +
+      '<div class="input-group" id="total_collies">' +
+      '<div class="input-group-prepend">' +
+      '<button class="btn btn-success" type="button">-</button>' +
+      '</div>' +
+      '<input type="text" class="form-control" placeholder="Collies" aria-label="Totaal Collies" aria-describedby="total-collies" value="' + totalQty + ' Collie(s)">' +
+      '<div class="input-group-append">' +
+      '<button class="btn btn-success" type="button">+</button>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</td>' +
+      '<td colspan="3">'+
+      '<div class="col">' +
+      '<div class="input-group" id="total_weight">' +
+      '<div class="input-group-prepend">' +
+      '<button class="btn btn-outline-primary" type="button">-</button>' +
+      '</div>' +
+      '<input type="text" class="form-control" placeholder="Gewicht" aria-label="Totaal Gewicht" aria-describedby="total-collies" value="' + totalVolumeWeight.toFixed(2) + 'Kg">' +
+      '<div class="input-group-append">' +
+      '<button class="btn btn-outline-primary" type="button">+</button>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</td>' +
+      '</tr></tfoot></table></div>';
+
+    return {'html': html, 'selectedCollies': selectedCollies, 'totalQty': totalQty, 'totalVolumeWeight': totalVolumeWeight};
+  }
+
+  let renderFooterBlock = function (totalVolumeWeight, totalQty, selectedCollies) {
+    let html = '';
+
+    html += '<div class="collie-type-footer-parent">'+
+            '<div class="row m-0 collie-type-footer">' +
+            '<div class="col-6 text-center pl-0">'+
+            '<button class="btn btn-outline-warning pallet-button"><img src="/upload/forklift-thin.svg" alt="Pallet Label"></button>' +
+            '</div>' +
+            '<div class="col-6 text-center pr-0">' +
+            '<input type="hidden" value="'+ selectedCollies + '" name="selected_collie_values" id="selected_collie_values">' +
+            '<button class="btn btn-outline-success print-button"><img src="/upload/print-sharp-thin.svg" alt="Collie"></button>' +
+
+            '</div></div></div>';
+
+    return html;
+  }
 
   $.fancyConfirmKoopmanLabelCollieTypeSelection = function (data) {
     let newList = {};
@@ -948,8 +1001,20 @@ let updateCollieListWs = function(){
     newList['1-meter']['volumeWeight'] = 0;
     newList['1-meter']['volumeSize'] = '';
     newList['1-meter']['volumeFormula'] = '';
+    newList['pallet'] = {};
+    newList['pallet']['display_name'] = 'Pallet';
+    newList['pallet']['name'] = 'pallet';
+    newList['pallet']['qty'] = 0;
+    newList['pallet']['weight'] = 0;
+    newList['pallet']['volumeWidth'] = 0;
+    newList['pallet']['volumeHeight'] = 0;
+    newList['pallet']['volumeLength'] = 0;
+    newList['pallet']['volumeMultiplier'] = 0;
+    newList['pallet']['volumeWeight'] = 0;
+    newList['pallet']['volumeSize'] = '';
+    newList['pallet']['volumeFormula'] = '';
     newList['2-meter'] = {};
-    newList['2-meter']['display_name'] = '2 Meter pakket';
+    newList['2-meter']['display_name'] = 'Collie';
     newList['2-meter']['name'] = '2-meter';
     newList['2-meter']['qty'] = 0;
     newList['2-meter']['weight'] = 0;
@@ -997,15 +1062,17 @@ let updateCollieListWs = function(){
     newList['mini-pallet']['volumeSize'] = '';
     newList['mini-pallet']['volumeFormula'] = '';
 
-
     let selectedCollies = {};
 
     if(parseFloat(data.totalOrderWeight) > EURO_PALLET_THRESHOLD || parseFloat(data.totalOrderWeight) > MINI_PALLET_THRESHOLD) {
       selectedCollies['euro-pallet'] = newList['euro-pallet'];
+
       //check if the total weight is eligible for a pallet
-      if (parseFloat(data.totalOrderWeight) > EURO_PALLET_THRESHOLD) {
+      if (parseFloat(data.totalOrderWeight) > PALLET_THRESHOLD) {
+        newList = updateCollieItemList(parseFloat(data.totalOrderWeight), 'pallet', '', newList, 1);
+      } else if (parseFloat(data.totalOrderWeight) > EURO_PALLET_THRESHOLD) {
         newList = updateCollieItemList(parseFloat(data.totalOrderWeight), 'euro-pallet', '', newList, 1);
-      }else if (parseFloat(data.totalOrderWeight) > MINI_PALLET_THRESHOLD) {
+      } else if (parseFloat(data.totalOrderWeight) > MINI_PALLET_THRESHOLD) {
         newList = updateCollieItemList(parseFloat(data.totalOrderWeight), 'mini-pallet', '', newList, 1);
       }
     } else {
@@ -1029,44 +1096,20 @@ let updateCollieListWs = function(){
 
     localStorage.setItem('current-collie-list', JSON.stringify(newList));
 
-    let html = '';
-    let tableData = '';
-    let totalQty = 0;
-    let totalVolumeWeight = 0;
-    for (let key in newList) {
-      html += htmlCollieChoiceBlock(newList[key], data.rowId);
-
-      if (newList[key]['qty'] > 0) {
-        totalQty += newList[key]['qty'];
-        totalVolumeWeight += newList[key]['weight'];
-        tableData += '<tr><td>' + newList[key]['name'] + '</td>' +
-          '<td class="text-center">' + newList[key]['qty'] + '</td>' +
-          '<td><b>' + newList[key]['volumeSize'] + '</b> || ( <i>' + newList[key]['volumeFormula'] + ' = ' + newList[key]['volumeWeight'].toFixed(4) + '</i> )</td>' +
-          '<td class="text-center">' + newList[key]['weight'].toFixed(2) + '</td></tr>';
-
-          let newLine = {};
-          newLine['name'] = newList[key]['name'].toString();
-          newLine['qty'] = newList[key]['qty'].toString();
-          newLine['width'] = (newList[key]['volumeWidth']*100).toFixed(2);
-          newLine['height'] = (newList[key]['volumeHeight']*100).toFixed(2);
-          newLine['length'] = (newList[key]['volumeLength']*100).toFixed(2);
-          newLine['weight'] = newList[key]['volumeWeight'].toFixed(2);
-          Object.assign(selectedCollies, newLine);
-      }
-    }
-
+    let table = renderTableBlock(newList, selectedCollies, data.rowId);
     // Replace all double quotes with single quotes using string replace
-    selectedCollies = JSON.stringify(selectedCollies).replace(/"/g, "'");
-
-    let htmlFooter = '<div class="row m-0 collie-type-footer"><div class="col-8"><table class="table table-condensed w-100">' +
-      '<thead><tr><th>Type</th><th class="text-center">Aantal</th><th>Formaat</th><th class="text-center">Gewicht</th></tr></thead><tbody>' + tableData + '</tbody>' +
-      '<tfoot style="border-top: 2px solid" class="border-dark"><tr><th>Totaal pakketten</th><td class="text-center">' + totalQty + '</td><th>Totaal gewicht</th><td class="text-center">' + totalVolumeWeight.toFixed(2) + '</td></tr></tfoot></table>' +
-      '</div><div class="col-4">' +
-      '<label><input type="checkbox" name="split_or_move"/ checked>Deel collie gewicht</label>' +
-      '<input type="hidden" value="'+ selectedCollies + '" name="selected_collie_values" id="selected_collie_values"><button class="btn btn-primary w-100 print-button">Print</button></div> ' + '</div> ';
+    selectedCollies = JSON.stringify(table.selectedCollies).replace(/"/g, "'");
+    let footer = renderFooterBlock(table.totalVolumeWeight, table.totalQty, selectedCollies);
 
     $.fancybox.open({
-        content: '<div class="row m-0"><a type="#" class="fancybox-item fancybox-close" href="javascript:jQuery.fancybox.close();"></a> ' + html + ' </div><div class="collie-type-footer-parent">' + htmlFooter +'</div>',
+        content: '<div class="row"><div class="col-10">'+table.html+footer+'</div><div class="col-2"><div class=" btn-group-lg btn-group-vertical w-100">' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '<button type="button" class="btn btn-secondary">1</button>' +
+          '</div></div></div>',
         type: 'inline',
         autoSize: true,
         modal: true,

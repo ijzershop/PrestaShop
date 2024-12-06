@@ -61,12 +61,35 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Tools;
 use Validate;
 use Zone;
-
+use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
+use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 /**
  *
  * Hooks Class for all hooks within the prestashop theme configurator
  *
  */
+
+define('MAX_PACKAGE_WEIGHT', 23);
+define('VOLUME_MULTIPLIER', 250);
+define('PALLET_THRESHOLD', 150);
+define('MINI_PALLET_THRESHOLD', 150);
+define('EURO_PALLET_THRESHOLD', 250);
+define('ENVELOPE_WIDTH', 0.30);
+define('ENVELOPE_LENGTH', 0.25);
+define('MIN_ENVELOPE_HEIGHT', 0.005);
+define('PLAAT_WIDTH', 0.50);
+define('PLAAT_LENGTH', 1);
+define('MIN_PLAAT_HEIGHT', 0.005);
+define('METER_WIDTH', 0.20);
+define('METER_LENGTH', 1);
+define('MIN_METER_HEIGHT', 0.05);
+define('METER_2_WIDTH', 0.25);
+define('METER_2_LENGTH', 2);
+define('MIN_METER_2_HEIGHT', 0.05);
+define('COLLIE_WIDTH_THRESHOLD', 0.7);
+define('COLLIE_HEIGHT_THRESHOLD', 0.7);
+
+
 class ModernHook
 {
     public $module;
@@ -2623,6 +2646,361 @@ public function hookActionFrontControllerSetVariables(&$param): void
     {
         return $this->getColumnById($gridDefinition,'actions');
     }
+
+
+    /**
+     * @param float $weight
+     * @param float $maxCollieWeight
+     * @return int
+     */
+    private function calculateCollieTotal(float $weight, float $maxCollieWeight = 23.0): int {
+        if($weight > 0){
+            return (int)ceil($weight / $maxCollieWeight);
+        } else {
+            return 1;
+        }
+    }
+
+    private function calculateVolumeSize(float $weight, string $type): array {
+
+        return match($type) {
+            'envelope' => [
+                'width' => ENVELOPE_WIDTH,
+                'height' => max(MIN_ENVELOPE_HEIGHT, $weight / (ENVELOPE_WIDTH * ENVELOPE_LENGTH * VOLUME_MULTIPLIER)),
+                'length' => ENVELOPE_LENGTH,
+                'multiplier' => VOLUME_MULTIPLIER,
+                'weight' => $weight,
+                'size' => sprintf('%.0f x %.0f x %.0f',
+                    ENVELOPE_LENGTH * 100,
+                    ENVELOPE_WIDTH * 100,
+                    max(MIN_ENVELOPE_HEIGHT, $weight / (ENVELOPE_WIDTH * ENVELOPE_LENGTH * VOLUME_MULTIPLIER)) * 100),
+                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
+                    $weight,
+                    ENVELOPE_WIDTH,
+                    ENVELOPE_LENGTH,
+                    VOLUME_MULTIPLIER)
+            ],
+            'plaat' => [
+                'width' => PLAAT_WIDTH,
+                'height' => max(MIN_PLAAT_HEIGHT, $weight / (PLAAT_WIDTH * PLAAT_LENGTH * VOLUME_MULTIPLIER)),
+                'length' => PLAAT_LENGTH,
+                'multiplier' => VOLUME_MULTIPLIER,
+                'weight' => $weight,
+                'size' => sprintf('%.0f x %.0f x %.0f',
+                    PLAAT_LENGTH * 100,
+                    PLAAT_WIDTH * 100,
+                    max(MIN_PLAAT_HEIGHT, $weight / (PLAAT_WIDTH * PLAAT_LENGTH * VOLUME_MULTIPLIER)) * 100),
+                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
+                    $weight,
+                    PLAAT_WIDTH,
+                    PLAAT_LENGTH,
+                    VOLUME_MULTIPLIER)
+            ],
+            '1-meter' => [
+                'width' => METER_WIDTH,
+                'height' => max(MIN_METER_HEIGHT, $weight / (METER_WIDTH * METER_LENGTH * VOLUME_MULTIPLIER)),
+                'length' => METER_LENGTH,
+                'multiplier' => VOLUME_MULTIPLIER,
+                'weight' => $weight,
+                'size' => sprintf('%.0f x %.0f x %.0f',
+                    METER_LENGTH * 100,
+                    METER_WIDTH * 100,
+                    max(MIN_METER_HEIGHT, $weight / (METER_WIDTH * METER_LENGTH * VOLUME_MULTIPLIER)) * 100),
+                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
+                    $weight,
+                    METER_WIDTH,
+                    METER_LENGTH,
+                    VOLUME_MULTIPLIER)
+            ],
+            '2-meter' => [
+                'width' => METER_2_WIDTH,
+                'height' => max(MIN_METER_2_HEIGHT, $weight / (METER_2_WIDTH * METER_2_LENGTH * VOLUME_MULTIPLIER)),
+                'length' => METER_2_LENGTH,
+                'multiplier' => VOLUME_MULTIPLIER,
+                'weight' => $weight,
+                'size' => sprintf('%.0f x %.0f x %.0f',
+                    METER_2_LENGTH * 100,
+                    METER_2_WIDTH * 100,
+                    max(MIN_METER_2_HEIGHT, $weight / (METER_2_WIDTH * METER_2_LENGTH * VOLUME_MULTIPLIER)) * 100),
+                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
+                    $weight,
+                    METER_2_WIDTH,
+                    METER_2_LENGTH,
+                    VOLUME_MULTIPLIER)
+            ],
+            default => throw new \InvalidArgumentException('Invalid package type')
+        };
+    }
+
+    private function updateCollieItemList(
+        float $weight,
+        string $collieType,
+        string $collieTypeId,
+        array $items,
+        int $qty = 0,
+        bool $update = false
+    ): array {
+        $collieName = strtolower(str_replace(' ', '-', $collieType));
+
+        switch ($collieName) {
+            case 'plaat':
+            case '1-meter':
+            case '2-meter':
+            case 'envelope':
+                if ($update) {
+                    $items[$collieName]['weight'] = $weight;
+                } else {
+                    $items[$collieName]['weight'] += $weight;
+                }
+
+
+
+                if ($qty > 0) {
+                    $items[$collieName]['qty'] = $qty;
+                } else {
+                    $items[$collieName]['qty'] = $this->calculateCollieTotal($items[$collieName]['weight']);
+                }
+
+                $packageSize = $this->calculateVolumeSize(
+                    $items[$collieName]['weight'] / $items[$collieName]['qty'],
+                    $collieName
+                );
+
+                $items[$collieName] = array_merge($items[$collieName], $packageSize);
+                break;
+
+            case 'euro-pallet':
+            case 'mini-pallet':
+            case 'pallet':
+                if ($update) {
+                    $items[$collieName]['weight'] = $weight;
+                } else {
+                    $items[$collieName]['weight'] += $weight;
+                }
+
+                if ($qty > 0) {
+                    $items[$collieName]['qty'] = $qty;
+                } else {
+                    $items[$collieName]['qty'] = $this->calculateCollieTotal($items[$collieName]['weight'], 1000);
+                }
+
+                $palletSizes = [
+                    'euro-pallet' => ['width' => 0.80, 'height' => 2.20, 'length' => 1.20, 'size' => '120 x 80 x 220'],
+                    'mini-pallet' => ['width' => 0.50, 'height' => 2.20, 'length' => 0.50, 'size' => '60 x 50 x 120'],
+                    'pallet' => ['width' => 1.00, 'height' => 2.20, 'length' => 2.00, 'size' => '100 x 200 x 220']
+                ];
+
+                $items[$collieName]['width'] = $palletSizes[$collieName]['width'];
+                $items[$collieName]['heigth'] = $palletSizes[$collieName]['height'];
+                $items[$collieName]['length'] = $palletSizes[$collieName]['length'];
+                $items[$collieName]['multiplier'] = 0;
+                $items[$collieName]['weight'] = $items[$collieName]['weight'] / $items[$collieName]['qty'];
+                $items[$collieName]['size'] = $palletSizes[$collieName]['size'];
+                $items[$collieName]['formula'] = '';
+                break;
+
+            default:
+                // Default to 2-meter handling
+                if ($update) {
+                    $items['2-meter']['weight'] = $weight;
+                } else {
+                    $items['2-meter']['weight'] += $weight;
+                }
+                $items['2-meter']['qty'] = $this->calculateCollieTotal($items['2-meter']['weight']);
+
+                $packageSize = $this->calculateVolumeSize(
+                    $items['2-meter']['weight'] / $items['2-meter']['qty'],
+                    '2-meter'
+                );
+
+                $items['2-meter'] = array_merge($items['2-meter'], $packageSize);
+        }
+
+        return $items;
+    }
+
+
+
+    /**
+     * @param array $params
+     * @return void
+     */
+    public function hookActionOrderGridDataModifier(array $params)
+        {
+            /** @var PrestaShop\PrestaShop\Core\Grid\Data\GridData $data */
+            $data = $params['data'];
+            $records = $data->getRecords()->all();
+            foreach ($records as &$record) {
+
+                $newList = [
+                    'plaat' => [
+                        'display_name' => 'Plaat',
+                        'name' => 'plaat',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    '1-meter' => [
+                        'display_name' => '1 Meter pakket',
+                        'name' => '1-meter',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    'pallet' => [
+                        'display_name' => 'Pallet',
+                        'name' => 'pallet',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    '2-meter' => [
+                        'display_name' => 'Collie',
+                        'name' => '2-meter',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    'envelope' => [
+                        'display_name' => 'Envelope',
+                        'name' => 'envelope',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    'euro-pallet' => [
+                        'display_name' => 'Euro Pallet',
+                        'name' => 'euro-pallet',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ],
+                    'mini-pallet' => [
+                        'display_name' => 'Mini Pallet',
+                        'name' => 'mini-pallet',
+                        'qty' => 0,
+                        'weight' => 0,
+                        'width' => 0,
+                        'height' => 0,
+                        'length' => 0,
+                        'multiplier' => 0,
+                        'weight' => 0,
+                        'size' => '',
+                        'formula' => ''
+                    ]
+                ];
+
+                $selectedCollies = [];
+                $newItemsList = [];
+                if((float)$record['total_order_weight'] > EURO_PALLET_THRESHOLD || (float)$record['total_order_weight'] > MINI_PALLET_THRESHOLD) {
+                    $selectedCollies['euro-pallet'] = $newList['euro-pallet'];
+
+                    //check if the total weight is eligible for a pallet
+                    if ((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
+                        $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'pallet', '', $newList, 1);
+                    } else if ((float)$record['total_order_weight'] > EURO_PALLET_THRESHOLD) {
+                        $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'euro-pallet', '', $newList, 1);
+                    } else if ((float)$record['total_order_weight'] > MINI_PALLET_THRESHOLD) {
+                        $newList = $this->updateCollieItemList($record['total_order_weight'], 'mini-pallet', '', $newList, 1);
+                    }
+
+                    $newItemsList[] = $newList;
+                } else {
+                    if (str_contains($record['product_quantity'], ',')) {
+                        $linesQty = explode(',',$record['product_quantity']);
+                        $linesWeight = explode(',',$record['product_weight']);
+                        $linesCollie = explode(',',$record['shipping_value_names']);
+                        $linesCollieIds = explode(',',$record['shipping_values']);
+
+                            for ($i = 0; $i < count($linesQty); $i++) {
+                                $newList = $this->updateCollieItemList((float)$linesWeight[$i], $linesCollie[$i], $linesCollieIds[$i], $newList, $this->calculateCollieTotal((float)$linesWeight[$i]));
+                            }
+                        $newItemsList[] = $newList;
+                    } else {
+                        $linesWeight = $record['product_weight'];
+                        $linesCollie = $record['shipping_value_names'];
+                        $linesCollieIds = $record['shipping_values'];
+
+                        $newList = $this->updateCollieItemList((float)$linesWeight, $linesCollie, $linesCollieIds, $newList,$this->calculateCollieTotal((float)$linesWeight));
+                        $newItemsList[] = $newList;
+                    }
+                }
+
+                $totalCollies = 0;
+                $totalWeight = 0;
+                foreach ($newItemsList as $newItem)
+                {
+                    foreach ($newList as $newItem) {
+                        if ($newItem['qty'] > 0) {
+                            $qty = $newItem['qty'];
+                            while ($qty > 0) {
+                                $newLine = [];
+                                $newLine['name'] = $newItem['name'];
+                                $newLine['qty'] = $newItem['qty'];
+                                $newLine['width'] = ($newItem['width'] * 100);
+                                $newLine['height'] = ($newItem['height'] * 100);
+                                $newLine['length'] = ($newItem['length'] * 100);
+                                $newLine['weight'] = $newItem['weight'];
+                                $newLine['size'] = $newItem['size'];
+                                $newLine['formula'] = $newItem['formula'];
+
+                                $totalWeight += $newLine['weight'];
+                                $totalCollies++;
+
+                                $selectedCollies[] = $newLine;
+                                $qty--;
+                            }
+                        }
+                    }
+                }
+
+                $record['collie_data'] = $selectedCollies;
+                $record['total_calculated_weight'] = $totalWeight;
+                $record['total_collies'] = $totalCollies;
+            }
+
+            $params['data'] = new GridData(
+                new RecordCollection($records),
+                $data->getRecordsTotal(),
+                $data->getQuery()
+            );
+        }
 
     /**
      * @param array $params

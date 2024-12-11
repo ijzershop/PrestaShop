@@ -28,7 +28,6 @@ class ExportOrdersMultipleCollies
 
     public bool $redirect = true;
     public bool $updateBool;
-    public float $weight;
 
     public int $addedSelectCarrier;
     public int $addedSelectStatus;
@@ -63,19 +62,12 @@ class ExportOrdersMultipleCollies
 
     /**
      * @param $id_order
-     * @param float $weight
-     * @param int $weightOption
-     * @param int $collies
-     * @param string $collieType
+     * @param array $collies
      */
-    public function __construct($id_order, float $weight = 1, int $weightOption = 0, int $collies = 1, string $collieType = 'COL')
+    public function __construct($id_order, array $collies = [])
     {
-
         $this->idOrder = $id_order;
         $this->debug = false;
-        $this->weight = (float)$weight;
-        $this->weightOption = $weightOption;
-        $this->collieType = $collieType;
         $this->collies = $collies;
         $this->context = Context::getContext();
         $this->ordersOk = [];
@@ -184,11 +176,8 @@ class ExportOrdersMultipleCollies
      **/
     public function export(): bool
     {
-
         try {
             $orders = $this->getOrders($this->selectStatus, $this->selectCarrier, 1, $this->idOrder);
-
-
         } catch (PrestaShopDatabaseException $e) {
             die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
         }
@@ -196,35 +185,10 @@ class ExportOrdersMultipleCollies
         if (empty($orders)) {
             return false;
         }
+
         if (!empty($this->idOrder)) {
-            $weight = $this->weight;
-            if (isset($this->weight)) {
-                if ($weight <= 0) {
-                    $weight = 1;
-                }
-            }
-            $collies = $this->collies;
-            if (isset($this->collies)) {
-                if ($collies == 0) {
-                    $collies = 1;
-                }
-            }
-            $collieType = $this->collieType;
-            if (isset($this->collieType)) {
-                if ($collieType == '') {
-                    $collieType = 'COL';
-                }
-            }
-
-            if (!isset($this->weight)) {
-                if ($this->weightOption > 0) {
-                    $weight = $this->weightOption;
-                }
-            }
-
-
             try {
-                $this->processOrdersNew($orders, $collies, $weight, $collieType);
+                $this->processOrdersNew($orders, $this->collies);
             } catch (PrestaShopDatabaseException|PrestaShopException $e) {
                 die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
             }
@@ -286,14 +250,12 @@ class ExportOrdersMultipleCollies
      * Process all new orders
      *
      * @param $orders
-     * @param int $collies
-     * @param int|float|string $weight
-     * @param string $collieType
+     * @param array $collies
      * @return void
-     * @throws PrestaShopDatabaseException|PrestaShopException
+     * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function processOrdersNew($orders, int $collies = 1, int|float|string $weight = 0, string $collieType = 'COL'): void
+    private function processOrdersNew($orders, array $collies = []): void
     {
         if (empty($orders)) {
             die("Error met melding: Geen order id's beschikbaar<br/>");
@@ -394,10 +356,7 @@ class ExportOrdersMultipleCollies
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_to_id']);
                 $linkedReferencesArray = explode(',', $row['added_to_reference']);
-
                 $this->redirect = false;
-
-
                 $this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray);
                 return;
             }
@@ -416,50 +375,28 @@ class ExportOrdersMultipleCollies
 
 
             if (!empty($shippingTask->geaplaats)) {
-
-                $collieWeight = (int)floor((float)($weight / $collies));
-
-                for ($i = 0; $i < $collies; $i++) {
+                for ($i = 0; $i < count($collies); $i++) {
                     $collieRow = new stdClass();
                     $collieRow->nrcollo = $i + 1;
-                    //COL = Collie //MP = mini-pallet //PLH = Halve Pallet //PL = Pallet
-                    $collieRow->vrzenh = $collieType;
-                    $collieRow->gewicht = $collieWeight;
 
-                    if ($collieType == 'COL') {
-                        $collieRow->lengte = 200;
-                        $collieRow->breedte = 14;
-                        $collieRow->hoogte = 14;
-                    } elseif ($collieType == 'MP') {
-                        $collieRow->lengte = 100;
-                        $collieRow->breedte = 50;
-                        $collieRow->hoogte = 10;
-                        $collieRow->gewicht = 50;
-                    } elseif ($collieType == 'PLH') {
-                        $collieRow->lengte = 80;
-                        $collieRow->breedte = 60;
-                        $collieRow->hoogte = 115;
-                    } elseif ($collieType == 'PL') {
-                        $collieRow->lengte = 80;
-                        $collieRow->breedte = 120;
-                        $collieRow->hoogte = 115;
-                    } elseif ($collieType == 'SP') {
-                        $collieRow->lengte = 195;
-                        $collieRow->breedte = 25;
-                        $collieRow->hoogte = 25;
-                        $collieRow->gewicht = 150;
+                    //COL = Collie //MP = mini-pallet //PLH = Halve Pallet //PL = Pallet
+                    if(in_array($collies[$i]->name, ['envelope', 'plaat', '1-meter', '2-meter'])) {
+                        $collieRow->vrzenh = 'COL';
                     } else {
-                        $collieRow->lengte = 200;
-                        $collieRow->breedte = 17;
-                        $collieRow->hoogte = 23;
+                        $collieRow->vrzenh = 'SP';
                     }
+
+                    $collieRow->gewicht = $collies[$i]->weight;
+                    $collieRow->lengte = $collies[$i]->length;
+                    $collieRow->breedte = $collies[$i]->width;
+                    $collieRow->hoogte = $collies[$i]->height;
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;
                 }
 
                 try {
+                    dd($shippingTask);
                     $transport = $client->addOpdracht($login, $shippingTask);
-
                     if ($transport) {
                         $trackingNumber = $transport->zendingnr;
                         $trackingNumber = 'T' . substr($trackingNumber, 1); //T98

@@ -34,34 +34,41 @@
           {% set max_collie_count = 5 %}
           {% set collie_counter = 0 %}
           {% for collie in record.collie_data %}
+            {% if collie.qty > 0 %}
             {% set max_collie_count = max_collie_count-1 %}
             {% set collie_counter = collie_counter+1 %}
+
+
             <tr>
-              <td>
-                <nav class="collie-nav collieTypeSelect" aria-label="" >
+              <td {% if collie.weight > 115 %}   class="disabled"     {% endif %}>
+
+
+              <nav class="collie-nav collieTypeSelect" aria-label="" >
                   <ul class="pagination pagination-lg mb-0">
-                    <li data-row-id="{{ record.id_order }}" data-index="{{ loop.index }}" class="page-item {% if collie.name == 'envelope' %}active{% endif %}" data-type="envelope"><a class="page-link"
+                    <li data-row-id="{{ record.id_order }}" data-index="{{ collie_counter }}" class="page-item {% if collie.name == 'envelope' %}active{% endif %}" data-type="envelope"><a class="page-link"
                                                                                                  href="#" alt="Envelop"><img
                           src="/upload/envelope-sharp-thin.svg" alt="Envelop"></a></li>
-                    <li data-row-id="{{ record.id_order }}" data-index="{{ loop.index }}" class="page-item {% if collie.name == 'plaat' %}active{% endif %}" data-type="plaat"><a class="page-link" href="#"
+                    <li data-row-id="{{ record.id_order }}" data-index="{{ collie_counter }}" class="page-item {% if collie.name == 'plaat' %}active{% endif %}" data-type="plaat"><a class="page-link" href="#"
                                                                                               alt="Plaat"><img
                           src="/upload/rectangle-wide-sharp-thin.svg" alt="Plaat"></a></li>
-                    <li data-row-id="{{ record.id_order }}" data-index="{{ loop.index }}" class="page-item {% if collie.name == '1-meter' %}active{% endif %}" data-type="1-meter"><a class="page-link"
+                    <li data-row-id="{{ record.id_order }}" data-index="{{ collie_counter }}" class="page-item {% if collie.name == '1-meter' %}active{% endif %}" data-type="1-meter"><a class="page-link"
                                                                                                 href="#"
                                                                                                 alt="1 Meter"><img
                           src="/upload/1m.svg" alt="Plaat"></a></li>
-                    <li data-row-id="{{ record.id_order }}" data-index="{{ loop.index }}" class="page-item  {% if collie.name == '2-meter' %}active{% endif %}" data-type="2-meter"><a class="page-link"
+                    <li data-row-id="{{ record.id_order }}" data-index="{{ collie_counter }}" class="page-item  {% if collie.name == '2-meter' %}active{% endif %}" data-type="2-meter"><a class="page-link"
                                                                                                  href="#" alt="2 Meter"><img
                           src="/upload/2m.svg" alt="Plaat"></a></li>
                   </ul>
                 </nav>
+
+
               </td>
               <td class="font-weight-bold" style="min-width: 150px;">{{ collie.size }}</td>
               <td class="font-weight-bold" style="min-width: 75px;">{{ collie.weight }}Kg</td>
-              {% if loop.index == 1 %}
-                <td style="width:120px;vertical-align: top;text-align: end" rowspan="5">
+              {% if collie_counter == 1 %}
+                <td style="width:120px;vertical-align: top;text-align: center" rowspan="5">
                   <input type="hidden" value="{{ record.collie_data|json_encode() }}" data-row-id="{{ record.id_order }}" name="selected_collie_values"
-                         id="selected_collie_values">
+                         class="selected_collie_values">
 
                   {% include '@Modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_buttons.html.twig' with {
                     'record': record,
@@ -69,6 +76,7 @@
                 </td>
               {% endif %}
             </tr>
+            {% endif %}
           {% endfor %}
           {#        End Loop collie rows #}
           {# Then add empty rows to reach 5 total rows #}
@@ -83,7 +91,7 @@
           <tr class="footer">
             <td style="padding:5px 0!important;">
               <div class="col">
-                <div class="input-group" id="total_collies">
+                <div class="input-group total_collies">
                   <div class="input-group-prepend">
                     <button class="btn btn-success {% if record.total_collies <= 1  %}disabled-btn{% endif %}" {% if record.total_collies <= 1  %}disabled{% endif %} data-row-id="{{ record.id_order }}" data-method="collie" data-type="minus" type="button">-</button>
                   </div>
@@ -98,7 +106,7 @@
             </td>
             <td style="padding:5px 0!important;" colspan="3">
               <div class="col">
-                <div class="input-group w-auto float-right" id="total_weight">
+                <div class="input-group w-auto float-right total_weight">
                   <div class="input-group-prepend">
                     <button class="btn btn-primary" data-row-id="{{ record.id_order }}" data-method="weight"
                             data-type="minus" type="button">-</button>

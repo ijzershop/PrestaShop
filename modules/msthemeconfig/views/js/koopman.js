@@ -51,26 +51,22 @@ $(function () {
     return false;
   });
 
-  let clickedButtonCheck = false;
-
-
   $('div.beingprepared-btn label').click(function () {
     let $clickedLabel = $(this);
-    let $input = $clickedLabel.prev('input');
     let $btnRow = $clickedLabel.closest('div.beingprepared-btn');
-    let $tr = $clickedLabel.closest('TR');
     let order = $btnRow.attr('data-order');
-    let type = $input.val();
+
+    setProcessingTimeOutButton($btnRow, order, true);
 
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=beingprepared_status&id_order=' + order + '&token=' + token,
       type: 'GET'
     })
       .done(function (data) {
-        // $('form#retourForm .messages').html(data);
         location.reload();
-      });
 
+        setProcessingTimeOutButton($btnRow, order, false);
+      });
   });
 
   $(document).on('click', 'div.workshop-btn label', function (e) {
@@ -162,6 +158,8 @@ $(function () {
     let $btnRow = $clickedLabel.closest('div.aftehalen-btn');
     let order = $btnRow.attr('data-order');
 
+    setProcessingTimeOutButton($btnRow, order, true);
+
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=afhalen&id_order=' + order + '&token=' + token,
       type: 'GET'
@@ -169,18 +167,18 @@ $(function () {
       .done(function (data) {
         $('form#retourForm .messages').html(data);
         location.reload();
+
+        setProcessingTimeOutButton($btnRow, order, false);
       });
 
   });
 
   $(document).on('click', 'div.afgehaald-btn label', function () {
     let $clickedLabel = $(this);
-    let $input = $clickedLabel.prev('input');
     let $btnRow = $clickedLabel.closest('div.afgehaald-btn');
-    let $tr = $clickedLabel.closest('TR');
     let order = $btnRow.attr('data-order');
-    let type = $input.val();
 
+    setProcessingTimeOutButton($btnRow, order, true);
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=afgehaald&id_order=' + order + '&token=' + token,
       type: 'GET'
@@ -188,17 +186,18 @@ $(function () {
       .done(function (data) {
         $('form#retourForm .messages').html(data);
         location.reload();
+
+        setProcessingTimeOutButton($btnRow, order, false);
       });
 
   });
 
   $(document).on('click', 'div.toegevoegd-btn label', function () {
     let $clickedLabel = $(this);
-    let $input = $clickedLabel.prev('input');
     let $btnRow = $clickedLabel.closest('div.toegevoegd-btn');
-    let $tr = $clickedLabel.closest('TR');
     let order = $btnRow.attr('data-order');
-    let type = $input.val();
+
+    setProcessingTimeOutButton($btnRow, order, true);
 
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=toegevoegd&id_order=' + order + '&token=' + token,
@@ -207,65 +206,95 @@ $(function () {
       .done(function (data) {
         $('form#retourForm .messages').html(data);
         location.reload();
+
+        setProcessingTimeOutButton($btnRow, order, false);
       });
   });
 
 
-  // $(document).on('click', 'div.koopman label',function (e) {
-  //   let $clickedLabel = $(this);
-  //   let $input = $clickedLabel.prev('input');
-  //   let $btnRow = $clickedLabel.closest('div.koopman');
-  //   let $tr = $clickedLabel.closest('TR');
-  //   let orderId = $input.attr('data-id-order');
-  //   let type = $input.val();
-  //   let gewicht = 0;
-  //
-  //   $clickedLabel.toggleClass('temp_disabled', "");
-  //   $tr.toggleClass('temp_disabled_row', "");
-  //   /*
-  //   *  Gewijzigd door JB Stoker - Moderne Smid
-  //   *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
-  //   *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
-  //   *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
-  //   *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
-  //   *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = collie-smaller
-  //   *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = collie-larger
-  //   *
-  //   */
-  //   if (type !== -1) {
-  //     switch (type) {
-  //       case 'envelope':
-  //         gewicht = 5;
-  //         break;
-  //       case 'plaat':
-  //         gewicht = 10;
-  //         break;
-  //       case '1-meter':
-  //         gewicht = 15;
-  //         break;
-  //       case 'collie-smaller':
-  //         gewicht = 20;
-  //         break;
-  //       case 'collie-larger':
-  //         gewicht = 30;
-  //         break;
-  //     }
-  //
-  //     $.ajax({
-  //       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' +
-  //         orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
-  //       type: 'GET'
-  //     })
-  //       .done(function (data) {
-  //         if(data === 'printed'){
-  //           location.reload();
-  //         } else {
-  //           $('#updateAddressModal .modal-content').html(data);
-  //           $('#updateAddressModal').modal('show');
-  //         }
-  //       });
-  //     }
-  // });
+
+
+  $(document).on('click', '.print-button, .pallet-button',function (e) {
+    e.stopImmediatePropagation();
+    let $clickedBtn = $(this);
+    let orderId = $clickedBtn.attr('data-order');
+    let collies = $('.selected_collie_values[data-row-id="'+orderId+'"]').val();
+
+    $.ajax({
+      url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' +
+        orderId + '&token=' + token,
+      type: 'POST',
+      data: {
+        'order': orderId,
+        'collies': collies
+      }
+    })
+      .done(function (data) {
+        if(data === 'printed'){
+          location.reload();
+        } else {
+          $('#updateAddressModal .modal-content').html(data);
+          $('#updateAddressModal').modal('show');
+        }
+      });
+
+  });
+
+  $(document).on('click', 'div.koopman label',function (e) {
+    let $clickedLabel = $(this);
+    let $input = $clickedLabel.prev('input');
+    let $btnRow = $clickedLabel.closest('div.koopman');
+    let $tr = $clickedLabel.closest('TR');
+    let orderId = $input.attr('data-id-order');
+    let type = $input.val();
+    let gewicht = 0;
+
+    $clickedLabel.toggleClass('temp_disabled', "");
+    $tr.toggleClass('temp_disabled_row', "");
+    /*
+    *  Gewijzigd door JB Stoker - Moderne Smid
+    *  Pakket maten en soorten aangepast, tevens type pakket toegevoegd voor maatvoering
+    *  1 -Envelop : (50 x 30 x 1=1Kg) / value = envelope
+    *  2 -Plaat : (50 x 30 x 1=15Kg) / value = plaat
+    *  3 -1 Meter : (50 x 30 x 1=15Kg) / value = 1-meter
+    *  4 -2 Meter < 15 : (50 x 30 x 1= 14Kg) / value = collie-smaller
+    *  5 -2 Meter > 15 : (50 x 30 x 1= 30Kg) / value = collie-larger
+    *
+    */
+    if (type !== -1) {
+      switch (type) {
+        case 'envelope':
+          gewicht = 5;
+          break;
+        case 'plaat':
+          gewicht = 10;
+          break;
+        case '1-meter':
+          gewicht = 15;
+          break;
+        case 'collie-smaller':
+          gewicht = 20;
+          break;
+        case 'collie-larger':
+          gewicht = 30;
+          break;
+      }
+
+      $.ajax({
+        url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile='+profileId+'&method=print-label&id_order=' +
+          orderId + '&weight='+gewicht+'&type='+type+'&token=' + token,
+        type: 'GET'
+      })
+        .done(function (data) {
+          if(data === 'printed'){
+            location.reload();
+          } else {
+            $('#updateAddressModal .modal-content').html(data);
+            $('#updateAddressModal').modal('show');
+          }
+        });
+      }
+  });
 
 
   $(document).on('click', '.updateAddress', function () {
@@ -361,13 +390,23 @@ $(function () {
   });
 
 
-  $(document).on('click', 'button#dag-afsluiting', function () {
+  let setProcessingTimeOutButton = function (element, rowId, status=0){
+      if(status){
+        element.addClass('temp_disabled');
+        element.closest('.koopman_label_button_2-type').parent('tr').addClass('temp_disabled_row');
+      } else {
+        element.removeClass('temp_disabled');
+        element.closest('.koopman_label_button_2-type').parent('tr').removeClass('temp_disabled_row');
+      }
+  }
 
+
+  $(document).on('click', 'button#dag-afsluiting', function () {
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=dag-afsluiting&token=' + token,
       type: 'GET'
     }).done(function (data) {
-      // location.reload();
+      location.reload();
     });
 
   });
@@ -392,17 +431,31 @@ $(function () {
   const COLLIE_WIDTH_THRESHOLD = 0.7;
   const COLLIE_HEIGHT_THRESHOLD = 0.7;
 
-  function centerAndFocusCollieTable(rowId) {
-    const collieTable = $(`.collie-table[data-row-id="${rowId}"]`);
+  let centerAndFocusCollieTable = function (rowId, elem) {
+      const collieTable = $(`.collie-table[data-row-id="${rowId}"]`);
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      const tableHeight = collieTable.outerHeight();
+      const tableWidth = collieTable.outerWidth();
 
-    if (collieTable.length) {
-      // Scroll to element with smooth animation
+      // Calculate scroll position to center vertically
+      const scrollTop = collieTable.offset().top - (windowHeight/2) + (tableHeight/2) - 100;
+
+      // Calculate scroll position to center horizontally
+      const scrollLeft = collieTable.offset().left - (windowWidth/2) + (tableWidth/2) - 20;
+
+      // Smooth scroll to centered position
       $('html, body').animate({
-        scrollTop: collieTable.offset().top - (window.innerHeight / 2) + (collieTable.height() / 2) - 100
-      }, 1);
-    }
-  }
+        scrollTop: scrollTop,
+        scrollLeft: scrollLeft
+      }, 300);
 
+      // Ensure element stays in view
+      collieTable.css({
+        'position': 'relative',
+        'z-index': 1000
+      });
+    }
 
   // Berekend in meter voor prijs, centimeters op het label: lengte * breedte * hoogte * 250
   let calculateVolumeSize = function (weight, type) {
@@ -416,6 +469,7 @@ $(function () {
     }
 
     let volumeHeight = 0;
+    let volumeWidth = 0;
     let packageSize = {
       'width': 0,
       'height': 0,
@@ -427,80 +481,76 @@ $(function () {
     switch (type) {
       case 'envelope':
         volumeHeight = weight / (ENVELOPE_LENGTH * ENVELOPE_WIDTH * VOLUME_MULTIPLIER);
-
+        volumeWidth = ENVELOPE_WIDTH;
         // Add check for minimum height and recalculate width if needed
         if (volumeHeight < MIN_ENVELOPE_HEIGHT) {
           volumeHeight = MIN_ENVELOPE_HEIGHT;
-          // Recalculate width based on fixed height
-          packageSize.width = weight / (ENVELOPE_LENGTH * MIN_ENVELOPE_HEIGHT * VOLUME_MULTIPLIER);
-        } else {
-          packageSize.width = ENVELOPE_WIDTH; // Original width
+          volumeWidth = weight / (ENVELOPE_LENGTH * MIN_ENVELOPE_HEIGHT * VOLUME_MULTIPLIER);
         }
-
-        packageSize.height = volumeHeight;
-        packageSize.length = ENVELOPE_LENGTH;
+        packageSize.width = volumeWidth*100;
+        packageSize.height = volumeHeight*100;
+        packageSize.length = ENVELOPE_LENGTH*100;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
-        packageSize.weight = ENVELOPE_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (ENVELOPE_LENGTH * 100).toString() + ' x ' + (packageSize.width * 100).toFixed(2).toString() + ' x ' + (volumeHeight * 100).toFixed(2).toString() + '';
-        packageSize.formula = ENVELOPE_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
+        packageSize.weight = weight;
+        packageSize.volumeSize = (ENVELOPE_LENGTH * 100).toString() +
+          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
+          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+        packageSize.formula = ENVELOPE_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case 'plaat':
         volumeHeight = weight / (PLAAT_LENGTH * PLAAT_WIDTH * VOLUME_MULTIPLIER);
-
-
+        volumeWidth = PLAAT_WIDTH;
         // Add check for minimum height and recalculate width if needed
         if (volumeHeight < MIN_PLAAT_HEIGHT) {
           volumeHeight = MIN_PLAAT_HEIGHT;
-          // Recalculate width based on fixed height
-          packageSize.width = weight / (PLAAT_LENGTH * MIN_PLAAT_HEIGHT * VOLUME_MULTIPLIER);
-        } else {
-          packageSize.width = PLAAT_WIDTH; // Original width
+          volumeWidth = weight / (PLAAT_LENGTH * MIN_PLAAT_HEIGHT * VOLUME_MULTIPLIER);
         }
-
-        packageSize.height = volumeHeight;
-        packageSize.length = PLAAT_LENGTH;
+        packageSize.width = volumeWidth*100;
+        packageSize.height = volumeHeight*100;
+        packageSize.length = PLAAT_LENGTH*100;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
-        packageSize.weight = PLAAT_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (PLAAT_LENGTH * 100).toString() + ' x ' + (packageSize.width * 100).toFixed(2).toString() + ' x ' + (volumeHeight * 100).toFixed(2).toString() + '';
-        packageSize.formula = PLAAT_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
+        packageSize.weight = weight;
+        packageSize.volumeSize = (PLAAT_LENGTH * 100).toString() +
+          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
+          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+        packageSize.formula = PLAAT_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '1-meter':
         volumeHeight = weight / (METER_LENGTH * METER_WIDTH * VOLUME_MULTIPLIER);
-
+        volumeWidth = METER_WIDTH;
         // Add check for minimum height and recalculate width if needed
         if (volumeHeight < MIN_METER_HEIGHT) {
           volumeHeight = MIN_METER_HEIGHT;
-          // Recalculate width based on fixed height
-          packageSize.width = weight / (METER_LENGTH * MIN_METER_HEIGHT * VOLUME_MULTIPLIER);
-        } else {
-          packageSize.width = METER_WIDTH; // Original width
+          volumeWidth = weight / (METER_LENGTH * MIN_METER_HEIGHT * VOLUME_MULTIPLIER);
         }
-
-        packageSize.height = volumeHeight;
-        packageSize.length = METER_LENGTH;
+        packageSize.width = volumeWidth*100;
+        packageSize.height = volumeHeight*100;
+        packageSize.length = METER_LENGTH*100;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
-        packageSize.weight = METER_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (METER_LENGTH * 100).toString() + ' x ' + (packageSize.width * 100).toFixed(2).toString() + ' x ' + (volumeHeight * 100).toFixed(2).toString() + '';
-        packageSize.formula = METER_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
+        packageSize.weight = weight;
+        packageSize.volumeSize = (METER_LENGTH * 100).toString() +
+          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
+          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+        packageSize.formula = METER_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '2-meter':
         volumeHeight = weight / (METER_2_LENGTH * METER_2_WIDTH * VOLUME_MULTIPLIER);
-
+        volumeWidth = METER_2_WIDTH;
         // Add check for minimum height and recalculate width if needed
         if (volumeHeight < MIN_METER_2_HEIGHT) {
           volumeHeight = MIN_METER_2_HEIGHT;
-          // Recalculate width based on fixed height
-          packageSize.width = weight / (METER_2_LENGTH * MIN_METER_2_HEIGHT * VOLUME_MULTIPLIER);
-        } else {
-          packageSize.width = METER_2_WIDTH; // Original width
+          volumeWidth = weight / (METER_2_LENGTH * MIN_METER_2_HEIGHT * VOLUME_MULTIPLIER);
         }
 
-        packageSize.height = volumeHeight;
-        packageSize.length = METER_2_LENGTH;
+        packageSize.width = volumeWidth*100;
+        packageSize.height = volumeHeight*100;
+        packageSize.length = METER_2_LENGTH*100;
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
-        packageSize.weight = METER_2_LENGTH * packageSize.width * volumeHeight * VOLUME_MULTIPLIER;
-        packageSize.volumeSize = (METER_2_LENGTH * 100).toString() + ' x ' + (packageSize.width * 100).toFixed(2).toString() + ' x ' + (volumeHeight * 100).toFixed(2).toString() + '';
-        packageSize.formula = METER_2_LENGTH.toString() + ' x ' + packageSize.width.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
+        packageSize.weight = weight;
+        packageSize.volumeSize = (METER_2_LENGTH * 100).toString() +
+          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
+          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+        packageSize.formula = METER_2_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
     }
 
@@ -513,24 +563,25 @@ $(function () {
     let tbody = '';
 
     for (let i = 0; i < newCollies.length; i++) {
+      let fixedIndex = i + 1;
       tbody += '<tr>';
-      tbody += '<td><nav class="collie-nav collieTypeSelect" aria-label="" data-index="'+i+'" data-row-id="'+rowId+'"><ul class="pagination pagination-lg mb-0">';
-      tbody += '<li data-type="envelope" data-index="'+i+'" data-row-id="'+rowId+'" class="page-item ';
+      tbody += '<td><nav class="collie-nav collieTypeSelect" aria-label="" data-index="'+fixedIndex+'" data-row-id="'+rowId+'"><ul class="pagination pagination-lg mb-0">';
+      tbody += '<li data-type="envelope" data-index="'+fixedIndex+'" data-row-id="'+rowId+'" class="page-item ';
       if (newCollies[i]['name'] === 'envelope') {
         tbody += 'active';
       }
       tbody += '"><a class="page-link" href="#" alt="Envelop"><img src="/upload/envelope-sharp-thin.svg" alt="Envelop"></a></li>';
-      tbody += '<li data-type="plaat" data-index="'+i+'" data-row-id="'+rowId+'" class="page-item ';
+      tbody += '<li data-type="plaat" data-index="'+fixedIndex+'" data-row-id="'+rowId+'" class="page-item ';
       if (newCollies[i]['name'] === 'plaat') {
         tbody += 'active';
       }
       tbody += '"><a class="page-link" href="#" alt="Plaat"><img src="/upload/rectangle-wide-sharp-thin.svg" alt="Plaat"></a></li>';
-      tbody += '<li data-type="1-meter" data-index="'+i+'" data-row-id="'+rowId+'" class="page-item ';
+      tbody += '<li data-type="1-meter" data-index="'+fixedIndex+'" data-row-id="'+rowId+'" class="page-item ';
       if (newCollies[i]['name'] === '1-meter') {
         tbody += 'active';
       }
       tbody += '"><a class="page-link" href="#" alt="1 Meter"><img src="/upload/1m.svg" alt="1 Meter"></a></li>';
-      tbody += '<li data-type="2-meter" data-index="'+i+'" data-row-id="'+rowId+'" class="page-item ';
+      tbody += '<li data-type="2-meter" data-index="'+fixedIndex+'" data-row-id="'+rowId+'" class="page-item ';
       if (newCollies[i]['name'] === '2-meter') {
         tbody += 'active';
       }
@@ -541,23 +592,25 @@ $(function () {
       tbody += '<td class="font-weight-bold" style="min-width: 150px;">' + newCollies[i]['weight'] + 'Kg</td>';
 
       if (i === 0) {
-        tbody += '<td style="width:120px;vertical-align: top;text-align: end;" rowspan="5">' + buttonBlock + '</td>';
+        tbody += '<td style="width:120px;vertical-align: top;text-align: center;" rowspan="5">' + buttonBlock + '</td>';
       }
       tbody += '</tr>';
     }
     table.html(tbody);
   }
+
+
   //plus/minus button
   let updateCollieListWs = function (rowId, method = 'collie') {
-    let selectedColliesInput = $('#selected_collie_values[data-row-id="' + rowId + '"]');
+    let selectedColliesInput = $('.selected_collie_values[data-row-id="' + rowId + '"]');
     let collieData = selectedColliesInput.val();
 
     let collieInput;
     let weightInput;
     let weight = 0;
     let qty = 0;
-    collieInput = $('.collie-table tfoot .input-group#total_collies input[data-row-id="' + rowId + '"]');
-    weightInput = $('.collie-table tfoot .input-group#total_weight input[data-row-id="' + rowId + '"]');
+    collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="' + rowId + '"]');
+    weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + rowId + '"]');
 
     qty = parseInt(collieInput.val().replace('Collie(s)', ''));
     weight = parseFloat(weightInput.val().replace('Kg', ''));
@@ -566,27 +619,26 @@ $(function () {
     selectedColliesInput.val(JSON.stringify(newData));
 
     updateCollieTable(rowId, newData);
-    centerAndFocusCollieTable(rowId);
   }
 
 
   $(document).on('click', '.collieTypeSelect li', function (e) {
-    e.preventDefault();
+    e.stopImmediatePropagation();
+    let clickedElem = $(this);
     let data = $(this).data();
     let index = data.index;
     let rowId = data.rowId;
     let collieType = data.type;
 
-
-    let selectedColliesInput = $('#selected_collie_values[data-row-id="' + rowId + '"]');
+    let selectedColliesInput = $('.selected_collie_values[data-row-id="' + rowId + '"]');
     let collieData = selectedColliesInput.val();
 
     let collieInput;
     let weightInput;
     let weight = 0;
     let qty = 0;
-    collieInput = $('.collie-table tfoot .input-group#total_collies input[data-row-id="' + rowId + '"]');
-    weightInput = $('.collie-table tfoot .input-group#total_weight input[data-row-id="' + rowId + '"]');
+    collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="' + rowId + '"]');
+    weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + rowId + '"]');
 
     qty = parseInt(collieInput.val().replace('Collie(s)', ''));
     weight = parseFloat(weightInput.val().replace('Kg', ''));
@@ -595,41 +647,42 @@ $(function () {
     selectedColliesInput.val(JSON.stringify(newData));
 
     updateCollieTable(rowId, newData);
-    centerAndFocusCollieTable(rowId);
+
+    centerAndFocusCollieTable(rowId, $(this));
   });
 
 
   function handleCollieQuantityChange(orderId, type) {
-    let collieInput = $('.collie-table tfoot .input-group#total_collies input[data-row-id="' + orderId + '"]');
+    let collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="' + orderId + '"]');
     let qty = parseInt(collieInput.val().replace('Collie(s)', ''));
 
     if (type === 'plus' && qty <= 4) {
-      $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
+      $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
         .attr('disabled', false)
         .removeClass('disabled-btn');
 
       if (qty === 4) {
-        $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+        $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
           .attr('disabled', true)
           .addClass('disabled-btn');
       } else {
-        $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+        $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
           .attr('disabled', false)
           .removeClass('disabled-btn');
       }
       collieInput.val((qty + 1) + " Collie(s)");
     } else {
       if (qty <= 5 && qty >= 2) {
-        $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+        $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="plus"]')
           .attr('disabled', false)
           .removeClass('disabled-btn');
 
         if (qty === 2) {
-          $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
+          $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
             .attr('disabled', true)
             .addClass('disabled-btn');
         } else {
-          $('.collie-table tfoot .input-group#total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
+          $('.collie-table tfoot .input-group.total_collies .btn[data-row-id="' + orderId + '"][data-type="minus"]')
             .attr('disabled', false)
             .removeClass('disabled-btn');
         }
@@ -637,36 +690,36 @@ $(function () {
       }
     }
 
-    let weightInput = $('.collie-table tfoot .input-group#total_weight input[data-row-id="'+orderId+'"]');
+    let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="'+orderId+'"]');
     let totalWeight = parseFloat(weightInput.val().replace('Kg',''));
     if(totalWeight > 0.01) {
-      $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+      $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
         .attr('disabled', false)
         .removeClass('disabled-btn');
     } else {
-      $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+      $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
         .attr('disabled', true)
         .addClass('disabled-btn');
     }
     if(totalWeight < (MAX_PACKAGE_WEIGHT*5)) {
-      $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+      $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
         .attr('disabled', false)
         .removeClass('disabled-btn');
     } else {
-      $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+      $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
         .attr('disabled', true)
         .addClass('disabled-btn');
     }
   }
 
   function handleWeightChange(orderId, type) {
-    let weightInput = $('.collie-table tfoot .input-group#total_weight input[data-row-id="'+orderId+'"]');
+    let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="'+orderId+'"]');
     let totalWeight = parseFloat(weightInput.val().replace('Kg',''));
-    let collieInput = $('.collie-table tfoot .input-group#total_collies input[data-row-id="'+orderId+'"]');
+    let collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="'+orderId+'"]');
     let currentCollies = parseInt(collieInput.val().replace('Collie(s)',''));
 
     if(type === 'plus') {
-      $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="'+orderId+'"][data-type="minus"]')
+      $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="'+orderId+'"][data-type="minus"]')
         .attr('disabled', false)
         .removeClass('disabled-btn');
 
@@ -681,7 +734,7 @@ $(function () {
           weightInput.val((totalWeight + 0.01).toFixed(2) + " Kg");
         } else {
           // Max collies reached
-          $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
+          $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="plus"]')
             .attr('disabled', true)
             .addClass('disabled-btn');
         }
@@ -690,12 +743,12 @@ $(function () {
       }
     } else {
       if(totalWeight >= 0.02){
-        $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="' + orderId + '"][data-type="minus"]')
+        $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="' + orderId + '"][data-type="minus"]')
           .attr('disabled', false)
           .removeClass('disabled-btn');
         weightInput.val((totalWeight - 0.01).toFixed(2) + " Kg");
       } else {
-        $('.collie-table tfoot .input-group#total_weight .btn[data-row-id="'+orderId+'"][data-type="minus"]')
+        $('.collie-table tfoot .input-group.total_weight .btn[data-row-id="'+orderId+'"][data-type="minus"]')
           .attr('disabled', true)
           .addClass('disabled-btn');
       }
@@ -713,6 +766,7 @@ $(function () {
     const method = $button.attr('data-method');
 
     // Execute once immediately
+
     if (method === 'collie') {
       handleCollieQuantityChange(orderId, type);
     } else if (method === 'weight') {
@@ -738,27 +792,30 @@ $(function () {
       clearInterval(intervalId);
       intervalId = null;
     }
+    const $button = $(this);
+    const orderId = $button.attr('data-row-id');
+    centerAndFocusCollieTable(orderId, $(this));
   });
 
 
   let updateCollieItemList = function (totalQty, totalWeight, collieData, index=null, collieName=null) {
+
+    let fixedIndex = index-1;
     let weight = totalWeight / totalQty;
     let newList = [];
-
     // If index and collieName are provided, update specific collie
-    if (index !== null && collieName !== null) {
-      collieData[index].name = collieName;
+
+    if (fixedIndex !== null && collieName !== null) {
+      console.log('updateCollieItemList', collieData[fixedIndex],  collieData, index, fixedIndex, collieName);
+      collieData[fixedIndex].name = collieName;
       // Recalculate package size for updated collie
       let packageSize = calculateVolumeSize(weight, collieName);
-      collieData[index].width = packageSize.width.toFixed(2);
-      collieData[index].height = packageSize.height.toFixed(2);
-      collieData[index].length = packageSize.length.toFixed(2);
-      collieData[index].formula = packageSize.weight.toFixed(2) + ' / (' +
-        (packageSize.width/100).toFixed(2) + ' x ' +
-        (packageSize.length/100).toFixed(2) + ' x ' +
-        packageSize.volumeMultiplier.toFixed(2);
-      collieData[index].size = packageSize.volumeSize;
-      collieData[index].weight = packageSize.weight.toFixed(2);
+      collieData[fixedIndex].width = packageSize.width.toFixed(0);
+      collieData[fixedIndex].height = packageSize.height.toFixed(0);
+      collieData[fixedIndex].length = packageSize.length.toFixed(0);
+      collieData[fixedIndex].formula = packageSize.formula;
+      collieData[fixedIndex].size = packageSize.volumeSize;
+      collieData[fixedIndex].weight = packageSize.weight.toFixed(2);
       return collieData;
     }
 
@@ -771,13 +828,12 @@ $(function () {
         let collieName = collieData[i].name;
         let packageSize = calculateVolumeSize(weight, collieName);
         collieItem['name'] = collieName;
-        collieItem['width'] = packageSize['width'].toFixed(2);
-        collieItem['height'] = packageSize['height'].toFixed(2);
-        collieItem['length'] = packageSize['length'].toFixed(2);
-        collieItem['qty'] = 1;
-        collieItem['formula'] = packageSize['weight'].toFixed(2) + ' / (' + (packageSize['width']).toFixed(2) + ' x ' + (packageSize['length']).toFixed(2) + ' x ' + (packageSize['volumeMultiplier']).toFixed(2);
-        collieItem['size'] = packageSize['volumeSize'];
-        collieItem['weight'] = packageSize['weight'].toFixed(2);
+        collieItem['width'] = packageSize.width.toFixed(packageSize.width % 1 ? 2 : 0);
+        collieItem['height'] = packageSize.height.toFixed(packageSize.height % 1 ? 2 : 0);
+        collieItem['length'] = packageSize.length.toFixed(packageSize.length % 1 ? 2 : 0);
+        collieItem['formula'] = packageSize.formula;
+        collieItem['size'] = packageSize.volumeSize;
+        collieItem['weight'] = packageSize.weight.toFixed(packageSize.weight % 1 ? 2 : 0);
 
         newList.push(collieItem);
       }
@@ -786,13 +842,12 @@ $(function () {
         let packageSize = calculateVolumeSize(weight, '2-meter');
         let collieItem = {};
         collieItem['name'] = '2-meter';
-        collieItem['width'] = packageSize['width'].toFixed(2);
-        collieItem['height'] = packageSize['height'].toFixed(2);
-        collieItem['length'] = packageSize['length'].toFixed(2);
-        collieItem['qty'] = 1;
-        collieItem['formula'] = packageSize['weight'].toFixed(2) + ' / (' + (packageSize['width']).toFixed(2) + ' x ' + (packageSize['length']).toFixed(2) + ' x ' + (packageSize['volumeMultiplier']).toFixed(2);
-        collieItem['size'] = packageSize['volumeSize'];
-        collieItem['weight'] = packageSize['weight'].toFixed(2);
+        collieItem['width'] = packageSize.width.toFixed(packageSize.width % 1 ? 2 : 0);
+        collieItem['height'] = packageSize.height.toFixed(packageSize.height % 1 ? 2 : 0);
+        collieItem['length'] = packageSize.length.toFixed(packageSize.length % 1 ? 2 : 0);
+        collieItem['formula'] = packageSize.formula;
+        collieItem['size'] = packageSize.volumeSize;
+        collieItem['weight'] = packageSize.weight.toFixed(packageSize.weight % 1 ? 2 : 0);
 
         newList.push(collieItem);
       }
@@ -804,13 +859,12 @@ $(function () {
         let packageSize = calculateVolumeSize(weight, collieName);
         let collieItem = {};
         collieItem['name'] = collieName;
-        collieItem['width'] = packageSize['width'].toFixed(2);
-        collieItem['height'] = packageSize['height'].toFixed(2);
-        collieItem['length'] = packageSize['length'].toFixed(2);
-        collieItem['qty'] = 1;
-        collieItem['formula'] = packageSize['weight'].toFixed(2) + ' / (' + (packageSize['width']).toFixed(2) + ' x ' + (packageSize['length']).toFixed(2) + ' x ' + (packageSize['volumeMultiplier']).toFixed(2);
-        collieItem['size'] = packageSize['volumeSize'];
-        collieItem['weight'] = packageSize['weight'].toFixed(2);
+        collieItem['width'] = packageSize.width.toFixed(packageSize.width % 1 ? 2 : 0);
+        collieItem['height'] = packageSize.height.toFixed(packageSize.height % 1 ? 2 : 0);
+        collieItem['length'] = packageSize.length.toFixed(packageSize.length % 1 ? 2 : 0);
+        collieItem['formula'] = packageSize.formula;
+        collieItem['size'] = packageSize.volumeSize;
+        collieItem['weight'] = packageSize.weight.toFixed(packageSize.weight % 1 ? 2 : 0);
 
         newList.push(collieItem);
       }
@@ -876,6 +930,23 @@ $(function () {
       fetchNewLabel($clickedLabel, $tr);
     }
   });
+
+
+  $(document).on('keyup','.total_weight input', function (e) {
+    let elem = $(this);
+    let rowId = elem.data('row-id');
+    let value = parseFloat(elem.val().replace('Kg',''));
+    if(value > 115){
+      $('.print-button[data-order="'+rowId+'"]').addClass('disabled').attr('disabled', true);
+      $('.pallet-button[data-order="'+rowId+'"]').removeClass('disabled').removeAttr('disabled');
+      $('.collie-table[data-row-id="'+rowId+'"] tbody tr td:first').addClass('disabled');
+    } else {
+      $('.print-button[data-order="'+rowId+'"]').removeClass('disabled').removeAttr('disabled');
+      $('.pallet-button[data-order="'+rowId+'"]').addClass('disabled').attr('disabled', true);
+      $('.collie-table[data-row-id="'+rowId+'"] tbody tr td:first').removeClass('disabled');
+    }
+  });
+
 
   let fetchNewLabel = function (button, row) {
     row.toggleClass('temp_disabled_row', "");

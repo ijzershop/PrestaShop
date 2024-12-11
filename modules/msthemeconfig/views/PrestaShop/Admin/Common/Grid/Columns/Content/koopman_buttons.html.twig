@@ -1,8 +1,8 @@
 {% if record.carrier is same as column.options.stateCarrier.shipping %}
   {# collie label button #}
-  <button class="btn btn-primary print-button"><img src="/upload/print-sharp-thin.svg" alt="Collie"></button>
+  <button type="button" class="btn btn-primary print-button {% if record.total_order_weight > 115 %}disabled{% endif %}" {% if record.total_order_weight > 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img src="/upload/print-sharp-thin.svg" alt="Collie"></button>
   {# Pallet label button #}
-  <button class="btn btn-primary pallet-button"><img src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
+  <button type="button" class="btn btn-primary pallet-button {% if record.total_order_weight <= 115 %}disabled{% endif %}" {% if record.total_order_weight <= 115 %}disabled{% endif %}data-order="{{ record.id_order }}"><img src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
 {% endif %}
 
   {#  Status buttons #}

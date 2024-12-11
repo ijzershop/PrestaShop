@@ -1515,13 +1515,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
         $id_order = Tools::getValue('id_order');
-        $weight_option = Tools::getValue('weight_option');
-        $weight = Tools::getValue('weight');
-        $collies = Tools::getValue('collies');
-        $collieType = Tools::getValue('collie_type');
+        $collies = json_decode(Tools::getValue('collies'));
 
-
-        $export = new ExportOrdersMultipleCollies($id_order, $weight, $weight_option, $collies, $collieType);
+        $export = new ExportOrdersMultipleCollies($id_order, $collies);
         $export->export();
         if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);

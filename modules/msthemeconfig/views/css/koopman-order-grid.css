@@ -13,7 +13,7 @@
 .cc-koopman.btn {
   padding: 5px;
   flex-wrap: wrap;
-  margin: 2px 0px;
+  margin: 5px 0;
 }
 
 .koopman-current-status-badge {
@@ -42,6 +42,12 @@
 }
 
 .disabled-btn{
+  opacity: .5;
+}
+
+.collie-table td.disabled {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
   opacity: .5;
 }
 
@@ -141,40 +147,40 @@
   text-align: center;
 }
 
-#total_collies.input-group,
-#total_weight.input-group{
+.total_collies.input-group,
+.total_weight.input-group{
   max-width: 400px;
 }
 
-#total_collies.input-group .btn{
+.total_collies.input-group .btn{
   background-color: #3d57ae !important;
   border: 1px solid #3d57ae;
 }
 
-#total_weight.input-group .btn{
+.total_weight.input-group .btn{
   background-color: #028102 !important;
   border: 1px solid #028102;
 }
 
 
-#total_collies.input-group .btn,
-#total_weight.input-group .btn{
+.total_collies.input-group .btn,
+.total_weight.input-group .btn{
   border-radius: 50% !important;
   height: 4rem;
   line-height: 2.8rem;
   font-size: 2rem;
   width: 4rem;
 }
-#total_collies.input-group input.form-control,
-#total_weight.input-group input.form-control{
+.total_collies.input-group input.form-control,
+.total_weight.input-group input.form-control{
   border: none;
   text-align: center;
   font-size: 2rem;
   max-width: 200px;
 }
 
-#total_collies.input-group label,
-#total_weight.input-group label{
+.total_collies.input-group label,
+.total_weight.input-group label{
   line-height: 2.8rem;
   width: 60px !important;
   font-weight: bold;
@@ -192,12 +198,21 @@ tfoot tr.footer{
   width: 10em;
 }
 
+.print-button.disabled, .pallet-button.disabled{
+  opacity: .5;
+}
+
 .print-button, .pallet-button{
-  width: 6.5em;
-  height: 6.5em;
+  margin: 5px 0;
+  width: 8em;
+  height: 8em;
   line-height: 1em;
   border-radius: 50% !important;
   background-color: #3d57ae !important;
+  border-style: double;
+  border-width: 10px;
+  border-color: #ffffff !important;
+  display: inline-block;
 
 }
 .print-button img, .pallet-button img{

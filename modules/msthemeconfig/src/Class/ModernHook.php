@@ -2662,74 +2662,161 @@ public function hookActionFrontControllerSetVariables(&$param): void
     }
 
     private function calculateVolumeSize(float $weight, string $type): array {
+        $newVolumeSize = [];
+        switch($type) {
+            case 'envelope':
+                $height = $weight / (ENVELOPE_LENGTH * ENVELOPE_WIDTH * VOLUME_MULTIPLIER);
 
-        return match($type) {
-            'envelope' => [
-                'width' => ENVELOPE_WIDTH,
-                'height' => max(MIN_ENVELOPE_HEIGHT, $weight / (ENVELOPE_WIDTH * ENVELOPE_LENGTH * VOLUME_MULTIPLIER)),
-                'length' => ENVELOPE_LENGTH,
-                'multiplier' => VOLUME_MULTIPLIER,
-                'weight' => $weight,
-                'size' => sprintf('%.0f x %.0f x %.0f',
-                    ENVELOPE_LENGTH * 100,
-                    ENVELOPE_WIDTH * 100,
-                    max(MIN_ENVELOPE_HEIGHT, $weight / (ENVELOPE_WIDTH * ENVELOPE_LENGTH * VOLUME_MULTIPLIER)) * 100),
-                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
-                    $weight,
-                    ENVELOPE_WIDTH,
-                    ENVELOPE_LENGTH,
-                    VOLUME_MULTIPLIER)
-            ],
-            'plaat' => [
-                'width' => PLAAT_WIDTH,
-                'height' => max(MIN_PLAAT_HEIGHT, $weight / (PLAAT_WIDTH * PLAAT_LENGTH * VOLUME_MULTIPLIER)),
-                'length' => PLAAT_LENGTH,
-                'multiplier' => VOLUME_MULTIPLIER,
-                'weight' => $weight,
-                'size' => sprintf('%.0f x %.0f x %.0f',
-                    PLAAT_LENGTH * 100,
-                    PLAAT_WIDTH * 100,
-                    max(MIN_PLAAT_HEIGHT, $weight / (PLAAT_WIDTH * PLAAT_LENGTH * VOLUME_MULTIPLIER)) * 100),
-                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
-                    $weight,
-                    PLAAT_WIDTH,
-                    PLAAT_LENGTH,
-                    VOLUME_MULTIPLIER)
-            ],
-            '1-meter' => [
-                'width' => METER_WIDTH,
-                'height' => max(MIN_METER_HEIGHT, $weight / (METER_WIDTH * METER_LENGTH * VOLUME_MULTIPLIER)),
-                'length' => METER_LENGTH,
-                'multiplier' => VOLUME_MULTIPLIER,
-                'weight' => $weight,
-                'size' => sprintf('%.0f x %.0f x %.0f',
-                    METER_LENGTH * 100,
-                    METER_WIDTH * 100,
-                    max(MIN_METER_HEIGHT, $weight / (METER_WIDTH * METER_LENGTH * VOLUME_MULTIPLIER)) * 100),
-                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
-                    $weight,
-                    METER_WIDTH,
-                    METER_LENGTH,
-                    VOLUME_MULTIPLIER)
-            ],
-            '2-meter' => [
-                'width' => METER_2_WIDTH,
-                'height' => max(MIN_METER_2_HEIGHT, $weight / (METER_2_WIDTH * METER_2_LENGTH * VOLUME_MULTIPLIER)),
-                'length' => METER_2_LENGTH,
-                'multiplier' => VOLUME_MULTIPLIER,
-                'weight' => $weight,
-                'size' => sprintf('%.0f x %.0f x %.0f',
-                    METER_2_LENGTH * 100,
-                    METER_2_WIDTH * 100,
-                    max(MIN_METER_2_HEIGHT, $weight / (METER_2_WIDTH * METER_2_LENGTH * VOLUME_MULTIPLIER)) * 100),
-                'formula' => sprintf('%.2f / (%.2f x %.2f x %d)',
-                    $weight,
-                    METER_2_WIDTH,
-                    METER_2_LENGTH,
-                    VOLUME_MULTIPLIER)
-            ],
-            default => throw new \InvalidArgumentException('Invalid package type')
-        };
+                if ($height < MIN_ENVELOPE_HEIGHT) {
+                    $height = MIN_ENVELOPE_HEIGHT;
+                    // Recalculate width based on fixed height
+                    $width = $weight / (ENVELOPE_LENGTH * $height * VOLUME_MULTIPLIER);
+                } else {
+                    // Original width
+                    $width = ENVELOPE_WIDTH;
+                }
+
+                $newVolumeSize = [
+                    'width' => $width,
+                    'height' => $height,
+                    'length' => ENVELOPE_LENGTH,
+                    'multiplier' => VOLUME_MULTIPLIER,
+                    'weight' => $weight,
+                    'size' => sprintf('%.0f x %.0f x %.0f',
+                        ENVELOPE_LENGTH * 100,
+                        $width * 100,
+                        $height * 100),
+                    'formula' => sprintf('%.2f x %.4f x %.4f x %d = %.2f',
+                        ENVELOPE_LENGTH,
+                        $width,
+                        $height,
+                        VOLUME_MULTIPLIER,
+                        $weight)
+                ];
+                break;
+            case 'plaat':
+                $height = $weight / (PLAAT_LENGTH * PLAAT_WIDTH * VOLUME_MULTIPLIER);
+
+                if ($height < MIN_PLAAT_HEIGHT) {
+                    $height = MIN_PLAAT_HEIGHT;
+                    // Recalculate width based on fixed height
+                    $width = $weight / (PLAAT_LENGTH * $height * VOLUME_MULTIPLIER);
+                } else {
+                    // Original width
+                    $width = PLAAT_WIDTH;
+                }
+
+                $newVolumeSize = [
+                    'width' => $width,
+                    'height' => $height,
+                    'length' => PLAAT_LENGTH,
+                    'multiplier' => VOLUME_MULTIPLIER,
+                    'weight' => $weight,
+                    'size' => sprintf('%.0f x %.0f x %.0f',
+                        PLAAT_LENGTH * 100,
+                        $width * 100,
+                        $height * 100),
+                    'formula' => sprintf('%.2f x %.4f x %.4f x %d = %.2f',
+                        PLAAT_LENGTH,
+                        $width,
+                        $height,
+                        VOLUME_MULTIPLIER,
+                        $weight)
+                ];
+                break;
+            case '1-meter':
+                $height = $weight / (METER_LENGTH * METER_WIDTH * VOLUME_MULTIPLIER);
+
+                if ($height < MIN_METER_HEIGHT) {
+                    $height = MIN_METER_HEIGHT;
+                    // Recalculate width based on fixed height
+                    $width = $weight / (METER_LENGTH * $height * VOLUME_MULTIPLIER);
+                } else {
+                    // Original width
+                    $width = METER_WIDTH;
+                }
+
+                $newVolumeSize = [
+                    'width' => $width,
+                    'height' => $height,
+                    'length' => METER_LENGTH,
+                    'multiplier' => VOLUME_MULTIPLIER,
+                    'weight' => $weight,
+                    'size' => sprintf('%.0f x %.0f x %.0f',
+                        METER_LENGTH * 100,
+                        $width * 100,
+                        $height * 100),
+                    'formula' => sprintf('%.2f x %.4f x %.4f x %d = %.2f',
+                        METER_LENGTH,
+                        $width,
+                        $height,
+                        VOLUME_MULTIPLIER,
+                        $weight)
+                ];
+                break;
+            case '2-meter':
+                $height = $weight / (METER_2_LENGTH * METER_2_WIDTH * VOLUME_MULTIPLIER);
+
+                if ($height < MIN_METER_2_HEIGHT) {
+                    $height = MIN_METER_2_HEIGHT;
+                    // Recalculate width based on fixed height
+                    $width = $weight / (METER_2_LENGTH * $height * VOLUME_MULTIPLIER);
+                } else {
+                    // Original width
+                    $width = METER_2_WIDTH;
+                }
+
+                $newVolumeSize = [
+                    'width' => $width,
+                    'height' => $height,
+                    'length' => METER_2_LENGTH,
+                    'multiplier' => VOLUME_MULTIPLIER,
+                    'weight' => $weight,
+                    'size' => sprintf('%.0f x %.0f x %.0f',
+                        METER_2_LENGTH * 100,
+                        $width * 100,
+                        $height * 100),
+                    'formula' => sprintf('%.2f x %.4f x %.4f x %d = %.2f',
+                        METER_2_LENGTH,
+                        $width,
+                        $height,
+                        VOLUME_MULTIPLIER,
+                        $weight)
+                ];
+                break;
+            default:
+                $height = $weight / (METER_2_LENGTH * METER_2_WIDTH * VOLUME_MULTIPLIER);
+
+                if ($height < MIN_METER_2_HEIGHT) {
+                    $height = MIN_METER_2_HEIGHT;
+                    // Recalculate width based on fixed height
+                    $width = $weight / (METER_2_LENGTH * $height * VOLUME_MULTIPLIER);
+                } else {
+                    // Original width
+                    $width = METER_2_WIDTH;
+                }
+
+                $newVolumeSize = [
+                    'width' => $width,
+                    'height' => $height,
+                    'length' => METER_2_LENGTH,
+                    'multiplier' => VOLUME_MULTIPLIER,
+                    'weight' => $weight,
+                    'size' => sprintf('%.0f x %.0f x %.0f',
+                        METER_2_LENGTH * 100,
+                        $width * 100,
+                        $height * 100),
+                    'formula' => sprintf('%.2f x %.4f x %.4f x %d = %.2f',
+                        METER_2_LENGTH,
+                        $width,
+                        $height,
+                        VOLUME_MULTIPLIER,
+                        $weight)
+                ];
+                break;
+        }
+
+        return $newVolumeSize;
     }
 
     private function updateCollieItemList(
@@ -2831,7 +2918,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
             $data = $params['data'];
             $records = $data->getRecords()->all();
             foreach ($records as &$record) {
-
                 $newList = [
                     'plaat' => [
                         'display_name' => 'Plaat',

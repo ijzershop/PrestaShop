@@ -71,7 +71,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 
 define('MAX_PACKAGE_WEIGHT', 23);
 define('VOLUME_MULTIPLIER', 250);
-define('PALLET_THRESHOLD', 150);
+define('PALLET_THRESHOLD', 115);
 define('MINI_PALLET_THRESHOLD', 150);
 define('EURO_PALLET_THRESHOLD', 250);
 define('ENVELOPE_WIDTH', 0.30);
@@ -2874,7 +2874,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 $palletSizes = [
                     'euro-pallet' => ['width' => 0.80, 'height' => 2.20, 'length' => 1.20, 'size' => '120 x 80 x 220'],
                     'mini-pallet' => ['width' => 0.50, 'height' => 2.20, 'length' => 0.50, 'size' => '60 x 50 x 120'],
-                    'pallet' => ['width' => 1.00, 'height' => 2.20, 'length' => 2.00, 'size' => '100 x 200 x 220']
+                    'pallet' => ['width' => 0.80, 'height' => 2.20, 'length' => 1.80, 'size' => '100 x 200 x 220']
                 ];
 
                 $items[$collieName]['width'] = $palletSizes[$collieName]['width'];
@@ -3014,18 +3014,11 @@ public function hookActionFrontControllerSetVariables(&$param): void
 
                 $selectedCollies = [];
                 $newItemsList = [];
-                if((float)$record['total_order_weight'] > EURO_PALLET_THRESHOLD || (float)$record['total_order_weight'] > MINI_PALLET_THRESHOLD) {
-                    $selectedCollies['euro-pallet'] = $newList['euro-pallet'];
-
+                if((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
                     //check if the total weight is eligible for a pallet
                     if ((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
                         $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'pallet', '', $newList, 1);
-                    } else if ((float)$record['total_order_weight'] > EURO_PALLET_THRESHOLD) {
-                        $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'euro-pallet', '', $newList, 1);
-                    } else if ((float)$record['total_order_weight'] > MINI_PALLET_THRESHOLD) {
-                        $newList = $this->updateCollieItemList($record['total_order_weight'], 'mini-pallet', '', $newList, 1);
                     }
-
                     $newItemsList[] = $newList;
                 } else {
                     if (str_contains($record['product_quantity'], ',')) {
@@ -3047,6 +3040,8 @@ public function hookActionFrontControllerSetVariables(&$param): void
                         $newItemsList[] = $newList;
                     }
                 }
+
+
 
                 $totalCollies = 0;
                 $totalWeight = 0;

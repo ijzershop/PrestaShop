@@ -1,10 +1,14 @@
 {% if record.carrier is same as column.options.stateCarrier.shipping %}
   {# collie label button #}
-  <button type="button" class="btn btn-primary print-button {% if record.total_order_weight > 115 %}disabled{% endif %}" {% if record.total_order_weight > 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img src="/upload/print-sharp-thin.svg" alt="Collie"></button>
+  <button type="button" class="btn btn-primary print-button {% if record.total_order_weight > 115 %} disabled {% endif %}"
+          {% if record.total_order_weight > 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img
+      src="/upload/print-sharp-thin.svg" alt="Collie"></button>
   {# Pallet label button #}
-  <button type="button" class="btn btn-primary pallet-button {% if record.total_order_weight <= 115 %}disabled{% endif %}" {% if record.total_order_weight <= 115 %}disabled{% endif %}data-order="{{ record.id_order }}"><img src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
+  <button type="button"
+          class="btn btn-primary pallet-button {% if record.total_order_weight <= 115 %} disabled {% endif %}"
+          {% if record.total_order_weight <= 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img
+      src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
 {% endif %}
-
   {#  Status buttons #}
   {#     Pickup Carrier #}
   {% if record.carrier is same as column.options.stateCarrier.pickup %}
@@ -21,8 +25,7 @@
         <label class="type-cc w-100 afgehaald" for="afgehaald_{{ record.id_order }}">Opgehaald</label>
       </div>
     {% endif %}
-    {% endif %}
-
+  {% endif %}
   {# Toevoegen button #}
   {% if record.carrier is same as column.options.stateCarrier.added %}
     {#  Toevoegen State  #}
@@ -33,8 +36,6 @@
       </div>
     {% endif %}
   {% endif %}
-
-
   {# backorder button #}
   {#  Backorder Waiting State  #}
   {% if record.current_state is not same as column.options.stateType.waiting %}
@@ -46,7 +47,6 @@
       </label>
     </div>
   {% endif %}
-
   {# Toevoegen button #}
   {#  Send to Workshop State  #}
   {% if record.current_state is not same as column.options.stateType.workshop %}
@@ -55,6 +55,16 @@
       <input id="workshop_{{ record.id_order }}" type="radio" name="workshop-pakket" value="workshop"/>
       <label class="type-cc workshop" for="workshop_{{ record.id_order }}">
         Werkplaats
+      </label>
+    </div>
+  {% endif %}
+  {#  Being prepared State  #}
+  {% if record.current_state is not same as column.options.stateType.shipping %}
+    <div class="cc-koopman beingprepared-btn btn btn-warning"
+         data-order="{{ record.id_order }}" title="Status wijzigen naar word voorbereid">
+      <input id="beingprepared_{{ record.id_order }}" type="radio" name="beingprepared-pakket" value="beingprepared"/>
+      <label class="type-cc beingprepared" for="beingprepared_{{ record.id_order }}">
+        In Behandeling
       </label>
     </div>
   {% endif %}

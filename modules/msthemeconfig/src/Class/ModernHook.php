@@ -2840,8 +2840,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     $items[$collieName]['weight'] += $weight;
                 }
 
-
-
                 if ($qty > 0) {
                     $items[$collieName]['qty'] = $qty;
                 } else {
@@ -2855,9 +2853,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
 
                 $items[$collieName] = array_merge($items[$collieName], $packageSize);
                 break;
-
-            case 'euro-pallet':
-            case 'mini-pallet':
             case 'pallet':
                 if ($update) {
                     $items[$collieName]['weight'] = $weight;
@@ -2871,21 +2866,14 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     $items[$collieName]['qty'] = $this->calculateCollieTotal($items[$collieName]['weight'], 1000);
                 }
 
-                $palletSizes = [
-                    'euro-pallet' => ['width' => 0.80, 'height' => 2.20, 'length' => 1.20, 'size' => '120 x 80 x 220'],
-                    'mini-pallet' => ['width' => 0.50, 'height' => 2.20, 'length' => 0.50, 'size' => '60 x 50 x 120'],
-                    'pallet' => ['width' => 0.80, 'height' => 2.20, 'length' => 1.80, 'size' => '100 x 200 x 220']
-                ];
-
-                $items[$collieName]['width'] = $palletSizes[$collieName]['width'];
-                $items[$collieName]['heigth'] = $palletSizes[$collieName]['height'];
-                $items[$collieName]['length'] = $palletSizes[$collieName]['length'];
-                $items[$collieName]['multiplier'] = 0;
-                $items[$collieName]['weight'] = $items[$collieName]['weight'] / $items[$collieName]['qty'];
-                $items[$collieName]['size'] = $palletSizes[$collieName]['size'];
+                $items[$collieName]['width'] = 0.80;
+                $items[$collieName]['heigth'] = 2.20;
+                $items[$collieName]['length'] = 1.80;
+                $items[$collieName]['multiplier'] = 250;
+                $items[$collieName]['weight'] = $items[$collieName]['weight'];
+                $items[$collieName]['size'] = '180 x 80 x 220';
                 $items[$collieName]['formula'] = '';
                 break;
-
             default:
                 // Default to 2-meter handling
                 if ($update) {
@@ -2983,54 +2971,42 @@ public function hookActionFrontControllerSetVariables(&$param): void
                         'weight' => 0,
                         'size' => '',
                         'formula' => ''
-                    ],
-                    'euro-pallet' => [
-                        'display_name' => 'Euro Pallet',
-                        'name' => 'euro-pallet',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ],
-                    'mini-pallet' => [
-                        'display_name' => 'Mini Pallet',
-                        'name' => 'mini-pallet',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
                     ]
                 ];
 
                 $selectedCollies = [];
                 $newItemsList = [];
+
                 if((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
                     //check if the total weight is eligible for a pallet
                     if ((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
                         $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'pallet', '', $newList, 1);
+                        $newItemsList[] = $newList;
                     }
-                    $newItemsList[] = $newList;
                 } else {
+
+
                     if (str_contains($record['product_quantity'], ',')) {
                         $linesQty = explode(',',$record['product_quantity']);
                         $linesWeight = explode(',',$record['product_weight']);
                         $linesCollie = explode(',',$record['shipping_value_names']);
                         $linesCollieIds = explode(',',$record['shipping_values']);
 
+                        $tempList = [];
+
                             for ($i = 0; $i < count($linesQty); $i++) {
-                                $newList = $this->updateCollieItemList((float)$linesWeight[$i], $linesCollie[$i], $linesCollieIds[$i], $newList, $this->calculateCollieTotal((float)$linesWeight[$i]));
+                                if(array_key_exists($linesCollie[$i], $tempList)) {
+                                    $tempList[$linesCollie[$i]]['weight'] += (float)$linesWeight[$i];
+                                } else {
+                                    $tempList[$linesCollie[$i]] = [];
+                                    $tempList[$linesCollie[$i]]['weight'] = (float)$linesWeight[$i];
+                                }
                             }
-                        $newItemsList[] = $newList;
+
+                        foreach ($tempList as $key => $item) {
+                            $newList = $this->updateCollieItemList((float)$item['weight'], $key, $key, $newList, $this->calculateCollieTotal((float)$item['weight']));
+                            $newItemsList[] = $newList;
+                        }
                     } else {
                         $linesWeight = $record['product_weight'];
                         $linesCollie = $record['shipping_value_names'];
@@ -3040,8 +3016,6 @@ public function hookActionFrontControllerSetVariables(&$param): void
                         $newItemsList[] = $newList;
                     }
                 }
-
-
 
                 $totalCollies = 0;
                 $totalWeight = 0;

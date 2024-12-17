@@ -159,12 +159,6 @@
                     <a style="color:#777777;" target="_blank" href="/index.php?controller=order-detail&id_order={$availableOrders[0].id_order}">Bekijk de lopende bestelling {$order_reference} waar u de huidige bestelling aan wilt toevoegen.</a>
                   </div>
 
-                {else}
-{*                  No orders available  *}
-                  <div class="col-12 col-md-9 offset-md-2 pl-2 pt-2 added-to-order-block text-center text-md-left" data-id="{$carrier_id}">
-                    <a style="color:#777777;">Er is momenteel geen bestaande bestelling beschikbaar waar u deze aan toe kunt voegen.</a>
-                  </div>
-
                 {/if}
                 {else}
                   {* Customer is guest *}

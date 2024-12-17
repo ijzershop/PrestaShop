@@ -176,6 +176,8 @@ class ExportOrdersMultipleCollies
      **/
     public function export(): bool
     {
+
+
         try {
             $orders = $this->getOrders($this->selectStatus, $this->selectCarrier, 1, $this->idOrder);
         } catch (PrestaShopDatabaseException $e) {
@@ -272,6 +274,7 @@ class ExportOrdersMultipleCollies
         $login->depot = $this->apiDepot;
         $login->verlader = $this->apiVerlader;
 
+
         foreach ($orders as $row) {
             $shippingTask = new stdClass();
             $shippingTask->type = 'T'; // T = Stukgoed Levering
@@ -312,10 +315,10 @@ class ExportOrdersMultipleCollies
             $shippingTask->geaemail = $orderEmail;
 
             $msg = $this->getFirstClientMessage($orderId);
-
             if (!empty($msg)) {
                 $shippingTask->instructie = $msg[0]['message'];
             }
+
             if ($shippingTask->gealand == 'nl') { // haal straat + plaats op bij koopman voor NL
                 try {
                     $addresses = $client->getAdresNL_2($login, $orderPostcode);
@@ -351,8 +354,7 @@ class ExportOrdersMultipleCollies
                     }
                 }
             }
-
-            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && strlen(Tools::getValue('connected_orders')) === 0) {
+            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && is_array(Tools::getValue('connected_orders')) && count(Tools::getValue('connected_orders')) === 0) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_to_id']);
                 $linkedReferencesArray = explode(',', $row['added_to_reference']);
@@ -360,19 +362,14 @@ class ExportOrdersMultipleCollies
                 $this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray);
                 return;
             }
-
-            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && strlen(Tools::getValue('connected_orders')) === 0) {
+            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && is_array(Tools::getValue('connected_orders')) && count(Tools::getValue('connected_orders')) === 0) {
                 //heeft toegevoegde orders
-
                 $linkedIdArray = explode(',', $row['added_with_id']);
                 $linkedReferencesArray = explode(',', $row['added_with_reference']);
-
                 $this->redirect = false;
-
                 $this->getOutputAddedOrders($linkedIdArray, $linkedReferencesArray);
                 return;
             }
-
 
             if (!empty($shippingTask->geaplaats)) {
                 for ($i = 0; $i < count($collies); $i++) {
@@ -380,22 +377,23 @@ class ExportOrdersMultipleCollies
                     $collieRow->nrcollo = $i + 1;
 
                     //COL = Collie //MP = mini-pallet //PLH = Halve Pallet //PL = Pallet
-                    if(in_array($collies[$i]->name, ['envelope', 'plaat', '1-meter', '2-meter'])) {
+                    if(in_array($collies[$i]['name'], ['envelope', 'plaat', '1-meter', '2-meter'])) {
                         $collieRow->vrzenh = 'COL';
                     } else {
                         $collieRow->vrzenh = 'SP';
                     }
 
-                    $collieRow->gewicht = $collies[$i]->weight;
-                    $collieRow->lengte = $collies[$i]->length;
-                    $collieRow->breedte = $collies[$i]->width;
-                    $collieRow->hoogte = $collies[$i]->height;
+                    $collieRow->gewicht = $collies[$i]['weight'];
+                    $collieRow->lengte = $collies[$i]['length'];
+                    $collieRow->breedte = $collies[$i]['width'];
+                    $collieRow->hoogte = $collies[$i]['height'];
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;
                 }
 
+                    die(var_dump($shippingTask));
+
                 try {
-                    dd($shippingTask);
                     $transport = $client->addOpdracht($login, $shippingTask);
                     if ($transport) {
                         $trackingNumber = $transport->zendingnr;
@@ -675,7 +673,11 @@ class ExportOrdersMultipleCollies
                                             <div class="card-body">
                                             <form class="mt-2" method="post" id="%s">', 'toevoegingForm');
 
+
         foreach ($_GET as $key => $value) {
+            if($key == 'collies'){
+                $value = str_replace('"', "'", $value);
+            }
             $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
         }
 
@@ -734,6 +736,9 @@ class ExportOrdersMultipleCollies
                                             <form class="mt-2" method="post" id="%s">', 'toevoegingForm');
 
         foreach ($_GET as $key => $value) {
+            if($key == 'collies'){
+                $value = str_replace('"', "'", $value);
+            }
             $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
         }
 
@@ -818,7 +823,7 @@ class ExportOrdersMultipleCollies
         }
         if (Tools::getIsset('connected_orders')) {
             $connectedOrders = Tools::getValue('connected_orders');
-            if (strlen($connectedOrders) > 0) {
+            if (count($connectedOrders) > 0) {
                 //get order object for each order and change status
                 foreach (explode(',', $connectedOrders) as $order) {
                     $orderObject = new Order((int)$order);

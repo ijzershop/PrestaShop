@@ -1509,16 +1509,16 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getKoopmanPrintedLabel()
     {
-
         if(Tools::getIsset('updateAddress')){
             $this->updateOrderDeliveryAddress(Tools::getAllValues());
         }
 
-        $id_order = Tools::getValue('id_order');
-        $collies = json_decode(Tools::getValue('collies'));
+        $id_order = (int)Tools::getValue('id_order');
+        $collies = json_decode(str_replace("'", '"', (string)Tools::getValue('collies')), true);
 
         $export = new ExportOrdersMultipleCollies($id_order, $collies);
         $export->export();
+
         if($export->redirect){
             $readyForShippingStatus = Configuration::get('KOOPMANORDEREXPORT_UPDATE_STATUS', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
 
@@ -1530,8 +1530,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $history->changeIdOrderState((int)$readyForShippingStatus, (int)$id_order);
                 $history->add();
             }
-
-
 
             die('printed');
         } else {

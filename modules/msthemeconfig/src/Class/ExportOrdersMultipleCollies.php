@@ -391,7 +391,7 @@ class ExportOrdersMultipleCollies
                     $shippingTask->aRegel[$i + 1] = $collieRow;
                 }
 
-                    die(var_dump($shippingTask));
+                    die(highlight_string(var_export($shippingTask, true), true));
 
                 try {
                     $transport = $client->addOpdracht($login, $shippingTask);

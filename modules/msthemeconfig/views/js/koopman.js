@@ -588,19 +588,16 @@ $(function () {
 
   function switchPalletCollie(orderId, type) {
     let printButton = $('.print-button[data-order="'+orderId+'"]');
-    let palletButton = $('.pallet-button[data-order="'+orderId+'"]');
     let collieTableFirstRow = $('.collie-table[data-row-id="'+orderId+'"] tbody tr:first td:not(:last-child)');
     let collieTableRemainingRows = $('.collie-table[data-row-id="'+orderId+'"] tbody tr:not(:first) td');
     let collieFooter = $('.collie-table[data-row-id="'+orderId+'"] tfoot tr td:first');
     if (type === 'pallet') {
       printButton.addClass('disabled').attr('disabled', true);
-      palletButton.removeClass('disabled').removeAttr('disabled');
       collieTableFirstRow.addClass('disabled');
       collieTableRemainingRows.addClass('disabled');
       collieFooter.addClass('disabled');
     } else {
       printButton.removeClass('disabled').removeAttr('disabled');
-      palletButton.addClass('disabled').attr('disabled', true);
       collieTableFirstRow.removeClass('disabled');
       collieTableRemainingRows.removeClass('disabled');
       collieFooter.removeClass('disabled');

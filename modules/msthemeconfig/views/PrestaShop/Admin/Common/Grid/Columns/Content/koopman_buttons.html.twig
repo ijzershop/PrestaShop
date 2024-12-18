@@ -5,8 +5,8 @@
       src="/upload/print-sharp-thin.svg" alt="Collie"></button>
   {# Pallet label button #}
   <button type="button"
-          class="btn btn-primary pallet-button {% if record.total_order_weight <= 115 %} disabled {% endif %}"
-          {% if record.total_order_weight <= 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img
+          class="btn btn-primary pallet-button"
+          data-order="{{ record.id_order }}"><img
       src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
 {% endif %}
   {#  Status buttons #}

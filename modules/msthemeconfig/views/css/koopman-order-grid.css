@@ -170,10 +170,10 @@ tfoot tr.footer{
 .print-button.disabled, .pallet-button.disabled{
   opacity: .5;
 }
-.print-button, .pallet-button{
+.print-button{
   margin: 5px 0;
-  width: 8em;
-  height: 8em;
+  width: 10em;
+  height: 10em;
   line-height: 1em;
   border-radius: 50% !important;
   background-color: #3d57ae !important;
@@ -181,7 +181,21 @@ tfoot tr.footer{
   border-width: 10px;
   border-color: #ffffff !important;
   display: inline-block;
+}
+.pallet-button{
+  margin: 5px 0;
+  width: 6.8em;
+  height: 6.8em;
+  line-height: 1em;
+  border-radius: 50% !important;
+  background-color: #3d57ae !important;
+  display: inline-block;
 
+}
+.pallet-button img{
+  width: 2.5em;
+  height: 2.5em;
+  fill: #ffffff !important;
 }
 .print-button img, .pallet-button img{
   width: 3.5em;

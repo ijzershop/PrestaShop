@@ -114,14 +114,14 @@
   border-color: #007bff;
 }
 .collie-nav .page-item .page-link img{
-  width: 30px;
+  width: 60px;
   height: 60px;
 }
 .collie-nav .page-item .page-link {
   border-radius: 50% !important;
-  height: 5.5rem;
-  width: 5.5rem;
-  line-height: 2.8rem;
+  height: 6.5rem;
+  width: 6.5rem;
+  line-height: 4.8rem;
   text-align: center;
 }
 .total_collies.input-group,

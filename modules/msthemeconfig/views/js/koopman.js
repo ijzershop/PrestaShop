@@ -531,22 +531,22 @@ $(function () {
       if (newCollies[i]['name'] === 'envelope') {
         tbody += 'active';
       }
-      tbody += '"><a class="page-link" href="#"><img src="/upload/envelope-sharp-thin.svg" alt="Envelop"></a></li>';
+      tbody += '"><a class="page-link" href="#"><img src="/upload/koopman/icons/envelope.png"  alt="Envelop"></a></li>';
       tbody += '<li data-type="plaat" data-index="' + fixedIndex + '" data-row-id="' + rowId + '" class="page-item ';
       if (newCollies[i]['name'] === 'plaat') {
         tbody += 'active';
       }
-      tbody += '"><a class="page-link" href="#"><img src="/upload/rectangle-wide-sharp-thin.svg" alt="Plaat"></a></li>';
+      tbody += '"><a class="page-link" href="#"><img src="/upload/koopman/icons/plaat.png"  alt="Plaat"></a></li>';
       tbody += '<li data-type="1-meter" data-index="' + fixedIndex + '" data-row-id="' + rowId + '" class="page-item ';
       if (newCollies[i]['name'] === '1-meter') {
         tbody += 'active';
       }
-      tbody += '"><a class="page-link" href="#"><img src="/upload/1m.svg" alt="1 Meter"></a></li>';
+      tbody += '"><a class="page-link" href="#"><img src="/upload/koopman/icons/1m.png" alt="1 Meter"></a></li>';
       tbody += '<li data-type="2-meter" data-index="' + fixedIndex + '" data-row-id="' + rowId + '" class="page-item ';
       if (newCollies[i]['name'] === '2-meter') {
         tbody += 'active';
       }
-      tbody += '"><a class="page-link" href="#"><img src="/upload/2m.svg" alt="2 Meter"></a></li>';
+      tbody += '"><a class="page-link" href="#"><img src="/upload/koopman/icons/2m.png" alt="2 Meter"></a></li>';
       tbody += '</ul></nav></td>';
       tbody += '<td class="font-weight-bold" style="min-width: 150px;">' + size + '</td>';
       tbody += '<td class="font-weight-bold" style="min-width: 150px;">' + weight + '</td>';

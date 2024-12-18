@@ -106,7 +106,7 @@
   border-color: #007bff;
 }
 .collie-nav .page-item.active .page-link img {
-  filter: invert(1);
+  filter: invert(0);
 }
 .collie-nav .page-item.active .page-link {
   z-index: 1;

@@ -927,9 +927,9 @@ $(function () {
 
 
   $('.delivery-option input[type=radio]').on('click', function (event) {
-    // if (!$(this).hasClass('add2order') && (parseInt($(this).val()) === shoppingcart.add2order_carrier)) {
-    //   $('#added_to_order').val($(this).attr('data-order-reference'));
-    // }
+    if (!$(this).hasClass('add2order') && (parseInt($(this).val()) === shoppingcart.add2order_carrier)) {
+      $('#added_to_order').val($('#added_to_order').attr('data-order-reference'));
+    }
     if (!$(this).hasClass('add2order') && (parseInt($(this).val()) !== shoppingcart.add2order_carrier)) {
       $('#added_to_order').val(null);
     }

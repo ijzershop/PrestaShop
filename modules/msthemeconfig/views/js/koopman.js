@@ -295,8 +295,7 @@ $(function () {
   $(document).on('click', '.updateAddress', function () {
     let profileId = $('#updateAddressKoopman [name="profile"]').val();
     let token = $('#updateAddressKoopman [name="token"]').val();
-    let $clickedBtn = $(this);
-    let orderId = $clickedBtn.attr('data-order');
+    let orderId = $('#updateAddressKoopman [name="id_order"]').val();
     let collies = $('.selected_collie_values[data-row-id="' + orderId + '"]').val();
     let address1 = $('.address-input-text#address1').val();
     let house_number = $('.address-input-text#house_number').val();
@@ -801,7 +800,7 @@ $(function () {
    */
   let intervalId = null;
   const REPEAT_DELAY = 50; // Milliseconds between repeats
-  $(document).on('touchstart mousedown', '.collie-table tfoot .input-group .btn', function () {
+  $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function () {
     const $button = $(this);
     const orderId = $button.attr('data-row-id');
     const type = $button.attr('data-type');
@@ -820,7 +819,7 @@ $(function () {
       }
       updateCollieListWs(orderId);
     }, REPEAT_DELAY);
-  }).on('touchend mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
+  }).on('mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
     if (intervalId) {
       clearInterval(intervalId);
       intervalId = null;

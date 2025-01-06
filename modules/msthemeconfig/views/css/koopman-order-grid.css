@@ -250,3 +250,7 @@ tfoot tr.footer{
   pointer-events: none;
   cursor: not-allowed;
 }
+
+.collie-table tfoot .btn{
+  user-select: none;
+}

@@ -820,7 +820,7 @@ $(function () {
       }
       updateCollieListWs(orderId);
     }, REPEAT_DELAY);
-  }).on('touchend touchcancel mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
+  }).on('touchend mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
     if (intervalId) {
       clearInterval(intervalId);
       intervalId = null;

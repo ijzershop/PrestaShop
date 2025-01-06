@@ -120,7 +120,7 @@ class PaymentModule extends PaymentModuleCore
                 $comp_precision
             ), 3, null, 'Cart', (int)$id_cart, true);
 
-            $id_order_state = Configuration::get('PS_OS_ERROR');
+//            $id_order_state = Configuration::get('PS_OS_ERROR');
         }
         foreach ($package_list as $id_address => $packageByAddress) {
             foreach ($packageByAddress as $id_package => $package) {

@@ -801,7 +801,7 @@ $(function () {
    */
   let intervalId = null;
   const REPEAT_DELAY = 50; // Milliseconds between repeats
-  $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function () {
+  $(document).on('touchstart mousedown', '.collie-table tfoot .input-group .btn', function () {
     const $button = $(this);
     const orderId = $button.attr('data-row-id');
     const type = $button.attr('data-type');
@@ -820,13 +820,7 @@ $(function () {
       }
       updateCollieListWs(orderId);
     }, REPEAT_DELAY);
-  }).on('touchstart', function (e) {
-    e.preventDefault();
-    $(this).trigger('mousedown');
-  }).on('touchend touchcancel', function (e) {
-    e.preventDefault();
-    $(this).trigger('mouseup');
-  }).on('mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
+  }).on('touchend touchcancel mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
     if (intervalId) {
       clearInterval(intervalId);
       intervalId = null;

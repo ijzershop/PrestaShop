@@ -489,7 +489,7 @@ class Cart extends CartCore
         }
         return Tools::ps_round($value, Context::getContext()->getComputingPrecision());
     }
-    
+
     public function getDiscountTotal($calculator, $cart_rules)
     {
         $amount = new AmountImmutable();

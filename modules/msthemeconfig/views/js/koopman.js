@@ -432,8 +432,8 @@ $(function () {
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = weight;
         packageSize.volumeSize = (ENVELOPE_LENGTH * 100).toString() +
-          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
-          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+          ' x ' + Math.round(volumeWidth * 100).toString() +
+          ' x ' + Math.round(volumeHeight * 100).toString() + '';
         packageSize.formula = ENVELOPE_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case 'plaat':
@@ -450,8 +450,8 @@ $(function () {
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = weight;
         packageSize.volumeSize = (PLAAT_LENGTH * 100).toString() +
-          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
-          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+          ' x ' + Math.round(volumeWidth * 100).toString() +
+          ' x ' + Math.round(volumeHeight * 100).toString() + '';
         packageSize.formula = PLAAT_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '1-meter':
@@ -468,8 +468,8 @@ $(function () {
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = weight;
         packageSize.volumeSize = (METER_LENGTH * 100).toString() +
-          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
-          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+          ' x ' + Math.round(volumeWidth * 100).toString() +
+          ' x ' + Math.round(volumeHeight * 100).toString() + '';
         packageSize.formula = METER_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
       case '2-meter':
@@ -486,8 +486,8 @@ $(function () {
         packageSize.volumeMultiplier = VOLUME_MULTIPLIER;
         packageSize.weight = weight;
         packageSize.volumeSize = (METER_2_LENGTH * 100).toString() +
-          ' x ' + (volumeWidth * 100).toFixed((volumeWidth * 100) % 1 ? 2 : 0).toString() +
-          ' x ' + (volumeHeight * 100).toFixed((volumeHeight * 100) % 1 ? 2 : 0).toString() + '';
+          ' x ' + Math.round(volumeWidth * 100).toString() +
+          ' x ' + Math.round(volumeHeight * 100).toString() + '';
         packageSize.formula = METER_2_LENGTH.toString() + ' x ' + volumeWidth.toString() + ' x ' + volumeHeight.toFixed(4).toString() + ' x ' + VOLUME_MULTIPLIER.toString();
         break;
     }
@@ -607,7 +607,7 @@ $(function () {
     // Add this check when handling weight values
     let totalOrderWeight = parseFloat(weight);
     if (isNaN(totalOrderWeight) || totalOrderWeight <= 0) {
-      totalOrderWeight = 0.01;
+      totalOrderWeight = 1;
     }
     return totalOrderWeight;
   }
@@ -794,17 +794,83 @@ $(function () {
     }
   }
 
-  /**
-   * click / hold function for collie qty and total weight buttons. Weight buttons are handled separately so they can have a hold functionality
-   * @type {null}
-   */
+  // /**
+  //  * click / hold function for collie qty and total weight buttons. Weight buttons are handled separately so they can have a hold functionality
+  //  * @type {null}
+  //  */
+
+  // $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function (e) {
+  //   console.log(e);
+  //   const $button = $(this);
+  //   const orderId = $button.attr('data-row-id');
+  //   const type = $button.attr('data-type');
+  //   const method = $button.attr('data-method');
+  //   // Execute once immediately
+  //   if (method === 'collie') {
+  //     handleCollieQuantityChange(orderId, type);
+  //   } else if (method === 'weight') {
+  //     handleWeightChange(orderId, type);
+  //   }
+  //   updateCollieListWs(orderId);
+  //   // Setup repeat interval for hold
+  //   intervalId = setInterval(() => {
+  //     if (method === 'weight') {
+  //       handleWeightChange(orderId, type);
+  //     }
+  //     updateCollieListWs(orderId);
+  //   }, REPEAT_DELAY);
+  // }).on('mouseup', '.collie-table tfoot .input-group .btn', function (e) {
+  //   console.log(e);
+  //   if (intervalId) {
+  //     clearInterval(intervalId);
+  //     intervalId = null;
+  //   }
+  //   const $button = $(this);
+  //   const orderId = $button.attr('data-row-id');
+  //   centerAndFocusCollieTable(orderId, $(this));
+  // });
+// Mouse events
+  $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function (e) {
+    handleButtonPress($(this));
+  }).on('mouseup mouseleave', '.collie-table tfoot .input-group .btn', function (e) {
+    handleButtonRelease($(this));
+  });
+
+// Touch events
+  $(document).on('touchstart', '.collie-table tfoot .input-group .btn', function (e) {
+    e.preventDefault();
+    // Disable context menu
+    e.stopPropagation();
+    $(this).on('contextmenu', function(e) {
+      e.preventDefault();
+      return false;
+    });
+    handleButtonPress($(this));
+    // Add touch identifier to track this specific touch
+    $(this).data('touchId', e.originalEvent.touches[0].identifier);
+  }).on('touchend touchcancel', '.collie-table tfoot .input-group .btn', function (e) {
+    e.preventDefault();
+    // Only handle release if this is the same touch that started
+    if ($(this).data('touchId') === e.originalEvent.changedTouches[0].identifier) {
+      handleButtonRelease($(this));
+      $(this).removeData('touchId');
+    }
+  });
+
   let intervalId = null;
-  const REPEAT_DELAY = 50; // Milliseconds between repeats
-  $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function () {
-    const $button = $(this);
+  let holdStartTime = null;
+  let shouldContinue = false;
+  const INITIAL_DELAY = 300;
+  const MIN_DELAY = 0.001;
+  const ACCELERATION_RATE = 0.6;
+
+  function handleButtonPress($button) {
     const orderId = $button.attr('data-row-id');
     const type = $button.attr('data-type');
     const method = $button.attr('data-method');
+    holdStartTime = Date.now();
+    shouldContinue = true;
+
     // Execute once immediately
     if (method === 'collie') {
       handleCollieQuantityChange(orderId, type);
@@ -812,23 +878,27 @@ $(function () {
       handleWeightChange(orderId, type);
     }
     updateCollieListWs(orderId);
-    // Setup repeat interval for hold
-    intervalId = setInterval(() => {
+
+    function updateWithSpeed() {
+      if (!shouldContinue) return;
+
       if (method === 'weight') {
         handleWeightChange(orderId, type);
+        const holdDuration = Date.now() - holdStartTime;
+        const currentDelay = Math.max(MIN_DELAY, INITIAL_DELAY * Math.pow(ACCELERATION_RATE, Math.floor(holdDuration / 300)));
+        setTimeout(updateWithSpeed, currentDelay);
       }
       updateCollieListWs(orderId);
-    }, REPEAT_DELAY);
-  }).on('mouseup mouseleave', '.collie-table tfoot .input-group .btn', function () {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
     }
-    const $button = $(this);
-    const orderId = $button.attr('data-row-id');
-    centerAndFocusCollieTable(orderId, $(this));
-  });
 
+    setTimeout(updateWithSpeed, INITIAL_DELAY);
+  }
+
+  function handleButtonRelease($button) {
+    shouldContinue = false;
+    const orderId = $button.attr('data-row-id');
+    centerAndFocusCollieTable(orderId, $button);
+  }
   /**
    * Modify the selected collie list, when collie name and index are provided the list is updated else the list is build
    * @param totalQty

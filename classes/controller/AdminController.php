@@ -2094,6 +2094,7 @@ class AdminControllerCore extends Controller
             'currentIndex' => self::$currentIndex,
             'bootstrap' => $this->bootstrap,
             'default_language' => (int) Configuration::get('PS_LANG_DEFAULT'),
+            'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
         ]);
     }
 

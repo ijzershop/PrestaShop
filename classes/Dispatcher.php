@@ -975,6 +975,7 @@ class DispatcherCore
             $id_shop = (int) Context::getContext()->shop->id;
         }
 
+
         if (!isset($this->routes[$id_shop])) {
             $this->loadRoutes($id_shop);
         }
@@ -984,7 +985,7 @@ class DispatcherCore
             $index_link = $this->use_routes ? '' : 'index.php';
 
             return ($route_id == 'index') ? $index_link . (($query) ? '?' . $query : '') :
-                ((trim($route_id) == '') ? '' : 'index.php?controller=' . $route_id) . (($query) ? '&' . $query : '') . $anchor;
+                ((trim((string)$route_id) == '') ? '' : 'index.php?controller=' . $route_id) . (($query) ? '&' . $query : '') . $anchor;
         }
         $route = $this->routes[$id_shop][$id_lang][$route_id];
         // Check required fields

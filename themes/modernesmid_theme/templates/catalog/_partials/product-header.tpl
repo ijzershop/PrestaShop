@@ -63,7 +63,7 @@
             <div id="block-category-inner" class="block-category-inner row">
                 <div class="col-12 col-sm-8">
                     {if $category.top_description}
-                        <div id="category-description" class="text-muted">{$category.top_description nofilter}</div>
+                        <div id="category-description" class="text-muted">{$category.top_description|unescape:'html' nofilter}</div>
                     {/if}
                 </div>
                 <div class="d-none d-sm-flex col-sm-4 pl-0">

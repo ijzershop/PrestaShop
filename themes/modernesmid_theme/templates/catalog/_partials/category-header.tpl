@@ -28,7 +28,7 @@
             {if !empty($listing.products)}
             <div class="block-category-inner">
                 {if $category.top_description}
-                    <div id="category-description" class="text-muted">{$category.top_description nofilter}</div>
+                    <div id="category-description" class="text-muted">{$category.top_description|unescape:'html' nofilter}</div>
                 {/if}
                 {if $category.image.large.url}
                     <div class="category-cover">

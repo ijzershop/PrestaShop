@@ -2866,12 +2866,12 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     $items[$collieName]['qty'] = $this->calculateCollieTotal($items[$collieName]['weight'], 1000);
                 }
 
-                $items[$collieName]['width'] = 0.80;
-                $items[$collieName]['heigth'] = 2.20;
-                $items[$collieName]['length'] = 1.80;
+                $items[$collieName]['width'] = 0.30;
+                $items[$collieName]['heigth'] = 1.00;
+                $items[$collieName]['length'] = 2.00;
                 $items[$collieName]['multiplier'] = 250;
                 $items[$collieName]['weight'] = $items[$collieName]['weight'];
-                $items[$collieName]['size'] = '180 x 80 x 220';
+                $items[$collieName]['size'] = '200 x 30 x 100';
                 $items[$collieName]['formula'] = '';
                 break;
             default:

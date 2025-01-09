@@ -99,6 +99,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
                 $extraStyling .= '.column-osname .dropdown-toggle{padding:15px 18px!important;pointer-events:none;}';
                 $extraStyling .= '.column-actions .btn-group-action{display:none;}';
                 $extraStyling .= '.orders-kpi{display:none;}';
+                $extraStyling .= '.header-toolbar.d-print-none{display:none;}';
             }
         }
         /**

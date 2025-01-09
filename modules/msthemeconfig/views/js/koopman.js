@@ -265,11 +265,11 @@ $(function () {
       let collieList = [];
       while(newPalletQty > 0){
         collieList.push('{"name":"pallet",' +
-          '"width":"80",' +
-          '"height":"220",' +
+          '"width":"30",' +
+          '"height":"100",' +
           '"length":"200",' +
           '"formula":"none",' +
-          '"size":"200 x 80 x 220",' +
+          '"size":"200 x 30 x 100",' +
           '"weight":'+splitWeight+'}');
 
         newPalletQty--;
@@ -368,31 +368,7 @@ $(function () {
       location.reload();
     });
   });
-  /**
-   * Re-center the collie table when the window is resized of reshaped
-   * @param rowId
-   */
-  let centerAndFocusCollieTable = function (rowId) {
-    const collieTable = $(`.collie-table[data-row-id="${rowId}"]`);
-    const windowHeight = window.innerHeight;
-    const windowWidth = window.innerWidth;
-    const tableHeight = collieTable.outerHeight();
-    const tableWidth = collieTable.outerWidth();
-    // Calculate scroll position to center vertically
-    const scrollTop = collieTable.offset().top - (windowHeight / 2) + (tableHeight / 2) - 100;
-    // Calculate scroll position to center horizontally
-    const scrollLeft = collieTable.offset().left - (windowWidth / 2) + (tableWidth / 2) - 20;
-    // Smooth scroll to centered position
-    $('html, body').animate({
-      scrollTop: scrollTop,
-      scrollLeft: scrollLeft
-    }, 300);
-    // Ensure element stays in view
-    collieTable.css({
-      'position': 'relative',
-      'z-index': 1000
-    });
-  }
+
   /**
    * Calculate the volume size by weight in centimeters and size for on label: length * width * height * 250
    */
@@ -1094,4 +1070,40 @@ $(function () {
       }
     });
   });
+});
+
+
+$(document).ready(function() {
+
+  /**
+   * Re-center the collie table when the window is resized of reshaped
+   * @param rowId
+   */
+  let centerAndFocusCollieTable = function (rowId) {
+    const collieTable = $(`.collie-table[data-row-id="${rowId}"]`);
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const tableHeight = collieTable.outerHeight();
+    const tableWidth = collieTable.outerWidth();
+    // Calculate scroll position to center vertically
+    const scrollTop = collieTable.offset().top - (windowHeight / 2) + (tableHeight / 2) - 100;
+    // Calculate scroll position to center horizontally
+    const scrollLeft = collieTable.offset().left - (windowWidth / 2) + (tableWidth / 2) - 20;
+    // Smooth scroll to centered position
+    $('html, body').animate({
+      scrollTop: scrollTop,
+      scrollLeft: scrollLeft
+    }, 300);
+    // Ensure element stays in view
+    collieTable.css({
+      'position': 'relative',
+      'z-index': 1000
+    });
+  }
+
+  const $firstTable = $('.collie-table').first();
+  if ($firstTable.length) {
+    const rowId = $firstTable.data('row-id');
+    centerAndFocusCollieTable(rowId);
+  }
 });

@@ -27,8 +27,8 @@
 <table style="width: 100%">
 <tr>
 	<td style="width: 50%">
-		{if $logo_path}
-			<img src="{$logo_path}" style="width:{$width_logo}px; height:{$height_logo}px;" />
+		{if $logo}
+			<img src="{$logo}" style="width:{$width_logo}px; height:{$height_logo}px;" />
 		{/if}
 	</td>
 	<td style="width: 50%; text-align: right;">

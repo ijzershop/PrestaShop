@@ -92,17 +92,7 @@ class Context
 
     public function getCustomerAddressInvoiceId(): int
     {
-        $invoice_id = (int) PrestashopContext::getContext()->cart->id_address_invoice;
-        if($invoice_id <= 1){
-            $invoice_id = (int) PrestashopContext::getContext()->cart->id_address_delivery;
-        }
-
-        if($invoice_id <= 1){
-            $cart  = new \Cart(PrestashopContext::getContext()->cart->id);
-            $invoice_id = (int) $cart->id_address_invoice;
-        }
-
-        return (int)$invoice_id;
+        return (int) PrestashopContext::getContext()->cart->id_address_invoice;
     }
 
     public function getModuleLink(

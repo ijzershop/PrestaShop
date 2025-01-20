@@ -57,7 +57,7 @@ class Ps_EmailAlerts extends Module
     {
         $this->name = 'ps_emailalerts';
         $this->tab = 'administration';
-        $this->version = '3.0.0';
+        $this->version = '3.0.1';
         $this->author = 'PrestaShop';
         $this->need_instance = 0;
 
@@ -126,15 +126,15 @@ class Ps_EmailAlerts extends Module
             Configuration::updateGlobalValue('MA_PRODUCT_COVERAGE', 0);
 
             $sql = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
-                (
-                    `id_customer` int(10) unsigned NOT NULL,
-                    `customer_email` varchar(128) NOT NULL,
-                    `id_product` int(10) unsigned NOT NULL,
-                    `id_product_attribute` int(10) unsigned NOT NULL,
-                    `id_shop` int(10) unsigned NOT NULL,
-                    `id_lang` int(10) unsigned NOT NULL,
-                    PRIMARY KEY  (`id_customer`,`customer_email`,`id_product`,`id_product_attribute`,`id_shop`)
-                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
+				(
+					`id_customer` int(10) unsigned NOT NULL,
+					`customer_email` varchar(128) NOT NULL,
+					`id_product` int(10) unsigned NOT NULL,
+					`id_product_attribute` int(10) unsigned NOT NULL,
+					`id_shop` int(10) unsigned NOT NULL,
+					`id_lang` int(10) unsigned NOT NULL,
+					PRIMARY KEY  (`id_customer`,`customer_email`,`id_product`,`id_product_attribute`,`id_shop`)
+				) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
 
             if (!Db::getInstance()->execute($sql)) {
                 return false;
@@ -332,10 +332,10 @@ class Ps_EmailAlerts extends Module
     public function getAllMessages($id)
     {
         $messages = Db::getInstance()->executeS('
-            SELECT `message`
-            FROM `' . _DB_PREFIX_ . 'message`
-            WHERE `id_order` = ' . (int) $id . '
-            ORDER BY `id_message` ASC');
+			SELECT `message`
+			FROM `' . _DB_PREFIX_ . 'message`
+			WHERE `id_order` = ' . (int) $id . '
+			ORDER BY `id_message` ASC');
         $result = [];
         foreach ($messages as $message) {
             $result[] = $message['message'];
@@ -349,7 +349,7 @@ class Ps_EmailAlerts extends Module
      *
      * @param Context $context
      *
-     * @return \PrestaShop\PrestaShop\Core\Localization\Locale|null
+     * @return PrestaShop\PrestaShop\Core\Localization\Locale|null
      *
      * @throws Exception
      */
@@ -360,14 +360,14 @@ class Ps_EmailAlerts extends Module
             return $locale;
         }
 
-        $containerFinder = new \PrestaShop\PrestaShop\Adapter\ContainerFinder($context);
+        $containerFinder = new PrestaShop\PrestaShop\Adapter\ContainerFinder($context);
         $container = $containerFinder->getContainer();
         if (null === $context->container) {
             // @phpstan-ignore-next-line
             $context->container = $container;
         }
 
-        /** @var \PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository $localeRepository */
+        /** @var PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository $localeRepository */
         $localeRepository = $container->get(Controller::SERVICE_LOCALE_REPOSITORY);
         $locale = $localeRepository->getLocale(
             $context->language->getLocale()
@@ -418,140 +418,55 @@ class Ps_EmailAlerts extends Module
         $items_table = '';
 
         $products = $params['order']->getProducts();
-//        $customized_datas = Product::getAllCustomizedDatas((int) $params['cart']->id);
-//        Product::addCustomizationPrice($products, $customized_datas);
-//        foreach ($products as $key => $product) {
-//            $unit_price = Product::getTaxCalculationMethod($customer->id) == PS_TAX_EXC ? $product['product_price'] : $product['product_price_wt'];
-//
-//            $customization_text = '';
-//            if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery][$product['id_customization']])) {
-//                foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery][$product['id_customization']] as $customization) {
-//                    if (isset($customization[Product::CUSTOMIZE_TEXTFIELD])) {
-//                        foreach ($customization[Product::CUSTOMIZE_TEXTFIELD] as $text) {
-//                            $customization_text .= $text['name'] . ': ' . $text['value'] . '<br />';
-//                        }
-//                        $customization_text .= '---<br />';
-//                    }
-//
-//                    if (isset($customization[Product::CUSTOMIZE_FILE])) {
-//                        $customization_text .= count($customization[Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Emailalerts.Admin') . '<br />';
-//                        $customization_text .= '---<br />';
-//                    }
-//                }
-//                if (method_exists('Tools', 'rtrimString')) {
-//                    $customization_text = Tools::rtrimString($customization_text, '---<br />');
-//                } else {
-//                    $customization_text = preg_replace('/---<br \/>$/', '', $customization_text);
-//                }
-//            }
-//
-//            $url = $context->link->getProductLink($product['product_id']);
-//            $items_table .=
-//                '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
-//                    <td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
-//                    <td style="padding:0.6em 0.4em;">
-//                        <strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
-//                            . (isset($product['attributes_small']) ? ' ' . $product['attributes_small'] : '')
-//                            . (!empty($customization_text) ? '<br />' . $customization_text : '')
-//                        . '</strong>
-//                    </td>
-//                    <td style="padding:0.6em 0.4em; text-align:right;">' . $contextLocale->formatPrice($unit_price, $currency->iso_code) . '</td>
-//                    <td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
-//                    <td style="padding:0.6em 0.4em; text-align:right;">'
-//                        . $contextLocale->formatPrice($unit_price * $product['product_quantity'], $currency->iso_code)
-//                    . '</td>
-//                </tr>';
-//        }
-//        foreach ($params['order']->getCartRules() as $discount) {
-//            $items_table .=
-//                '<tr style="background-color:#EBECEE;">
-//                        <td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', [], 'Modules.Emailalerts.Admin') . ' ' . $discount['name'] . '</td>
-//                    <td style="padding:0.6em 0.4em; text-align:right;">-' . $contextLocale->formatPrice($discount['value'], $currency->iso_code) . '</td>
-//            </tr>';
-//        }
+        $customized_datas = Product::getAllCustomizedDatas((int) $params['cart']->id);
+        Product::addCustomizationPrice($products, $customized_datas);
+        foreach ($products as $key => $product) {
+            $unit_price = Product::getTaxCalculationMethod($customer->id) == PS_TAX_EXC ? $product['product_price'] : $product['product_price_wt'];
 
-        $virtual_product = true;
-
-        $product_var_tpl_list = [];
-
-        foreach ($order->getProducts() as $product) {
-
-            $product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($product['total_price'], Context::getContext()->getComputingPrecision()) : $product['total_wt'];
-
-            $product_var_tpl = [
-                'id_product' => $product['id_product'],
-                'id_product_attribute' => null,
-                'reference' => $product['reference'],
-                'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
-                'price' => Tools::getContextLocale($context)->formatPrice($product_price, $context->currency->iso_code),
-                'price_tax_excl' => Tools::getContextLocale($context)->formatPrice($product['total_price'], $context->currency->iso_code),
-                'quantity' => $product['product_quantity'],
-                'customization' => [],
-            ];
-
-            if (isset($product['price']) && $product['price']) {
-                $product_var_tpl['unit_price'] = Tools::getContextLocale($context)->formatPrice($product['unit_price_tax_excl'], $context->currency->iso_code);
-                $product_var_tpl['unit_price_full'] = Tools::getContextLocale($context)->formatPrice($product['unit_price_tax_excl'], $context->currency->iso_code)
-                    . ' ' . $product['unity'];
-            } else {
-                $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';
-            }
-
-            $customized_datas = Product::getAllCustomizedDatas((int) $order->id_cart, null, true, null, (int) $product['id_customization']);
-            if (isset($customized_datas[$product['id_product']][0])) {
-                $product_var_tpl['customization'] = [];
-                foreach ($customized_datas[$product['id_product']][0][$order->id_address_delivery] as $customization) {
-                    $customization_text = '';
-                    if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD])) {
-                        foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text) {
-                            $customization_text .= '<strong>' . $text['name'] . '</strong>: ' . $text['value'] . '<br />';
+            $customization_text = '';
+            if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery][$product['id_customization']])) {
+                foreach ($customized_datas[$product['product_id']][$product['product_attribute_id']][$order->id_address_delivery][$product['id_customization']] as $customization) {
+                    if (isset($customization[Product::CUSTOMIZE_TEXTFIELD])) {
+                        foreach ($customization[Product::CUSTOMIZE_TEXTFIELD] as $text) {
+                            $customization_text .= $text['name'] . ': ' . $text['value'] . '<br />';
                         }
+                        $customization_text .= '---<br />';
                     }
 
-                    if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customization_text .= $context->getTranslator()->trans('%d image(s)', [count($customization['datas'][Product::CUSTOMIZE_FILE])], 'Admin.Payment.Notification') . '<br />';
+                    if (isset($customization[Product::CUSTOMIZE_FILE])) {
+                        $customization_text .= count($customization[Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Emailalerts.Admin') . '<br />';
+                        $customization_text .= '---<br />';
                     }
-
-                    $customization_quantity = (int) $customization['quantity'];
-
-                    $product_var_tpl['customization'][] = [
-                        'customization_text' => $customization_text,
-                        'customization_quantity' => $customization_quantity,
-                        'quantity' => Tools::getContextLocale($context)->formatPrice($customization_quantity * $product_price, $context->currency->iso_code),
-                    ];
+                }
+                if (method_exists('Tools', 'rtrimString')) {
+                    $customization_text = Tools::rtrimString($customization_text, '---<br />');
+                } else {
+                    $customization_text = preg_replace('/---<br \/>$/', '', $customization_text);
                 }
             }
 
-            $product_var_tpl_list[] = $product_var_tpl;
-            // Check if is not a virtual product for the displaying of shipping
-            if (!$product['is_virtual']) {
-                $virtual_product &= false;
-            }
+            $url = $context->link->getProductLink($product['product_id']);
+            $items_table .=
+                '<tr>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: left;">
+						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
+                            . (isset($product['attributes_small']) ? ' ' . $product['attributes_small'] : '')
+                            . (!empty($customization_text) ? '<br />' . $customization_text : '')
+                        . '</strong>
+					</td>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: center;">' . (int) $product['product_quantity'] . '</td>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">'
+                        . $contextLocale->formatPrice($unit_price * $product['product_quantity'], $currency->iso_code)
+                    . '</td>
+				</tr>';
         }
-
-        $product_list_txt = '';
-        $product_list_html = '';
-        if (count($product_var_tpl_list) > 0) {
-            $product_list_txt = PaymentModule::getEmailTemplateContentStatic('order_conf_product_list.txt', Mail::TYPE_TEXT, $product_var_tpl_list, $context);
-            $product_list_html = PaymentModule::getEmailTemplateContentStatic('order_conf_product_list.tpl', Mail::TYPE_HTML, $product_var_tpl_list, $context);
+        foreach ($params['order']->getCartRules() as $discount) {
+            $items_table .=
+                '<tr style="background-color:#EBECEE;">
+						<td colspan="2" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: left;">' . $this->trans('Voucher code:', [], 'Modules.Emailalerts.Admin') . ' ' . $discount['name'] . '</td>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">-' . $contextLocale->formatPrice($discount['value'], $currency->iso_code) . '</td>
+			</tr>';
         }
-
-        // Make sure CartRule caches are empty
-        CartRule::cleanCache();
-        $cart_rules_list = $order->getCartRules();
-
-        foreach ($cart_rules_list as $index => $rule){
-            $cart_rules_list[$index]['voucher_name'] = $rule['name'];
-            $cart_rules_list[$index]['voucher_reduction'] = Tools::getContextLocale($context)->formatPrice(-$rule['value_tax_excl'], $context->currency->iso_code);
-        }
-
-        $cart_rules_list_txt = '';
-        $cart_rules_list_html = '';
-        if (count($cart_rules_list) > 0) {
-            $cart_rules_list_txt = PaymentModule::getEmailTemplateContentStatic('order_conf_cart_rules.txt', Mail::TYPE_TEXT, $cart_rules_list, $context);
-            $cart_rules_list_html = PaymentModule::getEmailTemplateContentStatic('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list, $context);
-        }
-
         if ($delivery->id_state) {
             $delivery_state = new State((int) $delivery->id_state);
         }
@@ -620,13 +535,10 @@ class Ps_EmailAlerts extends Module
             '{date}' => $order_date_text,
             '{carrier}' => (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name),
             '{payment}' => Tools::substr($order->payment, 0, 32),
-            '{products}' => $product_list_html,
-            '{products_txt}' => $product_list_txt,
-            '{discounts}' => $cart_rules_list_html,
-            '{discounts_txt}' => $cart_rules_list_txt,
+            '{items}' => $items_table,
             '{total_paid}' => $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
             '{total_products}' => $contextLocale->formatPrice($total_products, $currency->iso_code),
-            '{total_discounts}' => $contextLocale->formatPrice(-$order->total_discounts_tax_excl, $currency->iso_code),
+            '{total_discounts}' => $contextLocale->formatPrice($order->total_discounts, $currency->iso_code),
             '{total_shipping}' => $contextLocale->formatPrice($order->total_shipping, $currency->iso_code),
             '{total_shipping_tax_excl}' => $contextLocale->formatPrice($order->total_shipping_tax_excl, $currency->iso_code),
             '{total_shipping_tax_incl}' => $contextLocale->formatPrice($order->total_shipping_tax_incl, $currency->iso_code),
@@ -654,9 +566,9 @@ class Ps_EmailAlerts extends Module
 
             // Use the merchant lang if he exists as an employee
             $results = Db::getInstance()->executeS('
-                SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'employee`
-                WHERE `email` = \'' . pSQL($merchant_mail) . '\'
-            ');
+				SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'employee`
+				WHERE `email` = \'' . pSQL($merchant_mail) . '\'
+			');
             if ($results) {
                 $user_iso = Language::getIsoById((int) $results[0]['id_lang']);
                 if ($user_iso) {
@@ -847,8 +759,8 @@ class Ps_EmailAlerts extends Module
     public function hookActionProductDelete($params)
     {
         $sql = '
-            DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
-            WHERE `id_product` = ' . (int) $params['product']->id;
+			DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
+			WHERE `id_product` = ' . (int) $params['product']->id;
 
         Db::getInstance()->execute($sql);
     }
@@ -857,13 +769,13 @@ class Ps_EmailAlerts extends Module
     {
         if ($params['deleteAllAttributes']) {
             $sql = '
-                DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
-                WHERE `id_product` = ' . (int) $params['id_product'];
+				DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
+				WHERE `id_product` = ' . (int) $params['id_product'];
         } else {
             $sql = '
-                DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
-                WHERE `id_product_attribute` = ' . (int) $params['id_product_attribute'] . '
-                AND `id_product` = ' . (int) $params['id_product'];
+				DELETE FROM `' . _DB_PREFIX_ . MailAlert::$definition['table'] . '`
+				WHERE `id_product_attribute` = ' . (int) $params['id_product_attribute'] . '
+				AND `id_product` = ' . (int) $params['id_product'];
         }
 
         Db::getInstance()->execute($sql);
@@ -949,10 +861,6 @@ class Ps_EmailAlerts extends Module
             'mailalerts-js',
             'modules/' . $this->name . '/js/mailalerts.js'
         );
-        $this->context->controller->registerStylesheet(
-            'mailalerts-css',
-            'modules/' . $this->name . '/css/mailalerts.css'
-        );
     }
 
     public function hookActionAdminControllerSetMedia()
@@ -1009,13 +917,13 @@ class Ps_EmailAlerts extends Module
             $url = $context->link->getProductLink($product['product_id']);
             $items_table .=
                 '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
-                    <td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
-                    <td style="padding:0.6em 0.4em;">
-                        <strong><a href="' . $url . '">' . $product['product_name'] . '</a>
-                    </strong>
-                    </td>
-                    <td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
-                </tr>';
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">' . $product['product_reference'] . '</td>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">
+						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>
+					</strong>
+					</td>
+					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;"">' . (int) $product['product_quantity'] . '</td>
+				</tr>';
         }
 
         $template_vars = [
@@ -1075,9 +983,9 @@ class Ps_EmailAlerts extends Module
 
             // Use the merchant lang if he exists as an employee
             $results = Db::getInstance()->executeS('
-                SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'employee`
-                WHERE `email` = \'' . pSQL($merchant_mail) . '\'
-            ');
+				SELECT `id_lang` FROM `' . _DB_PREFIX_ . 'employee`
+				WHERE `email` = \'' . pSQL($merchant_mail) . '\'
+			');
             if ($results) {
                 $user_iso = Language::getIsoById((int) $results[0]['id_lang']);
                 if ($user_iso) {
@@ -1311,23 +1219,23 @@ class Ps_EmailAlerts extends Module
         }
 
         $inputs[] = [
-                'type' => 'switch',
-                'is_bool' => true, // retro compat 1.5
-                'label' => $this->trans('Returns', [], 'Modules.Emailalerts.Admin'),
-                'name' => 'MA_RETURN_SLIP',
-                'desc' => $this->trans('Receive a notification when a customer requests a merchandise return.', [], 'Modules.Emailalerts.Admin'),
-                'values' => [
-                    [
-                        'id' => 'active_on',
-                        'value' => 1,
-                        'label' => $this->trans('Yes', [], 'Admin.Global'),
-                    ],
-                    [
-                        'id' => 'active_off',
-                        'value' => 0,
-                        'label' => $this->trans('No', [], 'Admin.Global'),
-                    ],
+            'type' => 'switch',
+            'is_bool' => true, // retro compat 1.5
+            'label' => $this->trans('Returns', [], 'Modules.Emailalerts.Admin'),
+            'name' => 'MA_RETURN_SLIP',
+            'desc' => $this->trans('Receive a notification when a customer requests a merchandise return.', [], 'Modules.Emailalerts.Admin'),
+            'values' => [
+                [
+                    'id' => 'active_on',
+                    'value' => 1,
+                    'label' => $this->trans('Yes', [], 'Admin.Global'),
                 ],
+                [
+                    'id' => 'active_off',
+                    'value' => 0,
+                    'label' => $this->trans('No', [], 'Admin.Global'),
+                ],
+            ],
         ];
         $inputs[] = [
             'type' => 'emailalerts_tags',

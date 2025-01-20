@@ -8,9 +8,8 @@ class PDFGenerator extends PDFGeneratorCore
      */
     public function Header()
     {
-        $_SERVER['DOCUMENT_ROOT'] = realpath(dirname(__FILE__).'/../');
-
         $this->writeHTML($this->header);
+
         if(strpos($this->header, 'TOEVOEGEN') !== false){
             $this->RotatedText(60,35,'TOEVOEGEN',-58, 110);
         }

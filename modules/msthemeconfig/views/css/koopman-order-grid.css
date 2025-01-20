@@ -167,7 +167,7 @@ tfoot tr.footer{
   height: 10em;
   width: 10em;
 }
-.print-button.disabled, .pallet-button.disabled{
+.print-button.disabled, .dropdown-dropdown-pallet-button.disabled{
   opacity: .5;
 }
 .print-button{
@@ -182,7 +182,7 @@ tfoot tr.footer{
   border-color: #ffffff !important;
   display: inline-block;
 }
-.pallet-button{
+.dropdown-pallet-button{
   margin: 5px 0;
   width: 6.8em;
   height: 6.8em;
@@ -192,12 +192,43 @@ tfoot tr.footer{
   display: inline-block;
 
 }
-.pallet-button img{
+.dropdown-pallet-button img{
   width: 2.5em;
   height: 2.5em;
   fill: #ffffff !important;
 }
-.print-button img, .pallet-button img{
+.dropleft .dropdown-menu{
+  border-radius: 0px;
+  box-shadow: none !important;
+  background-color: #ffffff;
+  border:2px solid #cccccc;
+  min-width:42rem;
+  height: 11rem;
+  padding:20px 95px;
+}
+
+.dropleft .dropdown-menu > .dropdown-item{
+  height: 7rem;
+  width: 7rem;
+  border-radius: 50% !important;
+  background-color: #3d57ae !important;
+  padding: 2.5rem 0;
+  text-align: center;
+  line-height: 1.2rem;
+  color: #ffffff;
+  border-style: double;
+  border-width: 10px;
+  border-color: #ffffff !important;
+  margin: 10px 20px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: inline-block;
+}
+.dropleft .dropdown-menu > .dropdown-item:first-child{
+  background-color: #f54c3e !important;
+}
+
+.print-button img, .dropdown-pallet-button img{
   width: 3.5em;
   height: 3.5em;
   fill: #ffffff !important;
@@ -233,6 +264,11 @@ tfoot tr.footer{
 .workshop-btn{
   background-color: #70b580!important;
   color: #ffffff;
+}
+.toegevoegd-btn{
+  background-color: #ffffff!important;
+  border: 1px solid #000000;
+  color: #000000;
 }
 .beingprepared-btn label{
   padding: 30% 0!important;

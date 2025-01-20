@@ -425,7 +425,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'total_refunded_tax_excl' => $this->order_invoice->total_refunded_tax_excl,
             'total_refunded_tax_incl' => $this->order_invoice->total_refunded_tax_incl
         );
-//dd($footer);
+
         foreach ($footer as $key => $value) {
             $footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
         }

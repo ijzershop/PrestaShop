@@ -276,6 +276,7 @@ class ExportOrdersMultipleCollies
 
 
         foreach ($orders as $row) {
+
             $shippingTask = new stdClass();
             $shippingTask->type = 'T'; // T = Stukgoed Levering
 
@@ -354,7 +355,7 @@ class ExportOrdersMultipleCollies
                     }
                 }
             }
-            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && is_array(Tools::getValue('connected_orders')) && count(Tools::getValue('connected_orders')) === 0) {
+            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && empty(Tools::getValue('connected_orders'))) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_to_id']);
                 $linkedReferencesArray = explode(',', $row['added_to_reference']);
@@ -362,7 +363,7 @@ class ExportOrdersMultipleCollies
                 $this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray);
                 return;
             }
-            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && is_array(Tools::getValue('connected_orders')) && count(Tools::getValue('connected_orders')) === 0) {
+            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && empty(Tools::getValue('connected_orders'))) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_with_id']);
                 $linkedReferencesArray = explode(',', $row['added_with_reference']);
@@ -380,7 +381,16 @@ class ExportOrdersMultipleCollies
                     if(in_array($collies[$i]['name'], ['envelope', 'plaat', '1-meter', '2-meter'])) {
                         $collieRow->vrzenh = 'COL';
                     } else {
-                        $collieRow->vrzenh = 'SP';
+                        switch ($collies[$i]['name']) {
+                            case 'pallet':
+                                $collieRow->vrzenh = 'PLH';
+                                break;
+                            case 'halve-pallet':
+                                $collieRow->vrzenh = 'MP';
+                                break;
+                            default:
+                                $collieRow->vrzenh = 'PLH';
+                        }
                     }
 
                     $collieRow->gewicht = $collies[$i]['weight'];
@@ -823,9 +833,9 @@ class ExportOrdersMultipleCollies
         }
         if (Tools::getIsset('connected_orders')) {
             $connectedOrders = Tools::getValue('connected_orders');
-            if (count($connectedOrders) > 0) {
+            if (is_array($connectedOrders)) {
                 //get order object for each order and change status
-                foreach (explode(',', $connectedOrders) as $order) {
+                foreach ($connectedOrders as $order) {
                     $orderObject = new Order((int)$order);
                     $shippingData = $orderObject->getShipping();
                     if ((int)$shippingData[0]['id_carrier'] === $this->addedSelectCarrier) {
@@ -842,7 +852,6 @@ class ExportOrdersMultipleCollies
                 }
             }
         }
-
         return true;
     }
 

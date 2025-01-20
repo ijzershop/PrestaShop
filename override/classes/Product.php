@@ -100,12 +100,11 @@ class Product extends ProductCore {
             foreach ($cartRules as $rule) {
 
                 $ruleId = (int)$rule['id_cart_rule'];
+                $rule = new CartRule($ruleId);
                 if (in_array($ruleId, [158, $firstDiscountRule, $secondDiscountRule, $thirdDiscountRule])) {
-                    $cartRule = new CartRule($ruleId);
-                    if ($cartRule->priority <= $prio) {
-                        $prio = $cartRule->priority;
-                        $cartReductionPercent = (float)$cartRule->reduction_percent;
-                        $rule = $cartRule;
+                    if ($rule->priority <= $prio) {
+                        $prio = $rule->priority;
+                        $cartReductionPercent = (float)$rule->reduction_percent;
                     }
                 }
             }

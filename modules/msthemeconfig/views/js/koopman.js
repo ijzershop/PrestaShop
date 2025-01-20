@@ -248,7 +248,7 @@ $(function () {
   /**
    * Action Button print collie label(s) or print a pallet label
    */
-  $(document).on('click', '.print-button, .pallet-button', function (e) {
+  $(document).on('click', '.print-button, .pallet-button, .halve-pallet-button', function (e) {
     e.stopImmediatePropagation();
     let $clickedBtn = $(this);
     let orderId = $clickedBtn.attr('data-order');
@@ -259,17 +259,40 @@ $(function () {
       let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
 
       let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
-      let newPalletQty = Math.ceil(currentWeight/1000);
+      let newPalletQty = Math.ceil(currentWeight/500);
       let splitWeight = currentWeight/newPalletQty;
       collies = '[';
       let collieList = [];
       while(newPalletQty > 0){
         collieList.push('{"name":"pallet",' +
           '"width":"30",' +
-          '"height":"100",' +
+          '"height":"50",' +
           '"length":"200",' +
           '"formula":"none",' +
-          '"size":"200 x 30 x 100",' +
+          '"size":"200 x 30 x 50",' +
+          '"weight":'+splitWeight+'}');
+
+        newPalletQty--;
+      }
+      collies += collieList.join(',');
+      collies += ']';
+    }
+
+    if($clickedBtn.hasClass('halve-pallet-button')){
+      let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
+
+      let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
+      let newPalletQty = Math.ceil(currentWeight/150);
+      let splitWeight = currentWeight/newPalletQty;
+      collies = '[';
+      let collieList = [];
+      while(newPalletQty > 0){
+        collieList.push('{"name":"halve-pallet",' +
+          '"width":"50",' +
+          '"height":"50",' +
+          '"length":"100",' +
+          '"formula":"none",' +
+          '"size":"100 x 50 x 50",' +
           '"weight":'+splitWeight+'}');
 
         newPalletQty--;
@@ -302,11 +325,11 @@ $(function () {
     let house_number_extension = $('.address-input-text#house_number_extension').val();
     let postcode = $('.address-input-text#postcode').val();
     let city = $('.address-input-text#city').val();
-
     let data = {
       '_token': token,
       'profile': profileId,
       'id_order': orderId,
+      'connected_orders':null,
       'collies': collies,
       'address1': address1,
       'house_number': house_number,
@@ -588,33 +611,6 @@ $(function () {
     return totalOrderWeight;
   }
 
-  /**
-   * Select the collie type and update the collie table
-   */
-  $(document).on('click', '.collieTypeSelect li', function (e) {
-    e.stopImmediatePropagation();
-    let data = $(this).data();
-    let index = data.index;
-    let rowId = data.rowId;
-    let collieType = data.type;
-    let collieInput;
-    let weightInput;
-    let weight;
-    let qty;
-    let selectedColliesInput = $('.selected_collie_values[data-row-id="' + rowId + '"]');
-    let collieData = selectedColliesInput.val();
-
-    collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="' + rowId + '"]');
-    weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + rowId + '"]');
-    qty = parseInt(collieInput.val().replace('Collie(s)', ''));
-    weight = parseFloat(weightInput.val().replace('Kg', ''));
-
-    let newData = updateCollieItemList(qty, weight, JSON.parse(collieData), index, collieType);
-    selectedColliesInput.val(JSON.stringify(newData));
-
-    updateCollieTable(rowId, newData);
-    centerAndFocusCollieTable(rowId, $(this));
-  });
 
   /**
    * Handle the collie quantity change on click qty +/- buttons
@@ -770,42 +766,6 @@ $(function () {
     }
   }
 
-  // /**
-  //  * click / hold function for collie qty and total weight buttons. Weight buttons are handled separately so they can have a hold functionality
-  //  * @type {null}
-  //  */
-
-  // $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function (e) {
-  //   console.log(e);
-  //   const $button = $(this);
-  //   const orderId = $button.attr('data-row-id');
-  //   const type = $button.attr('data-type');
-  //   const method = $button.attr('data-method');
-  //   // Execute once immediately
-  //   if (method === 'collie') {
-  //     handleCollieQuantityChange(orderId, type);
-  //   } else if (method === 'weight') {
-  //     handleWeightChange(orderId, type);
-  //   }
-  //   updateCollieListWs(orderId);
-  //   // Setup repeat interval for hold
-  //   intervalId = setInterval(() => {
-  //     if (method === 'weight') {
-  //       handleWeightChange(orderId, type);
-  //     }
-  //     updateCollieListWs(orderId);
-  //   }, REPEAT_DELAY);
-  // }).on('mouseup', '.collie-table tfoot .input-group .btn', function (e) {
-  //   console.log(e);
-  //   if (intervalId) {
-  //     clearInterval(intervalId);
-  //     intervalId = null;
-  //   }
-  //   const $button = $(this);
-  //   const orderId = $button.attr('data-row-id');
-  //   centerAndFocusCollieTable(orderId, $(this));
-  // });
-// Mouse events
   $(document).on('mousedown', '.collie-table tfoot .input-group .btn', function (e) {
     handleButtonPress($(this));
   }).on('mouseup mouseleave', '.collie-table tfoot .input-group .btn', function (e) {
@@ -1023,7 +983,8 @@ $(function () {
       type: 'GET',
       data: {
         'id_order': orderId,
-        'collies': collies
+        'connected_orders':null,
+        'collies': collies,
       }
     }).done(function (data) {
       if (data === 'printed') {
@@ -1053,8 +1014,8 @@ $(function () {
 
     let data = {
       '_token': token,
-      'collies': collies,
       'connected_orders': connectedOrders,
+      'collies': collies,
     }
 
     $.ajax({
@@ -1100,6 +1061,34 @@ $(document).ready(function() {
       'z-index': 1000
     });
   }
+
+  /**
+   * Select the collie type and update the collie table
+   */
+  $(document).on('click', '.collieTypeSelect li', function (e) {
+    e.stopImmediatePropagation();
+    let data = $(this).data();
+    let index = data.index;
+    let rowId = data.rowId;
+    let collieType = data.type;
+    let collieInput;
+    let weightInput;
+    let weight;
+    let qty;
+    let selectedColliesInput = $('.selected_collie_values[data-row-id="' + rowId + '"]');
+    let collieData = selectedColliesInput.val();
+
+    collieInput = $('.collie-table tfoot .input-group.total_collies input[data-row-id="' + rowId + '"]');
+    weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + rowId + '"]');
+    qty = parseInt(collieInput.val().replace('Collie(s)', ''));
+    weight = parseFloat(weightInput.val().replace('Kg', ''));
+
+    let newData = updateCollieItemList(qty, weight, JSON.parse(collieData), index, collieType);
+    selectedColliesInput.val(JSON.stringify(newData));
+
+    updateCollieTable(rowId, newData);
+    centerAndFocusCollieTable(rowId, $(this));
+  });
 
   const $firstTable = $('.collie-table').first();
   if ($firstTable.length) {

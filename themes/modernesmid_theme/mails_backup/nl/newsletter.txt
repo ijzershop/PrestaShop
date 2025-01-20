@@ -1,5 +1,0 @@
-{shop_url}
-
-{message}
-
-{custom_footer_html}

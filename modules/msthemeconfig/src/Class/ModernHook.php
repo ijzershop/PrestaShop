@@ -214,8 +214,8 @@ class ModernHook
             $catDescription .= trim(strip_tags($cat->top_description[$this->idLang]));
         }
 
-        if (isset($cat->description_short[$this->idLang])) {
-            $catDescription .= trim(strip_tags($cat->description_short[$this->idLang]));
+        if (isset($cat->additional_description[$this->idLang])) {
+            $catDescription .= trim(strip_tags($cat->additional_description[$this->idLang]));
         } elseif(isset($cat->description[$this->idLang])) {
             $catDescription .= trim(strip_tags($cat->description[$this->idLang]));
         }
@@ -706,8 +706,8 @@ class ModernHook
             $catDescription .= trim(strip_tags($cat->top_description[$this->idLang]));
         }
 
-        if (!empty($cat->description_short) && isset($cat->description_short[$this->idLang])) {
-            $catDescription .= trim(strip_tags($cat->description_short[$this->idLang]));
+        if (!empty($cat->additional_description) && isset($cat->additional_description[$this->idLang])) {
+            $catDescription .= trim(strip_tags($cat->additional_description[$this->idLang]));
         } elseif(isset($cat->description[$this->idLang])) {
             $catDescription .= trim(strip_tags($cat->description[$this->idLang]));
         }
@@ -2166,8 +2166,8 @@ public function hookActionFrontControllerSetVariables(&$param): void
             $catDescription .= trim(strip_tags($cat->top_description[$this->idLang]));
         }
 
-        if (isset($cat->description_short[$this->idLang])) {
-            $catDescription .= trim(strip_tags($cat->description_short[$this->idLang]));
+        if (isset($cat->additional_description[$this->idLang])) {
+            $catDescription .= trim(strip_tags($cat->additional_description[$this->idLang]));
         } elseif(isset($cat->description[$this->idLang])){
             $catDescription .= trim(strip_tags($cat->description[$this->idLang]));
         }

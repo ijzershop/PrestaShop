@@ -64,12 +64,15 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
     private function checkIsCronTab(){
         $sapi_type = php_sapi_name();
-        if(substr($sapi_type, 0, 3) == 'cli' || empty($_SERVER['REMOTE_ADDR'])) {
-            return Context::getContext()->shop->domain_ssl.DIRECTORY_SEPARATOR;
+        if (substr($sapi_type, 0, 3) == 'cli') {
+            // For CLI (cron) requests, use full web URL
+            return 'https://' . Context::getContext()->shop->domain_ssl . '/';
         } else {
-            return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR;
+            // For web requests, use filesystem path
+            return _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR;
         }
     }
+
 
     /**
      * Returns the template's HTML header.
@@ -170,6 +173,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
 
         foreach ($order_details as &$order_detail) {
+
             if (!is_null($order_detail['id_oi_offer'])) {
                 $descProduct = new Product($order_detail['product_id']);
                 if ($descProduct) {
@@ -187,36 +191,32 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             if (!is_null($order_detail['customizedDatas'])) {
                 foreach ($order_detail['customizedDatas'] as $addressId => $customization) {
                     if (!is_null($customization)) {
-
                         foreach ($customization as $customizationId => $customized) {
 
                             if (isset($customized['datas'])) {
                                 if (isset($customized['datas'][1][0]['technical_image'])) {
-                                       $file = $customized['datas'][1][0]['technical_image'];
+                                    $file = $customized['datas'][1][0]['technical_image'];
 
-                                       $domain = 'ijzershop.nl';
-                                        if(isset(Context::getContext()->shop->domain_ssl)){
-                                            $domain = Context::getContext()->shop->domain_ssl;
+                                    $context = stream_context_create(["ssl" => ["verify_peer" => true,"verify_peer_name" => true]]);
+                                    if(isset(Context::getContext()->shop->domain_ssl)){
+                                        if(Context::getContext()->shop->domain_ssl == 'ngrok.ijzershop-test.nl'){
+                                            $context = stream_context_create(["ssl" => ["verify_peer" => false,"verify_peer_name" => false]]);
                                         }
-
-                                    if($domain == 'ijzershop8.local'){
-                                        $ext = 'http://';
-                                        $context = stream_context_create(["ssl" => ["verify_peer" => false,"verify_peer_name" => false]]);
-                                    } else {
-                                        $ext = 'https://';
-                                        $context = stream_context_create(["ssl" => ["verify_peer" => true,"verify_peer_name" => true]]);
                                     }
 
-                                    if (!file_get_contents($ext.$domain.'/'.$file,false, $context)) {
+                                    $fileContents = @file_get_contents($this->checkIsCronTab().$file, false, $context);
+                                    if ($fileContents === false) {
                                             $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
-                                       }
+                                    } else {
+                                        $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = $this->checkIsCronTab().$file;
+
+                                    }
                                    }
                                }
                        }
                    }
                }
            }
-
 
 
         }
@@ -246,7 +246,6 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $referenceColumnA = array_column($order_details, 'reference');
         $referenceColumnB = array_column($order_details, 'product_name');
         array_multisort($referenceColumnA, SORT_ASC, SORT_STRING, $referenceColumnB, SORT_ASC, SORT_STRING,  $order_details);
-
 
         $this->smarty->assign(array(
             'webroot' => $this->checkIsCronTab(),

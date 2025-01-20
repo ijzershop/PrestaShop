@@ -27,10 +27,15 @@
       <h2 class="h2 mb-4 text-center">{$category.name}</h2>
             {if !empty($listing.products)}
             <div class="block-category-inner">
-                {if $category.top_description}
-                    <div id="category-description" class="text-muted">{$category.top_description|unescape:'html' nofilter}</div>
-                {/if}
-                {if $category.image.large.url}
+                    <div id="category-description" class="text-muted">
+                      {if $category.additional_description != ''}
+                        {$category.additional_description|unescape:'html' nofilter}
+                      {/if}
+                      {if $category.top_description != ''}
+                        {$category.top_description|unescape:'html' nofilter}
+                      {/if}
+                    </div>
+                {if ($category.additional_description != '' || $category.top_description != '') && $category.image.large.url}
                     <div class="category-cover">
                         <img style="max-width: 225px;max-height: 225px;" class="mx-auto" src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
                     </div>

@@ -23,6 +23,7 @@
   * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
   * International Registered Trademark & Property of PrestaShop SA
   *}
+
       <tr nobr="true">
         <th class="left" width="4%"></th>
         <th class="left" width="8%">Plaats</th>
@@ -41,17 +42,28 @@
           {foreach $customizationPerAddress as $customizationId => $customization}
           {if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
           {foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
-                {if !empty($customization_infos.technical_image) }
+            {if !empty($customization_infos.technical_image) }
                   <table>
                     <tr>
-                      <td colspan="2">
-                        {$customization_infos.value|strip_tags:true|strip}
+                      <td colspan="2" style="font-size: 9px;font-weight: bold;">
+                        Instructie: {$customization_infos.value|strip_tags:true|strip}<br>
                       </td>
                     </tr>
                     <tr>
-                      <td colspan="2">
-                        <br/>
-                        <img src="{Context::getContext()->shop->getBaseURL(true)}{$customization_infos.technical_image}" width="200"  alt=""/>
+                      <td style="width: 100px;padding-top: 10px;">
+                      <table>
+                        <tr><td colspan="3" style="font-size:smaller;text-decoration: underline;"><i>Invoer lijst</i></td></tr>
+                        {foreach json_decode($customization_infos.technical_reference) as $customization_infos_reference}
+                          <tr>
+                                <td style="font-size:smaller;width: 10px;">{$customization_infos_reference->plate}</td>
+                                <td style="font-size:smaller;width: 30px;">{$customization_infos_reference->format}</td>
+                                <td style="font-size:smaller;">{$customization_infos_reference->size}</td>
+                          </tr>
+                        {/foreach}
+                      </table>
+                      </td>
+                      <td style="width:70%;">
+                        <img src="{$customization_infos.technical_image}" width="250" style="border:1px solid #000000;margin-top:10px;"  alt=""/>
                       </td>
                     </tr>
                   </table>
@@ -72,5 +84,4 @@
         <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight*$order_detail.product_quantity), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
       </tr>
       {/foreach}
-      <tr nobr="true"><td colspan="5"></td></tr>
 

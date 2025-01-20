@@ -410,7 +410,7 @@ class OrderData implements JsonSerializable
         $this->title = $title;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         $lines = [];
         foreach ($this->getLines() as $line) {

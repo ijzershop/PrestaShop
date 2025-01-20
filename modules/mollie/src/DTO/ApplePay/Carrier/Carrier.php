@@ -68,7 +68,7 @@ class Carrier implements JsonSerializable
         return $this->amount;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize()
     {
         return [
             'label' => $this->getName(),

@@ -1,13 +1,20 @@
-{% if record.carrier is same as column.options.stateCarrier.shipping %}
+{% if record.carrier is same as column.options.stateCarrier.shipping or record.carrier is same as column.options.stateCarrier.added %}
   {# collie label button #}
   <button type="button" class="btn btn-primary print-button {% if record.total_order_weight > 115 %} disabled {% endif %}"
           {% if record.total_order_weight > 115 %}disabled{% endif %} data-order="{{ record.id_order }}"><img
       src="/upload/print-sharp-thin.svg" alt="Collie"></button>
   {# Pallet label button #}
-  <button type="button"
-          class="btn btn-primary pallet-button"
-          data-order="{{ record.id_order }}"><img
-      src="/upload/forklift-thin.svg" alt="Pallet Label"></button>
+  <div class="btn-group dropleft">
+    <button class="btn btn-primary dropdown-toggle dropdown-pallet-button dropleft" type="button" id="dropdownPalletMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img
+        src="/upload/forklift-thin.svg" alt="Pallet Label">
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownPalletMenuButton">
+      <a class="dropdown-item" href="javascript:void(0)">X</a>
+      <a class="dropdown-item halve-pallet-button" data-order="{{ record.id_order }}" href="#">&#189 Pallet</a>
+      <a class="dropdown-item pallet-button" data-order="{{ record.id_order }}" href="#">Pallet</a>
+    </div>
+  </div>
 {% endif %}
   {#  Status buttons #}
   {#     Pickup Carrier #}
@@ -27,15 +34,15 @@
     {% endif %}
   {% endif %}
   {# Toevoegen button #}
-  {% if record.carrier is same as column.options.stateCarrier.added %}
-    {#  Toevoegen State  #}
-    {% if record.current_state not in column.options.stateType.added %}
-      <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">
-        <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>
-        <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>
-      </div>
-    {% endif %}
-  {% endif %}
+{#  {% if record.carrier is same as column.options.stateCarrier.added %}#}
+{#    #}{#  Toevoegen State  #}
+{#    {% if record.current_state not in column.options.stateType.added %}#}
+{#      <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">#}
+{#        <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>#}
+{#        <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>#}
+{#      </div>#}
+{#    {% endif %}#}
+{#  {% endif %}#}
   {# backorder button #}
   {#  Backorder Waiting State  #}
   {% if record.current_state is not same as column.options.stateType.waiting %}

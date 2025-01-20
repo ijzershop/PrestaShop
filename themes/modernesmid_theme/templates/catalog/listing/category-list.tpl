@@ -31,17 +31,22 @@
     <div class="row">
       <h2 id="js-product-list-header" class="h2 mb-4 col-12 text-center">{if !empty($category.second_name)}{$category.second_name}{else}{$category.name}{/if}</h2>
        <div class="block-category-inner col-12">
-                {if $category.top_description != ''}
-                    <div class="row">
-                      <div id="category-description" class="text-muted col-12 col-sm-8">{$category.top_description|unescape:'html' nofilter}</div>
 
-                      {if $category.image.large.url}
+                    <div class="row">
+                      <div id="category-description" class="text-muted col-12 col-sm-8">
+                      {if $category.additional_description != ''}
+                        {$category.additional_description|unescape:'html' nofilter}<br/>
+                      {/if}
+                      {if $category.top_description != ''}
+                        {$category.top_description|unescape:'html' nofilter}
+                      {/if}
+                      </div>
+                      {if ($category.additional_description != '' || $category.top_description != '') && $category.image.large.url}
                           <div class="category-cover float-right col-12 col-sm-4">
                               <img style="width:100%;max-height: 225px;" class="mx-auto" src="{$category.image.large.url}" alt="{if !empty($category.image.legend)}{$category.image.legend}{else}{$category.name}{/if}">
                           </div>
                       {/if}
                     </div>
-                {/if}
             </div>
     {/block}
     <div class="col-12">

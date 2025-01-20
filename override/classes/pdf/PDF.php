@@ -123,6 +123,7 @@ class PDFCore
             }
 
             $template->assignHookData($object);
+
             $this->pdf_renderer->createHeader($template->getHeader());
             $this->pdf_renderer->createFooter($template->getFooter());
             $this->pdf_renderer->createPagination($template->getPagination());

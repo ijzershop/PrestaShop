@@ -32,7 +32,6 @@ class Carrier extends CarrierCore
         if (!Module::isEnabled('dynamicproduct')) {
             $carrier_list = parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
         } else {
-
             if ($cart === null) {
                 $cart = Context::getContext()->cart;
             }
@@ -52,8 +51,8 @@ class Carrier extends CarrierCore
             $carrier_list = parent::getAvailableCarrierList($product, $id_warehouse, $id_address_delivery, $id_shop, $cart, $error);
         }
 
-        return array_filter($carrier_list, function ($carrier) {
-            if (self::customerIsFreeToAddToOrder($carrier)) {
+        return array_filter($carrier_list, function ($carrier) use ($cart) {
+            if (self::customerIsFreeToAddToOrder($carrier, $cart)) {
                 return $carrier;
             }
             return false;
@@ -65,8 +64,13 @@ class Carrier extends CarrierCore
      * @param $id_carrier
      * @return bool
      */
-    private static function customerIsFreeToAddToOrder($id_carrier): bool
+    private static function customerIsFreeToAddToOrder($id_carrier, $cart): bool
     {
+        $id_customer = (int)$cart->id_customer;
+        if($id_customer == 0) {
+            $id_customer = (int)Context::getContext()->customer->id;
+        }
+
         $addToOrderCarrier = (int)Configuration::get('ADDTOORDER_DELIVERY_METHOD',
             Context::getContext()->cookie->id_lang,
             Context::getContext()->shop->id_shop_group,
@@ -78,12 +82,13 @@ class Carrier extends CarrierCore
                 Context::getContext()->shop->id_shop_group,
                 Context::getContext()->shop->id_shop));
 
-            foreach (Order::getCustomerOrders(Context::getContext()->cookie->id_customer, true, Context::getContext()) as $order) {
+            foreach (Order::getCustomerOrders($id_customer, true, Context::getContext()) as $order) {
                 $orderToCheck = (array)$order;
                 if (in_array($orderToCheck['id_order_state'] , $acceptedOrderStatusIds)) {
                     return true;
                 }
             }
+
             return false;
         }
         return true;

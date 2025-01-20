@@ -649,7 +649,6 @@ class ComposerStaticInita11d99060407121a828ab85bb8b687cb
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionAdminControllerSetMedia' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionAdminControllerSetMedia.php',
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionBeforeInstallModule' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionBeforeInstallModule.php',
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionBeforeUpgradeModule' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionBeforeUpgradeModule.php',
-        'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionDispatcherBefore' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionDispatcherBefore.php',
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGeneralPageSave' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionGeneralPageSave.php',
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGetAdminToolbarButtons' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionGetAdminToolbarButtons.php',
         'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGetAlternativeSearchPanels' => __DIR__ . '/../..' . '/src/Traits/Hooks/UseActionGetAlternativeSearchPanels.php',

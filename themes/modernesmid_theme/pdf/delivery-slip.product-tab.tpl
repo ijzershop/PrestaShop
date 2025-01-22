@@ -55,8 +55,7 @@
                         <tr><td colspan="3" style="font-size:smaller;text-decoration: underline;"><i>Invoer lijst</i></td></tr>
                         {foreach json_decode($customization_infos.technical_reference) as $customization_infos_reference}
                           <tr>
-                                <td style="font-size:smaller;width: 10px;">{$customization_infos_reference->plate}</td>
-                                <td style="font-size:smaller;width: 30px;">{$customization_infos_reference->format}</td>
+                                <td style="font-size:smaller;width: 40px;">{$customization_infos_reference->format}</td>
                                 <td style="font-size:smaller;">{$customization_infos_reference->size}</td>
                           </tr>
                         {/foreach}

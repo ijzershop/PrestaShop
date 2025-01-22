@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>wkwebp</name>
+    <displayName><![CDATA[Google WebP Image Converter-module]]></displayName>
+    <version><![CDATA[4.1.3]]></version>
+    <description><![CDATA[Zet diverse soorten beeldformaten in WebP formaat.]]></description>
+    <author><![CDATA[Webkul]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>1</is_configurable>
+    <need_instance>1</need_instance>
+</module>

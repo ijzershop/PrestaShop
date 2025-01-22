@@ -891,11 +891,14 @@ class ExportOrdersMultipleCollies
         if ($this->updateBool) {
             //orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
             $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
+            //all added to order orders
+            $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
+            $allOrders = array_merge($orders,$ordersAdded);
 
-            foreach ($orders as $order) {
+        foreach ($allOrders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }
-            $this->setNewStateForOrders($orders, $this->statusShipped);
+            $this->setNewStateForOrders($allOrders, $this->statusShipped);
         }
     }
 }

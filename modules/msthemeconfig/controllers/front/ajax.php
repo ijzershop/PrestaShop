@@ -1632,6 +1632,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     'desc' => $trello_card_descr,
                     'pos' => 'bottom'
                 ];
+                
+
                 $curlCard = curl_init();
                 curl_setopt_array($curlCard, [
                     CURLOPT_URL => $trello_url . '/1/cards',

@@ -108,7 +108,7 @@ $(function () {
     let $clickedLabel = $(this);
     let $input = $clickedLabel.prev('input');
     let $btnRow = $clickedLabel.closest('div.workshop-btn');
-    let $tr = $clickedLabel.closest('TR');
+    let $tr = $clickedLabel.closest('.column-label').closest('TR');
     let idOrder = $btnRow.attr('data-order');
     let type = $input.val();
     let reference = $tr.find("td.column-reference").text().trim();
@@ -372,10 +372,10 @@ $(function () {
   let setProcessingTimeOutButton = function (element, rowId, status = 0) {
     if (status) {
       element.addClass('temp_disabled');
-      element.closest('.koopman_label_button_2-type').parent('tr').addClass('temp_disabled_row');
+      element.closest('.column-label').parent('tr').addClass('temp_disabled_row');
     } else {
       element.removeClass('temp_disabled');
-      element.closest('.koopman_label_button_2-type').parent('tr').removeClass('temp_disabled_row');
+      element.closest('.column-label').parent('tr').removeClass('temp_disabled_row');
     }
   }
   /**
@@ -830,11 +830,7 @@ $(function () {
     setTimeout(updateWithSpeed, INITIAL_DELAY);
   }
 
-  function handleButtonRelease($button) {
-    shouldContinue = false;
-    const orderId = $button.attr('data-row-id');
-    centerAndFocusCollieTable(orderId, $button);
-  }
+
   /**
    * Modify the selected collie list, when collie name and index are provided the list is updated else the list is build
    * @param totalQty
@@ -1031,10 +1027,6 @@ $(function () {
       }
     });
   });
-});
-
-
-$(document).ready(function() {
 
   /**
    * Re-center the collie table when the window is resized of reshaped
@@ -1094,5 +1086,11 @@ $(document).ready(function() {
   if ($firstTable.length) {
     const rowId = $firstTable.data('row-id');
     centerAndFocusCollieTable(rowId);
+  }
+
+  function handleButtonRelease($button) {
+    shouldContinue = false;
+    const orderId = $button.attr('data-row-id');
+    centerAndFocusCollieTable(orderId, $button);
   }
 });

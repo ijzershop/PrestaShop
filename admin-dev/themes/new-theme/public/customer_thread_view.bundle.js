@@ -1,0 +1,2 @@
+/*! For license information please see customer_thread_view.bundle.js.LICENSE.txt */
+(()=>{"use strict";const e="#forward_customer_thread_someone_else_email",o="#forward_customer_thread_employee_id",{$:r}=window;r((()=>{r(o).on("change",(o=>{const s=r(e).closest(".form-group"),t=r(o.currentTarget).val();0===parseInt(t,10)?s.removeClass("d-none"):s.addClass("d-none")}))})),window.customer_thread_view={}})();

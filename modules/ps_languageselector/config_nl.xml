@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>ps_languageselector</name>
+    <displayName><![CDATA[Taal keuze blok]]></displayName>
+    <version><![CDATA[2.1.3]]></version>
+    <description><![CDATA[Ga internationaal en toon een taalkiezer in de kop van uw winkel, zodat klanten in hun eigen taal kunnen winkelen.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[front_office_features]]></tab>
+    <is_configurable>0</is_configurable>
+    <need_instance>0</need_instance>
+</module>

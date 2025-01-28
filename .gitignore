@@ -104,22 +104,6 @@ tests-legacy/.phpunit.result.cache
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
 
-# Downloaded RTL files
-/admin-dev/themes/default/css/bundle/default_rtl.css
-/admin-dev/themes/default/css/bundle/shared_rtl.css
-/admin-dev/themes/default/css/font_rtl.css
-/admin-dev/themes/default/css/overrides_rtl.css
-/admin-dev/themes/default/css/vendor/font-awesome/font-awesome_rtl.css
-/admin-dev/themes/default/css/vendor/nv.d3_rtl.css
-/admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
-/admin-dev/themes/default/public/theme_rtl.css
-/admin-dev/themes/default/public/*
-/admin-dev/themes/new-theme/css/module/drop_rtl.css
-/admin-dev/themes/new-theme/css/right-sidebar_rtl.css
-/admin-dev/themes/new-theme/public/*
-!/admin-dev/themes/new-theme/public/theme.rtlfix
-!/admin-dev/themes/default/public/theme.rtlfix
-
 themes/*/cache/*
 themes/core.js.map
 themes/core.js
@@ -142,48 +126,23 @@ themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
 
-# Themes, modules and overrides
-
-modules/*
-!modules/msthemeconfig
-
 #themes/*/
 themes/classic
 !themes/_core
 !themes/_libraries
 
 # Vendors and dependencies
-
 bower_components/
-node_modules/
 composer.phar
 php-cs-fixer
 .grunt/*
 
-# Translations and emails templates
-
-translations/*
-!translations/default
-mails/*
-!mails/themes/
-!mails/_partials/
-themes/default-bootstrap/lang/*
-themes/default-bootstrap/modules/*/translations/*.php
-themes/default-bootstrap/mails/*
-!themes/default-bootstrap/mails/en/
-themes/default-bootstrap/modules/*/mails/*
-!themes/default-bootstrap/modules/*/mails/en
-
-# MISC
-
 *sitemap.xml
-/robots.txt
 
 # Symfony
 
 /bin/
 /.web-server-pid
-/app/Resources/geoip/GeoLite2-City.mmdb
 /app/config/parameters.yml
 /app/config/parameters.php
 /build/
@@ -203,7 +162,6 @@ themes/default-bootstrap/modules/*/mails/*
 !/var/modules
 /var/modules/*
 !/var/modules/.gitkeep
-/vendor/
 /web/bundles/
 
 # Release creation
@@ -218,5 +176,3 @@ google_dumps/
 themes/modernesmid_theme/assets/cache/
 .idea/
 dynamicproduct/cache/
-!/modules/pricemodifier/src/Grid/Definition/Data/PriceModificationDataFactory.php
-!/override/classes/form/CustomerLoginForm.php

@@ -1,0 +1,3 @@
+SELECT *
+FROM ps_dynamicproduct_product_config_category_link
+LIMIT 1;

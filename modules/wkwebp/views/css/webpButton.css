@@ -1,0 +1,40 @@
+#binary_file-name {
+    cursor: pointer;
+}
+
+
+.webPButton{
+    width: 18.4%!important;
+    display: block!important;
+    margin-bottom: 5px!important;
+}
+#myProgress {
+    width: 100%;
+    background-color: #ddd;
+}
+
+#convertImagesBtn{
+    float: right;
+}
+
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color: blue;
+}
+.checkDiv{
+    margin-top: 10px;
+}
+.checkDiv input{
+    margin-right: 3px!important;
+}
+.countImg{
+    left: 20%;
+    position: absolute;
+}
+.progress{
+    margin-top: 10px;
+}
+#webPProgress{
+    background-color: #4cbb6c;
+}

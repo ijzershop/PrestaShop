@@ -355,7 +355,7 @@ class ExportOrdersMultipleCollies
                     }
                 }
             }
-            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && empty(Tools::getValue('connected_orders'))) {
+            if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && (int)Tools::getValue('added_check') != 1) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_to_id']);
                 $linkedReferencesArray = explode(',', $row['added_to_reference']);
@@ -363,7 +363,7 @@ class ExportOrdersMultipleCollies
                 $this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray);
                 return;
             }
-            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && empty(Tools::getValue('connected_orders'))) {
+            if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && (int)Tools::getValue('added_check') != 1) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_with_id']);
                 $linkedReferencesArray = explode(',', $row['added_with_reference']);
@@ -400,8 +400,6 @@ class ExportOrdersMultipleCollies
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;
                 }
-
-//                    die(highlight_string(var_export($shippingTask, true), true));
 
                 try {
                     $transport = $client->addOpdracht($login, $shippingTask);
@@ -681,7 +679,8 @@ class ExportOrdersMultipleCollies
                                     <div class="col-12">
                                         <div class="card row">
                                             <div class="card-body">
-                                            <form class="mt-2" method="post" id="%s">', 'toevoegingForm');
+                                            <form class="mt-2" method="post" id="%s">
+                                            <input type="hidden" name="addedToOrderChoice" id="addedToOrderChoice" value="1"/>', 'toevoegingForm');
 
 
         foreach ($_GET as $key => $value) {
@@ -743,7 +742,8 @@ class ExportOrdersMultipleCollies
                                     <div class="col-12">
                                         <div class="card row">
                                             <div class="card-body">
-                                            <form class="mt-2" method="post" id="%s">', 'toevoegingForm');
+                                            <form class="mt-2" method="post" id="%s">
+                                            <input type="hidden" name="addedToOrderChoice" id="addedToOrderChoice" value="1"', 'toevoegingForm');
 
         foreach ($_GET as $key => $value) {
             if($key == 'collies'){
@@ -891,11 +891,14 @@ class ExportOrdersMultipleCollies
         if ($this->updateBool) {
             //orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
             $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
+            //all added to order orders
+            $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
+            $allOrders = array_merge($orders,$ordersAdded);
 
-            foreach ($orders as $order) {
+        foreach ($allOrders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }
-            $this->setNewStateForOrders($orders, $this->statusShipped);
+            $this->setNewStateForOrders($allOrders, $this->statusShipped);
         }
     }
 }

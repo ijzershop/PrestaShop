@@ -278,7 +278,7 @@ class ModernHook
                 'total_remainder' => $total_remainder,
                 'total_remainder_tax_exc' => $total_remainder_tax_exc,
                 'cart_rules' => $cartRules,
-                ]);
+            ]);
 
         }
     }
@@ -563,7 +563,7 @@ class ModernHook
                 'name' => $this->shopName
             ],
             "review" => [],
-              "aggregateRating" => [
+            "aggregateRating" => [
                 "@type" => "AggregateRating",
                 "ratingValue" => 5,
                 "reviewCount" => 1
@@ -1153,11 +1153,11 @@ class ModernHook
         $results = Db::getInstance()->executeS($query);
 
         if (empty($results)) {
-                $attr = [
-                    'averageRating' => 10,
-                    'averageRatingPercentage' => 99,
-                    'totalReviews' => 2400,
-                ];
+            $attr = [
+                'averageRating' => 10,
+                'averageRatingPercentage' => 99,
+                'totalReviews' => 2400,
+            ];
         } else {
             $attr = [
                 'averageRating' => $results[0]['kiyoh_average'],
@@ -1302,11 +1302,11 @@ class ModernHook
         $message = '';
         switch ($isElegibleForDiscount){
             case 1:
-                    $message = '<a>Ontvang '.implode(' of ',$discountText).'</a>';
+                $message = '<a>Ontvang '.implode(' of ',$discountText).'</a>';
                 break;
             case 3:
             case 2:
-                    $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
+                $message = '<a>U heeft de maximale korting van '.(int)$maxReductionPercent.'% al in uw winkelwagen! <br/><a class="text-decoration-none text-black font-weight-bold" href="/'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id, '').'">Toch graag een aanbod op maat,<br/> neem dan contact met ons op.</a></a>';
                 break;
         }
 
@@ -1341,7 +1341,7 @@ class ModernHook
             if((float)$nextCartRuleObject->minimum_amount >= (float)$currentOrderTotal){
                 $remaining = (float)$nextCartRuleObject->minimum_amount - (float)$currentOrderTotal;
                 if($withTax !== "false"){
-                        $remaining = $remaining*1.21;
+                    $remaining = $remaining*1.21;
                 }
                 $fmt = numfmt_create('nl_NL', \NumberFormatter::CURRENCY);
                 $remainingTotal =  numfmt_format_currency($fmt,  $remaining, "EUR");
@@ -1567,11 +1567,11 @@ class ModernHook
         }
     }
 
-/**
- * @param $param
- * @return void
- */
-public function hookActionFrontControllerSetVariables(&$param): void
+    /**
+     * @param $param
+     * @return void
+     */
+    public function hookActionFrontControllerSetVariables(&$param): void
     {
         $param['templateVars']['analytics_data'] = [];
         switch ($param['templateVars']['page']['page_name']){
@@ -1626,16 +1626,16 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 $cart = new Cart($_GET['id_cart']);
                 $transaction_id = '';
                 $reference = '';
-               if(isset($_GET['id_order'])) {
-                   $order = new Order($_GET['id_order']);
-                   $transIds = $order->getOrderPayments();
-                   $reference = $order->reference;
-                   if(isset($transIds[0]->transaction_id)){
-                       $transaction_id = $transIds[0]->transaction_id;
-                   }
-               }
+                if(isset($_GET['id_order'])) {
+                    $order = new Order($_GET['id_order']);
+                    $transIds = $order->getOrderPayments();
+                    $reference = $order->reference;
+                    if(isset($transIds[0]->transaction_id)){
+                        $transaction_id = $transIds[0]->transaction_id;
+                    }
+                }
 
-               $items = [];
+                $items = [];
 
                 foreach ($cart->getProducts() as $product){
                     $prod = new Product($product['id_product']);
@@ -1693,23 +1693,23 @@ public function hookActionFrontControllerSetVariables(&$param): void
                 $cart = $param['templateVars']['cart'];
                 $cartObject = new Cart(Context::getContext()->cart->id);
 
-            $items = [];
+                $items = [];
 
-            foreach ($cart['products'] as $product){
-                $prod = new Product($product['id_product']);
+                foreach ($cart['products'] as $product){
+                    $prod = new Product($product['id_product']);
                     $product_categories = $prod->getParentCategories($this->context->cookie->id_lang);
-                $name1 = '';
-                $name2 = '';
+                    $name1 = '';
+                    $name2 = '';
 
-                if(count($product_categories) >= 2){
-                    $cat1 = $product_categories[count($product_categories)-2];
-                    $name2 = $cat1['name'];
-                }
+                    if(count($product_categories) >= 2){
+                        $cat1 = $product_categories[count($product_categories)-2];
+                        $name2 = $cat1['name'];
+                    }
 
-                if(count($product_categories) >= 3){
-                    $cat2 = $product_categories[count($product_categories)-3];
-                    $name1 = $cat2['name'];
-                }
+                    if(count($product_categories) >= 3){
+                        $cat2 = $product_categories[count($product_categories)-3];
+                        $name1 = $cat2['name'];
+                    }
                     $item = [];
 
                     $item['item_id'] = $product['id_product'];
@@ -1741,40 +1741,40 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     'items' => $items,
                 ];
 
-            if(isset($_SESSION['analytics_data']['product']['event_type'])){
-                $param['templateVars']['analytics_data']['product'] =  [
-                    'event_type' => $_SESSION['analytics_data']['product']['event_type'],
-                    'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
-                    'price' => $_SESSION['analytics_data']['product']['data']['price'],
-                    'item_id' => $_SESSION['analytics_data']['product']['data']['item_id'],
-                    'item_name' => $_SESSION['analytics_data']['product']['data']['item_name'],
-                    'coupon' => $_SESSION['analytics_data']['product']['data']['coupon'],
-                    'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
-                    'item_category' => $_SESSION['analytics_data']['product']['data']['item_category'],
-                    'item_category2' => $_SESSION['analytics_data']['product']['data']['item_category2'],
-                    'quantity' => $_SESSION['analytics_data']['product']['data']['quantity'],
-                ];
-                $_SESSION['analytics_data'] = null;
-            }
+                if(isset($_SESSION['analytics_data']['product']['event_type'])){
+                    $param['templateVars']['analytics_data']['product'] =  [
+                        'event_type' => $_SESSION['analytics_data']['product']['event_type'],
+                        'currency' => $_SESSION['analytics_data']['product']['data']['currency'],
+                        'price' => $_SESSION['analytics_data']['product']['data']['price'],
+                        'item_id' => $_SESSION['analytics_data']['product']['data']['item_id'],
+                        'item_name' => $_SESSION['analytics_data']['product']['data']['item_name'],
+                        'coupon' => $_SESSION['analytics_data']['product']['data']['coupon'],
+                        'discount' => $_SESSION['analytics_data']['product']['data']['discount'],
+                        'item_category' => $_SESSION['analytics_data']['product']['data']['item_category'],
+                        'item_category2' => $_SESSION['analytics_data']['product']['data']['item_category2'],
+                        'quantity' => $_SESSION['analytics_data']['product']['data']['quantity'],
+                    ];
+                    $_SESSION['analytics_data'] = null;
+                }
 
-            if(isset($_SESSION['analytics_data']['add_to_cart_product']['event_type'])){
-                $param['templateVars']['analytics_data']['add_to_cart_product'] =  [
-                    'event_type' => $_SESSION['analytics_data']['add_to_cart_product']['event_type'],
-                    'op' => $_SESSION['analytics_data']['add_to_cart_product']['op'],
-                    'currency' => $_SESSION['analytics_data']['add_to_cart_product']['data']['currency'],
-                    'price' => $_SESSION['analytics_data']['add_to_cart_product']['data']['price'],
-                    'item_id' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_id'],
-                    'item_name' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_name'],
-                    'coupon' => $_SESSION['analytics_data']['add_to_cart_product']['data']['coupon'],
-                    'discount' => $_SESSION['analytics_data']['add_to_cart_product']['data']['discount'],
-                    'item_category' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category'],
-                    'item_category2' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category2'],
-                    'quantity' => $_SESSION['analytics_data']['add_to_cart_product']['data']['quantity'],
-                ];
-                $_SESSION['analytics_data'] = null;
-            }
+                if(isset($_SESSION['analytics_data']['add_to_cart_product']['event_type'])){
+                    $param['templateVars']['analytics_data']['add_to_cart_product'] =  [
+                        'event_type' => $_SESSION['analytics_data']['add_to_cart_product']['event_type'],
+                        'op' => $_SESSION['analytics_data']['add_to_cart_product']['op'],
+                        'currency' => $_SESSION['analytics_data']['add_to_cart_product']['data']['currency'],
+                        'price' => $_SESSION['analytics_data']['add_to_cart_product']['data']['price'],
+                        'item_id' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_id'],
+                        'item_name' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_name'],
+                        'coupon' => $_SESSION['analytics_data']['add_to_cart_product']['data']['coupon'],
+                        'discount' => $_SESSION['analytics_data']['add_to_cart_product']['data']['discount'],
+                        'item_category' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category'],
+                        'item_category2' => $_SESSION['analytics_data']['add_to_cart_product']['data']['item_category2'],
+                        'quantity' => $_SESSION['analytics_data']['add_to_cart_product']['data']['quantity'],
+                    ];
+                    $_SESSION['analytics_data'] = null;
+                }
 
-            break;
+                break;
             case 'index'://Home
                 break;
             case 'contactinformation'://Informatie aanvraag formulier
@@ -1807,9 +1807,9 @@ public function hookActionFrontControllerSetVariables(&$param): void
         $formBuilder = $params['form_builder'];
 
         $formBuilder->add('top_description', TranslateType::class, [
-                'type' => FormattedTextareaType::class,
-                'locales' => [
-                  0 =>  [
+            'type' => FormattedTextareaType::class,
+            'locales' => [
+                0 =>  [
                     "id_lang" => 1,
                     "name" => "Nederlands (Dutch)",
                     "active" => 1,
@@ -1821,19 +1821,19 @@ public function hookActionFrontControllerSetVariables(&$param): void
                     "is_rtl" => 0,
                     "id_shop" => 1,
                     "shops" => [
-                      1 => true,
+                        1 => true,
                     ]
-                  ]
-                ],
-                'hideTabs' => false,
-                'required' => false,
-                'options' => [
-                    'limit' => 2500,
-                    'constraints' => [
-            new CleanHtml([
-                'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
-            ]),
-        ]]]);
+                ]
+            ],
+            'hideTabs' => false,
+            'required' => false,
+            'options' => [
+                'limit' => 2500,
+                'constraints' => [
+                    new CleanHtml([
+                        'message' => $this->module->getTranslator()->trans('This field is invalid',[], 'Admin.Notifications.Error'),
+                    ]),
+                ]]]);
 
         $formBuilder->add('second_name', TranslatableType::class, [
             'label' => $this->module->getTranslator()->trans('Second Name', [],
@@ -1995,7 +1995,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
      */
     public function hookActionAfterCreateCategoryFormHandler(array $params)
     {
-       $this->updateCustomCategoryFields($params);
+        $this->updateCustomCategoryFields($params);
     }
 
 
@@ -2819,6 +2819,58 @@ public function hookActionFrontControllerSetVariables(&$param): void
         return $newVolumeSize;
     }
 
+
+    private function combinePackages(array $packages): array {
+        // Define priority order for package types
+        $priority = [
+            'pallet' => 0,    // Highest priority, standalone
+            'plaat' => 1,     // Second priority, standalone
+            '2-meter' => 2,   // Can combine with 1-meter and envelope
+            '1-meter' => 3,   // Can combine with envelope
+            'envelope' => 4    // Lowest priority, can be combined with others
+        ];
+
+        usort($packages, function($a, $b) use ($priority) {
+            return $priority[$a['name']] <=> $priority[$b['name']];
+        });
+
+        $combinedPackages = []; // Changed variable name for clarity
+        $maxWeight = MAX_PACKAGE_WEIGHT;
+
+        // Try to combine packages starting with largest
+        foreach ($packages as $package) {
+            $wasCombined = false; // Flag to track if package was combined
+
+            // Special handling for pallet and plaat - add directly without combining
+            if ($package['name'] === 'pallet' || $package['name'] === 'plaat') {
+                $combinedPackages[] = $package;
+                continue;
+            }
+
+            // Look for existing package to combine with
+            foreach ($combinedPackages as &$existingPackage) {
+                $newWeight = $existingPackage['weight'] + $package['weight'];
+
+                if ($newWeight <= $maxWeight &&
+                    (($existingPackage['name'] === '2-meter' && in_array($package['name'], ['1-meter','envelope'])) ||
+                        ($existingPackage['name'] === '1-meter' && $package['name'] === 'envelope'))) {
+
+                    $existingPackage['weight'] += $package['weight'];
+                    $wasCombined = true;
+                    break;
+                }
+            }
+
+            // If couldn't combine, add as new package
+            if (!$wasCombined) {
+                $combinedPackages[] = $package;
+            }
+        }
+
+        return $combinedPackages;
+    }
+
+
     private function updateCollieItemList(
         float $weight,
         string $collieType,
@@ -2828,6 +2880,7 @@ public function hookActionFrontControllerSetVariables(&$param): void
         bool $update = false
     ): array {
         $collieName = strtolower(str_replace(' ', '-', $collieType));
+
 
         switch ($collieName) {
             case 'plaat':
@@ -2901,161 +2954,177 @@ public function hookActionFrontControllerSetVariables(&$param): void
      * @return void
      */
     public function hookActionOrderGridDataModifier(array $params)
-        {
-            /** @var PrestaShop\PrestaShop\Core\Grid\Data\GridData $data */
-            $data = $params['data'];
-            $records = $data->getRecords()->all();
-            foreach ($records as &$record) {
-                $newList = [
-                    'plaat' => [
-                        'display_name' => 'Plaat',
-                        'name' => 'plaat',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ],
-                    '1-meter' => [
-                        'display_name' => '1 Meter pakket',
-                        'name' => '1-meter',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ],
-                    'pallet' => [
-                        'display_name' => 'Pallet',
-                        'name' => 'pallet',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ],
-                    '2-meter' => [
-                        'display_name' => 'Collie',
-                        'name' => '2-meter',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ],
-                    'envelope' => [
-                        'display_name' => 'Envelope',
-                        'name' => 'envelope',
-                        'qty' => 0,
-                        'weight' => 0,
-                        'width' => 0,
-                        'height' => 0,
-                        'length' => 0,
-                        'multiplier' => 0,
-                        'weight' => 0,
-                        'size' => '',
-                        'formula' => ''
-                    ]
-                ];
+    {
+        /** @var PrestaShop\PrestaShop\Core\Grid\Data\GridData $data */
+        $data = $params['data'];
+        $records = $data->getRecords()->all();
+        foreach ($records as &$record) {
+            $newList = [
+                'plaat' => [
+                    'display_name' => 'Plaat',
+                    'name' => 'plaat',
+                    'qty' => 0,
+                    'weight' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length' => 0,
+                    'multiplier' => 0,
+                    'weight' => 0,
+                    'size' => '',
+                    'formula' => ''
+                ],
+                '1-meter' => [
+                    'display_name' => '1 Meter pakket',
+                    'name' => '1-meter',
+                    'qty' => 0,
+                    'weight' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length' => 0,
+                    'multiplier' => 0,
+                    'weight' => 0,
+                    'size' => '',
+                    'formula' => ''
+                ],
+                'pallet' => [
+                    'display_name' => 'Pallet',
+                    'name' => 'pallet',
+                    'qty' => 0,
+                    'weight' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length' => 0,
+                    'multiplier' => 0,
+                    'weight' => 0,
+                    'size' => '',
+                    'formula' => ''
+                ],
+                '2-meter' => [
+                    'display_name' => 'Collie',
+                    'name' => '2-meter',
+                    'qty' => 0,
+                    'weight' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length' => 0,
+                    'multiplier' => 0,
+                    'weight' => 0,
+                    'size' => '',
+                    'formula' => ''
+                ],
+                'envelope' => [
+                    'display_name' => 'Envelope',
+                    'name' => 'envelope',
+                    'qty' => 0,
+                    'weight' => 0,
+                    'width' => 0,
+                    'height' => 0,
+                    'length' => 0,
+                    'multiplier' => 0,
+                    'weight' => 0,
+                    'size' => '',
+                    'formula' => ''
+                ]
+            ];
 
-                $selectedCollies = [];
-                $newItemsList = [];
+            $selectedCollies = [];
+            $newItemsList = [];
 
-                if((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
-                    //check if the total weight is eligible for a pallet
-                    if ((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
-                        $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'pallet', '', $newList, 1);
-                        $newItemsList[] = $newList;
+            if((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
+                //check if the total weight is eligible for a pallet
+                if ((float)$record['total_order_weight'] > PALLET_THRESHOLD) {
+                    $newList = $this->updateCollieItemList((float)$record['total_order_weight'], 'pallet', '', $newList, 1);
+                    $newItemsList[] = $newList;
+                }
+            } else {
+
+
+                if (str_contains($record['product_quantity'], ',')) {
+                    $linesQty = explode(',',$record['product_quantity']);
+                    $linesWeight = explode(',',$record['product_weight']);
+                    $linesCollie = explode(',',$record['shipping_value_names']);
+                    $linesCollieIds = explode(',',$record['shipping_values']);
+
+                    $tempList = [];
+
+                    for ($i = 0; $i < count($linesQty); $i++) {
+                        if(array_key_exists($linesCollie[$i], $tempList)) {
+                            $tempList[$linesCollie[$i]]['weight'] += (float)$linesWeight[$i];
+                        } else {
+                            $tempList[$linesCollie[$i]] = [];
+                            $tempList[$linesCollie[$i]]['weight'] = (float)$linesWeight[$i];
+                        }
                     }
+
+                    foreach ($tempList as $key => $item) {
+                        $newListTemp = $this->updateCollieItemList((float)$item['weight'], $key, $key, $newList, $this->calculateCollieTotal((float)$item['weight']));
+
+                        $newItemsList[] = $newListTemp;
+                    }
+
                 } else {
+                    $linesWeight = $record['product_weight'];
+                    $linesCollie = $record['shipping_value_names'];
+                    $linesCollieIds = $record['shipping_values'];
 
-
-                    if (str_contains($record['product_quantity'], ',')) {
-                        $linesQty = explode(',',$record['product_quantity']);
-                        $linesWeight = explode(',',$record['product_weight']);
-                        $linesCollie = explode(',',$record['shipping_value_names']);
-                        $linesCollieIds = explode(',',$record['shipping_values']);
-
-                        $tempList = [];
-
-                            for ($i = 0; $i < count($linesQty); $i++) {
-                                if(array_key_exists($linesCollie[$i], $tempList)) {
-                                    $tempList[$linesCollie[$i]]['weight'] += (float)$linesWeight[$i];
-                                } else {
-                                    $tempList[$linesCollie[$i]] = [];
-                                    $tempList[$linesCollie[$i]]['weight'] = (float)$linesWeight[$i];
-                                }
-                            }
-
-                        foreach ($tempList as $key => $item) {
-                            $newList = $this->updateCollieItemList((float)$item['weight'], $key, $key, $newList, $this->calculateCollieTotal((float)$item['weight']));
-                            $newItemsList[] = $newList;
-                        }
-                    } else {
-                        $linesWeight = $record['product_weight'];
-                        $linesCollie = $record['shipping_value_names'];
-                        $linesCollieIds = $record['shipping_values'];
-
-                        $newList = $this->updateCollieItemList((float)$linesWeight, $linesCollie, $linesCollieIds, $newList,$this->calculateCollieTotal((float)$linesWeight));
-                        $newItemsList[] = $newList;
-                    }
+                    $newList = $this->updateCollieItemList((float)$linesWeight, $linesCollie, $linesCollieIds, $newList,$this->calculateCollieTotal((float)$linesWeight));
+                    $newItemsList[] = $newList;
                 }
-
-                $totalCollies = 0;
-                $totalWeight = 0;
-                foreach ($newItemsList as $newItem)
-                {
-                    foreach ($newList as $newItem) {
-                        if ($newItem['qty'] > 0) {
-                            $qty = $newItem['qty'];
-                            while ($qty > 0) {
-                                $newLine = [];
-                                $newLine['name'] = $newItem['name'];
-                                $newLine['qty'] = $newItem['qty'];
-                                $newLine['width'] = ($newItem['width'] * 100);
-                                $newLine['height'] = ($newItem['height'] * 100);
-                                $newLine['length'] = ($newItem['length'] * 100);
-                                $newLine['weight'] = $newItem['weight'];
-                                $newLine['size'] = $newItem['size'];
-                                $newLine['formula'] = $newItem['formula'];
-
-                                $totalWeight += $newLine['weight'];
-                                $totalCollies++;
-
-                                $selectedCollies[] = $newLine;
-                                $qty--;
-                            }
-                        }
-                    }
-                }
-
-                $record['collie_data'] = $selectedCollies;
-                $record['total_calculated_weight'] = $totalWeight;
-                $record['total_collies'] = $totalCollies;
             }
 
-            $params['data'] = new GridData(
-                new RecordCollection($records),
-                $data->getRecordsTotal(),
-                $data->getQuery()
-            );
+            $totalCollies = 0;
+            $totalWeight = 0;
+            foreach ($newItemsList as $newList)
+            {
+                foreach ($newList as $newItem) {
+
+                    if ($newItem['qty'] > 0) {
+                        $qty = $newItem['qty'];
+                        while ($qty > 0) {
+                            $newLine = [];
+                            $newLine['name'] = $newItem['name'];
+                            $newLine['qty'] = $newItem['qty'];
+                            $newLine['width'] = ($newItem['width'] * 100);
+                            $newLine['height'] = ($newItem['height'] * 100);
+                            $newLine['length'] = ($newItem['length'] * 100);
+                            $newLine['weight'] = $newItem['weight'];
+                            $newLine['size'] = $newItem['size'];
+                            $newLine['formula'] = $newItem['formula'];
+
+                            $totalWeight += $newLine['weight'];
+                            $totalCollies++;
+
+                            $selectedCollies[] = $newLine;
+                            $qty--;
+                        }
+                    }
+
+                }
+            }
+
+            // Add the optimization here
+//            dd($selectedCollies);
+            $selectedCollies = $this->combinePackages($selectedCollies);
+//            dd($selectedCollies);
+
+            $totalCollies = count($selectedCollies);
+            $totalWeight = array_sum(array_column($selectedCollies, 'weight'));
+
+            $record['collie_data'] = $selectedCollies;
+            $record['total_calculated_weight'] = $totalWeight;
+            $record['total_collies'] = $totalCollies;
+
+            // if($record['reference'] == 'YS-145289' && $_SERVER["REMOTE_ADDR"] == '62.131.112.137'){
+            //     dd($newItemsList, $newList, $selectedCollies);
+            // }
         }
+
+        $params['data'] = new GridData(
+            new RecordCollection($records),
+            $data->getRecordsTotal(),
+            $data->getQuery()
+        );
+    }
 
     /**
      * @param array $params

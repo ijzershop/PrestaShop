@@ -325,6 +325,7 @@ $(function () {
     let house_number_extension = $('.address-input-text#house_number_extension').val();
     let postcode = $('.address-input-text#postcode').val();
     let city = $('.address-input-text#city').val();
+
     let data = {
       '_token': token,
       'profile': profileId,
@@ -973,13 +974,12 @@ $(function () {
    */
   let fetchNewLabel = function (button, orderId, collies) {
     let profileId = $('#employee-profile-id').val();
-
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=print-label&token=' + token,
       type: 'GET',
       data: {
         'id_order': orderId,
-        'connected_orders':null,
+        'added_check':0,
         'collies': collies,
       }
     }).done(function (data) {
@@ -999,6 +999,7 @@ $(function () {
     let profileId = $('#employee-profile-id').val();
     let idOrder = $('#toevoegingForm [name="id_order"]').val();
     let collies = $('#toevoegingForm [name="collies"]').val();
+    let addedToOrderChoice = $('#toevoegingForm [name="addedToOrderChoice"]').val();
     let connectedOrders = [];
 
     if ($(this).attr('data-all') !== "0") {
@@ -1012,6 +1013,7 @@ $(function () {
       '_token': token,
       'connected_orders': connectedOrders,
       'collies': collies,
+      'added_check': addedToOrderChoice
     }
 
     $.ajax({

@@ -37,6 +37,7 @@
 namespace Mollie\Provider;
 
 use Address;
+use Tools;
 use Mollie\Adapter\Context;
 use Mollie\Calculator\PaymentFeeCalculator;
 use Mollie\Config\Config;
@@ -45,6 +46,7 @@ use Mollie\Exception\Code\ExceptionCode;
 use Mollie\Exception\FailedToProvidePaymentFeeException;
 use Mollie\Repository\AddressRepositoryInterface;
 use MolPaymentMethod;
+use Context as PrestashopContext;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -86,7 +88,9 @@ class PaymentFeeProvider implements PaymentFeeProviderInterface
         ]);
 
         if (!$address || !$address->id) {
-            throw new FailedToProvidePaymentFeeException('Failed to find customer address', ExceptionCode::FAILED_TO_FIND_CUSTOMER_ADDRESS);
+            $address = new Address();
+            $address->id_country = Tools::getCountry();
+            $address->id_state = 0;
         }
 
         $taxCalculator = $this->taxProvider->getTaxCalculator(

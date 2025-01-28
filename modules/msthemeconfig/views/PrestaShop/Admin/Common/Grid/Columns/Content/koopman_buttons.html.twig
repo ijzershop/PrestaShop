@@ -34,15 +34,15 @@
     {% endif %}
   {% endif %}
   {# Toevoegen button #}
-{#  {% if record.carrier is same as column.options.stateCarrier.added %}#}
-{#    #}{#  Toevoegen State  #}
-{#    {% if record.current_state not in column.options.stateType.added %}#}
-{#      <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">#}
-{#        <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>#}
-{#        <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>#}
-{#      </div>#}
-{#    {% endif %}#}
-{#  {% endif %}#}
+  {% if record.carrier is same as column.options.stateCarrier.added %}
+{#      Toevoegen State#}
+    {% if record.current_state not in column.options.stateType.added %}
+      <div class="cc-koopman toegevoegd-btn btn" data-order="{{ record.id_order }}" title="Toegevoegd">
+        <input id="toegevoegd_{{ record.id_order }}" type="radio" name="toegevoegd-aan-pakket" value="toegevoegd"/>
+        <label class="type-cc w-100 toegevoegd" for="toegevoegd_{{ record.id_order }}">Toegevoegd</label>
+      </div>
+    {% endif %}
+  {% endif %}
   {# backorder button #}
   {#  Backorder Waiting State  #}
   {% if record.current_state is not same as column.options.stateType.waiting %}

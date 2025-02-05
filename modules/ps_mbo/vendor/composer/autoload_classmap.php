@@ -436,6 +436,7 @@ return array(
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionAdminControllerSetMedia' => $baseDir . '/src/Traits/Hooks/UseActionAdminControllerSetMedia.php',
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionBeforeInstallModule' => $baseDir . '/src/Traits/Hooks/UseActionBeforeInstallModule.php',
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionBeforeUpgradeModule' => $baseDir . '/src/Traits/Hooks/UseActionBeforeUpgradeModule.php',
+    'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionDispatcherBefore' => $baseDir . '/src/Traits/Hooks/UseActionDispatcherBefore.php',
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGeneralPageSave' => $baseDir . '/src/Traits/Hooks/UseActionGeneralPageSave.php',
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGetAdminToolbarButtons' => $baseDir . '/src/Traits/Hooks/UseActionGetAdminToolbarButtons.php',
     'PrestaShop\\Module\\Mbo\\Traits\\Hooks\\UseActionGetAlternativeSearchPanels' => $baseDir . '/src/Traits/Hooks/UseActionGetAlternativeSearchPanels.php',

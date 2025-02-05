@@ -27,9 +27,10 @@
       <tr nobr="true">
         <th class="left" width="4%"></th>
         <th class="left" width="8%">Plaats</th>
-        <th class="left" width="70%">Product</th>
+        <th class="left" width="60%">Product</th>
         <th class="left" style="text-align:center" width="8%">Aantal</th>
-        <th class="left" width="10%" style="text-align:right;">Gewicht</th>
+        <th class="left" width="10%" style="text-align:right;">Stuk</th>
+        <th class="left" width="10%" style="text-align:right;">Bundel</th>
       </tr>
       {foreach $order_details as $idx => $order_detail}
       <tr nobr="true">
@@ -79,7 +80,8 @@
           {/foreach}
           {/foreach}
         </td>
-        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}X</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
         <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight*$order_detail.product_quantity), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
       </tr>
       {/foreach}

@@ -1,0 +1,13 @@
+{shop_url}
+
+Proficiat, u bent één van onze beste klanten, echter heeft u geen bestelling meer geplaatst sinds {days_threshold} dagen.
+
+Uw winkelwagen is opgeslagen, u kunt uw bestelling afmaken door onze winkel te bezoeken: {shop_url}
+
+We willen u graag een korting aanbieden van {amount}% op uw volgende order! Deze aanbieding is {days} dagen geldig, dus twijfel niet te lang!
+
+Hier is uw WAARDEBON: {voucher_num}
+
+Voer deze code in bij uw winkelwagen om uw korting te krijgen.
+
+ijzershop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

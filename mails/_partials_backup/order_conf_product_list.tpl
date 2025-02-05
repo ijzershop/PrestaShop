@@ -1,0 +1,109 @@
+{**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *}
+{foreach $list as $product}
+<tr>
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
+		<table class="table" width="100%">
+			<tr>
+				<td width="5">&nbsp;</td>
+				<td style="font-size: 12px;">
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+						<strong>{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</strong>
+						{if count($product['customization']) == 1}
+							<br>
+							{foreach $product['customization'] as $customization}
+								{$customization['customization_text'] nofilter}
+							{/foreach}
+						{/if}
+						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
+					</font>
+				</td>
+				<td width="5">&nbsp;</td>
+			</tr>
+		</table>
+	</td>
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
+		<table class="table" width="100%">
+			<tr>
+				<td width="5">&nbsp;</td>
+				<td style="text-align:center;">
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+						{$product['quantity']}
+					</font>
+				</td>
+				<td width="5">&nbsp;</td>
+			</tr>
+		</table>
+	</td>
+	<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
+		<table class="table" width="100%">
+			<tr>
+				<td width="5">&nbsp;</td>
+				<td style="text-align:right;">
+					<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+						{$product['price_tax_excl']}
+					</font>
+				</td>
+				<td width="5">&nbsp;</td>
+			</tr>
+		</table>
+	</td>
+</tr>
+  {if count($product['customization']) > 1}
+  	{foreach $product['customization'] as $customization}
+  		<tr>
+  		<td colspan="2" style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
+  			<table class="table" width="100%">
+  				<tr>
+  					<td width="5">&nbsp;</td>
+  					<td>
+  						<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+  							{$customization['customization_text'] nofilter}
+  						</font>
+  					</td>
+  					<td width="5">&nbsp;</td>
+  				</tr>
+  			</table>
+  		</td>
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;">
+  			<table class="table" width="100%">
+  				<tr>
+  					<td width="5">&nbsp;</td>
+  					<td style="text-align:right;">
+  						<font style="font-size: 12px;" face="Open-sans, sans-serif" color="#353943">
+  							{if count($product['customization']) > 1}
+  								{$customization['customization_quantity']}
+  							{/if}
+  						</font>
+  					</td>
+  					<td width="5">&nbsp;</td>
+  				</tr>
+  			</table>
+  		</td>
+  		<td style="border-width:1px;border-style:solid;border-color:#D6D4D4;font-size: 12px;"></td>
+  	</tr>
+  	{/foreach}
+  {/if}
+{/foreach}

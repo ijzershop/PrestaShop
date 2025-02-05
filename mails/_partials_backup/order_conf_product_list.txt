@@ -1,0 +1,17 @@
+{foreach $list as $product}
+						{$product['name']}
+
+						{$product['price']}
+
+						{$product['quantity']}
+
+						{$product['price']}
+
+	{foreach $product['customization'] as $customization}
+							{$customization['customization_text']}
+
+							{if count($product['customization']) > 1}
+								{$customization['customization_quantity']}
+							{/if}
+	{/foreach}
+{/foreach}

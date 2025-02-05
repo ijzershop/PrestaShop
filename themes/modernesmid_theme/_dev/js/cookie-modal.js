@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const expire = date.toUTCString();
     const domain = window.location.host;
 
-    document.cookie = `cookie-consent=${value};expires=${expire}domain=${domain};path=/;secure;samesite=lax;`
+    document.cookie = `cookie-consent=${value};expires=${expire}domain=${domain};path=/;secure;samesite=none;`
 
     if (marketing === true) {
       dataLayer.push({event: "marketing_consent"});

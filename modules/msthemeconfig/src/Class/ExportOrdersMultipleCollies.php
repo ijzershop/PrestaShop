@@ -893,11 +893,13 @@ class ExportOrdersMultipleCollies
             $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
             //all added to order orders
             $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
-            $allOrders = array_merge($orders,$ordersAdded);
+            $ordersAddedShipped = $this->getOrders($this->updateStatus, $this->addedSelectCarrier);
+            $allOrders = array_merge($orders,$ordersAdded, $ordersAddedShipped);
 
-        foreach ($allOrders as $order) {
+            foreach ($allOrders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }
+
             $this->setNewStateForOrders($allOrders, $this->statusShipped);
         }
     }

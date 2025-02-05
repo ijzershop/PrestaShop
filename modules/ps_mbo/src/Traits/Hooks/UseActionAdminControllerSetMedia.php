@@ -116,8 +116,7 @@ trait UseActionAdminControllerSetMedia
         }
         if (
             !Tab::mayDisplayRecommendedModules($controllerName) &&
-            !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT) &&
-            $controllerName !== 'AdminPsMboModule'
+            !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT)
         ) {
             return;
         }

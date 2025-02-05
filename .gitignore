@@ -104,11 +104,6 @@ tests-legacy/.phpunit.result.cache
 !/admin-dev/export/.htaccess
 !/admin-dev/export/index.php
 
-themes/*/cache/*
-themes/core.js.map
-themes/core.js
-themes/*-chunk.js
-themes/*-chunk.js.map
 
 # Install folder
 /install-dev/theme/custom/*
@@ -122,14 +117,9 @@ config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-themes/*/config/settings_*.json
 app/config/parameters.old.yml
-app/config/config.php
 
-#themes/*/
-themes/classic
-!themes/_core
-!themes/_libraries
+
 
 # Vendors and dependencies
 bower_components/

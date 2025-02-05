@@ -150,7 +150,6 @@ php-cs-fixer
 !var/SymfonyRequirements.php
 !var/class_stub.php
 !/var/modules
-/var/modules/*
 !/var/modules/.gitkeep
 /web/bundles/
 

@@ -382,10 +382,11 @@ class ExportOrdersMultipleCollies
                         $collieRow->vrzenh = 'COL';
                     } else {
                         switch ($collies[$i]['name']) {
+                            case 'balk-pallet':
                             case 'pallet':
                                 $collieRow->vrzenh = 'PLH';
                                 break;
-                            case 'halve-pallet':
+                            case 'plaat-pallet':
                                 $collieRow->vrzenh = 'MP';
                                 break;
                             default:

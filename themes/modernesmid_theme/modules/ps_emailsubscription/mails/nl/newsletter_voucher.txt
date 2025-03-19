@@ -1,0 +1,5 @@
+{shop_url}
+
+Bedankt voor het abonneren op onze nieuwsbrief. We bieden u graag de volgende kortingsbon aan: {discount}
+
+{custom_footer_html}

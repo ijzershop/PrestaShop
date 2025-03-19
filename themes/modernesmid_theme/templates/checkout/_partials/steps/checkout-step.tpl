@@ -109,29 +109,43 @@
 
   <section  id    = "{$identifier}"
             class = "{[
-                        'checkout-step'   => true,
-                        '-current'        => $step_is_current,
-                        '-reachable'      => $step_is_reachable,
-                        '-complete'       => $step_is_complete,
-                        'js-current-step' => $step_is_current
-                    ]|classnames}"
+            'checkout-step'   => true,
+            '-current'        => $step_is_current,
+            '-reachable'      => $step_is_reachable,
+            '-complete'       => $step_is_complete,
+            'js-current-step' => $step_is_current
+            ]|classnames}"
   >
     <h1 class="step-title js-step-title h5 w-100 text-dark p-2 pt-3 pb-3 {if $identifier === 'checkout-personal-information-step'}border-0{/if}">
       <div class="w-100">
         <table class="w-100">
-        <tr class="row">
-          <td class="col-1 text-success" style="min-width:35px; max-width: 35px;text-align: center;vertical-align: center;">
-            <i class="fasl fa-check rtl-no-flip done pl-2 pr-1"></i>
-            <span class="step-number m-0">{$position}</span>
-          </td>
-          <td class="col-9" style="padding-left: 1.2rem;padding-top: .2rem;">
-            {$title}
-          </td>
-          <td class="col-2 text-right">
-            <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-xl-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
-          </td>
-        </tr>
-      </table>
+          <tr class="row">
+            <td class="col-1 text-success" style="min-width:35px; max-width: 35px;text-align: center;vertical-align: center;">
+              <i class="fasl fa-check rtl-no-flip done pl-2 pr-1"></i>
+              <span class="step-number m-0">{$position}</span>
+            </td>
+            <td class="col-9" style="padding-left: 1.2rem;padding-top: .2rem;">
+              {$title}
+            </td>
+            <td class="col-2 text-right">
+              <span class="step-edit text-muted"><i class="fasl fa-pen-to-square edit"></i> <span class="d-none d-xl-inline">{l s='Edit' d='Shop.Theme.Actions'}</span></span>
+            </td>
+          </tr>
+          {if $position == 4}
+            <tr>
+              <td style="font-size: initial;" colspan="3">
+                <div class="w-100">
+                  <div class="d-flex align-items-center p-0" role="alert">
+                    <div class="p-1 text-center border-danger mx-auto" style="border:3px solid red;">
+                      Lukt het afrekenen niet? Geen probleem! <a href="/informatie-aanvragen?winkelwagen={Context::getContext()->cart->id}">Klik hier</a>
+                      om ons een bericht te sturen, dan lossen wij het op. (winkelwagen code  {Context::getContext()->cart->id})
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {/if}
+        </table>
       </div>
     </h1>
 

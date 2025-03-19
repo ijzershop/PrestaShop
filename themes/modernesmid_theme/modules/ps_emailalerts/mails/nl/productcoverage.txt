@@ -1,0 +1,7 @@
+{shop_url}
+
+Uw voorraaddekking is nu minder dan het gespecificeerde minimum van: {warning_coverage}
+
+Huidige voorraaddekking: {current_coverage}
+
+{custom_footer_html}

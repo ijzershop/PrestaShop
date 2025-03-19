@@ -204,12 +204,16 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                                         }
                                     }
 
-                                    $fileContents = @file_get_contents($this->checkIsCronTab().$file, false, $context);
-                                    if ($fileContents === false) {
-                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
-                                    } else {
-                                        $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = $this->checkIsCronTab().$file;
+                                    if(!empty($file))
+                                    {
 
+                                        $fileContents = @file_get_contents($this->checkIsCronTab().$file, false, $context);
+                                        if ($fileContents === false) {
+                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = "";
+                                        } else {
+                                            $order_detail['customizedDatas'][$addressId][$customizationId]['datas'][1][0]['technical_image'] = $this->checkIsCronTab().$file;
+
+                                        }
                                     }
                                    }
                                }

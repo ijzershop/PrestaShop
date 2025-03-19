@@ -202,17 +202,17 @@ tfoot tr.footer{
   box-shadow: none !important;
   background-color: #ffffff;
   border:2px solid #cccccc;
-  min-width:42rem;
-  height: 11rem;
-  padding:20px 95px;
+  min-width:43rem;
+  height: 10rem;
+  padding:5px 0;
 }
 
 .dropleft .dropdown-menu > .dropdown-item{
-  height: 7rem;
-  width: 7rem;
+  height: 8rem;
+  width: 8rem;
   border-radius: 50% !important;
   background-color: #3d57ae !important;
-  padding: 2.5rem 0;
+  padding: 2.7rem 0;
   text-align: center;
   line-height: 1.2rem;
   color: #ffffff;
@@ -221,7 +221,7 @@ tfoot tr.footer{
   border-color: #ffffff !important;
   margin: 10px 20px;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   display: inline-block;
 }
 .dropleft .dropdown-menu > .dropdown-item:first-child{

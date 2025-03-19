@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>ps_cashondelivery</name>
+    <displayName><![CDATA[Onder rembours]]></displayName>
+    <version><![CDATA[2.0.1]]></version>
+    <description><![CDATA[Accepteer contante betalingen bij levering om het klanten gemakkelijk te maken om in uw winkel te kopen.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[payments_gateways]]></tab>
+    <is_configurable>0</is_configurable>
+    <need_instance>1</need_instance>
+</module>

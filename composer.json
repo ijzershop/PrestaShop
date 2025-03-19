@@ -143,7 +143,9 @@
         "symfony/symfony": "4.4.*",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+      "ext-ftp": "*",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -188,12 +190,14 @@
     },
     "autoload": {
         "psr-4": {
+            "App\\": "app/",
             "PrestaShop\\PrestaShop\\": "src/",
             "PrestaShopBundle\\": "src/PrestaShopBundle/"
         },
         "classmap": [
             "app/AppKernel.php",
-            "app/AppCache.php"
+            "app/AppCache.php",
+            "app/Resources/"
         ]
     },
     "autoload-dev": {

@@ -248,58 +248,119 @@ $(function () {
   /**
    * Action Button print collie label(s) or print a pallet label
    */
-  $(document).on('click', '.print-button, .pallet-button, .halve-pallet-button', function (e) {
+  $(document).on('click', '.print-button, .standaard-pallet-button, .plaat-pallet-button, .balk-pallet-button', function (e) {
     e.stopImmediatePropagation();
     let $clickedBtn = $(this);
     let orderId = $clickedBtn.attr('data-order');
     let collies = $('.selected_collie_values[data-row-id="' + orderId + '"]').val();
 
     setProcessingTimeOutButton($clickedBtn, orderId, true);
-    if($clickedBtn.hasClass('pallet-button')){
-      let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
 
+
+    // Standaard pallet
+    if($clickedBtn.hasClass('standaard-pallet-button')){
+      let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
       let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
+
       let newPalletQty = Math.ceil(currentWeight/500);
       let splitWeight = currentWeight/newPalletQty;
+
       collies = '[';
       let collieList = [];
       while(newPalletQty > 0){
         collieList.push('{"name":"pallet",' +
           '"width":"30",' +
-          '"height":"50",' +
+          '"height":"30",' +
           '"length":"200",' +
           '"formula":"none",' +
-          '"size":"200 x 30 x 50",' +
+          '"size":"200 x 30 x 30",' +
           '"weight":'+splitWeight+'}');
 
         newPalletQty--;
       }
+
       collies += collieList.join(',');
       collies += ']';
     }
 
-    if($clickedBtn.hasClass('halve-pallet-button')){
+    // Balk pallet
+    if($clickedBtn.hasClass('balk-pallet-button')){
       let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
-
       let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
-      let newPalletQty = Math.ceil(currentWeight/150);
+
+      let newPalletQty = Math.ceil(currentWeight/500);
       let splitWeight = currentWeight/newPalletQty;
+
       collies = '[';
       let collieList = [];
       while(newPalletQty > 0){
-        collieList.push('{"name":"halve-pallet",' +
-          '"width":"50",' +
-          '"height":"50",' +
-          '"length":"100",' +
+        collieList.push('{"name":"balk-pallet",' +
+          '"width":"15",' +
+          '"height":"15",' +
+          '"length":"200",' +
           '"formula":"none",' +
-          '"size":"100 x 50 x 50",' +
+          '"size":"200 x 15 x 15",' +
           '"weight":'+splitWeight+'}');
 
         newPalletQty--;
       }
+
       collies += collieList.join(',');
       collies += ']';
     }
+
+    // Plaat pallet
+    if($clickedBtn.hasClass('plaat-pallet-button')){
+      let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
+      let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
+
+      let newPalletQty = Math.ceil(currentWeight/150);
+      let splitWeight = currentWeight/newPalletQty;
+
+      collies = '[';
+      let collieList = [];
+      while(newPalletQty > 0){
+        collieList.push('{"name":"plaat-pallet",' +
+          '"width":"50",' +
+          '"height":"15",' +
+          '"length":"100",' +
+          '"formula":"none",' +
+          '"size":"200 x 50 x 15",' +
+          '"weight":'+splitWeight+'}');
+
+        newPalletQty--;
+      }
+
+      collies += collieList.join(',');
+      collies += ']';
+    }
+
+
+
+
+
+    // if($clickedBtn.hasClass('halve-pallet-button')){
+    //   let weightInput = $('.collie-table tfoot .input-group.total_weight input[data-row-id="' + orderId + '"]');
+    //
+    //   let currentWeight = parseFloat(weightInput.val().replace('Kg', ''));
+    //   let newPalletQty = Math.ceil(currentWeight/150);
+    //   let splitWeight = currentWeight/newPalletQty;
+    //   collies = '[';
+    //   let collieList = [];
+    //   while(newPalletQty > 0){
+    //     collieList.push('{"name":"halve-pallet",' +
+    //       '"width":"50",' +
+    //       '"height":"50",' +
+    //       '"length":"100",' +
+    //       '"formula":"none",' +
+    //       '"size":"100 x 50 x 50",' +
+    //       '"weight":'+splitWeight+'}');
+    //
+    //     newPalletQty--;
+    //   }
+    //   collies += collieList.join(',');
+    //   collies += ']';
+    // }
 
     let trackingEl = $clickedBtn.parents('td').find('.tracking_number');
     //Already has tracking number

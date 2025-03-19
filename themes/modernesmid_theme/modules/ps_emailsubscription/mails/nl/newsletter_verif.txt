@@ -1,0 +1,6 @@
+{shop_url}
+
+Bedankt voor het abonneren op onze nieuwsbrief. Klik op de volgende link om uw inschrijving te bevestigen:
+{verif_url}
+
+{custom_footer_html}

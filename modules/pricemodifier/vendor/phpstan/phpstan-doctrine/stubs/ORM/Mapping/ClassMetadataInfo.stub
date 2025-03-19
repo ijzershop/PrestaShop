@@ -1,0 +1,74 @@
+<?php
+
+namespace Doctrine\ORM\Mapping;
+
+use Doctrine\Persistence\Mapping\ClassMetadata;
+use ReflectionClass;
+
+/**
+ * @template-covariant T of object
+ * @template-implements ClassMetadata<T>
+ * @psalm-type FieldMapping = array{
+ *      type: string,
+ *      fieldName: string,
+ *      columnName: string,
+ *      length?: int,
+ *      id?: bool,
+ *      nullable?: bool,
+ *      notInsertable?: bool,
+ *      notUpdatable?: bool,
+ *      generated?: string,
+ *      enumType?: class-string<BackedEnum>,
+ *      columnDefinition?: string,
+ *      precision?: int,
+ *      scale?: int,
+ *      unique?: string,
+ *      inherited?: class-string,
+ *      originalClass?: class-string,
+ *      originalField?: string,
+ *      quoted?: bool,
+ *      requireSQLConversion?: bool,
+ *      declared?: class-string,
+ *      declaredField?: string,
+ *      options?: array<string, mixed>
+ * }
+ */
+class ClassMetadataInfo implements ClassMetadata
+{
+
+	/** @var string|null */
+	public $customRepositoryClassName;
+
+	/**
+     * @param class-string<T> $entityName
+     */
+    public function __construct($entityName)
+    {
+
+    }
+
+    /**
+	 * @param string $assocName
+	 * @return class-string
+	 */
+	public function getAssociationTargetClass($assocName);
+
+    /**
+	 * @return T
+	 */
+	public function newInstance()
+	{
+
+	}
+
+	/**
+	 * @return class-string<T>
+	 */
+	public function getName();
+
+	/**
+	 * @return ReflectionClass<T>
+	 */
+	public function getReflectionClass();
+
+}

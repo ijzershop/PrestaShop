@@ -51,17 +51,15 @@
                       </td>
                     </tr>
                     <tr>
-{*                      <td style="width: 100px;padding-top: 10px;">*}
-{*                      <table>*}
-{*                        <tr><td colspan="3" style="font-size:smaller;text-decoration: underline;"><i>Invoer lijst</i></td></tr>*}
-{*                        {foreach json_decode($customization_infos.technical_reference) as $customization_infos_reference}*}
-{*                          <tr>*}
-{*                                <td style="font-size:smaller;width: 40px;">{$customization_infos_reference->format}</td>*}
-{*                                <td style="font-size:smaller;">{$customization_infos_reference->size}</td>*}
-{*                          </tr>*}
-{*                        {/foreach}*}
-{*                      </table>*}
-{*                      </td>*}
+
+                      <td>
+                      {if file_exists(str_replace('\\', '/', $customization_infos.technical_image))}
+                          <img src="{str_replace('\\', '/', $customization_infos.technical_image)}" width="250" style="border:1px solid #000000;margin-top:10px;" alt=""/>
+                        {else}
+                          <p>Image not available</p>
+                        {/if}
+                      </td>
+
                       <td>
                         <img src="{$customization_infos.technical_image}" width="250" style="border:1px solid #000000;margin-top:10px;"  alt=""/>
                       </td>

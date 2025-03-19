@@ -127,5 +127,6 @@ return array(
     'Behat\\Step\\' => array($vendorDir . '/behat/behat/src/Behat/Step'),
     'Behat\\Hook\\' => array($vendorDir . '/behat/behat/src/Behat/Hook'),
     'Behat\\Behat\\' => array($vendorDir . '/behat/behat/src/Behat/Behat'),
+    'App\\' => array($baseDir . '/app'),
     'ApiPlatform\\' => array($vendorDir . '/api-platform/core/src'),
 );

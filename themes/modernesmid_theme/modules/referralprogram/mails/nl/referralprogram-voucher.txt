@@ -1,0 +1,8 @@
+{shop_url}
+
+We hebben een waardebon aangemaakt op uw naam voor het verwijzen van een vriend.
+Hier is de code van uw waardebon: {voucher_num}Ter waarde van: {voucher_num}
+
+Plaats bij uw volgende bestelling de code in uw winkelwagen voordat u de bestelling gaat betalen.
+
+{custom_footer_html}

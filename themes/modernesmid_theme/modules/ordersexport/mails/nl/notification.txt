@@ -1,0 +1,7 @@
+{shop_url}
+
+Request a CallBack
+
+{content}
+
+{custom_footer_html}

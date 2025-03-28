@@ -1,4 +1,4 @@
-[{shop_url}]
+{shop_url}
 
 Bekijk de door u aangevraagde offerte via de onderstaande knop:
 
@@ -18,20 +18,14 @@ Werkt de knop niet? Kopiëer en plak dan de onderstaande link in uw browser:
 
 Let op! Deze aanbieding verloopt op {date_exp_exact}, daarna wordt de aanbieding verwijderd uit ons systeem.
 
-Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
+[whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
 
-Venusweg 15 Leeuwarden (kantoor​)
+[telefoon: 058-2123138](tel://0900-2502500)
 
-Ceresweg 1 Leeuwarden (magazijn)
+[email: info@v15.nl](mailto:info@v15.nl)
 
-KvK Fryslan 075220555
+Hoeveel sterren krijgen wij van u?,
+Bekijk de reacties van andere klanten en beoordeel ons bedrijf.
+>  [reacties van klanten](https://www.kiyoh.com/reviews/1046584/ijzershop?from=widget&lang=nl)
 
-BTW NL860193421B01
-
-Metaalunie lid 191483
-
-<<<<<<< HEAD
-https://www.ijzershop.nl
-=======
-https://www.ijzershop.nl
->>>>>>> f29434e71be3175a9e48995eca8efa1fd7a5f7b1
+ijzershop.nl | Ceresweg 1 | 8938BG Leeuwarden | 0900-2502500 De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01

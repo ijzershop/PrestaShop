@@ -128,6 +128,7 @@ class ComposerStaticInitcffc7c67702d96398080b7eb753e8a70
         array (
             'MyCLabs\\Enum\\' => 13,
             'Monolog\\' => 8,
+            'Mollie\\Api\\' => 11,
             'MaxMind\\WebService\\' => 19,
             'MaxMind\\Exception\\' => 18,
             'MaxMind\\Db\\' => 11,
@@ -218,6 +219,7 @@ class ComposerStaticInitcffc7c67702d96398080b7eb753e8a70
         ),
         'A' => 
         array (
+            'App\\' => 4,
             'ApiPlatform\\' => 12,
         ),
     );
@@ -482,6 +484,10 @@ class ComposerStaticInitcffc7c67702d96398080b7eb753e8a70
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'Mollie\\Api\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mollie/mollie-api-php/src',
+        ),
         'MaxMind\\WebService\\' => 
         array (
             0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
@@ -711,6 +717,10 @@ class ComposerStaticInitcffc7c67702d96398080b7eb753e8a70
         'Behat\\Behat\\' => 
         array (
             0 => __DIR__ . '/..' . '/behat/behat/src/Behat/Behat',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app',
         ),
         'ApiPlatform\\' => 
         array (
@@ -1749,14 +1759,24 @@ class ComposerStaticInitcffc7c67702d96398080b7eb753e8a70
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'WishList' => __DIR__ . '/../..' . '/modules/blockwishlist/classes/WishList.php',
+        'XmlConfig' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
+        'app\\Resources\\cron_scripts\\CalculateBelgiumVat' => __DIR__ . '/../..' . '/app/Resources/cronscripts/BelgiumVatCalculation.php',
+        'app\\Resources\\cron_scripts\\FixStockAvailable' => __DIR__ . '/../..' . '/app/Resources/cronscripts/FixStockAvailable.php',
+        'app\\Resources\\cron_scripts\\OfferEndDateChecker' => __DIR__ . '/../..' . '/app/Resources/cronscripts/OfferEndDateChecker.php',
+        'app\\Resources\\cron_scripts\\OrderSlipGenerator' => __DIR__ . '/../..' . '/app/Resources/cronscripts/OrderSlipGenerator.php',
         'blockreassurance' => __DIR__ . '/../..' . '/modules/blockreassurance/blockreassurance.php',
+        'cMySQLBackUp' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
         'dashgoals' => __DIR__ . '/../..' . '/modules/dashgoals/dashgoals.php',
         'dashtrends' => __DIR__ . '/../..' . '/modules/dashtrends/dashtrends.php',
+        'dbConn' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
+        'dbMySQL' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
+        'dbMySQLi' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
         'lessc' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'lessc_formatter_classic' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'lessc_formatter_compressed' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'lessc_formatter_lessjs' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'lessc_parser' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
+        'pdoMySQL' => __DIR__ . '/../..' . '/app/Resources/cronscripts/bridge_HzTPZIUg.php',
         'ps_GoogleanalyticsAjaxModuleFrontController' => __DIR__ . '/../..' . '/modules/ps_googleanalytics/controllers/front/ajax.php',
         'ps_themecusto' => __DIR__ . '/../..' . '/modules/ps_themecusto/ps_themecusto.php',
         'psgdprExportDataToCsvModuleFrontController' => __DIR__ . '/../..' . '/modules/psgdpr/controllers/front/ExportDataToCsv.php',

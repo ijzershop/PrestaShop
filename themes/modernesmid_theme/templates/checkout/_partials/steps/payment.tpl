@@ -1,6 +1,7 @@
 {extends file='checkout/_partials/steps/checkout-step.tpl'}
 
 {block name='step_content'}
+
   <style>
     body{
       font-size: 1rem;

@@ -235,6 +235,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
     {
         $idAddressDelivery = (int) $this->getCheckoutSession()->getIdAddressDelivery();
         $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
+
+        $idAddress = (int)Tools::getValue('id_address');
+        if($idAddress == 0) {
+            $idAddress = $idAddressDelivery;
+        }
+
         $params = [
             'address_form' => $this->addressForm->getProxy(),
             'use_same_address' => $this->use_same_address,
@@ -256,7 +262,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 null,
                 ['newAddress' => 'invoice']
             ),
-            'id_address' => (int) Tools::getValue('id_address'),
+            'id_address' => $idAddress,
             'id_address_delivery' => $idAddressDelivery,
             'id_address_invoice' => $idAddressInvoice,
             'show_delivery_address_form' => $this->show_delivery_address_form,

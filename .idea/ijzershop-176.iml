@@ -14,12 +14,6 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_themecusto/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_imageslider/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/mollie_bc/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/gamification/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/mollie_backup/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/ps_distributionapiclient/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/tools/build/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/backup_mollie/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
@@ -332,9 +326,11 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_imageslider/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert_backup/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mollie/mollie-api-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jQuery" level="project" />
+    <orderEntry type="library" name="bootstrap-icons" level="application" />
   </component>
 </module>

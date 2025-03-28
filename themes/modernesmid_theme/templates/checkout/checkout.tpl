@@ -72,26 +72,68 @@
 
       <div class="modal" id="be-btw-msg" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title text-primary">Informatie voor klanten uit België!</h5>
+          <div class="modal-content border-0">
+
+
+
+            <div class="modal-body">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
-            </div>
-            <div class="modal-body">
-              <p>Ook vanuit belgië betaalt u altijd 21% btw.<br>
-                Aangezien wij uitsluitend aan particuliere klanten in België leveren,<br> wordt het BTW-bedrag ook in België door berekend.<br><br>
-                <strong>Het is daarom niet mogelijk om een factuur met 0% BTW te ontvangen.</strong>
+              <h5 class="modal-title text-primary">Informatie voor klanten uit België!</h5>
+              <hr class="w-100 border-bottom border-3 border-dark">
+              <p>Wij leveren uitsluitend aan particuliere klanten in België.<br>
+                <strong>Het is daarom niet mogelijk om een factuur met 0% BTW te ontvangen of aan te vragen.</strong><br/><br/>
+                Levertijd in België is 5-7 werkdagen.<br/>
               </p>
+              <br/>
+              <br/>
+              <h5 class="modal-title text-primary">Informations pour les clients Belges!</h5>
+              <hr class="w-100 border-bottom border-3 border-dark">
+              <p>Nous livrons uniquement aux clients privés en Belgique.<br>
+                <strong>Il nést pas possible de recevoir ou de demander une facture avec 0% de TVA</strong><br/><br/>
+                Le délai de livraison en Belgique est d'environ 5 á 7 jours ouvrables<br/>
+              </p>
+
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary w-100" data-dismiss="modal">OK, gelezen</button>
+              <button type="button" class="btn btn-primary w-100" data-dismiss="modal">OK</button>
             </div>
           </div>
         </div>
       </div>
 
+
+      <div class="modal" id="geo-shipping-msg" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content border-0">
+            <div class="modal-body">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <p>
+                <h5 class="text-primary">Wij verzenden uitsluitend naar Nederland en België</h5>
+              </p>
+              <hr class="w-100 border-bottom border-3 border-dark"/>
+              <p>
+              <h5 class="text-primary">We only ship to the Netherlands and Belgium</h5>
+              </p>
+              <hr class="w-100 border-bottom border-3 border-dark"/>
+              <p>
+              <h5 class="text-primary">Wir versenden nur in die Niederlande und nach Belgien</h5>
+              </p>
+              <hr class="w-100 border-bottom border-3 border-dark"/>
+              <p>
+              <h5 class="text-primary">Nous expéditions uniquement aux Pays-Bas et en Belgique</h5>
+              </p>
+              <hr class="w-100 border-bottom border-3 border-dark"/>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary w-100" data-dismiss="modal">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <script>
 
@@ -112,7 +154,6 @@
     {include file='_partials/footer.tpl'}
   {/block}
 </footer>
-
 {block name='javascript_bottom'}
   {include file="_partials/javascript.tpl" javascript=$javascript.bottom}
 
@@ -122,6 +163,15 @@
       $('#be-btw-msg').on('hide.bs.modal', function (e) {
         // Set cookie data to show only once
         $.get(postcodeApiUrl+"?method=set-viewed-be-vat-msg");
+      });
+    {/if}
+
+
+{if Context::getContext()->country->iso_code != 'BE' &&  Context::getContext()->country->iso_code !== 'NL' && !Context::getContext()->cookie->accepted_shipping_msg}
+      $('#geo-shipping-msg').modal('show');
+      $('#geo-shipping-msg').on('hide.bs.modal', function (e) {
+        // Set cookie data to show only once
+        $.get(postcodeApiUrl+"?method=set-viewed-geo-shipping-msg");
       });
     {/if}
   </script>

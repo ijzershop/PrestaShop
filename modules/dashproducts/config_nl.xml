@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>dashproducts</name>
+    <displayName><![CDATA[Dashboard Producten]]></displayName>
+    <version><![CDATA[2.1.4]]></version>
+    <description><![CDATA[Verrijk uw statistieken: toon een tabel met uw laatste bestellingen en een rangschikking van uw producten.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <tab><![CDATA[administration]]></tab>
+    <is_configurable>0</is_configurable>
+    <need_instance>1</need_instance>
+</module>

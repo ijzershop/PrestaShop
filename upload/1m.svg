@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 512"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="1m.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="-162.93612"
+       y="53.519164"
+       width="273.54239"
+       height="176.61324"
+       id="rect3" />
+    <rect
+       x="51.140534"
+       y="52.924506"
+       width="194.45296"
+       height="290.78746"
+       id="rect2" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.1890995"
+     inkscape:cx="1.681945"
+     inkscape:cy="243.46155"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <!--!Font Awesome Pro 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2024 Fonticons, Inc.-->
+  <path
+     d="M 93.609564,128.99867 H 17.739284 V 415.0053 h 75.87028 V 362.57076 H 66.513035 63.803383 v -9.53356 h 2.709652 27.096529 V 305.36943 H 66.513035 63.803383 v -9.53356 h 2.709652 27.096529 V 248.16811 H 66.513035 63.803383 v -9.53356 h 2.709652 27.096529 V 190.96678 H 66.513035 63.803383 v -9.53355 h 2.709652 27.096529 z m 5.419305,224.03853 v 9.53356 52.43454 9.53356 h -5.419305 -75.87028 -5.419307 v -9.53356 -286.00663 -9.53355 h 5.419307 75.87028 5.419305 v 9.53355 52.43456 9.53355 47.66777 9.53356 47.66776 9.53356 z"
+     id="path1"
+     style="stroke-width:0.44924" />
+  <text
+     xml:space="preserve"
+     id="text3"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:'Tw Cen MT Condensed Extra Bold';-inkscape-font-specification:'Tw Cen MT Condensed Extra Bold, ';text-align:center;white-space:pre;shape-inside:url(#rect3);fill:#000000"
+     transform="matrix(7.2644775,0,0,7.2644775,396.81623,-389.15149)"><tspan
+       x="-41.852539"
+       y="111.95354"
+       id="tspan1">1</tspan></text>
+</svg>

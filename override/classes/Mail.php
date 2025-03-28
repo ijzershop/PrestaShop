@@ -187,7 +187,6 @@ class Mail extends MailCore
         if ($configuration['PS_MAIL_METHOD'] == self::METHOD_DISABLE) {
             return true;
         }
-
         // Hook to alter template vars
         Hook::exec(
             'sendMailAlterTemplateVars',
@@ -378,6 +377,7 @@ class Mail extends MailCore
                 $moduleName = $res[1];
             }
 
+
             $isoTemplate = '';
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode . '/' . $template;
@@ -554,7 +554,6 @@ class Mail extends MailCore
             );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
 
-
             $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null));
             $templateBlocksData = $templateBlocks->{$template};
 
@@ -590,6 +589,7 @@ class Mail extends MailCore
                 null,
                 true
             );
+
             $templateVars = array_merge($templateVars, $extraTemplateVars);
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||

@@ -1,0 +1,5 @@
+{shop_url}
+
+Bedankt voor uw inschrijving op onze nieuwsbrief
+
+{custom_footer_html}

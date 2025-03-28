@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 512"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="2m.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <rect
+       x="-162.93612"
+       y="53.519164"
+       width="273.54239"
+       height="176.61324"
+       id="rect3" />
+    <rect
+       x="51.140534"
+       y="52.924506"
+       width="194.45296"
+       height="290.78746"
+       id="rect2" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.29727488"
+     inkscape:cx="195.10562"
+     inkscape:cy="183.33201"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <!--!Font Awesome Pro 6.7.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2024 Fonticons, Inc.-->
+  <path
+     d="M 4.6079775,241.15329 4.7746779,501.60047 H 71.620169 v -46.19745 h -23.87339 -2.387338 v -8.39954 h 2.387338 23.87339 v -41.99767 h -23.87339 -2.387338 v -8.39954 h 2.387338 23.87339 V 354.6086 h -23.87339 -2.387338 v -8.39954 h 2.387338 23.87339 v -41.99768 h -23.87339 -2.387338 v -8.39953 h 2.387338 23.87339 l 0.216951,-54.79901 4.485582,-0.021 0.07214,54.81998 v 8.39953 41.99768 8.39954 41.99767 8.39954 41.99767 8.39954 46.19745 V 510 H 71.620169 4.7746779 0 v -8.39953 -251.98607 -8.39953"
+     id="path1"
+     style="stroke-width:0.395803"
+     sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccccccccccc" />
+  <path
+     d="M 4.5801045,269.79212 4.7468045,9.3449447 H 71.592293 V 55.542395 h -23.87339 -2.387338 v 8.39954 h 2.387338 23.87339 v 41.997675 h -23.87339 -2.387338 v 8.39953 h 2.387338 23.87339 v 41.99767 h -23.87339 -2.387338 v 8.39954 h 2.387338 23.87339 v 41.99768 h -23.87339 -2.387338 v 8.39953 h 2.387338 23.87339 l 0.216951,54.79901 4.485582,0.021 0.07214,-54.81998 v -8.39953 -41.99768 -8.39954 -41.99767 -8.39953 V 63.941965 55.542425 9.3449747 0.9454144 H 71.592293 4.7468045 -0.02787551 v 8.3995303 251.9860653 8.39953"
+     id="path1-4"
+     style="stroke-width:0.395803"
+     sodipodi:nodetypes="ccccccccccccccccccccccccccccccccccccccccccccc" />
+  <text
+     xml:space="preserve"
+     id="text3"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:64px;font-family:'Tw Cen MT Condensed Extra Bold';-inkscape-font-specification:'Tw Cen MT Condensed Extra Bold, ';text-align:center;white-space:pre;shape-inside:url(#rect3);display:inline;fill:#000000"
+     transform="matrix(6.6258212,0,0,6.6258212,341.18758,-344.76764)"><tspan
+       x="-41.852539"
+       y="111.95354"
+       id="tspan2">2</tspan></text>
+</svg>

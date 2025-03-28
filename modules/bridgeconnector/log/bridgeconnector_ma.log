@@ -1,0 +1,8 @@
+*INFO* 	v8.2.0	2024/10/22 - 10:05:21: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/22 - 10:05:25: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/22 - 10:05:30: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/22 - 11:20:26: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/22 - 11:20:26: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/28 - 10:57:38: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/29 - 08:51:22: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist
+*INFO* 	v8.2.0	2024/10/29 - 10:57:05: Exception while executing query - SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ijzershop8.ps176_bridgeconnector_ma_push_notifications' doesn't exist

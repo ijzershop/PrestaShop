@@ -3,7 +3,7 @@
         'name' => 'prestashop/prestashop',
         'pretty_version' => '8.2.x-dev',
         'version' => '8.2.9999999.9999999-dev',
-        'reference' => '8db7a73e3250d03ada7ffbec689bd39299754200',
+        'reference' => '855843ac61127598a9627e49726e7f80a4b02e7f',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -664,6 +664,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'mollie/mollie-api-php' => array(
+            'pretty_version' => 'v2.79.0',
+            'version' => '2.79.0.0',
+            'reference' => 'ad078c1b07da16c6571b16401a286143a5da188c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mollie/mollie-api-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'monolog/monolog' => array(
             'pretty_version' => '1.27.1',
             'version' => '1.27.1.0',
@@ -1134,7 +1143,7 @@
         'prestashop/prestashop' => array(
             'pretty_version' => '8.2.x-dev',
             'version' => '8.2.9999999.9999999-dev',
-            'reference' => '8db7a73e3250d03ada7ffbec689bd39299754200',
+            'reference' => '855843ac61127598a9627e49726e7f80a4b02e7f',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

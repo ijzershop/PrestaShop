@@ -172,10 +172,10 @@ class ToolsCore
         }
 
         if (!preg_match('@^https?://@i', $url) && $link) {
-            if (strpos($url, $base_uri) === 0) {
+            if (str_starts_with($url, $base_uri)) {
                 $url = substr($url, strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') === 0) {
+            if (str_starts_with($url, 'index.php?controller=')) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = Tools::strReplaceFirst('&', '?', $url);

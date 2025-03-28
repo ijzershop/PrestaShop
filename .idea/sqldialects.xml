@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="file://$USER_HOME$/Downloads/ijzershop_multitest_2024-11-04_11-21-00.sql/ijzershop_multitest_2024-11-04_11-21-00.sql" dialect="MariaDB" />
     <file url="file://$PROJECT_DIR$" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/modules/pricemodifier/Resources/data/install.sql" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />

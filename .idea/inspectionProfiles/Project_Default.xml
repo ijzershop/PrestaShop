@@ -168,7 +168,7 @@
     <inspection_tool class="DuplicateSectionInFile" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <Languages>
-        <language minSize="188" name="JavaScript" />
+        <language minSize="256" name="JavaScript" />
         <language minSize="297" name="PHP" />
       </Languages>
     </inspection_tool>

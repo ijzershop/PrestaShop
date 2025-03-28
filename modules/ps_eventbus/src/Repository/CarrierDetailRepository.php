@@ -106,7 +106,7 @@ class CarrierDetailRepository extends AbstractRepository implements RepositoryIn
                 ->select('
                     (
                         SELECT d2.price
-                        FROM ps_delivery d2
+                        FROM ' . _DB_PREFIX_ . 'delivery d2
                         WHERE d2.id_carrier = d.id_carrier
                         ORDER BY d2.id_delivery DESC
                         LIMIT 1
@@ -147,14 +147,10 @@ class CarrierDetailRepository extends AbstractRepository implements RepositoryIn
      */
     public function retrieveContentsForIncremental($limit, $contentIds, $langIso)
     {
-        if ($contentIds == []) {
-            return [];
-        }
-
         $this->generateFullQuery($langIso, true);
 
         $this->query
-            ->where('ca.id_carrier IN(' . implode(',', array_map('intval', $contentIds)) . ')')
+            ->where('ca.id_carrier IN(' . implode(',', array_map('intval', $contentIds ?: [-1])) . ')')
             // ->limit($limit) Sub shop content depend from another, temporary disabled
         ;
 

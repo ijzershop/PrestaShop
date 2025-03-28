@@ -26,8 +26,6 @@
 
 namespace PrestaShop\Module\PsEventbus\ServiceContainer;
 
-use Monolog\Logger as MonologLogger;
-use PrestaShop\Module\PsEventbus\Log\Logger;
 use PrestaShop\Module\PsEventbus\ServiceContainer\Contract\IServiceProvider;
 use PrestaShop\Module\PsEventbus\ServiceContainer\Contract\ISingletonService;
 use PrestaShop\Module\PsEventbus\ServiceContainer\Exception\ParameterNotFoundException;
@@ -67,11 +65,6 @@ class ServiceContainer
     ];
 
     /**
-     * @var MonologLogger
-     */
-    private $logger;
-
-    /**
      * @param string $configPath
      */
     public function __construct($configPath)
@@ -88,7 +81,6 @@ class ServiceContainer
     {
         $container = new ServiceContainer($configPath);
         $container->loadConfig();
-        $container->initLogger();
         $container->init();
 
         return $container;
@@ -107,12 +99,8 @@ class ServiceContainer
      */
     public function init()
     {
-        $this->logger->debug('Initializing service container');
-
         foreach ($this->provides as $provider) {
             if (is_a($provider, IServiceProvider::class, true)) {
-                $this->logger->debug('Initializing service provider ' . $provider);
-
                 (new $provider())->provide($this);
             }
         }
@@ -144,8 +132,6 @@ class ServiceContainer
         }
 
         $this->set($name, $service);
-
-        $this->logger->debug('Service Loaded: ' . $name);
 
         return $service;
     }
@@ -272,17 +258,5 @@ class ServiceContainer
         }
 
         return null;
-    }
-
-    /**
-     * @return void
-     */
-    private function initLogger()
-    {
-        // early stage logger
-        $this->logger = Logger::create(
-            $this->getParameterWithDefault('ps_eventbus.log_level', Logger::ERROR)
-        );
-        $this->set('ps_eventbus.logger', $this->logger);
     }
 }

@@ -112,6 +112,10 @@ class CustomerLoginForm extends CustomerLoginFormCore {
 
 
         if(!Context::getContext()->controller->errors){
+            if(!isset($this->urls['authentication'])){
+                $this->errors[] = 'Authentication url is not available';
+            }
+
             return Context::getContext()->controller->redirectWithNotifications($this->urls['authentication']);
         }
 

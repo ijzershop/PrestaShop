@@ -203,7 +203,15 @@ class DmsMailThemeController extends FrameworkBundleAdminController
     public static function filterFooterBlocks($templateName, string $route = ''): string
     {
         $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, true));
-        $templateBlocksData = $templateBlocks->{$templateName->getName()};
+
+        $templateBlocksData = ["trace" => false, "add2order" => false, "faq" => false, "review" => false, "contact" => false];
+        if(isset($templateBlocks->{$templateName->getName()})){
+            $templateBlocksData['trace'] = $templateBlocks->{$templateName->getName()}->{'trace'} ?? false;
+            $templateBlocksData['add2order'] = $templateBlocks->{$templateName->getName()}->{'add2order'} ?? false;
+            $templateBlocksData['faq'] = $templateBlocks->{$templateName->getName()}->{'faq'} ?? false;
+            $templateBlocksData['review'] = $templateBlocks->{$templateName->getName()}->{'review'} ?? false;
+            $templateBlocksData['contact'] = $templateBlocks->{$templateName->getName()}->{'contact'} ?? false;
+        }
 
         $instance = SymfonyContainer::getInstance();
 

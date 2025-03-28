@@ -30,4 +30,8 @@ BTW NL860193421B01
 
 Metaalunie lid 191483
 
+<<<<<<< HEAD
 https://www.ijzershop.nl
+=======
+https://www.ijzershop.nl
+>>>>>>> f29434e71be3175a9e48995eca8efa1fd7a5f7b1

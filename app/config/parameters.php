@@ -2,10 +2,10 @@
   'parameters' =>
   array (
     'database_host' => '127.0.0.1',
-    'database_port' => '3307',
-    'database_name' => 'ijzershop_muli',
-    'database_user' => 'root',
-    'database_password' => 'root',
+    'database_port' => '',
+    'database_name' => 'ijzershop_multitest',
+    'database_user' => 'ijzermlt2367',
+    'database_password' => '4txwY$180&527',
     'database_prefix' => 'ps176_',
     'database_engine' => 'InnoDB',
     'mailer_transport' => 'smtp',

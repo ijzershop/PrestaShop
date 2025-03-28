@@ -285,11 +285,14 @@ abstract class AbstractRestController extends ModuleFrontController
                 $this->setContextShop($shop);
                 $publicKey = $shopKeysService->getPublicKey();
 
+                $this->module->getLogger()->debug('trying to verify token with pkey: ' . $publicKey);
+
                 if (
-                    !empty($publicKey) &&
-                    is_string($publicKey) &&
+                    null !== $publicKey &&
                     true === $jwt->verify(new Sha256(), new Key((string) $publicKey))
                 ) {
+                    $this->module->getLogger()->debug('token verified: ' . $jwtString);
+
                     return $jwt->claims()->all();
                 }
                 $this->module->getLogger()->error('Failed to verify token: ' . $jwtString);
@@ -363,7 +366,7 @@ abstract class AbstractRestController extends ModuleFrontController
      *
      * @return false
      */
-    public function geolocationManagement($defaultCountry)
+    protected function geolocationManagement($defaultCountry)
     {
         return false;
     }

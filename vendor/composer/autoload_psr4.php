@@ -70,6 +70,7 @@ return array(
     'Negotiation\\' => array($vendorDir . '/willdurand/negotiation/src/Negotiation'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'Mollie\\Api\\' => array($vendorDir . '/mollie/mollie-api-php/src'),
     'MaxMind\\WebService\\' => array($vendorDir . '/maxmind/web-service-common/src/WebService'),
     'MaxMind\\Exception\\' => array($vendorDir . '/maxmind/web-service-common/src/Exception'),
     'MaxMind\\Db\\' => array($vendorDir . '/maxmind-db/reader/src/MaxMind/Db'),

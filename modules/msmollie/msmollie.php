@@ -14,6 +14,8 @@
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -55,6 +57,7 @@ class MSMollie extends PaymentModule
         Configuration::updateValue('MSMOLLIE_TEST_API_KEY', '');
         Configuration::updateValue('MSMOLLIE_LIVE_API_KEY', '');
         Configuration::updateValue('MSMOLLIE_DEFAULT_STATUS', Configuration::get('PS_OS_PAYMENT'));
+        Configuration::updateValue('MSMOLLIE_WAITING_PAYMENT_STATUS', 52);
         Configuration::updateValue('MSMOLLIE_EMAIL', '');
 
         // Enable all payment methods by default
@@ -79,6 +82,7 @@ class MSMollie extends PaymentModule
         Configuration::deleteByName('MSMOLLIE_TEST_API_KEY');
         Configuration::deleteByName('MSMOLLIE_LIVE_API_KEY');
         Configuration::deleteByName('MSMOLLIE_DEFAULT_STATUS');
+        Configuration::deleteByName('MSMOLLIE_WAITING_PAYMENT_STATUS');
         Configuration::deleteByName('MSMOLLIE_EMAIL');
         // Remove all payment method configurations
         $methods = array('ideal', 'creditcard', 'paypal', 'bancontact');
@@ -180,9 +184,20 @@ class MSMollie extends PaymentModule
                     ),
                     array(
                         'type' => 'select',
-                        'label' => $this->l('Default order status'),
+                        'label' => $this->l('Default paid order status'),
                         'name' => 'MSMOLLIE_DEFAULT_STATUS',
                         'desc' => $this->l('Default status for successful payments'),
+                        'options' => array(
+                            'query' => $this->getOrderStatuses(),
+                            'id' => 'id_order_state',
+                            'name' => 'name'
+                        )
+                    ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->l('Default waiting on payment order status'),
+                        'name' => 'MSMOLLIE_WAITING_PAYMENT_STATUS',
+                        'desc' => $this->l('Default status for waiting on payment'),
                         'options' => array(
                             'query' => $this->getOrderStatuses(),
                             'id' => 'id_order_state',
@@ -243,17 +258,18 @@ class MSMollie extends PaymentModule
     protected function getConfigFormValues()
     {
         $values = array(
-            'MSMOLLIE_LIVE_MODE' => Configuration::get('MSMOLLIE_LIVE_MODE'),
-            'MSMOLLIE_TEST_API_KEY' => Configuration::get('MSMOLLIE_TEST_API_KEY'),
-            'MSMOLLIE_LIVE_API_KEY' => Configuration::get('MSMOLLIE_LIVE_API_KEY'),
-            'MSMOLLIE_DEFAULT_STATUS' => Configuration::get('MSMOLLIE_DEFAULT_STATUS'),
+            'MSMOLLIE_LIVE_MODE' => Configuration::get('MSMOLLIE_LIVE_MODE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            'MSMOLLIE_TEST_API_KEY' => Configuration::get('MSMOLLIE_TEST_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            'MSMOLLIE_LIVE_API_KEY' => Configuration::get('MSMOLLIE_LIVE_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            'MSMOLLIE_DEFAULT_STATUS' => Configuration::get('MSMOLLIE_DEFAULT_STATUS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            'MSMOLLIE_WAITING_PAYMENT_STATUS' => Configuration::get('MSMOLLIE_WAITING_PAYMENT_STATUS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
             'MSMOLLIE_EMAIL' => Configuration::get('MSMOLLIE_EMAIL'),
         );
 
         // Get payment method configurations
         $methods = array('ideal', 'creditcard', 'paypal', 'bancontact');
         foreach ($methods as $method) {
-            $values['MSMOLLIE_METHODS_' . strtoupper($method)] = Configuration::get('MSMOLLIE_METHODS_' . strtoupper($method));
+            $values['MSMOLLIE_METHODS_' . strtoupper($method)] = Configuration::get('MSMOLLIE_METHODS_' . strtoupper($method), $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
         }
 
         return $values;
@@ -267,16 +283,16 @@ class MSMollie extends PaymentModule
         $form_values = $this->getConfigFormValues();
 
         foreach (array_keys($form_values) as $key) {
-            Configuration::updateValue($key, Tools::getValue($key));
+            Configuration::updateValue($key, Tools::getValue($key), false, $this->context->shop->id_shop_group, $this->context->shop->id);
         }
     }
 
     /**
      * Add the CSS & JavaScript files you want to be loaded in the BO.
      */
-    public function hookdisplayBackOfficeHeader()
+    public function hookDisplayBackOfficeHeader()
     {
-        if (Tools::getValue('module_name') == $this->name) {
+        if ($this->context->controller->php_self == 'AdminOrders') {
             $this->context->controller->addJS($this->_path.'views/js/back.js');
             $this->context->controller->addCSS($this->_path.'views/css/back.css');
         }
@@ -287,8 +303,8 @@ class MSMollie extends PaymentModule
      */
     public function hookDisplayHeader()
     {
-        $this->context->controller->addJS($this->_path.'/views/js/front.js');
-        $this->context->controller->addCSS($this->_path.'/views/css/front.css');
+        $this->context->controller->addJS($this->_path.'views/js/front.js');
+        $this->context->controller->addCSS($this->_path.'views/css/front.css');
     }
     /**
       * Return payment options available for PS 1.7+
@@ -312,19 +328,19 @@ class MSMollie extends PaymentModule
         $payment_options = [];
 
         // Add enabled payment methods
-        if (Configuration::get('MSMOLLIE_METHODS_IDEAL')) {
+        if (Configuration::get('MSMOLLIE_METHODS_IDEAL', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
             $payment_options[] = $this->getIDealOption();
         }
 
-        if (Configuration::get('MSMOLLIE_METHODS_CREDITCARD')) {
+        if (Configuration::get('MSMOLLIE_METHODS_CREDITCARD', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
             $payment_options[] = $this->getCreditCardOption();
         }
 
-        if (Configuration::get('MSMOLLIE_METHODS_PAYPAL')) {
+        if (Configuration::get('MSMOLLIE_METHODS_PAYPAL', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
             $payment_options[] = $this->getPayPalOption();
         }
 
-        if (Configuration::get('MSMOLLIE_METHODS_BANCONTACT')) {
+        if (Configuration::get('MSMOLLIE_METHODS_BANCONTACT', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
             $payment_options[] = $this->getBancontactOption();
         }
         return $payment_options;
@@ -335,15 +351,15 @@ class MSMollie extends PaymentModule
       */
     protected function getApiKey()
     {
-        if (Configuration::get('MSMOLLIE_LIVE_MODE')) {
-            return Configuration::get('MSMOLLIE_LIVE_API_KEY');
+        if (Configuration::get('MSMOLLIE_LIVE_MODE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
+            return Configuration::get('MSMOLLIE_LIVE_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
         } else {
-            return Configuration::get('MSMOLLIE_TEST_API_KEY');
+            return Configuration::get('MSMOLLIE_TEST_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
         }
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     * @return PaymentOption
      * @throws SmartyException
      */
     protected function getIDealOption()
@@ -358,7 +374,7 @@ class MSMollie extends PaymentModule
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     * @return PaymentOption
      */
     protected function getCreditCardOption()
     {
@@ -372,7 +388,7 @@ class MSMollie extends PaymentModule
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Payment\PaymentOption
+     * @return PaymentOption
      */
     protected function getPayPalOption()
     {
@@ -410,7 +426,7 @@ class MSMollie extends PaymentModule
 
         $order = $params['order'];
 
-        if ($order->getCurrentState() == Configuration::get('PS_OS_PAYMENT')) {
+        if ($order->getCurrentState() == Configuration::get('PS_OS_PAYMENT', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id)) {
             $this->smarty->assign([
                 'status' => 'ok',
                 'id_order' => $order->id,
@@ -421,6 +437,16 @@ class MSMollie extends PaymentModule
         }
 
         return $this->fetch('module:msmollie/views/templates/hook/payment_return.tpl');
+    }
+
+    public function getReturnUrl()
+    {
+        return 'return url';
+    }
+
+    public function getWebhookUrl()
+    {
+        return 'webhook url';
     }
 
 }

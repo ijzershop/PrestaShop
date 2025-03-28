@@ -16,7 +16,8 @@ class PaymentModule extends PaymentModuleCore
         $dont_touch_amount = false,
         $secure_key = false,
         Shop $shop = null,
-        ?string $order_reference = null
+        ?string $order_reference = null,
+        bool $sendEmail = true,
     )
     {
         if (self::DEBUG_MODE) {
@@ -453,6 +454,8 @@ class PaymentModule extends PaymentModuleCore
                     if (is_array($extra_vars)) {
                         $data = array_merge($data, $extra_vars);
                     }
+
+                    if($sendEmail){
                     Mail::Send(
                         (int)$order->id_lang,
                         'order_conf',
@@ -474,13 +477,13 @@ class PaymentModule extends PaymentModuleCore
                         (int)$order->id_shop
                     );
                 }
+                }
             }
 
             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                 $product_list = $order->getProducts();
 
                 foreach ($product_list as $product) {
-
                     if (StockAvailable::dependsOnStock($product['product_id'])) {
                         StockAvailable::synchronize($product['product_id'], $order->id_shop);
                     }

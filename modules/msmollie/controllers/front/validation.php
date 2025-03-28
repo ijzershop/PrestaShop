@@ -38,7 +38,6 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
             return;
         }
 
-        // Check that this payment option is still available
         $authorized = false;
         foreach (Module::getPaymentModules() as $module) {
             if ($module['name'] == 'msmollie') {
@@ -75,43 +74,106 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
             return;
         }
 
-        // Get the configured order status
-        $orderStatus = Configuration::get('MSMOLLIE_DEFAULT_STATUS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
-        if (!$orderStatus) {
-            $orderStatus = Configuration::get('PS_OS_PAYMENT', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
-        }
-
         try {
-            // Simulate API call to Mollie
-           $payment = $this->createMolliePayment($apiKey, $paymentMethod, $total, $currency->iso_code);
+            $order = $this->generateTempOrderRule($cart->id,
+                $cart->id_customer,
+                $paymentMethod,
+                $total,
+                $cart->id_carrier,
+                (int)Configuration::get('MSMOLLIE_WAITING_PAYMENT_STATUS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+                $this->context->language->id,
+                $currency->id);
 
-            // Create the order
-           $validate =  $this->module->validateOrder(
-                    (int)$cart->id,
-                    (int)$orderStatus,
-                    $total,
-                    $this->module->l('Mollie') . '|' . $paymentMethod . '',
-                    null,
-                    ['transaction_id' => $payment->id ?? null],
-                    (int)$currency->id,
-                    false,
-                    $customer->secure_key
-                );
+            // Save cart state before payment initiation
+            $this->context->cookie->__set('mollie_cart_id', $cart->id);
+            $this->context->cookie->__set('mollie_cart_secure_key', $cart->secure_key);
+            $this->context->cookie->write();
 
-            if(!$validate){
-                $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
+            $payment = $this->createMolliePayment($apiKey, $paymentMethod, $total, $currency->iso_code, $order);
 
+            $orderPayment = OrderPayment::getByOrderReference($order['reference']);
+            if(empty($orderPayment)){
+                $orderPayment = new OrderPayment();
+                $orderPayment->order_reference = $order['reference'];
+                $orderPayment->amount = $total;
+                $orderPayment->id_currency = $currency->id;
+                $orderPayment->payment_method = $paymentMethod;
+                $orderPayment->transaction_id = $payment->id;
+                if(!$orderPayment->save()) {
+                    $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order payment is niet geldig of kan niet opgeslagen worden', 'error');
+                }
+//                $orderPayment->associateTo($this->context->shop->id);
             }
 
-
-            // Redirect to order confirmation page
-            Tools::redirect('index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
+            Tools::redirect($payment->getCheckoutUrl());
         } catch (Exception $e) {
-            $this->errors[] = $this->module->l('An error occurred during the payment process: ') . $e->getMessage();
-            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Error tijdens het betaal process', 'error');
+            $this->errors[] = $this->module->l('An error occurred during the payment process:') . $e->getMessage();
+            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Error tijdens het betaal process: '. $e->getMessage(), 'error');
             $this->redirectWithNotifications('index.php?controller=order&step=1');
         }
     }
+
+    /**
+     * @param $id_cart
+     * @param $id_customer
+     * @return array|bool|object $tempOrder
+     * @throws PrestaShopException
+     */
+    private function generateTempOrderRule($id_cart, $id_customer, $paymentMethod, $total, $carrier, $status, $id_lang, $id_currency): array|bool|object
+    {
+        $existingTempOrder = Db::getInstance()->getRow('
+        SELECT * FROM '._DB_PREFIX_.'orders
+        WHERE id_cart = '.(int)$id_cart
+        );
+        $customer = new Customer($id_customer);
+
+        if(!$existingTempOrder || $existingTempOrder['id_customer'] != $id_customer){
+            $reference = Order::generateReference();
+            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Geen order, we maken eentje vooraf', 'info');
+
+            $result = Db::getInstance()->insert('orders', [
+                'id_cart' => (int)$id_cart,
+                'id_customer' => (int)$id_customer,
+                'module' => 'msmollie',
+                'gift_message' => '',
+                'note' => '',
+                'desired_delivery_date' => '',
+                'shipping_number' => '',
+                'added_to_order' => '',
+                'reference' => pSQL($reference),
+                'id_lang' => pSQL($id_lang),
+                'id_currency' => pSQL($id_currency),
+                'total_paid' => pSQL($total),
+                'id_carrier' => pSQL($carrier),
+                'current_state' => pSQL($status),
+                'valid' => 0,
+                'payment' => pSQL($paymentMethod),
+                'secure_key' => $customer->secure_key,
+                'date_add' => date('Y-m-d H:i:s'),
+                'date_upd' => date('Y-m-d H:i:s')
+            ]);
+
+            if($result){
+               $existingTempOrder = Db::getInstance()->getRow('
+                SELECT * FROM '._DB_PREFIX_.'orders
+                WHERE id_cart = '.(int)$id_cart
+               );
+           }
+
+        }
+
+        $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order bestaat, we gebruiken de bestaande', 'info');
+
+        if($existingTempOrder['payment'] != $paymentMethod){
+            Db::getInstance()->update('orders',
+                ['payment' => pSQL($paymentMethod)],
+                'id_cart = '.(int)$id_cart
+            );
+        }
+
+        return $existingTempOrder;
+    }
+
 
     /**
      * Create a Mollie payment (in a real module, this would be an actual API call)
@@ -124,54 +186,69 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
      * @return Payment|null payment response
      * @throws ApiException
      */
-    private function createMolliePayment(string $apiKey, string $method, float $amount, $currency): Payment|null
+    private function createMolliePayment(string $apiKey, string $method, float $amount, string $currency, $order): Payment|null
     {
+        if(!$order || !$order['id_order']) {
+            return null;
+        }
+
         // In a real implementation, this would be a call to Mollie's API
         $mollie = new MollieApiClient();
-        $mollie->setApiKey($apiKey);
+        $mollie->setApiKey(trim($apiKey));
+        $this->logPaymentMessage('Api Keys is set: ' . $apiKey, 'info', 200, true);
 
         // Get customer information
-        $customer = new Customer($this->context->cart->id_customer);
-        $customerId = (string) $customer->id;
-        $cartId = (string) $this->context->cart->id;
+        $customer = new Customer($order['id_customer']);
+        $cartId = (string) $order['id_cart'];
         // Generate a unique order reference
         $firstInitial = !empty($customer->firstname) ? strtoupper(substr($customer->firstname, 0, 1)).'.' : '';
-        $orderReference = Context::getContext()->shop_name . '|' . $firstInitial . $customer->lastname . '|' . $method . '|' . $this->context->cart->id;
+        $orderReference = $order['reference'] . '|' . $firstInitial . $customer->lastname . '|' . $method . '|' . Context::getContext()->shop_name;
 
         $this->logPaymentMessage('Start Mollie betaling voor order: ' . $cartId, 'info', 200, true);
 
-
-            $paymentParams = [
-                "amount" => [
-                    "currency" => $currency,
-                    "value" => number_format($amount, 2, '.', '')
-                ],
-                "description" => $orderReference,
-                "redirectUrl" => $this->context->link->getModuleLink(
-                    'msmollie',
-                    'return',
-                    [
-                        'cart_id' => $cartId,
-                        'secure_key' => $this->context->customer->secure_key
-                    ],
-                    true
-                ),
-                "webhookUrl"  => $this->context->link->getModuleLink('msmollie', 'webhook', [], true),
-                "method" => $method,
-                "metadata" => [
-                    "cartId" => $cartId,
-                    "customerId" => $customerId,
-                    "reference" => $orderReference,
-                ],
-                "locale" => $this->context->language->iso_code . "_" . strtoupper($this->context->country->iso_code),
-                "billingEmail" => $customer->email,
-            ];
-
-            dd($paymentParams);
+        $paymentParams = [
+            "amount" => [
+                "currency" => $currency,
+                "value" => number_format($amount, 2, '.', '')
+            ],
+            "description" => $orderReference,
+            "redirectUrl" => $this->context->link->getModuleLink('msmollie', 'return', [
+                'cart_id' => $cartId,
+                'module_id' => $this->module->id,
+                'order_id' => $order['id_order'],
+                'method' => $method,
+                'secure_key' => $customer->secure_key,
+                'mollie_cart_id' => $this->context->cookie->mollie_cart_id,
+                'mollie_cart_secure_key' => $this->context->cookie->mollie_cart_secure_key
+                ], true),
+            "cancelUrl" => $this->context->link->getModuleLink('msmollie', 'return', [
+                'cart_id' => $cartId,
+                'module_id' => $this->module->id,
+                'order_id' => $order['id_order'],
+                'method' => $method,
+                'secure_key' => $customer->secure_key,
+                'mollie_cart_id' => $this->context->cookie->mollie_cart_id,
+                'mollie_cart_secure_key' => $this->context->cookie->mollie_cart_secure_key
+                ], true),
+            "webhookUrl"  => $this->context->link->getModuleLink('msmollie', 'webhook', [
+                'cart_id' => $cartId,
+                'module_id' => $this->module->id,
+                'order_id' => $order['id_order'],
+                'method' => $method,
+                'secure_key' => $customer->secure_key,
+            ], true),
+            "method" => $method,
+            "metadata" => [
+                "cartId" => $cartId,
+                "customerId" => $order['id_customer'],
+                "reference" => $orderReference,
+            ],
+            "locale" => $this->context->language->iso_code . "_" . strtoupper($this->context->country->iso_code),
+            "billingEmail" => $customer->email,
+        ];
         try {
-            $mollie->enableDebugging();
+//            $debug = $mollie->enableDebugging();
             $payment = $mollie->payments->create($paymentParams);
-
             $this->logPaymentMessage('Mollie betaling succesvol aangemaakt: ' . $payment->id, 'info', 200, true);
             return $payment;
         } catch (ApiException $e) {
@@ -188,7 +265,6 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
      */
     private function logPaymentMessage($message, string $level = 'info', $withEmail=true, $code=200): void
     {
-
         $langId = $this->context->language->id;
         $shopId = $this->context->shop->id;
         $shopGroupId = $this->context->shop->id;
@@ -205,10 +281,9 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
         $log_message_txt .= "│ Klant Email: " . $customerEmail . "\n";
         $log_message_txt .= "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
 
-
         try {
             PrestaShopLogger::addLog($log_message_txt,
-                $level,
+                $level === 'error' ? 1 : 3, // Convert text level to numeric
                 $code,
                 'Mollie',
                 true,
@@ -241,22 +316,19 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
                         '{status_text}' => 'Er is een fout gedetecteerd in de Mollie betaal module.'];
                 }
 
-
                 Mail::send($this->context->language->id,
-                  'notification_payment',
-                  'Betaal '.ucwords($level),
-                  $emailContent,
-                  $emailTo,
-                  'ICT - '. $this->context->shop->name,
-                  );
+                    'notification_payment',
+                    'Betaal '.ucwords($level),
+                    $emailContent,
+                    $emailTo,
+                    'ICT - '. $this->context->shop->name,
+                );
             }
 
         } catch (Exception $exception){
             PrestaShopLogger::addLog($exception->getMessage(),
-                'error',
+                $level === 'error' ? 1 : 3, // Convert text level to numeric
                 $exception->getCode());
         }
-
-
     }
 }

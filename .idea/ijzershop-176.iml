@@ -326,6 +326,7 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_imageslider/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert_backup/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mollie/mollie-api-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

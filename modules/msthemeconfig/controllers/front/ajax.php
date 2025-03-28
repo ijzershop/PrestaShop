@@ -181,6 +181,47 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             return true;
         }
 
+        if (Tools::getValue('method') == 'set-viewed-geo-shipping-msg') {
+            Context::getContext()->cookie->accepted_shipping_msg = true;
+            return true;
+        }
+
+
+        if (Tools::getValue('action') === 'sendCustomerInfoToAdministration') {
+            $customerData = json_decode(Tools::getValue('customerData'), true);
+
+            $customerInfo = '';
+
+            foreach ($customerData as $label => $data) {
+                if(!empty($data)){
+                    $customerInfo .= '<span style="width:30%;font-weight: bold;">'. $label . '</span>: <span style="width:70%">'. $data . '</span><br/>';
+                }
+            }
+
+            $template_vars = [
+                'customer_info' => $customerInfo,
+                'shop_url' => Context::getContext()->shop->domain_ssl,
+                'date' => date('d-m-Y H:i:s'),
+            ];
+
+           $result =  Mail::Send(
+                Context::getContext()->language->id,
+                'customer_info',
+                'Klant data rapport',
+                $template_vars,
+                'jelmer@ijzershop.nl',
+                'Administrator',
+                'ijzershop nl',
+                'Webshop Ijzershop'
+            );
+            if($result){
+                die(json_encode(['success' => true]));
+            } else {
+                die(json_encode(['success' => false]));
+            }
+        }
+
+
         if (Tools::getValue('action') == 'fetch_products_for_retour') {
             $idOrder = $_POST['id_order'];
             $postcode = $_POST['postalcode'];
@@ -1632,7 +1673,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                     'desc' => $trello_card_descr,
                     'pos' => 'bottom'
                 ];
-                
+
 
                 $curlCard = curl_init();
                 curl_setopt_array($curlCard, [

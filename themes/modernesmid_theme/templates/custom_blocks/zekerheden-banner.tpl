@@ -76,20 +76,18 @@
                 <div class="col certainty">
                     <div class="row">
                         <div class="pr-0 certainty-icon text-right">
-                            {* TODO add shippinng method selet to template module, get visitor carrier and set shipping price *}
-                            {assign var="transmissionCarrier" value=Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang)}
                             {* By changing zone the banner item gets updated belgium is 9, Germany 10 *}
-                          {if Context::getContext()->country->id === '3'}
-                              {assign var="customerCountry" value="België"}
+                          {if Context::getContext()->country->iso_code === 'NL'}
+                            {assign var="customerCountry" value="Nederland"}
+                            {assign var="defaultShippingPrice" value="10"}
                           {else}
-                              {assign var="customerCountry" value="Nederland"}
+                            {assign var="customerCountry" value="België"}
+                            {assign var="defaultShippingPrice" value="20"}
                           {/if}
                                     {if Context::getContext()->cookie->price_vat_settings_incl === "true"}
-                                        {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)*1.21}
                                         {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice),0,',','.')}
                                     {else}
-                                        {assign var="defaultShippingPrice" value=$transmissionCarrier->getMaxDeliveryPriceByPrice(Context::getContext()->country->id_zone)}
-                                        {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice),2,',','.')}
+                                        {assign var="shippingPrice" value=number_format(Tools::convertPrice($defaultShippingPrice/1.21),2,',','.')}
                                     {/if}
 
                                     {if is_array($customerCountry)}

@@ -164,7 +164,7 @@ class DmsAdminOrderController extends FrameworkBundleAdminController
             /** @var OrderForViewing $orderForViewing */
             $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $this->getErrorMessageForException($e, [$e->getMessage()]));
 
             return $this->redirectToRoute('admin_orders_index');
         }

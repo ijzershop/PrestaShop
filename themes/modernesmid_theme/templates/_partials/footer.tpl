@@ -173,7 +173,7 @@
       'Bestelbedrag': '€ {Context::getContext()->cart->getOrderTotal()}',
       'Valuta': '{Context::getContext()->currency->iso_code}',
 
-      'Land': '{Context::getContext()->country->name}',
+      'Land': '{Context::getContext()->country->name[1]}',
       'Landcode': '{Context::getContext()->country->iso_code}',
       'Taal': '{Context::getContext()->language->language_code}',
 
@@ -218,7 +218,7 @@
 
           $('#customerInfoContent').prepend('<div class="col-12 p-4 alert-success mt-3">Bedankt!, Uw informatie is verzonden naar onze administratie. U kunt nu deze modal sluiten.</div>');
         } else {
-          $('#customerInfoContent').prepend('<div class="col-12 p-4  alert-danger mt-3">Informatie verzenden mislukt!</div>');
+          $('#customerInfoContent').prepend('<div class="col-12 p-4  alert-danger mt-3">Informatie verzenden mislukt! <br/>' + data.message +'</div>');
         }
       }
     });

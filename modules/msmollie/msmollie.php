@@ -368,7 +368,7 @@ class MSMollie extends PaymentModule
         $option->setCallToActionText($this->l('Ideal'))
               ->setAction($this->context->link->getModuleLink($this->name, 'validation', ['method' => 'ideal'], true))
               ->setAdditionalInformation($this->context->smarty->fetch('module:msmollie/views/templates/hook/ideal_info.tpl'))
-              ->setLogo('/modules/'.$this->name.'/views/img/payment_methods/Name=IDEAL, Size=2-Extra-large, Shape=Card.svg');
+              ->setLogo('/modules/'.$this->name.'/views/img/payment_methods/Name%3DiDEAL%2C Size%3D2-Extra-large%2C Shape%3DCard.svg');
 
         return $option;
     }

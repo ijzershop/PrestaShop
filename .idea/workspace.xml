@@ -657,11 +657,11 @@
       <recent name="C:\wampserver\www\ijzershop8.local\modules" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\ps_eventbus" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\controllers\front" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop\Admin\Sell\Order\Order" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views" />
-      <recent name="C:\wampserver\www\ijzershop8.local\app\Resources\UpdateDataFromLive\Handler" />
     </key>
   </component>
   <component name="RunManager" selected="Batch.ngrok">
@@ -782,7 +782,7 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewState">
-    <option name="selectedTab" value="Twig" />
+    <option name="selectedTab" value="Smarty" />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -1763,7 +1763,9 @@
       <workItem from="1743054520046" duration="5613000" />
       <workItem from="1743101900469" duration="34000" />
       <workItem from="1743143819375" duration="1974000" />
-      <workItem from="1743151252668" duration="1762000" />
+      <workItem from="1743151252668" duration="8770000" />
+      <workItem from="1743398217295" duration="1548000" />
+      <workItem from="1743400331423" duration="12596000" />
     </task>
     <servers />
   </component>
@@ -2526,6 +2528,11 @@
           <url>file://$PROJECT_DIR$/modules/ps_accounts.php</url>
           <line>36</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/modules/msmollie/controllers/front/ajax.php</url>
+          <line>25</line>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

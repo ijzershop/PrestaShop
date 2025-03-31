@@ -198,13 +198,17 @@
           <tr class="sub taxes">
             <td><span class="label">{l s='%label%:' sprintf=['%label%' => Btw] d='Shop.Theme.Global'}</span></td>
             <td class="text-right"><span class="value">
-                {if Context::getContext()->is_counter_customer && $total_remainder < 0}
+                {if Context::getContext()->is_counter_customer}
+                  {if  ((float)$total_remainder - (float)$total_remainder_tax_exc) < 0}
                     {Context::getContext()->currentLocale->formatPrice((float)$total_remainder - $total_remainder_tax_exc,  'EUR')}
                   {else}
                     {Context::getContext()->currentLocale->formatPrice((float)$subtotals.total_paid_tax_incl-(float)$subtotals.total_paid_tax_excl,'EUR')}
                   {/if}
-
-              </span></td>
+                {else}
+                  {Context::getContext()->currentLocale->formatPrice($subtotals.tax.amount,'EUR')}
+                  {/if}
+              </span>
+            </td>
           </tr>
         {/if}
         {if !$configuration.display_prices_tax_incl && $configuration.taxes_enabled}
@@ -239,6 +243,5 @@
 
       </table>
     {/block}
-
   </div>
 </div>

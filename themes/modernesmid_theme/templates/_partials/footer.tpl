@@ -173,7 +173,7 @@
       'Bestelbedrag': '€ {Context::getContext()->cart->getOrderTotal()}',
       'Valuta': '{Context::getContext()->currency->iso_code}',
 
-      'Land': '{Context::getContext()->country->name}',
+      'Land': '{Context::getContext()->country->name[1]}',
       'Landcode': '{Context::getContext()->country->iso_code}',
       'Taal': '{Context::getContext()->language->language_code}',
 

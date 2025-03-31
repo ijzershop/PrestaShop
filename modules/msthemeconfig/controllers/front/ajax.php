@@ -209,7 +209,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 'customer_info',
                 'Klant data rapport',
                 $template_vars,
-                'jelmer@ijzershop.nl',
+                'info@ijzershop.nl',
                 'Administrator',
                 'ijzershop nl',
                 'Webshop Ijzershop'

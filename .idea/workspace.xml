@@ -782,7 +782,7 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewState">
-    <option name="selectedTab" value="Smarty" />
+    <option name="selectedTab" value="Twig" />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -1765,7 +1765,13 @@
       <workItem from="1743143819375" duration="1974000" />
       <workItem from="1743151252668" duration="8770000" />
       <workItem from="1743398217295" duration="1548000" />
-      <workItem from="1743400331423" duration="12596000" />
+      <workItem from="1743400331423" duration="16493000" />
+      <workItem from="1743482194672" duration="93000" />
+      <workItem from="1743482650952" duration="9593000" />
+      <workItem from="1743657092420" duration="5635000" />
+      <workItem from="1743744427553" duration="17022000" />
+      <workItem from="1744007708104" duration="9123000" />
+      <workItem from="1744089135994" duration="53000" />
     </task>
     <servers />
   </component>
@@ -2533,6 +2539,16 @@
           <url>file://$PROJECT_DIR$/modules/msmollie/controllers/front/ajax.php</url>
           <line>25</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/order_conf.html.twig</url>
+          <line>156</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/bankwire.html.twig</url>
+          <line>15</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -183,10 +183,15 @@
               <!-- BOX ENDING -->
               <!--[if mso | IE]>
                   </table>
-                <![endif]-->
-
 {% endblock %}
 
+{% block footer_blocks %}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;background-color:#ffffff">
+      {{ footer_blocks|raw }}
+    </td>
+  </tr>
+{% endblock %}
 {% block styles %}
 {{ parent() }}
 <style type="text/css">

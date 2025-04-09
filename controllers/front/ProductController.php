@@ -544,7 +544,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 false,
                 false,
                 true,
-                $this->isPreview() ? ['preview' => '1'] : []
+                $this->isPreview() ? [
+                    'preview' => '1',
+                    'id_employee' => Tools::getValue('id_employee'),
+                    'adtoken' => Tools::getValue('adtoken'),
+                ] : []
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
@@ -911,9 +915,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
     protected function transformDescriptionWithImg($desc)
     {
-        if(is_null($desc)){
-            return '';
-        }
         $reg = '/\[img\-([0-9]+)\-(left|right)\-([a-zA-Z0-9-_]+)\]/';
         while (preg_match($reg, $desc, $matches)) {
             $link_lmg = $this->context->link->getImageLink($this->product->link_rewrite, $this->product->id . '-' . $matches[1], $matches[3]);

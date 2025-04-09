@@ -310,6 +310,9 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
             $total_taxes = $total_remainder_tax_incl - $total_remainder_tax_excl;
         }
 
+        $total_discount_tax_excl = $this->order_invoice->total_discount_tax_excl;
+        $total_discount_tax_incl = $this->order_invoice->total_discount_tax_incl;
+
         $footer = [
             'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
             'product_discounts_tax_excl' => $product_discounts_tax_excl,

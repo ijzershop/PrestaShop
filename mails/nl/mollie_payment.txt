@@ -1,7 +1,9 @@
 [{shop_url}]
 
 Bedankt voor het winkelen bij {shop_name}!
-U kunt nu uw bestelling afronden door nu te [betalen.]({checkoutUrl})
+U kunt nu uw bestelling afronden door nu te
+
+[betalen.]({checkoutUrl})
 
 Werkt de knop niet kopieëer dan de onderstaande link en plak deze in uw browser..
 {checkoutUrl}

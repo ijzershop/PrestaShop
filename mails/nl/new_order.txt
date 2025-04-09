@@ -2,18 +2,18 @@
 
 Besteloverzicht
 
-Klant: {firstname} {lastname} - ({email})
+Klant:
+{firstname} {lastname} - ({email})
 
 Address:
 {delivery_block_html}
 
 Bestelling: {order_name} Geplaatst op {date}
-
 Betaling: {payment}
-
 Vervoerder: {carrier}
 
-Klantbericht: {message}
+Klantbericht:
+{message}
 
 Product	Aantal	Totaal  {products_txt} {discounts_txt}
 
@@ -22,6 +22,10 @@ Verzending	{total_shipping_tax_excl}
 Korting	{total_discounts}
 Btw	{total_tax}
 Totaal	{total_paid}
+
+- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
+- [telefoon: 058-2123138](tel://0900-2502500)
+- [email: info@v15.nl](mailto:info@v15.nl)
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

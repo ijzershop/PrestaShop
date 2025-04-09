@@ -1,7 +1,10 @@
 [{shop_url}]
 
 {reply}
-Geautomatiseerde mailbox: a. u. b. niet direct antwoorden op deze mail want we zullen deze mogelijk niet ontvangen. In order to reply, click on the following link: [> {link}]({link})
+
+Geautomatiseerde mailbox: a. u. b. niet direct antwoorden op deze mail want we zullen deze mogelijk niet ontvangen.
+
+In order to reply, click on the following link: [> {link}]({link})
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

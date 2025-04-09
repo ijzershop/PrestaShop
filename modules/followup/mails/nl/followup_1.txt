@@ -7,7 +7,6 @@ Uw winkelwagen is opgeslagen, u kan terug naar onze online shop om te bestellen:
 We willen u graag een korting aanbieden van {amount}% op uw volgende order! Deze aanbieding is {days} dagen geldig, dus twijfel niet te lang!
 
 Hier is uw WAARDEBON: {voucher_num}
-
 Voer deze code in bij uw winkelwagen om uw korting te krijgen.
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!

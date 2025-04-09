@@ -1,6 +1,6 @@
 [{shop_url}]
 
-Uw retourzending (#{id_order_return}) status is bijgewerkt, de nieuwe status is: "{state_order_return}" "{state_order_return}".
+Uw retourzending (#{id_order_return}) status is bijgewerkt, de nieuwe status is: "{state_order_return}"
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

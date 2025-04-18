@@ -4,7 +4,6 @@
 namespace Behat\Testwork\EventDispatcher;
 
 
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -25,7 +24,7 @@ final class TestworkEventDispatcherSymfonyLegacy extends EventDispatcher
      * {@inheritdoc}
      *
      */
-    public function dispatch($eventName, ?Event $event = null)
+    public function dispatch($eventName, \Symfony\Component\EventDispatcher\Event $event = null)
     {
         trigger_error(
             'Class "\Behat\Testwork\EventDispatcher\TestworkEventDispatcherSymfonyLegacy" is deprecated ' .
@@ -36,7 +35,7 @@ final class TestworkEventDispatcherSymfonyLegacy extends EventDispatcher
 
         if (null === $event) {
             /** @psalm-suppress UndefinedClass */
-            $event = new Event();
+            $event = new \Symfony\Component\EventDispatcher\Event();
         }
         if (method_exists($event, 'setName')) {
             $event->setName($eventName);

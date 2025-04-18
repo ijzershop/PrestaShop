@@ -37,6 +37,9 @@ abstract class AbstractPropertyExtractor implements PropertyExtractorInterface
         $this->container = $container;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getProperties(): array
     {
         if (null !== $this->properties) {

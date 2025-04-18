@@ -22,6 +22,9 @@ use ApiPlatform\Util\Inflector;
  */
 final class DashPathSegmentNameGenerator implements PathSegmentNameGeneratorInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getSegmentName(string $name, bool $collection = true): string
     {
         return $collection ? $this->dashize(Inflector::pluralize($name)) : $this->dashize($name);

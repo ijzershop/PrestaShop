@@ -12,7 +12,6 @@ namespace PHPUnit\Framework\Constraint;
 use function sprintf;
 use ReflectionClass;
 use ReflectionException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Constraint that asserts that the object it is evaluated for is an instance
@@ -63,7 +62,7 @@ final class IsInstanceOf extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

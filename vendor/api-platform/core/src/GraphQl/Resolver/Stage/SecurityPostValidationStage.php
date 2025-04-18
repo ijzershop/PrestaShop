@@ -32,6 +32,9 @@ final class SecurityPostValidationStage implements SecurityPostValidationStageIn
         $this->resourceAccessChecker = $resourceAccessChecker;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __invoke(string $resourceClass, Operation $operation, array $context): void
     {
         $isGranted = $operation->getSecurityPostValidation();

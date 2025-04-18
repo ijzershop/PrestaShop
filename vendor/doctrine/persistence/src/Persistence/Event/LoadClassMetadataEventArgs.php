@@ -18,19 +18,19 @@ class LoadClassMetadataEventArgs extends EventArgs
 {
     /**
      * @var ClassMetadata
-     * @phpstan-var TClassMetadata
+     * @psalm-var TClassMetadata
      */
     private $classMetadata;
 
     /**
      * @var ObjectManager
-     * @phpstan-var TObjectManager
+     * @psalm-var TObjectManager
      */
     private $objectManager;
 
     /**
-     * @phpstan-param TClassMetadata $classMetadata
-     * @phpstan-param TObjectManager $objectManager
+     * @psalm-param TClassMetadata $classMetadata
+     * @psalm-param TObjectManager $objectManager
      */
     public function __construct(ClassMetadata $classMetadata, ObjectManager $objectManager)
     {
@@ -42,7 +42,7 @@ class LoadClassMetadataEventArgs extends EventArgs
      * Retrieves the associated ClassMetadata.
      *
      * @return ClassMetadata
-     * @phpstan-return TClassMetadata
+     * @psalm-return TClassMetadata
      */
     public function getClassMetadata()
     {

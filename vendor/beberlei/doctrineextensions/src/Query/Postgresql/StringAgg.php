@@ -4,11 +4,9 @@ namespace DoctrineExtensions\Query\Postgresql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\PathExpression;
+use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Query\TokenType;
-
-use function sprintf;
 
 /**
  * @author Roberto Júnior <me@robertojunior.net>
@@ -24,32 +22,32 @@ class StringAgg extends FunctionNode
 
     private $isDistinct = false;
 
-    public function parse(Parser $parser): void
+    public function parse(Parser $parser)
     {
-        $parser->match(TokenType::T_IDENTIFIER);
-        $parser->match(TokenType::T_OPEN_PARENTHESIS);
+        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         $lexer = $parser->getLexer();
-        if ($lexer->isNextToken(TokenType::T_DISTINCT)) {
-            $parser->match(TokenType::T_DISTINCT);
+        if ($lexer->isNextToken(Lexer::T_DISTINCT)) {
+            $parser->match(Lexer::T_DISTINCT);
 
             $this->isDistinct = true;
         }
 
         $this->expression = $parser->PathExpression(PathExpression::TYPE_STATE_FIELD);
-        $parser->match(TokenType::T_COMMA);
+        $parser->match(Lexer::T_COMMA);
         $this->delimiter = $parser->StringPrimary();
 
-        if ($lexer->isNextToken(TokenType::T_ORDER)) {
+        if ($lexer->isNextToken(Lexer::T_ORDER)) {
             $this->orderBy = $parser->OrderByClause();
         }
 
-        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(SqlWalker $sqlWalker): string
+    public function getSql(SqlWalker $sqlWalker)
     {
-        return sprintf(
+        return \sprintf(
             'string_agg(%s%s, %s%s)',
             ($this->isDistinct ? 'DISTINCT ' : ''),
             $sqlWalker->walkPathExpression($this->expression),

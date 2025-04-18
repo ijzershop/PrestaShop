@@ -14,6 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_imageslider/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/msthemeconfig/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/pricemodifier/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -319,6 +320,13 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/message-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-common" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/type-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

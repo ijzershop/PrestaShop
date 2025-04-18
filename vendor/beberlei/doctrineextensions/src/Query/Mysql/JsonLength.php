@@ -3,11 +3,9 @@
 namespace DoctrineExtensions\Query\Mysql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
+use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Query\TokenType;
-
-use function sprintf;
 
 class JsonLength extends FunctionNode
 {
@@ -15,23 +13,23 @@ class JsonLength extends FunctionNode
 
     protected $path;
 
-    public function parse(Parser $parser): void
+    public function parse(Parser $parser)
     {
-        $parser->match(TokenType::T_IDENTIFIER);
-        $parser->match(TokenType::T_OPEN_PARENTHESIS);
+        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         $this->target = $parser->StringPrimary();
 
-        if ($parser->getLexer()->isNextToken(TokenType::T_COMMA)) {
-            $parser->match(TokenType::T_COMMA);
+        if ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+            $parser->match(Lexer::T_COMMA);
 
             $this->path = $parser->StringPrimary();
         }
 
-        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
-    public function getSql(SqlWalker $sqlWalker): string
+    public function getSql(SqlWalker $sqlWalker)
     {
         $target = $sqlWalker->walkStringPrimary($this->target);
 

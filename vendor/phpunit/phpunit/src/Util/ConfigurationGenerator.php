@@ -24,7 +24,6 @@ final class ConfigurationGenerator
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/{phpunit_version}/phpunit.xsd"
          bootstrap="{bootstrap_script}"
-         cacheResultFile="{cache_directory}/test-results"
          executionOrder="depends,defects"
          forceCoversAnnotation="true"
          beStrictAboutCoversAnnotation="true"
@@ -47,7 +46,7 @@ final class ConfigurationGenerator
 
 EOT;
 
-    public function generateDefaultConfiguration(string $phpunitVersion, string $bootstrapScript, string $testsDirectory, string $srcDirectory, string $cacheDirectory): string
+    public function generateDefaultConfiguration(string $phpunitVersion, string $bootstrapScript, string $testsDirectory, string $srcDirectory): string
     {
         return str_replace(
             [
@@ -55,14 +54,12 @@ EOT;
                 '{bootstrap_script}',
                 '{tests_directory}',
                 '{src_directory}',
-                '{cache_directory}',
             ],
             [
                 $phpunitVersion,
                 $bootstrapScript,
                 $testsDirectory,
                 $srcDirectory,
-                $cacheDirectory,
             ],
             self::TEMPLATE
         );

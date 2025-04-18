@@ -22,6 +22,9 @@ use ApiPlatform\Util\Inflector;
  */
 final class UnderscorePathSegmentNameGenerator implements PathSegmentNameGeneratorInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getSegmentName(string $name, bool $collection = true): string
     {
         $name = Inflector::tableize($name);

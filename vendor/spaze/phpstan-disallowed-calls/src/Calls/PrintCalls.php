@@ -11,7 +11,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCall;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCallFactory;
-use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedCallsRuleErrors;
+use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
 
 /**
  * Reports on dynamically calling print().
@@ -22,24 +22,24 @@ use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedCallsRuleErrors;
 class PrintCalls implements Rule
 {
 
-	/** @var DisallowedCallsRuleErrors */
-	private $disallowedCallsRuleErrors;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
 
-	/** @var list<DisallowedCall> */
+	/** @var DisallowedCall[] */
 	private $disallowedCalls;
 
 
 	/**
-	 * @param DisallowedCallsRuleErrors $disallowedCallsRuleErrors
+	 * @param DisallowedHelper $disallowedHelper
 	 * @param DisallowedCallFactory $disallowedCallFactory
 	 * @param array $forbiddenCalls
 	 * @phpstan-param ForbiddenCallsConfig $forbiddenCalls
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCallsConfig is a type alias defined in PHPStan config
 	 * @throws ShouldNotHappenException
 	 */
-	public function __construct(DisallowedCallsRuleErrors $disallowedCallsRuleErrors, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
+	public function __construct(DisallowedHelper $disallowedHelper, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
 	{
-		$this->disallowedCallsRuleErrors = $disallowedCallsRuleErrors;
+		$this->disallowedHelper = $disallowedHelper;
 		$this->disallowedCalls = $disallowedCallFactory->createFromConfig($forbiddenCalls);
 	}
 
@@ -53,12 +53,11 @@ class PrintCalls implements Rule
 	/**
 	 * @param Print_ $node
 	 * @param Scope $scope
-	 * @return list<RuleError>
-	 * @throws ShouldNotHappenException
+	 * @return RuleError[]
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
-		return $this->disallowedCallsRuleErrors->get(null, $scope, 'print', 'print', null, $this->disallowedCalls);
+		return $this->disallowedHelper->getDisallowedMessage(null, $scope, 'print', 'print', $this->disallowedCalls);
 	}
 
 }

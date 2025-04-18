@@ -4,13 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\Persistence;
 
-use BadMethodCallException;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\ClassMetadataFactory;
-
-use function get_class;
-use function method_exists;
-use function sprintf;
 
 /**
  * Base class to simplify ObjectManager decorators
@@ -23,7 +18,7 @@ abstract class ObjectManagerDecorator implements ObjectManager
     protected $wrapped;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function find(string $className, $id)
     {
@@ -61,7 +56,7 @@ abstract class ObjectManagerDecorator implements ObjectManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRepository(string $className)
     {
@@ -69,14 +64,14 @@ abstract class ObjectManagerDecorator implements ObjectManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClassMetadata(string $className)
     {
         return $this->wrapped->getClassMetadata($className);
     }
 
-    /** @phpstan-return ClassMetadataFactory<ClassMetadata<object>> */
+    /** @psalm-return ClassMetadataFactory<ClassMetadata<object>> */
     public function getMetadataFactory()
     {
         return $this->wrapped->getMetadataFactory();
@@ -87,31 +82,8 @@ abstract class ObjectManagerDecorator implements ObjectManager
         $this->wrapped->initializeObject($obj);
     }
 
-    /** @param mixed $value */
-    public function isUninitializedObject($value): bool
-    {
-        if (! method_exists($this->wrapped, 'isUninitializedObject')) {
-            $wrappedClass = get_class($this->wrapped);
-
-            throw new BadMethodCallException(sprintf(
-                <<<'EXCEPTION'
-Context: Trying to call %s
-Problem: The wrapped ObjectManager, an instance of %s does not implement this method.
-Solution: Implement %s::isUninitializedObject() with a signature compatible with this one:
-    public function isUninitializedObject(mixed $value): bool
-EXCEPTION
-                ,
-                __METHOD__,
-                $wrappedClass,
-                $wrappedClass
-            ));
-        }
-
-        return $this->wrapped->isUninitializedObject($value);
-    }
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function contains(object $object)
     {

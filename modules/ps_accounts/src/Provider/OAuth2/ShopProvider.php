@@ -20,14 +20,11 @@
 
 namespace PrestaShop\Module\PsAccounts\Provider\OAuth2;
 
-use PrestaShop\Module\PsAccounts\Adapter\Link;
 use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\AbstractProvider;
 use PrestaShop\Module\PsAccounts\Vendor\PrestaShop\OAuth2\Client\Provider\PrestaShop;
 
 class ShopProvider extends PrestaShop
 {
-    const QUERY_LOGOUT_CALLBACK_PARAM = 'oauth2Callback';
-
     /**
      * @var \Ps_accounts
      */
@@ -63,8 +60,8 @@ class ShopProvider extends PrestaShop
         parent::__construct(array_merge([
             'clientId' => $this->oauth2Client->getClientId(),
             'clientSecret' => $this->oauth2Client->getClientSecret(),
-            'redirectUri' => $this->getRedirectUri(),
-            'postLogoutCallbackUri' => $this->getPostLogoutRedirectUri(),
+            'redirectUri' => $this->getOauth2Client()->getRedirectUri(),
+            'postLogoutCallbackUri' => $this->getOauth2Client()->getPostLogoutRedirectUri(),
             'pkceMethod' => AbstractProvider::PKCE_METHOD_S256,
         ], $options), $collaborators);
     }
@@ -96,39 +93,6 @@ class ShopProvider extends PrestaShop
     {
         return array_merge(parent::getAllowedClientOptions($options), [
             'verify',
-        ]);
-    }
-
-    /**
-     * @example  http://my-shop.mydomain/admin-path/index.php?controller=AdminOAuth2PsAccounts
-     *
-     * @return string
-     *
-     * @throws \Exception
-     */
-    public function getRedirectUri()
-    {
-        /** @var Link $link */
-        $link = $this->module->getService(Link::class);
-
-        return $link->getAdminLink('AdminOAuth2PsAccounts', false);
-    }
-
-    /**
-     * @example http://my-shop.mydomain/admin-path/index.php?controller=AdminLogin&logout=1&oauth2Callback=1
-     *
-     * @return string
-     *
-     * @throws \PrestaShopException
-     */
-    public function getPostLogoutRedirectUri()
-    {
-        /** @var Link $link */
-        $link = $this->module->getService(Link::class);
-
-        return $link->getAdminLink('AdminLogin', false, [], [
-            'logout' => 1,
-            self::QUERY_LOGOUT_CALLBACK_PARAM => 1,
         ]);
     }
 

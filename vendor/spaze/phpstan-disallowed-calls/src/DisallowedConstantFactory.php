@@ -4,24 +4,13 @@ declare(strict_types = 1);
 namespace Spaze\PHPStan\Rules\Disallowed;
 
 use PHPStan\ShouldNotHappenException;
-use Spaze\PHPStan\Rules\Disallowed\Normalizer\Normalizer;
 
 class DisallowedConstantFactory
 {
 
-	/** @var Normalizer */
-	private $normalizer;
-
-
-	public function __construct(Normalizer $normalizer)
-	{
-		$this->normalizer = $normalizer;
-	}
-
-
 	/**
-	 * @param array<array{class?:string, constant?:string, message?:string, allowIn?:list<string>, allowExceptIn?:list<string>, disallowIn?:list<string>, errorIdentifier?:string, errorTip?:string}> $config
-	 * @return list<DisallowedConstant>
+	 * @param array<array{class?:string, constant?:string, message?:string, allowIn?:string[], allowExceptIn?:string[], disallowIn?:string[], errorIdentifier?:string, errorTip?:string}> $config
+	 * @return DisallowedConstant[]
 	 * @throws ShouldNotHappenException
 	 */
 	public function createFromConfig(array $config): array
@@ -36,7 +25,7 @@ class DisallowedConstantFactory
 			foreach ((array)$constants as $constant) {
 				$class = $disallowed['class'] ?? null;
 				$disallowedConstant = new DisallowedConstant(
-					$this->normalizer->normalizeNamespace($class ? "{$class}::{$constant}" : $constant),
+					$class ? "{$class}::{$constant}" : $constant,
 					$disallowed['message'] ?? null,
 					$disallowed['allowIn'] ?? [],
 					$disallowed['allowExceptIn'] ?? $disallowed['disallowIn'] ?? [],

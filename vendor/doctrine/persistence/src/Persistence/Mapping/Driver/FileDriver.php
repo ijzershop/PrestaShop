@@ -21,8 +21,6 @@ use function str_replace;
  * classes on demand. This requires the user to adhere to the convention of 1 mapping
  * file per class and the file names of the mapping files must correspond to the full
  * class name, including namespace, with the namespace delimiters '\', replaced by dots '.'.
- *
- * @template T
  */
 abstract class FileDriver implements MappingDriver
 {
@@ -30,8 +28,8 @@ abstract class FileDriver implements MappingDriver
     protected $locator;
 
     /**
-     * @var mixed[]|null
-     * @phpstan-var array<class-string, T>|null
+     * @var ClassMetadata[]|null
+     * @psalm-var array<class-string, ClassMetadata<object>>|null
      */
     protected $classCache;
 
@@ -78,9 +76,10 @@ abstract class FileDriver implements MappingDriver
      * Gets the element of schema meta data for the class from the mapping file.
      * This will lazily load the mapping file if it is not loaded yet.
      *
-     * @phpstan-param class-string $className
+     * @psalm-param class-string $className
      *
-     * @return T The element of schema meta data.
+     * @return ClassMetadata The element of schema meta data.
+     * @psalm-return ClassMetadata<object>
      *
      * @throws MappingException
      */
@@ -137,7 +136,7 @@ abstract class FileDriver implements MappingDriver
             return $this->locator->getAllClassNames($this->globalBasename);
         }
 
-        /** @phpstan-var array<class-string, ClassMetadata<object>> $classCache */
+        /** @psalm-var array<class-string, ClassMetadata<object>> $classCache */
         $classCache = $this->classCache;
 
         /** @var list<class-string> $keys */
@@ -155,8 +154,8 @@ abstract class FileDriver implements MappingDriver
      *
      * @param string $file The mapping file to load.
      *
-     * @return mixed[]
-     * @phpstan-return array<class-string, T>
+     * @return ClassMetadata[]
+     * @psalm-return array<class-string, ClassMetadata<object>>
      */
     abstract protected function loadMappingFile(string $file);
 
@@ -174,7 +173,7 @@ abstract class FileDriver implements MappingDriver
     protected function initialize()
     {
         $this->classCache = [];
-        if ($this->globalBasename === '') {
+        if ($this->globalBasename === null) {
             return;
         }
 

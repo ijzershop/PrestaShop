@@ -22,6 +22,9 @@ use Symfony\Component\Uid\Ulid;
  */
 final class UlidUriVariableTransformer implements UriVariableTransformerInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function transform($value, array $types, array $context = [])
     {
         try {
@@ -31,6 +34,9 @@ final class UlidUriVariableTransformer implements UriVariableTransformerInterfac
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsTransformation($value, array $types, array $context = []): bool
     {
         return \is_string($value) && is_a($types[0], Ulid::class, true);

@@ -7,7 +7,6 @@ namespace Doctrine\Persistence;
 use InvalidArgumentException;
 use ReflectionClass;
 
-use function assert;
 use function sprintf;
 
 /**
@@ -32,14 +31,14 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
 
     /**
      * @var string
-     * @phpstan-var class-string
+     * @psalm-var class-string
      */
     private $proxyInterfaceName;
 
     /**
      * @param array<string, string> $connections
      * @param array<string, string> $managers
-     * @phpstan-param class-string $proxyInterfaceName
+     * @psalm-param class-string $proxyInterfaceName
      */
     public function __construct(
         string $name,
@@ -64,7 +63,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
      *
      * @param string $name The name of the service.
      *
-     * @return object The instance of the given service.
+     * @return ObjectManager The instance of the given service.
      */
     abstract protected function getService(string $name);
 
@@ -90,7 +89,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConnection(?string $name = null)
     {
@@ -108,7 +107,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConnectionNames()
     {
@@ -116,7 +115,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getConnections()
     {
@@ -129,7 +128,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultConnectionName()
     {
@@ -137,7 +136,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDefaultManagerName()
     {
@@ -145,7 +144,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */
@@ -161,10 +160,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
             );
         }
 
-        $service = $this->getService($this->managers[$name]);
-        assert($service instanceof ObjectManager);
-
-        return $service;
+        return $this->getService($this->managers[$name]);
     }
 
     /**
@@ -189,7 +185,6 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
 
         foreach ($this->managers as $id) {
             $manager = $this->getService($id);
-            assert($manager instanceof ObjectManager);
 
             if (! $manager->getMetadataFactory()->isTransient($class)) {
                 return $manager;
@@ -200,7 +195,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getManagerNames()
     {
@@ -208,15 +203,14 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getManagers()
     {
         $managers = [];
 
         foreach ($this->managers as $name => $id) {
-            $manager = $this->getService($id);
-            assert($manager instanceof ObjectManager);
+            $manager         = $this->getService($id);
             $managers[$name] = $manager;
         }
 
@@ -224,7 +218,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getRepository(
         string $persistentObject,
@@ -236,7 +230,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function resetManager(?string $name = null)
     {
@@ -255,7 +249,7 @@ abstract class AbstractManagerRegistry implements ManagerRegistry
         return $this->getManager($name);
     }
 
-    /** @phpstan-param class-string $persistentObject */
+    /** @psalm-param class-string $persistentObject */
     private function selectManager(
         string $persistentObject,
         ?string $persistentManagerName = null

@@ -11,7 +11,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedConstant;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedConstantFactory;
-use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedConstantRuleErrors;
+use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
 
 /**
  * Reports on constant usage.
@@ -22,22 +22,22 @@ use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedConstantRuleErrors;
 class ConstantUsages implements Rule
 {
 
-	/** @var DisallowedConstantRuleErrors */
-	private $disallowedConstantRuleError;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
 
-	/** @var list<DisallowedConstant> */
+	/** @var DisallowedConstant[] */
 	private $disallowedConstants;
 
 
 	/**
-	 * @param DisallowedConstantRuleErrors $disallowedConstantRuleErrors
+	 * @param DisallowedHelper $disallowedHelper
 	 * @param DisallowedConstantFactory $disallowedConstantFactory
-	 * @param array<array{constant?:string, message?:string, allowIn?:list<string>}> $disallowedConstants
+	 * @param array<array{constant?:string, message?:string, allowIn?:string[]}> $disallowedConstants
 	 * @throws ShouldNotHappenException
 	 */
-	public function __construct(DisallowedConstantRuleErrors $disallowedConstantRuleErrors, DisallowedConstantFactory $disallowedConstantFactory, array $disallowedConstants)
+	public function __construct(DisallowedHelper $disallowedHelper, DisallowedConstantFactory $disallowedConstantFactory, array $disallowedConstants)
 	{
-		$this->disallowedConstantRuleError = $disallowedConstantRuleErrors;
+		$this->disallowedHelper = $disallowedHelper;
 		$this->disallowedConstants = $disallowedConstantFactory->createFromConfig($disallowedConstants);
 	}
 
@@ -51,13 +51,12 @@ class ConstantUsages implements Rule
 	/**
 	 * @param ConstFetch $node
 	 * @param Scope $scope
-	 * @return list<RuleError>
-	 * @throws ShouldNotHappenException
+	 * @return RuleError[]
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
 		/** @var ConstFetch $node */
-		return $this->disallowedConstantRuleError->get((string)$node->name, $scope, null, $this->disallowedConstants);
+		return $this->disallowedHelper->getDisallowedConstantMessage((string)$node->name, $scope, null, $this->disallowedConstants);
 	}
 
 }

@@ -41,6 +41,7 @@ final class AddLinkHeaderListener
 
     /**
      * @param Discovery|string $discovery
+     * @param mixed            $resourceMetadataFactory
      */
     public function __construct($resourceMetadataFactory, $discovery)
     {
@@ -69,8 +70,8 @@ final class AddLinkHeaderListener
         $operation = $this->initializeOperation($request);
 
         if (
-            null === ($resourceClass = $request->attributes->get('_api_resource_class'))
-            || !($attributes = RequestAttributesExtractor::extractAttributes($request))
+            null === ($resourceClass = $request->attributes->get('_api_resource_class')) ||
+            !($attributes = RequestAttributesExtractor::extractAttributes($request))
         ) {
             return;
         }

@@ -25,6 +25,9 @@ use Symfony\Component\Validator\Constraints\Length;
  */
 class PropertySchemaLengthRestriction implements PropertySchemaRestrictionMetadataInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function create(Constraint $constraint, ApiProperty $propertyMetadata): array
     {
         $restriction = [];
@@ -40,6 +43,9 @@ class PropertySchemaLengthRestriction implements PropertySchemaRestrictionMetada
         return $restriction;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supports(Constraint $constraint, ApiProperty $propertyMetadata): bool
     {
         return $constraint instanceof Length && null !== ($type = $propertyMetadata->getBuiltinTypes()[0] ?? null) && Type::BUILTIN_TYPE_STRING === $type->getBuiltinType();

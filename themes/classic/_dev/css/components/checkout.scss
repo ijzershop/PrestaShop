@@ -297,7 +297,7 @@ body#checkout {
       border: 3px solid transparent;
 
       > header {
-        min-height: auto;
+        min-height: 11.7rem;
       }
 
       &.selected {
@@ -369,10 +369,6 @@ body#checkout {
     }
 
     .delivery-options {
-      > .row {
-        border-right: 0.1rem solid darken($gray-lighter, 20%);
-      }
-
       .delivery-option {
         min-height: 80px;
         padding: 0.9375rem 0;
@@ -407,6 +403,10 @@ body#checkout {
           width: 3.125rem;
         }
       }
+
+      .carrier-extra-content {
+        padding-block-end: 1rem;
+      }
     }
 
     .carrier-delay,
@@ -437,6 +437,9 @@ body#checkout {
       font-size: $font-size-sm;
     }
 
+    .forgot-password {
+      margin-left: 14.38rem;
+    }
 
     @include media-breakpoint-down(sm) {
       .forgot-password {
@@ -762,7 +765,7 @@ body#checkout {
 
     section.checkout-step {
       .content {
-        padding: 0rem 0.9375rem;
+        padding: 0.9375rem;
       }
     }
 

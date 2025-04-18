@@ -91,7 +91,7 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
     }
 
     /**
-     * @param mixed|null $format
+     * {@inheritdoc}
      *
      * @return array|string|int|float|bool|\ArrayObject|null
      */
@@ -127,7 +127,7 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
      *
      * @param ResourceMetadata|ApiResource $resourceMetadata
      */
-    private function populateEntrypointProperties(string $resourceClass, $resourceMetadata, string $shortName, string $prefixedShortName, array &$entrypointProperties, ResourceMetadataCollection $resourceMetadataCollection = null)
+    private function populateEntrypointProperties(string $resourceClass, $resourceMetadata, string $shortName, string $prefixedShortName, array &$entrypointProperties, ?ResourceMetadataCollection $resourceMetadataCollection = null)
     {
         $hydraCollectionOperations = $this->getHydraOperations($resourceClass, $resourceMetadata, $prefixedShortName, true, $resourceMetadataCollection);
         if (empty($hydraCollectionOperations)) {
@@ -169,7 +169,7 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
      *
      * @param ResourceMetadata|ApiResource $resourceMetadata
      */
-    private function getClass(string $resourceClass, $resourceMetadata, string $shortName, string $prefixedShortName, array $context, ResourceMetadataCollection $resourceMetadataCollection = null): array
+    private function getClass(string $resourceClass, $resourceMetadata, string $shortName, string $prefixedShortName, array $context, ?ResourceMetadataCollection $resourceMetadataCollection = null): array
     {
         if ($resourceMetadata instanceof ApiResource) {
             $description = $resourceMetadata->getDescription();
@@ -337,7 +337,7 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
      *
      * @param ResourceMetadata|ApiResource $resourceMetadata
      */
-    private function getHydraOperations(string $resourceClass, $resourceMetadata, string $prefixedShortName, bool $collection, ResourceMetadataCollection $resourceMetadataCollection = null): array
+    private function getHydraOperations(string $resourceClass, $resourceMetadata, string $prefixedShortName, bool $collection, ?ResourceMetadataCollection $resourceMetadataCollection = null): array
     {
         if ($resourceMetadata instanceof ResourceMetadata) {
             if (null === $operations = $collection ? $resourceMetadata->getCollectionOperations() : $resourceMetadata->getItemOperations()) {
@@ -376,9 +376,10 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
      * Gets and populates if applicable a Hydra operation.
      *
      * @param ResourceMetadata|ApiResource $resourceMetadata
+     * @param SubresourceMetadata          $subresourceMetadata
      * @param array|HttpOperation          $operation
      */
-    private function getHydraOperation(string $resourceClass, $resourceMetadata, string $operationName, $operation, string $prefixedShortName, string $operationType = null, SubresourceMetadata $subresourceMetadata = null): array
+    private function getHydraOperation(string $resourceClass, $resourceMetadata, string $operationName, $operation, string $prefixedShortName, ?string $operationType = null, SubresourceMetadata $subresourceMetadata = null): array
     {
         if ($operation instanceof HttpOperation) {
             $method = $operation->getMethod() ?: HttpOperation::METHOD_GET;
@@ -712,11 +713,17 @@ final class DocumentationNormalizer implements NormalizerInterface, CacheableSup
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return self::FORMAT === $format && $data instanceof Documentation;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasCacheableSupportsMethod(): bool
     {
         return true;

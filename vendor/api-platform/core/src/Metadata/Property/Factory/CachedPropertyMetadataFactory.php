@@ -36,6 +36,9 @@ final class CachedPropertyMetadataFactory implements PropertyMetadataFactoryInte
         $this->decorated = $decorated;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(string $resourceClass, string $property, array $options = []): ApiProperty
     {
         $cacheKey = self::CACHE_KEY_PREFIX.md5(serialize([$resourceClass, $property, $options]));

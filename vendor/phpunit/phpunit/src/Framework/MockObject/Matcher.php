@@ -17,13 +17,11 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Rule\AnyInvokedCount;
 use PHPUnit\Framework\MockObject\Rule\AnyParameters;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
-use PHPUnit\Framework\MockObject\Rule\InvokedAtMostCount;
 use PHPUnit\Framework\MockObject\Rule\InvokedCount;
 use PHPUnit\Framework\MockObject\Rule\MethodName;
 use PHPUnit\Framework\MockObject\Rule\ParametersRule;
 use PHPUnit\Framework\MockObject\Stub\Stub;
 use PHPUnit\Framework\TestFailure;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
@@ -118,8 +116,8 @@ final class Matcher
 
         if ($this->afterMatchBuilderId !== null) {
             $matcher = $invocation->getObject()
-                ->__phpunit_getInvocationHandler()
-                ->lookupMatcher($this->afterMatchBuilderId);
+                                  ->__phpunit_getInvocationHandler()
+                                  ->lookupMatcher($this->afterMatchBuilderId);
 
             if (!$matcher) {
                 throw new RuntimeException(
@@ -162,16 +160,16 @@ final class Matcher
     }
 
     /**
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @throws RuntimeException
      */
     public function matches(Invocation $invocation): bool
     {
         if ($this->afterMatchBuilderId !== null) {
             $matcher = $invocation->getObject()
-                ->__phpunit_getInvocationHandler()
-                ->lookupMatcher($this->afterMatchBuilderId);
+                                  ->__phpunit_getInvocationHandler()
+                                  ->lookupMatcher($this->afterMatchBuilderId);
 
             if (!$matcher) {
                 throw new RuntimeException(
@@ -216,8 +214,8 @@ final class Matcher
     }
 
     /**
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      * @throws RuntimeException
      */
     public function verify(): void
@@ -233,11 +231,10 @@ final class Matcher
                 $this->parametersRule = new AnyParameters;
             }
 
-            $invocationIsAny    = $this->invocationRule instanceof AnyInvokedCount;
-            $invocationIsNever  = $this->invocationRule instanceof InvokedCount && $this->invocationRule->isNever();
-            $invocationIsAtMost = $this->invocationRule instanceof InvokedAtMostCount;
+            $invocationIsAny   = $this->invocationRule instanceof AnyInvokedCount;
+            $invocationIsNever = $this->invocationRule instanceof InvokedCount && $this->invocationRule->isNever();
 
-            if (!$invocationIsAny && !$invocationIsNever && !$invocationIsAtMost) {
+            if (!$invocationIsAny && !$invocationIsNever) {
                 $this->parametersRule->verify();
             }
         } catch (ExpectationFailedException $e) {

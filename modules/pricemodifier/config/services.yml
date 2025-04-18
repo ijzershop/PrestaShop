@@ -8,8 +8,8 @@ doctrine:
       PricemodifierModule:
         is_bundle: false
         type: annotation  # or attribute if using PHP 8+
-        dir: "%kernel.project_dir%/modules/pricemodifier/src/EntityPrice"
-        prefix: 'Modernesmid\Module\Pricemodifier\EntityPrice'
+        dir: "%kernel.project_dir%/modules/pricemodifier/src/Entity"
+        prefix: 'Modernesmid\Module\Pricemodifier\Entity'
         alias: PricemodifierModule
 
 services:

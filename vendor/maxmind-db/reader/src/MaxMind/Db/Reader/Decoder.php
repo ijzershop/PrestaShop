@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MaxMind\Db\Reader;
 
 // @codingStandardsIgnoreLine
+use RuntimeException;
 
 class Decoder
 {
@@ -12,19 +13,20 @@ class Decoder
      * @var resource
      */
     private $fileStream;
-
     /**
      * @var int
      */
     private $pointerBase;
-
+    /**
+     * @var float
+     */
+    private $pointerBaseByteSize;
     /**
      * This is only used for unit testing.
      *
      * @var bool
      */
     private $pointerTestHack;
-
     /**
      * @var bool
      */
@@ -42,8 +44,8 @@ class Decoder
     private const _UINT64 = 9;
     private const _UINT128 = 10;
     private const _ARRAY = 11;
-    // 12 is the container type
-    // 13 is the end marker type
+    private const _CONTAINER = 12;
+    private const _END_MARKER = 13;
     private const _BOOLEAN = 14;
     private const _FLOAT = 15;
 
@@ -58,14 +60,12 @@ class Decoder
         $this->fileStream = $fileStream;
         $this->pointerBase = $pointerBase;
 
+        $this->pointerBaseByteSize = $pointerBase > 0 ? log($pointerBase, 2) / 8 : 0;
         $this->pointerTestHack = $pointerTestHack;
 
         $this->switchByteOrder = $this->isPlatformLittleEndian();
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function decode(int $offset): array
     {
         $ctrlByte = \ord(Util::read($this->fileStream, $offset, 1));
@@ -111,11 +111,6 @@ class Decoder
         return $this->decodeByType($type, $offset, $size);
     }
 
-    /**
-     * @param int<0, max> $size
-     *
-     * @return array{0:mixed, 1:int}
-     */
     private function decodeByType(int $type, int $offset, int $size): array
     {
         switch ($type) {
@@ -172,9 +167,6 @@ class Decoder
         }
     }
 
-    /**
-     * @return array{0:array<mixed>, 1:int}
-     */
     private function decodeArray(int $size, int $offset): array
     {
         $array = [];
@@ -196,13 +188,7 @@ class Decoder
     {
         // This assumes IEEE 754 doubles, but most (all?) modern platforms
         // use them.
-        $rc = unpack('E', $bytes);
-        if ($rc === false) {
-            throw new InvalidDatabaseException(
-                'Could not unpack a double value from the given bytes.'
-            );
-        }
-        [, $double] = $rc;
+        [, $double] = unpack('E', $bytes);
 
         return $double;
     }
@@ -211,13 +197,7 @@ class Decoder
     {
         // This assumes IEEE 754 floats, but most (all?) modern platforms
         // use them.
-        $rc = unpack('G', $bytes);
-        if ($rc === false) {
-            throw new InvalidDatabaseException(
-                'Could not unpack a float value from the given bytes.'
-            );
-        }
-        [, $float] = $rc;
+        [, $float] = unpack('G', $bytes);
 
         return $float;
     }
@@ -244,20 +224,11 @@ class Decoder
                 );
         }
 
-        $rc = unpack('l', $this->maybeSwitchByteOrder($bytes));
-        if ($rc === false) {
-            throw new InvalidDatabaseException(
-                'Could not unpack a 32bit integer value from the given bytes.'
-            );
-        }
-        [, $int] = $rc;
+        [, $int] = unpack('l', $this->maybeSwitchByteOrder($bytes));
 
         return $int;
     }
 
-    /**
-     * @return array{0:array<string, mixed>, 1:int}
-     */
     private function decodeMap(int $size, int $offset): array
     {
         $map = [];
@@ -271,39 +242,24 @@ class Decoder
         return [$map, $offset];
     }
 
-    /**
-     * @return array{0:int, 1:int}
-     */
     private function decodePointer(int $ctrlByte, int $offset): array
     {
         $pointerSize = (($ctrlByte >> 3) & 0x3) + 1;
 
         $buffer = Util::read($this->fileStream, $offset, $pointerSize);
-        $offset += $pointerSize;
+        $offset = $offset + $pointerSize;
 
         switch ($pointerSize) {
             case 1:
                 $packed = \chr($ctrlByte & 0x7) . $buffer;
-                $rc = unpack('n', $packed);
-                if ($rc === false) {
-                    throw new InvalidDatabaseException(
-                        'Could not unpack an unsigned short value from the given bytes (pointerSize is 1).'
-                    );
-                }
-                [, $pointer] = $rc;
+                [, $pointer] = unpack('n', $packed);
                 $pointer += $this->pointerBase;
 
                 break;
 
             case 2:
                 $packed = "\x00" . \chr($ctrlByte & 0x7) . $buffer;
-                $rc = unpack('N', $packed);
-                if ($rc === false) {
-                    throw new InvalidDatabaseException(
-                        'Could not unpack an unsigned long value from the given bytes (pointerSize is 2).'
-                    );
-                }
-                [, $pointer] = $rc;
+                [, $pointer] = unpack('N', $packed);
                 $pointer += $this->pointerBase + 2048;
 
                 break;
@@ -313,13 +269,7 @@ class Decoder
 
                 // It is safe to use 'N' here, even on 32 bit machines as the
                 // first bit is 0.
-                $rc = unpack('N', $packed);
-                if ($rc === false) {
-                    throw new InvalidDatabaseException(
-                        'Could not unpack an unsigned long value from the given bytes (pointerSize is 3).'
-                    );
-                }
-                [, $pointer] = $rc;
+                [, $pointer] = unpack('N', $packed);
                 $pointer += $this->pointerBase + 526336;
 
                 break;
@@ -334,7 +284,7 @@ class Decoder
                 if (\PHP_INT_MAX - $pointerBase >= $pointerOffset) {
                     $pointer = $pointerOffset + $pointerBase;
                 } else {
-                    throw new \RuntimeException(
+                    throw new RuntimeException(
                         'The database offset is too large to be represented on your platform.'
                     );
                 }
@@ -357,44 +307,34 @@ class Decoder
             return 0;
         }
 
+        $integer = 0;
+
         // PHP integers are signed. PHP_INT_SIZE - 1 is the number of
         // complete bytes that can be converted to an integer. However,
         // we can convert another byte if the leading bit is zero.
         $useRealInts = $byteLength <= \PHP_INT_SIZE - 1
             || ($byteLength === \PHP_INT_SIZE && (\ord($bytes[0]) & 0x80) === 0);
 
-        if ($useRealInts) {
-            $integer = 0;
-            for ($i = 0; $i < $byteLength; ++$i) {
-                $part = \ord($bytes[$i]);
-                $integer = ($integer << 8) + $part;
-            }
-
-            return $integer;
-        }
-
-        // We only use gmp or bcmath if the final value is too big
-        $integerAsString = '0';
         for ($i = 0; $i < $byteLength; ++$i) {
             $part = \ord($bytes[$i]);
 
-            if (\extension_loaded('gmp')) {
-                $integerAsString = gmp_strval(gmp_add(gmp_mul($integerAsString, '256'), $part));
+            // We only use gmp or bcmath if the final value is too big
+            if ($useRealInts) {
+                $integer = ($integer << 8) + $part;
+            } elseif (\extension_loaded('gmp')) {
+                $integer = gmp_strval(gmp_add(gmp_mul((string) $integer, '256'), $part));
             } elseif (\extension_loaded('bcmath')) {
-                $integerAsString = bcadd(bcmul($integerAsString, '256'), (string) $part);
+                $integer = bcadd(bcmul((string) $integer, '256'), (string) $part);
             } else {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     'The gmp or bcmath extension must be installed to read this database.'
                 );
             }
         }
 
-        return $integerAsString;
+        return $integer;
     }
 
-    /**
-     * @return array{0:int, 1:int}
-     */
     private function sizeFromCtrlByte(int $ctrlByte, int $offset): array
     {
         $size = $ctrlByte & 0x1F;
@@ -409,22 +349,10 @@ class Decoder
         if ($size === 29) {
             $size = 29 + \ord($bytes);
         } elseif ($size === 30) {
-            $rc = unpack('n', $bytes);
-            if ($rc === false) {
-                throw new InvalidDatabaseException(
-                    'Could not unpack an unsigned short value from the given bytes.'
-                );
-            }
-            [, $adjust] = $rc;
+            [, $adjust] = unpack('n', $bytes);
             $size = 285 + $adjust;
         } else {
-            $rc = unpack('N', "\x00" . $bytes);
-            if ($rc === false) {
-                throw new InvalidDatabaseException(
-                    'Could not unpack an unsigned long value from the given bytes.'
-                );
-            }
-            [, $adjust] = $rc;
+            [, $adjust] = unpack('N', "\x00" . $bytes);
             $size = $adjust + 65821;
         }
 
@@ -440,13 +368,7 @@ class Decoder
     {
         $testint = 0x00FF;
         $packed = pack('S', $testint);
-        $rc = unpack('v', $packed);
-        if ($rc === false) {
-            throw new InvalidDatabaseException(
-                'Could not unpack an unsigned short value from the given bytes.'
-            );
-        }
 
-        return $testint === current($rc);
+        return $testint === current(unpack('v', $packed));
     }
 }

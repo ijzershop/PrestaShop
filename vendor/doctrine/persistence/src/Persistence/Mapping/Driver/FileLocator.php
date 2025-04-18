@@ -25,7 +25,7 @@ interface FileLocator
      * @param string $globalBasename Passed to allow excluding the basename.
      *
      * @return array<int, string>
-     * @phpstan-return list<class-string>
+     * @psalm-return list<class-string>
      */
     public function getAllClassNames(string $globalBasename);
 

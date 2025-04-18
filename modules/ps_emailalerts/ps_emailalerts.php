@@ -447,15 +447,17 @@ class Ps_EmailAlerts extends Module
 
             $url = $context->link->getProductLink($product['product_id']);
             $items_table .=
-                '<tr>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: left;">
+                '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
+					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
+					<td style="padding:0.6em 0.4em;">
 						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
                             . (isset($product['attributes_small']) ? ' ' . $product['attributes_small'] : '')
                             . (!empty($customization_text) ? '<br />' . $customization_text : '')
                         . '</strong>
 					</td>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: center;">' . (int) $product['product_quantity'] . '</td>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">'
+					<td style="padding:0.6em 0.4em; text-align:right;">' . $contextLocale->formatPrice($unit_price, $currency->iso_code) . '</td>
+					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">'
                         . $contextLocale->formatPrice($unit_price * $product['product_quantity'], $currency->iso_code)
                     . '</td>
 				</tr>';
@@ -463,8 +465,8 @@ class Ps_EmailAlerts extends Module
         foreach ($params['order']->getCartRules() as $discount) {
             $items_table .=
                 '<tr style="background-color:#EBECEE;">
-						<td colspan="2" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: left;">' . $this->trans('Voucher code:', [], 'Modules.Emailalerts.Admin') . ' ' . $discount['name'] . '</td>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">-' . $contextLocale->formatPrice($discount['value'], $currency->iso_code) . '</td>
+						<td colspan="4" style="padding:0.6em 0.4em; text-align:right;">' . $this->trans('Voucher code:', [], 'Modules.Emailalerts.Admin') . ' ' . $discount['name'] . '</td>
+					<td style="padding:0.6em 0.4em; text-align:right;">-' . $contextLocale->formatPrice($discount['value'], $currency->iso_code) . '</td>
 			</tr>';
         }
         if ($delivery->id_state) {
@@ -481,12 +483,6 @@ class Ps_EmailAlerts extends Module
         }
 
         $order_state = $params['orderStatus'];
-
-        if($order->total_paid_tax_incl <= 0){
-            $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_discounts_tax_incl - (float)$order->total_discounts_tax_excl, $context->currency->iso_code);
-        } else {
-            $totalTax = Tools::getContextLocale($context)->formatPrice((float)$order->total_paid_tax_incl-(float)$order->total_paid_tax_excl, $context->currency->iso_code);
-        }
 
         // Filling-in vars for email
         $template_vars = [
@@ -546,7 +542,6 @@ class Ps_EmailAlerts extends Module
                 $order->total_paid_tax_incl - $order->total_paid_tax_excl,
                 $currency->iso_code
             ),
-            '{total_tax}' => $totalTax,
             '{total_wrapping}' => $contextLocale->formatPrice($order->total_wrapping, $currency->iso_code),
             '{currency}' => $currency->sign,
             '{gift}' => (bool) $order->gift,
@@ -593,11 +588,10 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        '%s | %s | %s | %s',
-                        [   $order->reference,
-                            $contextLocale->formatPrice($order->total_paid, $currency->iso_code),
-                            strtoupper(Tools::substr($order->payment, 0, 32)),
-                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
+                        'New order : #%d - %s',
+                        [
+                            $order->id,
+                            $order->reference,
                         ],
                         'Emails.Subject',
                         $locale),
@@ -917,12 +911,12 @@ class Ps_EmailAlerts extends Module
             $url = $context->link->getProductLink($product['product_id']);
             $items_table .=
                 '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">' . $product['product_reference'] . '</td>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;">
+					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
+					<td style="padding:0.6em 0.4em;">
 						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>
 					</strong>
 					</td>
-					<td style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; font-family: Open-sans, sans-serif; color: #353943; font-weight: 600; font-size: 16px; padding: 10px; border: 1px solid #DFDFDF; text-align: right;"">' . (int) $product['product_quantity'] . '</td>
+					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 				</tr>';
         }
 

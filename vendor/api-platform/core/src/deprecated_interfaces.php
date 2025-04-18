@@ -38,8 +38,6 @@ return [
 
     // Bridge\Elasticsearch => Elasticsearch
     ApiPlatform\Core\Bridge\Elasticsearch\Metadata\Document\Factory\DocumentMetadataFactoryInterface::class => ApiPlatform\Elasticsearch\Metadata\Document\Factory\DocumentMetadataFactoryInterface::class,
-    ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\FilterInterface::class => ApiPlatform\Elasticsearch\Filter\FilterInterface::class,
-    ApiPlatform\Core\Bridge\Elasticsearch\DataProvider\Filter\ConstantScoreFilterInterface::class => ApiPlatform\Elasticsearch\Filter\ConstantScoreFilterInterface::class,
 
     // Bridge\Symfony\Validator
     ApiPlatform\Core\Bridge\Symfony\Validator\ValidationGroupsGeneratorInterface::class => ApiPlatform\Symfony\Validator\ValidationGroupsGeneratorInterface::class,
@@ -77,7 +75,6 @@ return [
     ApiPlatform\Core\Validator\ValidatorInterface::class => ApiPlatform\Validator\ValidatorInterface::class,
 
     // API:
-    ApiPlatform\Core\Api\FilterInterface::class => ApiPlatform\Api\FilterInterface::class,
     ApiPlatform\Core\Api\ResourceClassResolverInterface::class => ApiPlatform\Api\ResourceClassResolverInterface::class,
     ApiPlatform\Core\Api\UrlGeneratorInterface::class => ApiPlatform\Api\UrlGeneratorInterface::class,
 

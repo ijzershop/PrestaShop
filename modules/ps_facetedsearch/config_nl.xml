@@ -2,7 +2,7 @@
 <module>
     <name>ps_facetedsearch</name>
     <displayName><![CDATA[Faceted search]]></displayName>
-    <version><![CDATA[3.16.1]]></version>
+    <version><![CDATA[4.0.0]]></version>
     <description><![CDATA[Filter uw catalogus zodat bezoekers zich een beeld kunnen vormen van de categoriestructuur en gemakkelijk door uw winkel kunnen bladeren.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[front_office_features]]></tab>

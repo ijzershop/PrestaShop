@@ -13,7 +13,6 @@ use Doctrine\ORM\Tools\SchemaValidator;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\AbstractClassMetadataFactory;
 use Symfony\Bridge\Doctrine\DataCollector\DoctrineDataCollector as BaseCollector;
-use Symfony\Bridge\Doctrine\Middleware\Debug\DebugDataHolder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -65,18 +64,12 @@ class DoctrineDataCollector extends BaseCollector
     /** @var bool */
     private $shouldValidateSchema;
 
-    /** @psalm-suppress UndefinedClass */
-    public function __construct(ManagerRegistry $registry, bool $shouldValidateSchema = true, ?DebugDataHolder $debugDataHolder = null)
+    public function __construct(ManagerRegistry $registry, bool $shouldValidateSchema = true)
     {
         $this->registry             = $registry;
         $this->shouldValidateSchema = $shouldValidateSchema;
 
-        if ($debugDataHolder === null) {
-            parent::__construct($registry);
-        } else {
-            /** @psalm-suppress TooManyArguments */
-            parent::__construct($registry, $debugDataHolder);
-        }
+        parent::__construct($registry);
     }
 
     /**

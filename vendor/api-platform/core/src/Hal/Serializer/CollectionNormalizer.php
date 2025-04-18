@@ -35,6 +35,9 @@ final class CollectionNormalizer extends AbstractCollectionNormalizer
         parent::__construct($resourceClassResolver, $pageParameterName, $resourceMetadataFactory);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getPaginationData($object, array $context = []): array
     {
         [$paginator, $paginated, $currentPage, $itemsPerPage, $lastPage, $pageTotalItems, $totalItems] = $this->getPaginationConfig($object, $context);
@@ -82,6 +85,8 @@ final class CollectionNormalizer extends AbstractCollectionNormalizer
     }
 
     /**
+     * {@inheritdoc}
+     *
      * @throws UnexpectedValueException
      */
     protected function getItemsData($object, string $format = null, array $context = []): array

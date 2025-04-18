@@ -12,7 +12,6 @@ namespace PHPUnit\Framework\Constraint;
 use function json_decode;
 use function json_last_error;
 use function sprintf;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Constraint that asserts that a string is valid JSON.
@@ -56,7 +55,7 @@ final class IsJson extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

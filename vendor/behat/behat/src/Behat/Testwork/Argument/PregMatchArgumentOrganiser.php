@@ -37,11 +37,11 @@ final class PregMatchArgumentOrganiser implements ArgumentOrganiser
     /**
      * {@inheritdoc}
      */
-    public function organiseArguments(ReflectionFunctionAbstract $function, array $arguments)
+    public function organiseArguments(ReflectionFunctionAbstract $function, array $match)
     {
-        $cleanedArguments = $this->cleanupMatchDuplicates($arguments);
+        $arguments = $this->cleanupMatchDuplicates($match);
 
-        return $this->baseOrganiser->organiseArguments($function, $cleanedArguments);
+        return $this->baseOrganiser->organiseArguments($function, $arguments);
     }
 
     /**

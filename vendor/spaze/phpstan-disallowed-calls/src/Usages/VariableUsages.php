@@ -10,7 +10,7 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedVariable;
-use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedVariableRuleErrors;
+use Spaze\PHPStan\Rules\Disallowed\DisallowedVariableHelper;
 
 /**
  * Reports on a variable name usage.
@@ -21,20 +21,20 @@ use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedVariableRuleErrors;
 class VariableUsages implements Rule
 {
 
-	/** @var DisallowedVariableRuleErrors */
-	private $disallowedVariableRuleErrors;
+	/** @var DisallowedVariableHelper */
+	private $disallowedHelper;
 
-	/** @var list<DisallowedVariable> */
+	/** @var DisallowedVariable[] */
 	private $disallowedVariables;
 
 
 	/**
-	 * @param DisallowedVariableRuleErrors $disallowedVariableRuleErrors
-	 * @param list<DisallowedVariable> $disallowedVariables
+	 * @param DisallowedVariableHelper $disallowedVariableHelper
+	 * @param DisallowedVariable[] $disallowedVariables
 	 */
-	public function __construct(DisallowedVariableRuleErrors $disallowedVariableRuleErrors, array $disallowedVariables)
+	public function __construct(DisallowedVariableHelper $disallowedVariableHelper, array $disallowedVariables)
 	{
-		$this->disallowedVariableRuleErrors = $disallowedVariableRuleErrors;
+		$this->disallowedHelper = $disallowedVariableHelper;
 		$this->disallowedVariables = $disallowedVariables;
 	}
 
@@ -46,9 +46,9 @@ class VariableUsages implements Rule
 
 
 	/**
-	 * @param Node $node
+	 * @param Variable $node
 	 * @param Scope $scope
-	 * @return list<RuleError>
+	 * @return RuleError[]
 	 * @throws ShouldNotHappenException
 	 */
 	public function processNode(Node $node, Scope $scope): array
@@ -62,7 +62,7 @@ class VariableUsages implements Rule
 			return [];
 		}
 
-		return $this->disallowedVariableRuleErrors->get('$' . $variableName, $scope, $this->disallowedVariables);
+		return $this->disallowedHelper->getDisallowedMessage('$' . $variableName, $scope, $this->disallowedVariables);
 	}
 
 }

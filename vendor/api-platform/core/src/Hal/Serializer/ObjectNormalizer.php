@@ -41,18 +41,24 @@ final class ObjectNormalizer implements NormalizerInterface, DenormalizerInterfa
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return self::FORMAT === $format && $this->decorated->supportsNormalization($data, $format, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasCacheableSupportsMethod(): bool
     {
         return $this->decorated instanceof CacheableSupportsMethodInterface && $this->decorated->hasCacheableSupportsMethod();
     }
 
     /**
-     * @param mixed|null $format
+     * {@inheritdoc}
      *
      * @return array|string|int|float|bool|\ArrayObject|null
      */
@@ -83,6 +89,9 @@ final class ObjectNormalizer implements NormalizerInterface, DenormalizerInterfa
         return $metadata + $data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsDenormalization($data, $type, $format = null, array $context = []): bool
     {
         // prevent the use of lower priority normalizers (e.g. serializer.normalizer.object) for this format
@@ -90,9 +99,11 @@ final class ObjectNormalizer implements NormalizerInterface, DenormalizerInterfa
     }
 
     /**
-     * @param mixed|null $format
+     * {@inheritdoc}
      *
      * @throws LogicException
+     *
+     * @return mixed
      */
     public function denormalize($data, $class, $format = null, array $context = [])
     {

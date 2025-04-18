@@ -16,7 +16,6 @@ use function trim;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 use SebastianBergmann\Comparator\Factory as ComparatorFactory;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Constraint that checks if one value is equal to another.
@@ -110,7 +109,7 @@ final class IsEqual extends Constraint
     /**
      * Returns a string representation of the constraint.
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function toString(): string
     {

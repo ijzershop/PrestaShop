@@ -242,7 +242,7 @@
     <option name="optionsStr" value="UseSurrogates=1" />
   </component>
   <component name="NamedScopeManager">
-    <scope name="pricemodifier" pattern="file[ijzershop-176]:modules/pricemodifier/*" />
+    <scope name="pricemodifier" pattern="file[ijzershop-176]:modules/pricemodifier/*||file[ijzershop-176]:modules/msthemeconfig/*" />
   </component>
   <component name="PHPCSFixerBlackList">
     <option name="filePaths">
@@ -559,6 +559,13 @@
       <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan-doctrine" />
       <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -579,78 +586,78 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Batch.ijzershop_ngrok.executor&quot;: &quot;Run&quot;,
-    &quot;Batch.ngrok.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;PHP Built-in Web Server.Localhost.executor&quot;: &quot;Run&quot;,
-    &quot;PHP Script.FixStockAvailable.php.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.AccountsToCodyMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.DeprecatedChatLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;modernesmid-live&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.9.3&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop8.local/modules&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;DEFAULT&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.sourcegraph.cody.config.ui.CodyConfigurable&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Batch.ijzershop_ngrok.executor": "Run",
+    "Batch.ngrok.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "PHP Built-in Web Server.Localhost.executor": "Run",
+    "PHP Script.FixStockAvailable.php.executor": "Run",
+    "RunOnceActivity.AccountsToCodyMigration": "true",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
+    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "modernesmid-live",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "22.11.0",
+    "javascript.nodejs.core.library.typings.version": "22.9.3",
+    "last_opened_file_path": "C:/wampserver/www/ijzershop8.local",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "php.override.implement.member.chooser.php.doc": "DEFAULT",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "com.sourcegraph.cody.config.ui.CodyConfigurable",
+    "ts.external.directory.path": "C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
+    "two.files.diff.last.used.file": "C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "repository"
     ],
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+    "DatabaseDriversLRU": [
+      "mysql"
     ],
-    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
-      &quot;MySQL&quot;
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "MySQL"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PHP&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PHP"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReadonlyStatusHandler">
     <option name="SHOW_DIALOG" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules" />
       <recent name="C:\wampserver\www\ijzershop8.local\src\PrestaShopBundle\Resources\views\Admin\Common\Grid\Actions\Row" />
       <recent name="C:\wampserver\www\ijzershop8.local\mails\nl" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\templates\hook" />
-      <recent name="C:\wampserver\www\ijzershop8.local\mails\themes\modernesmid\core" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\ijzershop8.local\modules\pricemodifier\src\Service" />
@@ -1785,7 +1792,7 @@
       <workItem from="1744619350149" duration="6717000" />
       <workItem from="1744691404944" duration="14977000" />
       <workItem from="1744779881140" duration="3229000" />
-      <workItem from="1744871627249" duration="8203000" />
+      <workItem from="1744871627249" duration="11516000" />
     </task>
     <servers />
   </component>
@@ -2474,7 +2481,7 @@
             <State>
               <option name="CUSTOM_BOOLEAN_PROPERTIES">
                 <map>
-                  <entry key="Show.Git.Branches" value="true" />
+                  <entry key="Show.Git.Branches" value="false" />
                 </map>
               </option>
               <option name="FILTERS">

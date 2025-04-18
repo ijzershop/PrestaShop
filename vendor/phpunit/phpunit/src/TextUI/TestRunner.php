@@ -53,6 +53,7 @@ use PHPUnit\Runner\TestListenerAdapter;
 use PHPUnit\Runner\TestSuiteLoader;
 use PHPUnit\Runner\TestSuiteSorter;
 use PHPUnit\Runner\Version;
+use PHPUnit\Util\Color;
 use PHPUnit\Util\Configuration;
 use PHPUnit\Util\Filesystem;
 use PHPUnit\Util\Log\JUnit;
@@ -84,8 +85,10 @@ use SebastianBergmann\Timer\Timer;
  */
 final class TestRunner extends BaseTestRunner
 {
-    public const SUCCESS_EXIT   = 0;
-    public const FAILURE_EXIT   = 1;
+    public const SUCCESS_EXIT = 0;
+
+    public const FAILURE_EXIT = 1;
+
     public const EXCEPTION_EXIT = 2;
 
     /**
@@ -118,7 +121,7 @@ final class TestRunner extends BaseTestRunner
      */
     private $extensions = [];
 
-    public function __construct(?TestSuiteLoader $loader = null, ?CodeCoverageFilter $filter = null)
+    public function __construct(TestSuiteLoader $loader = null, CodeCoverageFilter $filter = null)
     {
         if ($filter === null) {
             $filter = new CodeCoverageFilter;
@@ -294,7 +297,7 @@ final class TestRunner extends BaseTestRunner
                     } catch (ReflectionException $e) {
                         throw new Exception(
                             $e->getMessage(),
-                            $e->getCode(),
+                            (int) $e->getCode(),
                             $e
                         );
                     }
@@ -316,7 +319,18 @@ final class TestRunner extends BaseTestRunner
             $this->printer->setShowProgressAnimation(!$arguments['noInteraction']);
         }
 
-        $this->write(Version::getVersionString() . "\n");
+        if ($arguments['colors'] !== ResultPrinter::COLOR_NEVER) {
+            $this->write(
+                'PHPUnit ' .
+                Version::id() .
+                ' ' .
+                Color::colorize('bg-blue', '#StandWith') .
+                Color::colorize('bg-yellow', 'Ukraine') .
+                "\n"
+            );
+        } else {
+            $this->write(Version::getVersionString() . "\n");
+        }
 
         if ($arguments['verbose']) {
             $this->writeMessage('Runtime', $this->runtime->getNameWithVersionAndCodeCoverageDriver());
@@ -1071,7 +1085,7 @@ final class TestRunner extends BaseTestRunner
                 } catch (ReflectionException $e) {
                     throw new Exception(
                         $e->getMessage(),
-                        $e->getCode(),
+                        (int) $e->getCode(),
                         $e
                     );
                 }
@@ -1119,7 +1133,7 @@ final class TestRunner extends BaseTestRunner
                 } catch (ReflectionException $e) {
                     throw new Exception(
                         $e->getMessage(),
-                        $e->getCode(),
+                        (int) $e->getCode(),
                         $e
                     );
                 }

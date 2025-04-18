@@ -177,7 +177,7 @@ final class InvocationHandler
     }
 
     /**
-     * @throws ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function verify(): void
     {

@@ -23,14 +23,10 @@ use function strpos;
 use function trim;
 use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestFailure;
 use PHPUnit\Framework\TestResult;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Runner\PhptTestCase;
 use PHPUnit\Util\Color;
-use PHPUnit\Util\Filter;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
-use SebastianBergmann\Timer\RuntimeException;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
 
@@ -69,6 +65,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
         " \e[36m◑\e[0m running tests",
         " \e[36m◒\e[0m running tests",
     ];
+
     private const STATUS_STYLES = [
         BaseTestRunner::STATUS_PASSED => [
             'symbol' => '✔',
@@ -117,7 +114,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
     private $nonSuccessfulTestResults = [];
 
     /**
-     * @throws RuntimeException
+     * @throws \SebastianBergmann\Timer\RuntimeException
      */
     public function printResult(TestResult $result): void
     {
@@ -129,7 +126,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
     }
 
     /**
-     * @throws RuntimeException
+     * @throws \SebastianBergmann\Timer\RuntimeException
      */
     protected function printHeader(TestResult $result): void
     {
@@ -146,7 +143,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function registerTestResult(Test $test, ?Throwable $t, int $status, float $time, bool $verbose): void
     {
@@ -158,7 +155,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function formatTestName(Test $test): string
     {
@@ -205,7 +202,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
 
     protected function formatThrowable(Throwable $t, ?int $status = null): string
     {
-        return trim(TestFailure::exceptionToString($t));
+        return trim(\PHPUnit\Framework\TestFailure::exceptionToString($t));
     }
 
     protected function colorizeMessageAndDiff(string $style, string $buffer): array
@@ -244,7 +241,7 @@ class CliTestDoxPrinter extends TestDoxPrinter
 
     protected function formatStacktrace(Throwable $t): string
     {
-        $trace = Filter::getFilteredStacktrace($t);
+        $trace = \PHPUnit\Util\Filter::getFilteredStacktrace($t);
 
         if (!$this->colors) {
             return $trace;

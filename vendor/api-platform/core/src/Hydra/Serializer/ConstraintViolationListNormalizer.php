@@ -36,7 +36,7 @@ final class ConstraintViolationListNormalizer extends AbstractConstraintViolatio
     }
 
     /**
-     * @param mixed|null $format
+     * {@inheritdoc}
      *
      * @return array|string|int|float|bool|\ArrayObject|null
      */

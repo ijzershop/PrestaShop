@@ -16,7 +16,6 @@ use function var_export;
 use ArrayObject;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use Traversable;
 
 /**
@@ -57,13 +56,13 @@ final class ArraySubset extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     public function evaluate($other, string $description = '', bool $returnResult = false)
     {
-        // type cast $other & $this->subset as an array to allow
-        // support in standard array functions.
+        //type cast $other & $this->subset as an array to allow
+        //support in standard array functions.
         $other        = $this->toArray($other);
         $this->subset = $this->toArray($this->subset);
 
@@ -94,7 +93,7 @@ final class ArraySubset extends Constraint
     /**
      * Returns a string representation of the constraint.
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function toString(): string
     {
@@ -109,7 +108,7 @@ final class ArraySubset extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

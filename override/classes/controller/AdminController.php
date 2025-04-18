@@ -11,6 +11,36 @@ class AdminController extends AdminControllerCore
     protected $_pagination = [20, 50, 100, 250, 500, 750, 1000, 1250, 1500];
 
 
+    public function getTemplateViewVars()
+    {
+        $this->setClasses();
+        $this->setPlugins();
+        return $this->tpl_view_vars;
+    }
+
+    public function setClasses(){
+        $this->context->smarty->registerClass('Context', 'Context');
+        $this->context->smarty->registerClass('Configuration', 'Configuration');
+        $this->context->smarty->registerClass('Tools', 'Tools');
+        $this->context->smarty->registerClass('Cart', 'Cart');
+        $this->context->smarty->registerClass('Product', 'Product');
+        $this->context->smarty->registerClass('Order', 'Order');
+        $this->context->smarty->registerClass('Category', 'Category');
+        $this->context->smarty->registerClass('AttributeGroup', 'AttributeGroup');
+        $this->context->smarty->registerClass('Address', 'Address');
+        $this->context->smarty->registerClass('Module', 'Module');
+        $this->context->smarty->registerClass('ShopGroup', 'ShopGroup');
+        $this->context->smarty->registerClass('Shop', 'Shop');
+    }
+
+    public function setPlugins(){
+        $this->context->smarty->loadPlugin('unserialize', true);
+        $this->context->smarty->loadPlugin('serialize', true);
+        $this->context->smarty->loadPlugin('number_format', true);
+        $this->context->smarty->loadPlugin('basename', true);
+        $this->context->smarty->loadPlugin('is_object', true);
+    }
+
     /**
      * Check for security token.
      *

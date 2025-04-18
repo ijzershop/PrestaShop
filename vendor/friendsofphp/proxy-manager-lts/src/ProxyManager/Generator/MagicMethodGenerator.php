@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ProxyManager\Generator;
 
-use Laminas\Code\Generator\MethodGenerator as LaminasMethodGenerator;
 use Laminas\Code\Generator\ParameterGenerator;
 use LogicException;
 use ReflectionClass;
@@ -55,14 +54,5 @@ class MagicMethodGenerator extends MethodGenerator
         } elseif ($originalReturnType) {
             throw new LogicException('Unexpected ' . get_class($type));
         }
-    }
-
-    public function setBody($body): LaminasMethodGenerator
-    {
-        if ((string) $this->getReturnType() === 'void') {
-            $body = preg_replace('/return ([^;]++;)/', '\1 return;', $body);
-        }
-
-        return parent::setBody($body);
     }
 }

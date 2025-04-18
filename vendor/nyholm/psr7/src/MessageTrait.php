@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nyholm\Psr7;
 
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -35,10 +34,7 @@ trait MessageTrait
         return $this->protocol;
     }
 
-    /**
-     * @return static
-     */
-    public function withProtocolVersion($version): MessageInterface
+    public function withProtocolVersion($version): self
     {
         if (!\is_scalar($version)) {
             throw new \InvalidArgumentException('Protocol version must be a string');
@@ -85,10 +81,7 @@ trait MessageTrait
         return \implode(', ', $this->getHeader($header));
     }
 
-    /**
-     * @return static
-     */
-    public function withHeader($header, $value): MessageInterface
+    public function withHeader($header, $value): self
     {
         $value = $this->validateAndTrimHeader($header, $value);
         $normalized = \strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
@@ -103,10 +96,7 @@ trait MessageTrait
         return $new;
     }
 
-    /**
-     * @return static
-     */
-    public function withAddedHeader($header, $value): MessageInterface
+    public function withAddedHeader($header, $value): self
     {
         if (!\is_string($header) || '' === $header) {
             throw new \InvalidArgumentException('Header name must be an RFC 7230 compatible string');
@@ -118,10 +108,7 @@ trait MessageTrait
         return $new;
     }
 
-    /**
-     * @return static
-     */
-    public function withoutHeader($header): MessageInterface
+    public function withoutHeader($header): self
     {
         if (!\is_string($header)) {
             throw new \InvalidArgumentException('Header name must be an RFC 7230 compatible string');
@@ -148,10 +135,7 @@ trait MessageTrait
         return $this->stream;
     }
 
-    /**
-     * @return static
-     */
-    public function withBody(StreamInterface $body): MessageInterface
+    public function withBody(StreamInterface $body): self
     {
         if ($body === $this->stream) {
             return $this;

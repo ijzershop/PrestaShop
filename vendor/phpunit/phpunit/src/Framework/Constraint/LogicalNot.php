@@ -14,7 +14,6 @@ use function get_class;
 use function preg_match;
 use function str_replace;
 use PHPUnit\Framework\ExpectationFailedException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Logical NOT.
@@ -101,8 +100,8 @@ final class LogicalNot extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     public function evaluate($other, string $description = '', bool $returnResult = false)
     {
@@ -151,7 +150,7 @@ final class LogicalNot extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

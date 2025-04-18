@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class DoctrineMiddlewarePass implements CompilerPassInterface
 {
     /**
-     * @return void
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

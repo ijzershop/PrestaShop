@@ -54,7 +54,7 @@ trait ColocatedMappingDriver
      * Cache for getAllClassNames().
      *
      * @var array<int, string>|null
-     * @phpstan-var list<class-string>|null
+     * @psalm-var list<class-string>|null
      */
     protected $classNames;
 
@@ -128,7 +128,7 @@ trait ColocatedMappingDriver
      * Returns whether the class with the specified name is transient. Only non-transient
      * classes, that is entities and mapped superclasses, should have their metadata loaded.
      *
-     * @phpstan-param class-string $className
+     * @psalm-param class-string $className
      *
      * @return bool
      */
@@ -138,7 +138,7 @@ trait ColocatedMappingDriver
      * Gets the names of all mapped classes known to this driver.
      *
      * @return string[] The names of all mapped classes known to this driver.
-     * @phpstan-return list<class-string>
+     * @psalm-return list<class-string>
      */
     public function getAllClassNames()
     {

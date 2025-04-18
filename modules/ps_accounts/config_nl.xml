@@ -2,7 +2,7 @@
 <module>
     <name>ps_accounts</name>
     <displayName><![CDATA[PrestaShop-account]]></displayName>
-    <version><![CDATA[7.1.1]]></version>
+    <version><![CDATA[7.1.2]]></version>
     <description><![CDATA[Koppel uw winkel aan uw PrestaShop-account om uw abonnementen te activeren en te beheren in uw backoffice. Verwijder deze module niet als u een lopend abonnement hebt.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[administration]]></tab>

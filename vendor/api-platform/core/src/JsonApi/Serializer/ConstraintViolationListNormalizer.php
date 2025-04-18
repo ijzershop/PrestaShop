@@ -45,6 +45,7 @@ final class ConstraintViolationListNormalizer implements NormalizerInterface, Ca
     }
 
     /**
+     * @param mixed      $object
      * @param mixed|null $format
      *
      * @return array
@@ -64,11 +65,17 @@ final class ConstraintViolationListNormalizer implements NormalizerInterface, Ca
         return ['errors' => $violations];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return self::FORMAT === $format && $data instanceof ConstraintViolationListInterface;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasCacheableSupportsMethod(): bool
     {
         return true;

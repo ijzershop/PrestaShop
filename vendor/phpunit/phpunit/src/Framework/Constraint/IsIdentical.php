@@ -9,14 +9,18 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use const PHP_FLOAT_EPSILON;
+use function abs;
 use function get_class;
 use function is_array;
+use function is_float;
+use function is_infinite;
+use function is_nan;
 use function is_object;
 use function is_string;
 use function sprintf;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Constraint that asserts that one value is identical to another.
@@ -51,12 +55,18 @@ final class IsIdentical extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     public function evaluate($other, string $description = '', bool $returnResult = false)
     {
-        $success = $this->value === $other;
+        if (is_float($this->value) && is_float($other) &&
+            !is_infinite($this->value) && !is_infinite($other) &&
+            !is_nan($this->value) && !is_nan($other)) {
+            $success = abs($this->value - $other) < PHP_FLOAT_EPSILON;
+        } else {
+            $success = $this->value === $other;
+        }
 
         if ($returnResult) {
             return $success;
@@ -92,7 +102,7 @@ final class IsIdentical extends Constraint
     /**
      * Returns a string representation of the constraint.
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function toString(): string
     {
@@ -112,7 +122,7 @@ final class IsIdentical extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

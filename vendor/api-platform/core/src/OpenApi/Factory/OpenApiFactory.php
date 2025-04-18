@@ -83,6 +83,9 @@ final class OpenApiFactory implements OpenApiFactoryInterface
         $this->router = $router;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __invoke(array $context = []): OpenApi
     {
         $baseUrl = $context[self::BASE_URL] ?? '/';
@@ -346,7 +349,7 @@ final class OpenApiFactory implements OpenApiFactoryInterface
             $path = substr($path, 0, -10);
         }
 
-        return str_starts_with($path, '/') ? $path : '/'.$path;
+        return 0 === strpos($path, '/') ? $path : '/'.$path;
     }
 
     private function getPathDescription(string $resourceShortName, string $method, bool $isCollection): string
@@ -390,10 +393,10 @@ final class OpenApiFactory implements OpenApiFactoryInterface
                 $parameters = [];
                 $method = $operation instanceof HttpOperation ? $operation->getMethod() : HttpOperation::METHOD_GET;
                 if (
-                    $operationName === $operation->getName()
-                    || isset($links[$operationName])
-                    || $operation instanceof CollectionOperationInterface
-                    || HttpOperation::METHOD_GET !== ($method ?? null)
+                    $operationName === $operation->getName() ||
+                    isset($links[$operationName]) ||
+                    $operation instanceof CollectionOperationInterface ||
+                    HttpOperation::METHOD_GET !== ($method ?? null)
                 ) {
                     continue;
                 }

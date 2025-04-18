@@ -73,16 +73,16 @@ final class RuntimeFeatureTester implements SpecificationTester
     /**
      * {@inheritdoc}
      */
-    public function test(Environment $env, $spec, $skip = false)
+    public function test(Environment $env, $feature, $skip = false)
     {
         $results = array();
-        foreach ($spec->getScenarios() as $scenario) {
+        foreach ($feature->getScenarios() as $scenario) {
             $tester = $scenario instanceof OutlineNode ? $this->outlineTester : $this->scenarioTester;
 
-            $setup = $tester->setUp($env, $spec, $scenario, $skip);
+            $setup = $tester->setUp($env, $feature, $scenario, $skip);
             $localSkip = !$setup->isSuccessful() || $skip;
-            $testResult = $tester->test($env, $spec, $scenario, $localSkip);
-            $teardown = $tester->tearDown($env, $spec, $scenario, $localSkip, $testResult);
+            $testResult = $tester->test($env, $feature, $scenario, $localSkip);
+            $teardown = $tester->tearDown($env, $feature, $scenario, $localSkip, $testResult);
 
             $integerResult = new IntegerTestResult($testResult->getResultCode());
             $results[] = new TestWithSetupResult($setup, $integerResult, $teardown);

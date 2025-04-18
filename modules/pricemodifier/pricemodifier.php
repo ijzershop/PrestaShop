@@ -83,11 +83,29 @@ class Pricemodifier extends Module
     public function install()
     {
 
-        return $this->installTables() && parent::install() &&
-            $this->installTab()
-            ;
+        // Register Doctrine configuration
+        if (method_exists($this, 'registerHook')) {
+            $this->registerHook('actionRegisterDoctrineMapping');
+        }
+
+        if($this->installTables() && parent::install() &&
+            $this->installTab()){
+
+            return true;
+        }
+        return false;
+
     }
 
+    public function hookActionRegisterDoctrineMapping($params)
+    {
+        $modulePath = $this->getLocalPath();
+        $params['mappings'][] = [
+            'dir' => $modulePath . 'src/Entity',
+            'prefix' => 'Modernesmid\\Module\\Pricemodifier\\Entity',
+            'alias' => 'PricemodifierModule'
+        ];
+    }
     /**
      * Uninstall module and detach hooks
      *

@@ -11,9 +11,7 @@ namespace PHPUnit\Framework\Constraint;
 
 use function array_values;
 use function count;
-use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * Logical AND.
@@ -37,7 +35,7 @@ final class LogicalAnd extends Constraint
     /**
      * @param Constraint[] $constraints
      *
-     * @throws Exception
+     * @throws \PHPUnit\Framework\Exception
      */
     public function setConstraints(array $constraints): void
     {
@@ -45,7 +43,7 @@ final class LogicalAnd extends Constraint
 
         foreach ($constraints as $constraint) {
             if (!($constraint instanceof Constraint)) {
-                throw new Exception(
+                throw new \PHPUnit\Framework\Exception(
                     'All parameters to ' . __CLASS__ .
                     ' must be a constraint object.'
                 );
@@ -65,8 +63,8 @@ final class LogicalAnd extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws ExpectationFailedException
-     * @throws InvalidArgumentException
      */
     public function evaluate($other, string $description = '', bool $returnResult = false)
     {

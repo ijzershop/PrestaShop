@@ -15,7 +15,7 @@ class SecurityMiddlewarePass implements CompilerPassInterface
     const SERVICE_ID = 'tactician.middleware.security';
 
     /**
-     * @return void
+     * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {

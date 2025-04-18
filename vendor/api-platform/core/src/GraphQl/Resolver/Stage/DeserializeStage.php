@@ -35,6 +35,9 @@ final class DeserializeStage implements DeserializeStageInterface
         $this->serializerContextBuilder = $serializerContextBuilder;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __invoke($objectToPopulate, string $resourceClass, Operation $operation, array $context)
     {
         if (!($operation->canDeserialize() ?? true)) {

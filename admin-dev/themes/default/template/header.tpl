@@ -49,9 +49,12 @@
     var _PS_VERSION_ = '{$smarty.const._PS_VERSION_|@addcslashes:'\''}';
     var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
-  {if $shop_context == Shop::CONTEXT_ALL}
+//Shop::CONTEXT_ALL = 4
+//Shop::Context_GROUP = 2
+//Shop::CONTEXT_SHOP = 1
+  {if $shop_context == 4}
     var youEditFieldFor = '{l|escape s='This field will be modified for all your shops.' js=1 d='Admin.Notifications.Info'}';
-  {elseif $shop_context == Shop::CONTEXT_GROUP}
+  {elseif $shop_context == 2}
     var youEditFieldFor = '{l|escape s='This field will be modified for all shops in this shop group:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
   {else}
     var youEditFieldFor = '{l|escape s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
@@ -276,9 +279,9 @@
           <li class="shopname" data-mobile="true" data-from="header-list" data-target="menu">
             {if isset($is_multishop) && $is_multishop && $shop_list &&
               (isset($multishop_context) &&
-              $multishop_context & Shop::CONTEXT_GROUP ||
-              $multishop_context & Shop::CONTEXT_SHOP ||
-              $multishop_context & Shop::CONTEXT_ALL
+              $multishop_context & 2 ||
+              $multishop_context & 1 ||
+              $multishop_context & 4
             )}
               <ul id="header_shop" class="shop-state">
                 <li class="dropdown">

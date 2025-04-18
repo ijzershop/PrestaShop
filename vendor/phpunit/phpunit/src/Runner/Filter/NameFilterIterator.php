@@ -18,10 +18,8 @@ use Exception;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\Util\RegularExpression;
-use PHPUnit\Util\Test;
 use RecursiveFilterIterator;
 use RecursiveIterator;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
@@ -54,7 +52,7 @@ final class NameFilterIterator extends RecursiveFilterIterator
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function accept(): bool
     {
@@ -64,7 +62,7 @@ final class NameFilterIterator extends RecursiveFilterIterator
             return true;
         }
 
-        $tmp = Test::describe($test);
+        $tmp = \PHPUnit\Util\Test::describe($test);
 
         if ($test instanceof WarningTestCase) {
             $name = $test->getMessage();

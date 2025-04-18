@@ -31,6 +31,9 @@ final class SecurityStage implements SecurityStageInterface
         $this->resourceAccessChecker = $resourceAccessChecker;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __invoke(string $resourceClass, Operation $operation, array $context): void
     {
         $isGranted = $operation->getSecurity();

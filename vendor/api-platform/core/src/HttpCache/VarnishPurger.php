@@ -64,6 +64,9 @@ final class VarnishPurger implements PurgerInterface
         return (int) floor(($this->maxHeaderLength + $gluesize) / ($tagsize + $gluesize)) ?: 1;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function purge(array $iris)
     {
         if (!$iris) {
@@ -78,6 +81,9 @@ final class VarnishPurger implements PurgerInterface
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getResponseHeaders(array $iris): array
     {
         return ['Cache-Tags' => implode(',', $iris)];

@@ -10,7 +10,12 @@
 
 namespace Behat\Behat\HelperContainer;
 
-class_alias('Psr\\Container\\ContainerInterface', 'Behat\\Behat\\HelperContainer\\ContainerInterface');
+class_alias(
+    interface_exists('Interop\\Container\\ContainerInterface')
+        ? 'Interop\\Container\\ContainerInterface'
+        : 'Psr\\Container\\ContainerInterface',
+    'Behat\\Behat\\HelperContainer\\ContainerInterface'
+);
 
 if (false) {
     /**

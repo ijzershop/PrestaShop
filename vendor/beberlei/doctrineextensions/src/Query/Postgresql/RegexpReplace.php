@@ -3,14 +3,11 @@
 namespace DoctrineExtensions\Query\Postgresql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Query\TokenType;
+use Doctrine\ORM\Query\Lexer;
 
 /**
- * @link https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-TABLE
- *
  * @example SELECT REGEXP_REPLACE(string, search, replace)
+ * @link https://www.postgresql.org/docs/current/functions-matching.html#FUNCTIONS-POSIX-TABLE
  */
 class RegexpReplace extends FunctionNode
 {
@@ -20,22 +17,22 @@ class RegexpReplace extends FunctionNode
 
     private $replace;
 
-    public function getSql(SqlWalker $sqlWalker): string
+    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
-        return 'REGEXP_REPLACE(' . $this->string->dispatch($sqlWalker) . ', ' . $this->search->dispatch($sqlWalker) . ', ' . $this->replace->dispatch($sqlWalker) . ')';
+        return 'REGEXP_REPLACE('.$this->string->dispatch($sqlWalker).', '.$this->search->dispatch($sqlWalker).', '.$this->replace->dispatch($sqlWalker).')';
     }
 
-    public function parse(Parser $parser): void
+    public function parse(\Doctrine\ORM\Query\Parser $parser)
     {
-        $parser->match(TokenType::T_IDENTIFIER);
-        $parser->match(TokenType::T_OPEN_PARENTHESIS);
+        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         $this->string = $parser->StringPrimary();
-        $parser->match(TokenType::T_COMMA);
+        $parser->match(Lexer::T_COMMA);
         $this->search = $parser->StringExpression();
-        $parser->match(TokenType::T_COMMA);
+        $parser->match(Lexer::T_COMMA);
         $this->replace = $parser->StringExpression();
 
-        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 }

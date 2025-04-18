@@ -16,11 +16,11 @@ class ManagerEventArgs extends EventArgs
 {
     /**
      * @var ObjectManager
-     * @phpstan-var TObjectManager
+     * @psalm-var TObjectManager
      */
     private $objectManager;
 
-    /** @phpstan-param TObjectManager $objectManager */
+    /** @psalm-param TObjectManager $objectManager */
     public function __construct(ObjectManager $objectManager)
     {
         $this->objectManager = $objectManager;
@@ -30,7 +30,7 @@ class ManagerEventArgs extends EventArgs
      * Retrieves the associated ObjectManager.
      *
      * @return ObjectManager
-     * @phpstan-return TObjectManager
+     * @psalm-return TObjectManager
      */
     public function getObjectManager()
     {

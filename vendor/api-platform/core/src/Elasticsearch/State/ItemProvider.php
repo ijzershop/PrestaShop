@@ -44,6 +44,9 @@ final class ItemProvider implements ProviderInterface
         $this->denormalizer = $denormalizer;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function provide(Operation $operation, array $uriVariables = [], array $context = [])
     {
         $resourceClass = $operation->getClass();

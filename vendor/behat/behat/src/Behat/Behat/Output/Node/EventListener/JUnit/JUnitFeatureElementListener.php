@@ -169,13 +169,7 @@ final class JUnitFeatureElementListener implements EventListener
 
         foreach ($this->afterScenarioTestedEvents as $afterScenario) {
             $afterScenarioTested = $afterScenario['event'];
-            $this->scenarioPrinter->printOpenTag(
-                $formatter,
-                $afterScenarioTested->getFeature(),
-                $afterScenarioTested->getScenario(),
-                $afterScenarioTested->getTestResult(),
-                $event->getFeature()->getFile()
-            );
+            $this->scenarioPrinter->printOpenTag($formatter, $afterScenarioTested->getFeature(), $afterScenarioTested->getScenario(), $afterScenarioTested->getTestResult());
 
             /** @var AfterStepSetup $afterStepSetup */
             foreach ($afterScenario['step_setup_events'] as $afterStepSetup) {

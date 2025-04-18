@@ -9,8 +9,6 @@ use Doctrine\Persistence\Mapping\ClassMetadataFactory;
 
 /**
  * Contract for a Doctrine persistence layer ObjectManager class to implement.
- *
- * @method bool isUninitializedObject(mixed $value) Implementing this method will be mandatory in version 4.
  */
 interface ObjectManager
 {
@@ -21,10 +19,10 @@ interface ObjectManager
      *
      * @param string $className The class name of the object to find.
      * @param mixed  $id        The identity of the object to find.
-     * @phpstan-param class-string<T> $className
+     * @psalm-param class-string<T> $className
      *
      * @return object|null The found object.
-     * @phpstan-return T|null
+     * @psalm-return T|null
      *
      * @template T of object
      */
@@ -98,9 +96,9 @@ interface ObjectManager
     /**
      * Gets the repository for a class.
      *
-     * @phpstan-param class-string<T> $className
+     * @psalm-param class-string<T> $className
      *
-     * @phpstan-return ObjectRepository<T>
+     * @psalm-return ObjectRepository<T>
      *
      * @template T of object
      */
@@ -112,9 +110,9 @@ interface ObjectManager
      * The class name must be the fully-qualified class name without a leading backslash
      * (as it is returned by get_class($obj)).
      *
-     * @phpstan-param class-string<T> $className
+     * @psalm-param class-string<T> $className
      *
-     * @phpstan-return ClassMetadata<T>
+     * @psalm-return ClassMetadata<T>
      *
      * @template T of object
      */
@@ -123,7 +121,7 @@ interface ObjectManager
     /**
      * Gets the metadata factory used to gather the metadata of classes.
      *
-     * @phpstan-return ClassMetadataFactory<ClassMetadata<object>>
+     * @psalm-return ClassMetadataFactory<ClassMetadata<object>>
      */
     public function getMetadataFactory();
 

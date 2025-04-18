@@ -34,11 +34,9 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\CoveredCodeNotExecutedException as OriginalCoveredCodeNotExecutedException;
 use SebastianBergmann\CodeCoverage\Exception as OriginalCodeCoverageException;
 use SebastianBergmann\CodeCoverage\MissingCoversAnnotationException as OriginalMissingCoversAnnotationException;
-use SebastianBergmann\CodeCoverage\RuntimeException;
 use SebastianBergmann\CodeCoverage\UnintentionallyCoveredCodeException;
 use SebastianBergmann\Invoker\Invoker;
 use SebastianBergmann\Invoker\TimeoutException;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use SebastianBergmann\ResourceOperations\ResourceOperations;
 use SebastianBergmann\Timer\Timer;
 use Throwable;
@@ -430,7 +428,7 @@ final class TestResult implements Countable
     /**
      * Informs the result that a test was completed.
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function endTest(Test $test, float $time): void
     {
@@ -614,11 +612,11 @@ final class TestResult implements Countable
      * Runs a TestCase.
      *
      * @throws \SebastianBergmann\CodeCoverage\InvalidArgumentException
+     * @throws \SebastianBergmann\CodeCoverage\RuntimeException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      * @throws CodeCoverageException
-     * @throws InvalidArgumentException
      * @throws OriginalCoveredCodeNotExecutedException
      * @throws OriginalMissingCoversAnnotationException
-     * @throws RuntimeException
      * @throws UnintentionallyCoveredCodeException
      */
     public function run(Test $test): void
@@ -742,9 +740,7 @@ final class TestResult implements Countable
                     $e->getMessage(),
                     $frame['file'] ?? $e->getFile(),
                     $frame['line'] ?? $e->getLine()
-                ),
-                0,
-                $e
+                )
             );
         } catch (Warning $e) {
             $warning = true;
@@ -879,7 +875,7 @@ final class TestResult implements Countable
             } catch (ReflectionException $e) {
                 throw new Exception(
                     $e->getMessage(),
-                    $e->getCode(),
+                    (int) $e->getCode(),
                     $e
                 );
             }
@@ -894,7 +890,7 @@ final class TestResult implements Countable
                 } catch (ReflectionException $e) {
                     throw new Exception(
                         $e->getMessage(),
-                        $e->getCode(),
+                        (int) $e->getCode(),
                         $e
                     );
                 }

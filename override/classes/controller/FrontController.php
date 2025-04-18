@@ -22,6 +22,72 @@ if (!defined('_PS_VERSION_')) {
 }
 class FrontController extends FrontControllerCore
 {
+
+    protected function assignGeneralPurposeVariables()
+    {
+        if (Validate::isLoadedObject($this->context->cart)) {
+            $cart = $this->context->cart;
+        } else {
+            $cart = new Cart();
+        }
+
+        /**
+         * @var array<string, mixed> $templateVars
+         */
+        $templateVars = [];
+
+        Hook::exec(
+            'actionFrontControllerSetVariablesBefore',
+            [
+                'templateVars' => &$templateVars,
+                'cart' => $cart,
+            ]
+        );
+
+        $templateVars['cart'] = $templateVars['cart'] ?? $this->cart_presenter->present($cart);
+        $templateVars['currency'] = $templateVars['currency'] ?? $this->getTemplateVarCurrency();
+        $templateVars['customer'] = $templateVars['customer'] ?? $this->getTemplateVarCustomer();
+        $templateVars['country'] = $templateVars['country'] ?? $this->objectPresenter->present($this->context->country);
+        $templateVars['language'] = $templateVars['language'] ?? $this->objectPresenter->present($this->context->language);
+        $templateVars['page'] = $templateVars['page'] ?? $this->getTemplateVarPage();
+        $templateVars['shop'] = $templateVars['shop'] ?? $this->getTemplateVarShop();
+        $templateVars['core_js_public_path'] = $templateVars['core_js_public_path'] ?? $this->getCoreJsPublicPath();
+        $templateVars['urls'] = $templateVars['urls'] ?? $this->getTemplateVarUrls();
+        $templateVars['configuration'] = $templateVars['configuration'] ?? $this->getTemplateVarConfiguration();
+        $templateVars['field_required'] = $templateVars['field_required'] ?? $this->context->customer->validateFieldsRequiredDatabase();
+        $templateVars['breadcrumb'] = $templateVars['breadcrumb'] ?? $this->getBreadcrumb();
+        $templateVars['link'] = $templateVars['link'] ?? $this->context->link;
+        $templateVars['time'] = $templateVars['time'] ?? time();
+        $templateVars['static_token'] = $templateVars['static_token'] ?? Tools::getToken(false);
+        $templateVars['token'] = $templateVars['token'] ?? Tools::getToken();
+        $templateVars['debug'] = $templateVars['debug'] ?? _PS_MODE_DEV_;
+
+        // An array [module_name => module_output] will be returned
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
+
+        if (is_array($modulesVariables)) {
+            foreach ($modulesVariables as $moduleName => $variables) {
+                $templateVars['modules'][$moduleName] = $variables;
+            }
+        }
+
+        $this->setClasses();
+        $this->setPlugins();
+        $this->context->smarty->assign($templateVars);
+
+        Media::addJsDef([
+            'prestashop' => $this->buildFrontEndObject($templateVars),
+        ]);
+    }
+
+
     public function getTemplateVarShop()
     {
         $shop = parent::getTemplateVarShop();
@@ -71,9 +137,36 @@ class FrontController extends FrontControllerCore
                 <i class="fasl fa-chevron-right"></i> Offerte formulier</a></div>');
                         }
 
+
+
         return $shop;
     }
 
+
+
+
+    public function setClasses(){
+        $this->context->smarty->registerClass('Context', 'Context');
+        $this->context->smarty->registerClass('Configuration', 'Configuration');
+        $this->context->smarty->registerClass('Tools', 'Tools');
+        $this->context->smarty->registerClass('Cart', 'Cart');
+        $this->context->smarty->registerClass('Product', 'Product');
+        $this->context->smarty->registerClass('Order', 'Order');
+        $this->context->smarty->registerClass('Category', 'Category');
+        $this->context->smarty->registerClass('AttributeGroup', 'AttributeGroup');
+        $this->context->smarty->registerClass('Address', 'Address');
+        $this->context->smarty->registerClass('Module', 'Module');
+        $this->context->smarty->registerClass('ShopGroup', 'ShopGroup');
+        $this->context->smarty->registerClass('Shop', 'Shop');
+    }
+
+    public function setPlugins(){
+        $this->context->smarty->loadPlugin('unserialize', true);
+        $this->context->smarty->loadPlugin('serialize', true);
+        $this->context->smarty->loadPlugin('number_format', true);
+        $this->context->smarty->loadPlugin('basename', true);
+        $this->context->smarty->loadPlugin('is_object', true);
+    }
 
 
     /**

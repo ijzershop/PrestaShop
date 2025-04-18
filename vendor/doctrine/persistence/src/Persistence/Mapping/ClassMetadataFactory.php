@@ -16,7 +16,7 @@ interface ClassMetadataFactory
      * mapping driver.
      *
      * @return ClassMetadata[] The ClassMetadata instances of all mapped classes.
-     * @phpstan-return list<T>
+     * @psalm-return list<T>
      */
     public function getAllMetadata();
 
@@ -26,7 +26,7 @@ interface ClassMetadataFactory
      * @param class-string $className The name of the class.
      *
      * @return ClassMetadata
-     * @phpstan-return T
+     * @psalm-return T
      */
     public function getMetadataFor(string $className);
 
@@ -43,7 +43,7 @@ interface ClassMetadataFactory
      * Sets the metadata descriptor for a specific class.
      *
      * @param class-string $className
-     * @phpstan-param T $class
+     * @psalm-param T $class
      *
      * @return void
      */
@@ -53,7 +53,7 @@ interface ClassMetadataFactory
      * Returns whether the class with the specified name should have its metadata loaded.
      * This is only the case if it is either mapped directly or as a MappedSuperclass.
      *
-     * @phpstan-param class-string $className
+     * @psalm-param class-string $className
      *
      * @return bool
      */

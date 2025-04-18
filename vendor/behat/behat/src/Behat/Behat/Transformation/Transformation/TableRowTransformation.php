@@ -57,13 +57,13 @@ final class TableRowTransformation extends RuntimeCallee implements SimpleArgume
     /**
      * {@inheritdoc}
      */
-    public function supportsDefinitionAndArgument(DefinitionCall $definitionCall, $argumentIndex, $argumentArgumentValue)
+    public function supportsDefinitionAndArgument(DefinitionCall $definitionCall, $argumentIndex, $argumentValue)
     {
-        if (!$argumentArgumentValue instanceof TableNode) {
+        if (!$argumentValue instanceof TableNode) {
             return false;
         };
 
-        return $this->pattern === 'row:' . implode(',', $argumentArgumentValue->getRow(0));
+        return $this->pattern === 'row:' . implode(',', $argumentValue->getRow(0));
     }
 
     /**

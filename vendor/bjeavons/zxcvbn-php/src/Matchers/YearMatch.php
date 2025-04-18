@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace ZxcvbnPhp\Matchers;
 
+use JetBrains\PhpStorm\ArrayShape;
 use ZxcvbnPhp\Matcher;
 
-final class YearMatch extends BaseMatch
+class YearMatch extends BaseMatch
 {
     public const NUM_YEARS = 119;
 
@@ -23,7 +24,7 @@ final class YearMatch extends BaseMatch
     public static function match(string $password, array $userInputs = []): array
     {
         $matches = [];
-        $groups = static::findAll($password, "/(19\d\d|20\d\d)/u");
+        $groups = static::findAll($password, "/(19\d\d|200\d|201\d)/u");
         foreach ($groups as $captures) {
             $matches[] = new static($password, $captures[1]['begin'], $captures[1]['end'], $captures[1]['token']);
         }
@@ -31,10 +32,7 @@ final class YearMatch extends BaseMatch
         return $matches;
     }
 
-
-    /**
-     * @return array{'warning': string, "suggestions": string[]}
-     */
+    #[ArrayShape(['warning' => 'string', 'suggestions' => 'string[]'])]
     public function getFeedback(bool $isSoleMatch): array
     {
         return [

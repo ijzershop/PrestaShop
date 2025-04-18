@@ -60,7 +60,7 @@ final class ReturnTypeTransformation extends RuntimeCallee implements SimpleArgu
     /**
      * {@inheritdoc}
      */
-    public function supportsDefinitionAndArgument(DefinitionCall $definitionCall, $argumentIndex, $argumentArgumentValue)
+    public function supportsDefinitionAndArgument(DefinitionCall $definitionCall, $argumentIndex, $argumentValue)
     {
         $returnClass = self::getReturnClass($this->getReflection());
 

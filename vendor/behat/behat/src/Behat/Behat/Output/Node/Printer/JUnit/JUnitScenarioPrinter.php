@@ -53,7 +53,7 @@ final class JUnitScenarioPrinter
      */
     private $durationListener;
 
-    public function __construct(ResultToStringConverter $resultConverter, JUnitOutlineStoreListener $outlineListener, ?JUnitDurationListener $durationListener = null)
+    public function __construct(ResultToStringConverter $resultConverter, JUnitOutlineStoreListener $outlineListener, JUnitDurationListener $durationListener = null)
     {
         $this->resultConverter = $resultConverter;
         $this->outlineStoreListener = $outlineListener;
@@ -63,7 +63,7 @@ final class JUnitScenarioPrinter
     /**
      * {@inheritDoc}
      */
-    public function printOpenTag(Formatter $formatter, FeatureNode $feature, ScenarioLikeInterface $scenario, TestResult $result, ?string $file = null)
+    public function printOpenTag(Formatter $formatter, FeatureNode $feature, ScenarioLikeInterface $scenario, TestResult $result)
     {
         $name = implode(' ', array_map(function ($l) {
             return trim($l);
@@ -76,21 +76,12 @@ final class JUnitScenarioPrinter
         /** @var JUnitOutputPrinter $outputPrinter */
         $outputPrinter = $formatter->getOutputPrinter();
 
-        $testCaseAttributes = array(
-            'name'      => $name,
+        $outputPrinter->addTestcase(array(
+            'name' => $name,
             'classname' => $feature->getTitle(),
-            'status'    => $this->resultConverter->convertResultToString($result),
-            'time'      => $this->durationListener ? $this->durationListener->getDuration($scenario) : ''
-        );
-
-        if ($file) {
-            $cwd = realpath(getcwd());
-            $testCaseAttributes['file'] =
-                substr($file, 0, strlen($cwd)) === $cwd ?
-                    ltrim(substr($file, strlen($cwd)), DIRECTORY_SEPARATOR) : $file;
-        }
-
-        $outputPrinter->addTestcase($testCaseAttributes);
+            'status' => $this->resultConverter->convertResultToString($result),
+            'time' => $this->durationListener ? $this->durationListener->getDuration($scenario) : ''
+        ));
     }
 
     /**

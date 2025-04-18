@@ -16,13 +16,13 @@ class OnClearEventArgs extends EventArgs
 {
     /**
      * @var ObjectManager
-     * @phpstan-var TObjectManager
+     * @psalm-var TObjectManager
      */
     private $objectManager;
 
     /**
      * @param ObjectManager $objectManager The object manager.
-     * @phpstan-param TObjectManager $objectManager
+     * @psalm-param TObjectManager $objectManager
      */
     public function __construct(ObjectManager $objectManager)
     {
@@ -33,7 +33,7 @@ class OnClearEventArgs extends EventArgs
      * Retrieves the associated ObjectManager.
      *
      * @return ObjectManager
-     * @phpstan-return TObjectManager
+     * @psalm-return TObjectManager
      */
     public function getObjectManager()
     {

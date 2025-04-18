@@ -39,7 +39,8 @@ final class CollectionFiltersNormalizer implements NormalizerInterface, Normaliz
     private $resourceClassResolver;
 
     /**
-     * @param ContainerInterface|FilterCollection                                 $filterLocator         The new filter locator or the deprecated filter collection
+     * @param ContainerInterface|FilterCollection                                 $filterLocator           The new filter locator or the deprecated filter collection
+     * @param mixed                                                               $resourceMetadataFactory
      * @param ResourceClassResolverInterface|LegacyResourceClassResolverInterface $resourceClassResolver
      */
     public function __construct(NormalizerInterface $collectionNormalizer, $resourceMetadataFactory, $resourceClassResolver, $filterLocator)
@@ -53,18 +54,24 @@ final class CollectionFiltersNormalizer implements NormalizerInterface, Normaliz
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function supportsNormalization($data, $format = null, array $context = []): bool
     {
         return $this->collectionNormalizer->supportsNormalization($data, $format, $context);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function hasCacheableSupportsMethod(): bool
     {
         return $this->collectionNormalizer instanceof CacheableSupportsMethodInterface && $this->collectionNormalizer->hasCacheableSupportsMethod();
     }
 
     /**
-     * @param mixed|null $format
+     * {@inheritdoc}
      *
      * @return array|string|int|float|bool|\ArrayObject|null
      */
@@ -111,6 +118,9 @@ final class CollectionFiltersNormalizer implements NormalizerInterface, Normaliz
         return $data;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setNormalizer(NormalizerInterface $normalizer)
     {
         if ($this->collectionNormalizer instanceof NormalizerAwareInterface) {

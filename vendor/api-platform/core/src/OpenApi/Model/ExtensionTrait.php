@@ -19,7 +19,7 @@ trait ExtensionTrait
 
     public function withExtensionProperty(string $key, $value)
     {
-        if (!str_starts_with($key, 'x-')) {
+        if (0 !== strpos($key, 'x-')) {
             $key = 'x-'.$key;
         }
 

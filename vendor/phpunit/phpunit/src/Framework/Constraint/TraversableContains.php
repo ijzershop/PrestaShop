@@ -14,7 +14,6 @@ use function is_object;
 use function is_string;
 use function sprintf;
 use function strpos;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 use SplObjectStorage;
 
 /**
@@ -50,7 +49,7 @@ final class TraversableContains extends Constraint
     /**
      * Returns a string representation of the constraint.
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     public function toString(): string
     {
@@ -108,7 +107,7 @@ final class TraversableContains extends Constraint
      *
      * @param mixed $other evaluated value or object
      *
-     * @throws InvalidArgumentException
+     * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
     protected function failureDescription($other): string
     {

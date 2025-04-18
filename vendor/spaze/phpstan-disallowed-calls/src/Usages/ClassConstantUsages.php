@@ -12,12 +12,11 @@ use PHPStan\Rules\RuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Type\Constant\ConstantStringType;
+use PHPStan\Type\TypeWithClassName;
 use PHPStan\Type\VerbosityLevel;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedConstant;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedConstantFactory;
-use Spaze\PHPStan\Rules\Disallowed\Formatter\Formatter;
-use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedConstantRuleErrors;
-use Spaze\PHPStan\Rules\Disallowed\Type\TypeResolver;
+use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
 
 /**
  * Reports on class constant usage.
@@ -28,37 +27,22 @@ use Spaze\PHPStan\Rules\Disallowed\Type\TypeResolver;
 class ClassConstantUsages implements Rule
 {
 
-	/** @var DisallowedConstantRuleErrors */
-	private $disallowedConstantRuleErrors;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
 
-	/** @var TypeResolver */
-	private $typeResolver;
-
-	/** @var Formatter */
-	private $formatter;
-
-	/** @var list<DisallowedConstant> */
+	/** @var DisallowedConstant[] */
 	private $disallowedConstants;
 
 
 	/**
-	 * @param DisallowedConstantRuleErrors $disallowedConstantRuleErrors
+	 * @param DisallowedHelper $disallowedHelper
 	 * @param DisallowedConstantFactory $disallowedConstantFactory
-	 * @param TypeResolver $typeResolver
-	 * @param Formatter $formatter
-	 * @param array<array{class?:string, constant?:string, message?:string, allowIn?:list<string>}> $disallowedConstants
+	 * @param array<array{class?:string, constant?:string, message?:string, allowIn?:string[]}> $disallowedConstants
 	 * @throws ShouldNotHappenException
 	 */
-	public function __construct(
-		DisallowedConstantRuleErrors $disallowedConstantRuleErrors,
-		DisallowedConstantFactory $disallowedConstantFactory,
-		TypeResolver $typeResolver,
-		Formatter $formatter,
-		array $disallowedConstants
-	) {
-		$this->disallowedConstantRuleErrors = $disallowedConstantRuleErrors;
-		$this->typeResolver = $typeResolver;
-		$this->formatter = $formatter;
+	public function __construct(DisallowedHelper $disallowedHelper, DisallowedConstantFactory $disallowedConstantFactory, array $disallowedConstants)
+	{
+		$this->disallowedHelper = $disallowedHelper;
 		$this->disallowedConstants = $disallowedConstantFactory->createFromConfig($disallowedConstants);
 	}
 
@@ -70,9 +54,9 @@ class ClassConstantUsages implements Rule
 
 
 	/**
-	 * @param Node $node
+	 * @param ClassConstFetch $node
 	 * @param Scope $scope
-	 * @return list<RuleError>
+	 * @return RuleError[]
 	 * @throws ShouldNotHappenException
 	 */
 	public function processNode(Node $node, Scope $scope): array
@@ -84,48 +68,37 @@ class ClassConstantUsages implements Rule
 			throw new ShouldNotHappenException(sprintf('$node->name should be %s but is %s', Identifier::class, get_class($node->name)));
 		}
 		$constant = (string)$node->name;
-		$type = $this->typeResolver->getType($node->class, $scope);
-		$usedOnType = $type->getObjectTypeOrClassStringObjectType();
+		$usedOnType = $this->disallowedHelper->resolveType($node->class, $scope);
 
 		if (strtolower($constant) === 'class') {
 			return [];
 		}
 
-		$displayName = $usedOnType->getObjectClassNames() ? $this->getFullyQualified($usedOnType->getObjectClassNames(), $constant) : null;
-		if ($usedOnType->getConstantStrings()) {
-			$classNames = array_map(
-				function (ConstantStringType $constantString): string {
-					return $constantString->getValue();
-				},
-				$usedOnType->getConstantStrings()
-			);
+		$displayName = ($usedOnType instanceof TypeWithClassName ? $this->getFullyQualified($usedOnType->getClassName(), $constant) : null);
+		if ($usedOnType instanceof ConstantStringType) {
+			$className = ltrim($usedOnType->getValue(), '\\');
 		} else {
-			if ($usedOnType->hasConstant($constant)->yes()) {
-				$classNames = [$usedOnType->getConstant($constant)->getDeclaringClass()->getDisplayName()];
-			} elseif ($type->hasConstant($constant)->no()) {
+			if ($usedOnType->hasConstant($constant)->no()) {
 				return [
 					RuleErrorBuilder::message(sprintf(
 						'Cannot access constant %s on %s',
 						$constant,
-						$type->describe(VerbosityLevel::getRecommendedLevelByType($type))
+						$usedOnType->describe(VerbosityLevel::getRecommendedLevelByType($usedOnType))
 					))->build(),
 				];
 			} else {
-				return [];
+				$className = $usedOnType->getConstant($constant)->getDeclaringClass()->getDisplayName();
 			}
 		}
-		return $this->disallowedConstantRuleErrors->get($this->getFullyQualified($classNames, $constant), $scope, $displayName, $this->disallowedConstants);
+		$constant = $this->getFullyQualified($className, $constant);
+
+		return $this->disallowedHelper->getDisallowedConstantMessage($constant, $scope, $displayName, $this->disallowedConstants);
 	}
 
 
-	/**
-	 * @param non-empty-list<string> $classNames
-	 * @param string $constant
-	 * @return string
-	 */
-	private function getFullyQualified(array $classNames, string $constant): string
+	private function getFullyQualified(string $class, string $constant): string
 	{
-		return $this->formatter->formatIdentifier($classNames) . '::' . $constant;
+		return "{$class}::{$constant}";
 	}
 
 }

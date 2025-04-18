@@ -241,9 +241,6 @@ final class MixedArgumentOrganiser implements ArgumentOrganiser
 
         $type = $parameter->getType();
 
-        /**
-         * @psalm-suppress UndefinedClass (ReflectionUnionType)
-         */
         if ($type instanceof \ReflectionNamedType) {
             $types = [$type];
         }

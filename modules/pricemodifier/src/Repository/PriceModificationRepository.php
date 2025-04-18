@@ -13,17 +13,13 @@ declare(strict_types=1);
 
 namespace Modernesmid\Module\Pricemodifier\Repository;
 
-use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShopDatabaseException;
-use Product;
-
+use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
 /**
  *
  */

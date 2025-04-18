@@ -6,7 +6,7 @@ namespace Modernesmid\Module\Pricemodifier\Controller\Admin;
 use DateTime;
 use Db;
 use DbQuery;
-use Modernesmid\Module\Pricemodifier\EntityPrice\PriceModification;
+use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
 use ParseError;
 use PrestaShop\OAuth2\Client\Provider\PrestaShop;
 use Feature;

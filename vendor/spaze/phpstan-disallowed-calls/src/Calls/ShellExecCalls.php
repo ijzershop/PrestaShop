@@ -11,7 +11,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCall;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCallFactory;
-use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedCallsRuleErrors;
+use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
 
 /**
  * Reports on dynamically using the execution backtick operator (<code>`ls`</code>).
@@ -26,24 +26,24 @@ use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedCallsRuleErrors;
 class ShellExecCalls implements Rule
 {
 
-	/** @var DisallowedCallsRuleErrors */
-	private $disallowedCallsRuleErrors;
+	/** @var DisallowedHelper */
+	private $disallowedHelper;
 
-	/** @var list<DisallowedCall> */
+	/** @var DisallowedCall[] */
 	private $disallowedCalls;
 
 
 	/**
-	 * @param DisallowedCallsRuleErrors $disallowedCallsRuleErrors
+	 * @param DisallowedHelper $disallowedHelper
 	 * @param DisallowedCallFactory $disallowedCallFactory
 	 * @param array $forbiddenCalls
 	 * @phpstan-param ForbiddenCallsConfig $forbiddenCalls
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCallsConfig is a type alias defined in PHPStan config
 	 * @throws ShouldNotHappenException
 	 */
-	public function __construct(DisallowedCallsRuleErrors $disallowedCallsRuleErrors, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
+	public function __construct(DisallowedHelper $disallowedHelper, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
 	{
-		$this->disallowedCallsRuleErrors = $disallowedCallsRuleErrors;
+		$this->disallowedHelper = $disallowedHelper;
 		$this->disallowedCalls = $disallowedCallFactory->createFromConfig($forbiddenCalls);
 	}
 
@@ -57,16 +57,14 @@ class ShellExecCalls implements Rule
 	/**
 	 * @param ShellExec $node
 	 * @param Scope $scope
-	 * @return list<RuleError>
-	 * @throws ShouldNotHappenException
+	 * @return RuleError[]
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
-		return $this->disallowedCallsRuleErrors->get(
+		return $this->disallowedHelper->getDisallowedMessage(
 			null,
 			$scope,
 			'shell_exec',
-			null,
 			null,
 			$this->disallowedCalls,
 			'Using the backtick operator (`...`) is forbidden because shell_exec() is forbidden, %2$s%3$s'

@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\Reference;
 final class MetadataAwareNameConverterPass implements CompilerPassInterface
 {
     /**
+     * {@inheritdoc}
+     *
      * @throws RuntimeException
      */
     public function process(ContainerBuilder $container)

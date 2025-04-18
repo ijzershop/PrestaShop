@@ -4,16 +4,16 @@ namespace DoctrineExtensions\Query\Mysql;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\SimpleArithmeticExpression;
-use Doctrine\ORM\Query\Parser;
-use Doctrine\ORM\Query\SqlWalker;
-use Doctrine\ORM\Query\TokenType;
+use Doctrine\ORM\Query\Lexer;
 
 class Rand extends FunctionNode
 {
-    /** @var SimpleArithmeticExpression */
+    /**
+     * @var SimpleArithmeticExpression
+     */
     private $expression = null;
 
-    public function getSql(SqlWalker $sqlWalker): string
+    public function getSql(\Doctrine\ORM\Query\SqlWalker $sqlWalker)
     {
         if ($this->expression) {
             return 'RAND(' . $this->expression->dispatch($sqlWalker) . ')';
@@ -22,16 +22,16 @@ class Rand extends FunctionNode
         return 'RAND()';
     }
 
-    public function parse(Parser $parser): void
+    public function parse(\Doctrine\ORM\Query\Parser $parser)
     {
         $lexer = $parser->getLexer();
-        $parser->match(TokenType::T_IDENTIFIER);
-        $parser->match(TokenType::T_OPEN_PARENTHESIS);
+        $parser->match(Lexer::T_IDENTIFIER);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
-        if ($lexer->lookahead->type !== TokenType::T_CLOSE_PARENTHESIS) {
+        if (Lexer::T_CLOSE_PARENTHESIS !== $lexer->lookahead['type']) {
             $this->expression = $parser->SimpleArithmeticExpression();
         }
 
-        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 }

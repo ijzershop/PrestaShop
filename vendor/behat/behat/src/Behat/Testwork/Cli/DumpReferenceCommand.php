@@ -45,7 +45,7 @@ final class DumpReferenceCommand extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $dumper = new YamlReferenceDumper();
         $configTree = new ConfigurationTree();

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="7"
+    errorLevel="8"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -32,13 +32,6 @@
             </errorLevel>
         </InvalidThrow>
 
-        <!-- suppress errors related to Symfony return types including enums -->
-        <UndefinedDocblockClass>
-            <errorLevel type="suppress">
-                <referencedClass name="UnitEnum" />
-            </errorLevel>
-        </UndefinedDocblockClass>
-
         <!-- Suppress errors related to legacy PHPUnit classes -->
         <UndefinedClass>
             <errorLevel type="suppress">
@@ -46,17 +39,5 @@
                 <referencedClass name="PHPUnit_Framework_TestFailure" />
             </errorLevel>
         </UndefinedClass>
-
-        <!-- Suppress deliberately mismatching parameters and methods in Symfony legacy layer -->
-        <ParamNameMismatch>
-            <errorLevel type="suppress">
-                <file name="src/Behat/Testwork/EventDispatcher/TestworkEventDispatcherSymfonyLegacy.php" />
-            </errorLevel>
-        </ParamNameMismatch>
-        <MethodSignatureMismatch>
-            <errorLevel type="suppress">
-                <file name="src/Behat/Testwork/EventDispatcher/TestworkEventDispatcherSymfonyLegacy.php" />
-            </errorLevel>
-        </MethodSignatureMismatch>
     </issueHandlers>
 </psalm>

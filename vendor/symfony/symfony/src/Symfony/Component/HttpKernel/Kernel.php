@@ -196,14 +196,12 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
         $this->boot();
         ++$this->requestStackSize;
         $this->resetServices = true;
-
         try {
             return $this->getHttpKernel()->handle($request, $type, $catch);
         } finally {
             --$this->requestStackSize;
         }
     }
-
     /**
      * Gets an HTTP kernel from the container.
      *

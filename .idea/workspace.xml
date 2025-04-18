@@ -241,6 +241,9 @@
     <option name="ignoreSourceCode" value="false" />
     <option name="optionsStr" value="UseSurrogates=1" />
   </component>
+  <component name="NamedScopeManager">
+    <scope name="pricemodifier" pattern="file[ijzershop-176]:modules/pricemodifier/*||file[ijzershop-176]:modules/msthemeconfig/*" />
+  </component>
   <component name="PHPCSFixerBlackList">
     <option name="filePaths">
       <option value="$PROJECT_DIR$/modules/modernesmidthemeconfigurator/modernesmidthemeconfigurator.php" />
@@ -258,51 +261,6 @@
       <path value="$PROJECT_DIR$/modules/pricemodifier/src" />
       <path value="$APPLICATION_HOME_DIR$/external_plugins/PHPStorm-CC-PrestaShop-master" />
       <path value="$PROJECT_DIR$/modules/ps_creditpayment/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/header-stamp" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/autoindex" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php81" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/complex" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/myclabs/php-enum" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/php-dev-tools" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher-contracts" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/extension-installer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan-doctrine" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/friendsofphp/php-cs-fixer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/composer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/squizlabs/php_codesniffer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/maennchen/zipstream-php" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/ezyang/htmlpurifier" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/lexer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/simple-cache" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpoffice/phpspreadsheet" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-client" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/event-dispatcher" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/stopwatch" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-normalizer" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/matrix" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-grapheme" />
-      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher" />
       <path value="$PROJECT_DIR$/tests/Resources/modules/cronjobs/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -431,12 +389,10 @@
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/modules/msthemeconfig/vendor/psr/http-factory" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
-      <path value="$PROJECT_DIR$/modules/ps_imageslider/vendor/composer" />
       <path value="$PROJECT_DIR$/modules/autoupgrade/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/vendor/pear/console_getopt" />
       <path value="$PROJECT_DIR$/vendor/pear/pear-core-minimal" />
       <path value="$PROJECT_DIR$/vendor/pear/pear_exception" />
-      <path value="$PROJECT_DIR$/vendor/php-http/message-factory" />
       <path value="$PROJECT_DIR$/vendor/pear/archive_tar" />
       <path value="$PROJECT_DIR$/vendor/ergebnis/json-normalizer" />
       <path value="$PROJECT_DIR$/vendor/ergebnis/json-printer" />
@@ -486,7 +442,6 @@
       <path value="$PROJECT_DIR$/vendor/jakeasmith/http_build_url" />
       <path value="$PROJECT_DIR$/vendor/martinlindhe/php-mb-helpers" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
       <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
       <path value="$PROJECT_DIR$/vendor/prestashop/autoload" />
       <path value="$PROJECT_DIR$/vendor/psr/simple-cache" />
@@ -502,9 +457,6 @@
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
       <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
       <path value="$PROJECT_DIR$/vendor/api-platform/core" />
       <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
       <path value="$PROJECT_DIR$/vendor/curl/curl" />
@@ -553,16 +505,67 @@
       <path value="$PROJECT_DIR$/vendor/league/tactician-logger" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/vendor/league/uri" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/vendor/tubalmartin/cssmin" />
-      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/tijsverkoyen/css-to-inline-styles" />
       <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
       <path value="$PROJECT_DIR$/vendor/mollie/mollie-api-php" />
+      <path value="$PROJECT_DIR$/vendor/api-platform/core_compare" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/header-stamp" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/php-dev-tools" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/prestashop/autoindex" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/composer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/complex" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpoffice/phpspreadsheet" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/markbaker/matrix" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/myclabs/php-enum" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/maennchen/zipstream-php" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/friendsofphp/php-cs-fixer" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan-doctrine" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/modules/pricemodifier/vendor/phpstan/extension-installer" />
+      <path value="$PROJECT_DIR$/vendor/php-http/message-factory" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -583,85 +586,85 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Batch.ijzershop_ngrok.executor&quot;: &quot;Run&quot;,
-    &quot;Batch.ngrok.executor&quot;: &quot;Run&quot;,
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;PHP Built-in Web Server.Localhost.executor&quot;: &quot;Run&quot;,
-    &quot;PHP Script.FixStockAvailable.php.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.AccountsToCodyMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.DeprecatedChatLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;modernesmid-live&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.9.3&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop8.local/mails/nl&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;DEFAULT&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "Batch.ijzershop_ngrok.executor": "Run",
+    "Batch.ngrok.executor": "Run",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "PHP Built-in Web Server.Localhost.executor": "Run",
+    "PHP Script.FixStockAvailable.php.executor": "Run",
+    "RunOnceActivity.AccountsToCodyMigration": "true",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
+    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "modernesmid-live",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.nodejs.core.library.configured.version": "22.11.0",
+    "javascript.nodejs.core.library.typings.version": "22.9.3",
+    "last_opened_file_path": "C:/wampserver/www/ijzershop8.local",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "php.override.implement.member.chooser.php.doc": "DEFAULT",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "com.sourcegraph.cody.config.ui.CodyConfigurable",
+    "ts.external.directory.path": "C:\\wampserver\\www\\ijzershop8.local\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
+    "two.files.diff.last.used.file": "C:/wamp64/www/ijzershop8.local/admin-dev/themes/new-theme/js/components/tinymce-editor.js",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ChangesTree.GroupingKeys&quot;: [
-      &quot;directory&quot;,
-      &quot;repository&quot;
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "repository"
     ],
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+    "DatabaseDriversLRU": [
+      "mysql"
     ],
-    &quot;com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect&quot;: [
-      &quot;MySQL&quot;
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "MySQL"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PHP&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PHP"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReadonlyStatusHandler">
     <option name="SHOW_DIALOG" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local" />
+      <recent name="C:\wampserver\www\ijzershop8.local\modules" />
+      <recent name="C:\wampserver\www\ijzershop8.local\src\PrestaShopBundle\Resources\views\Admin\Common\Grid\Actions\Row" />
       <recent name="C:\wampserver\www\ijzershop8.local\mails\nl" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\templates\hook" />
-      <recent name="C:\wampserver\www\ijzershop8.local\mails\themes\modernesmid\core" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\pricemodifier\src\Service" />
+      <recent name="C:\wampserver\www\ijzershop8.local\modules" />
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\ps_eventbus" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\controllers\front" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop\Admin\Sell\Order\Order" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views" />
-      <recent name="C:\wampserver\www\ijzershop8.local\app\Resources\UpdateDataFromLive\Handler" />
     </key>
   </component>
   <component name="RunManager" selected="Batch.ngrok">
@@ -725,6 +728,7 @@
         <option value="php-doctrine_common-5543a6ebd44f-efb0421a" />
         <option value="php-doctrine_dbal-5543a6ebd44f-045582c6" />
         <option value="php-doctrine_doctrine_bundle-5543a6ebd44f-0bf7bd5a" />
+        <option value="php-doctrine_doctrine_bundle-5543a6ebd44f-b52177d5" />
         <option value="php-doctrine_inflector-5543a6ebd44f-c145f861" />
         <option value="php-doctrine_orm-5543a6ebd44f-1244442d" />
         <option value="php-egulias_email_validator-5543a6ebd44f-f8e7eb7f" />
@@ -753,6 +757,7 @@
         <option value="php-phpstan_phpstan-5543a6ebd44f-3a1dd5ce" />
         <option value="php-phpstan_phpstan-5543a6ebd44f-71fc9071" />
         <option value="php-phpstan_phpstan-5543a6ebd44f-88ff1117" />
+        <option value="php-phpstan_phpstan-5543a6ebd44f-fea0ed4d" />
         <option value="php-phpunit_php_code_coverage-5543a6ebd44f-0d77371e" />
         <option value="php-phpunit_php_code_coverage-5543a6ebd44f-28de8927" />
         <option value="php-phpunit_php_code_coverage-5543a6ebd44f-9d65f2fd" />
@@ -772,17 +777,19 @@
         <option value="php-symfony_finder-5543a6ebd44f-7b1a1db5" />
         <option value="php-symfony_finder-5543a6ebd44f-a2f040dd" />
         <option value="php-symfony_monolog_bundle-5543a6ebd44f-feabfd6d" />
+        <option value="php-symfony_options_resolver-5543a6ebd44f-45c2f950" />
         <option value="php-symfony_polyfill_iconv-5543a6ebd44f-bbf54f7e" />
         <option value="php-symfony_process-5543a6ebd44f-78ef7d72" />
         <option value="php-symfony_psr_http_message_bridge-5543a6ebd44f-6960db19" />
         <option value="php-symfony_string-5543a6ebd44f-0bf900ec" />
+        <option value="php-twig_twig-5543a6ebd44f-429a3eaa" />
         <option value="php-twig_twig-5543a6ebd44f-e2fa3d80" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewState">
-    <option name="selectedTab" value="Twig" />
+    <option name="selectedTab" value="Smarty" />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -1763,7 +1770,29 @@
       <workItem from="1743054520046" duration="5613000" />
       <workItem from="1743101900469" duration="34000" />
       <workItem from="1743143819375" duration="1974000" />
-      <workItem from="1743151252668" duration="1762000" />
+      <workItem from="1743151252668" duration="8770000" />
+      <workItem from="1743398217295" duration="1548000" />
+      <workItem from="1743400331423" duration="16493000" />
+      <workItem from="1743482194672" duration="93000" />
+      <workItem from="1743482650952" duration="9593000" />
+      <workItem from="1743657092420" duration="5635000" />
+      <workItem from="1743744427553" duration="17022000" />
+      <workItem from="1744007708104" duration="9123000" />
+      <workItem from="1744089135994" duration="53000" />
+      <workItem from="1744089310732" duration="9721000" />
+      <workItem from="1744180682969" duration="105000" />
+      <workItem from="1744180800876" duration="6742000" />
+      <workItem from="1744189081627" duration="6683000" />
+      <workItem from="1744198575114" duration="8399000" />
+      <workItem from="1744268839981" duration="285000" />
+      <workItem from="1744270928334" duration="7819000" />
+      <workItem from="1744356796404" duration="1396000" />
+      <workItem from="1744358411485" duration="8530000" />
+      <workItem from="1744614095213" duration="3479000" />
+      <workItem from="1744619350149" duration="6717000" />
+      <workItem from="1744691404944" duration="14977000" />
+      <workItem from="1744779881140" duration="3229000" />
+      <workItem from="1744871627249" duration="11516000" />
     </task>
     <servers />
   </component>
@@ -2452,7 +2481,7 @@
             <State>
               <option name="CUSTOM_BOOLEAN_PROPERTIES">
                 <map>
-                  <entry key="Show.Git.Branches" value="true" />
+                  <entry key="Show.Git.Branches" value="false" />
                 </map>
               </option>
               <option name="FILTERS">
@@ -2526,6 +2555,21 @@
           <url>file://$PROJECT_DIR$/modules/ps_accounts.php</url>
           <line>36</line>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/modules/msmollie/controllers/front/ajax.php</url>
+          <line>25</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/order_conf.html.twig</url>
+          <line>156</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/bankwire.html.twig</url>
+          <line>15</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

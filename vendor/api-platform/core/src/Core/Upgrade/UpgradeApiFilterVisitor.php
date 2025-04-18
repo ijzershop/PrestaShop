@@ -43,7 +43,7 @@ use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter as OrmExistsFilter;
 use ApiPlatform\Doctrine\Orm\Filter\NumericFilter as OrmNumericFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter as OrmOrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\RangeFilter as OrmRangeFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter as OrmSearchFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter as OrmSearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\Resource\DeprecationMetadataTrait;
 use ApiPlatform\Serializer\Filter\GroupFilter;

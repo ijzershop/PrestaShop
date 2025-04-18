@@ -10,7 +10,7 @@
   "type": "prestashop-module",
   "config": {
     "platform": {
-      "php": "^7.3|^8.0"
+      "php": "^7.3|^8.3"
     },
     "sort-packages": true,
     "preferred-install": "dist",

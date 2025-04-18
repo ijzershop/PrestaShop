@@ -15,9 +15,10 @@ namespace MsThemeConfig\Core\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use MsThemeConfig\Entity\OfferIntegration;
 
 /**
- *
+ * Repository for OfferIntegration entities
  */
 class OfferIntegrationRepository extends EntityRepository
 {
@@ -25,10 +26,10 @@ class OfferIntegrationRepository extends EntityRepository
      * Find one item by ID.
      *
      * @param int $id_oi_offer
-     * @return float|int|mixed|string
+     * @return OfferIntegration|null
      * @throws NonUniqueResultException
      */
-    public function findOneById(int $id_oi_offer)
+    public function findOneById(int $id_oi_offer): ?OfferIntegration
     {
         $qb = $this->createQueryBuilder('q')
             ->addSelect('q')
@@ -39,18 +40,18 @@ class OfferIntegrationRepository extends EntityRepository
             ->setParameter('id_oi_offer', $id_oi_offer)
         ;
 
-       return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
-     * Find one item by ID.
+     * Find items by IDs.
      *
-     * @param array $id_oi_offer
-     * @throws NonUniqueResultException
+     * @param array $id_oi_offers
+     * @return array<OfferIntegration>
      */
-    public function findByIds(array $id_oi_offers)
+    public function findByIds(array $id_oi_offers): array
     {
-        $qb = $this->createQueryBuilder('q')        ;
+        $qb = $this->createQueryBuilder('q');
 
         $qb->andWhere("q.id_oi_offer IN (:id_oi_offer)")
             ->setParameter('id_oi_offer', $id_oi_offers);
@@ -58,7 +59,14 @@ class OfferIntegrationRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function getRandom($langId = 0, $limit = 0)
+    /**
+     * Get random offer integrations
+     *
+     * @param int $langId
+     * @param int $limit
+     * @return array<OfferIntegration>
+     */
+    public function getRandom(int $langId = 0, int $limit = 0): array
     {
         /** @var QueryBuilder $qb */
         $qb = $this->createQueryBuilder('q')
@@ -83,7 +91,12 @@ class OfferIntegrationRepository extends EntityRepository
         return $offer_integrations;
     }
 
-    public function getAllIds()
+    /**
+     * Get all IDs
+     *
+     * @return array<int>
+     */
+    public function getAllIds(): array
     {
         /** @var QueryBuilder $qb */
         $qb = $this

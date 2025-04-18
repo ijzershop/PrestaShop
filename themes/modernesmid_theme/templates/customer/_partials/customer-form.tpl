@@ -75,7 +75,7 @@
 <script type="text/javascript">
   //Wrong password but existing customer at registration
   let checkoutLoginPassModal = [];
-  {if property_exists(Context::getContext(), 'checkout')}
+  {if isset(Context::getContext()->checkout)}
       checkoutLoginPassModal = JSON.parse('{Context::getContext()->checkout nofilter}');
   {/if}
 </script>

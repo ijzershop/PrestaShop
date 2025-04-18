@@ -18,9 +18,10 @@ use MsThemeConfig\Class\Offer;
 use MsThemeConfig\Core\Repository\OfferIntegrationRepository;
 use MsThemeConfig\Entity\OfferIntegration;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
+use DateTime;
 
 /**
- *
+ * Form data handler for OfferIntegration
  */
 class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
 {
@@ -50,11 +51,12 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $data)
+    public function create(array $data): int
     {
         $existingOffer = Offer::getOfferForCode($data['code']);
         if (isset($existingOffer->id_oi_offer)) {
-            $offerIntegration = new OfferIntegration($existingOffer->id_oi_offer);
+            $offerIntegration = new OfferIntegration();
+            $offerIntegration->setId($existingOffer->id_oi_offer);
         } else {
             $offerIntegration = new OfferIntegration();
         }
@@ -63,10 +65,22 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
         $offerIntegration->setName($data['name']);
         $offerIntegration->setEmail($data['email']);
         $offerIntegration->setPhone($data['phone']);
-        $offerIntegration->setDateExp($data['date_exp']);
-        $offerIntegration->setUpdatedAt(date_create());
+
+        // Convert string date to DateTime object if it's not already
+        $dateExp = $data['date_exp'];
+        if (!($dateExp instanceof DateTime)) {
+            $dateExp = new DateTime($dateExp);
+        }
+        $offerIntegration->setDateExp($dateExp);
+
+        $offerIntegration->setUpdatedAt(new DateTime());
         $offerIntegration->setAccessCode($this->generateAccessCode($data['email']));
-        $this->entityManager->persist($offerIntegration);
+
+        if (!$this->entityManager->contains($offerIntegration)) {
+            $this->entityManager->persist($offerIntegration);
+        }
+
+
         $this->entityManager->flush();
 
         return $offerIntegration->getId();
@@ -77,34 +91,42 @@ class OfferIntegrationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data): int
     {
-
-        $offerIntegration = $this->offerIntegrationRepository->findOneById($id);
+        $offerIntegration = $this->offerIntegrationRepository->findOneById((int)$id);
 
         if ($offerIntegration) {
             $offerIntegration->setCode($data['code']);
             $offerIntegration->setName($data['name']);
             $offerIntegration->setEmail($data['email']);
             $offerIntegration->setPhone($data['phone']);
-            $offerIntegration->setDateExp($data['date_exp']);
-            $offerIntegration->setUpdatedAt(date_create());
+
+            // Convert string date to DateTime object if it's not already
+            $dateExp = $data['date_exp'];
+            if (!($dateExp instanceof DateTime)) {
+                $dateExp = new DateTime($dateExp);
+            }
+            $offerIntegration->setDateExp($dateExp);
+
+            $offerIntegration->setUpdatedAt(new DateTime());
+
             if(empty($offerIntegration->getAccessCode())){
                 $offerIntegration->setAccessCode($this->generateAccessCode($data['email']));
             }
+
             $this->entityManager->flush();
 
             return $offerIntegration->getId();
         }
         return 0;
-
     }
 
-
     /**
-     * @param $string
+     * Generate access code
+     *
+     * @param string|null $string
      * @param int $length
      * @return string
      */
-    public function generateAccessCode($string, int $length = 6): string
+    public function generateAccessCode(?string $string, int $length = 6): string
     {
         if (!$string) {
             return '';

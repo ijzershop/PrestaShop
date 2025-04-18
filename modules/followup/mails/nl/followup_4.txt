@@ -1,7 +1,5 @@
 [{shop_url}]
 
-Proficiat, u bent één van onze beste klanten, echter heeft u geen bestelling meer geplaatst sinds {days_threshold} dagen.
-
 Uw winkelwagen is opgeslagen, u kunt uw bestelling afmaken door onze winkel te bezoeken: {shop_url}
 
 We willen u graag een korting aanbieden van {amount}% op uw volgende order! Deze aanbieding is {days} dagen geldig, dus twijfel niet te lang!

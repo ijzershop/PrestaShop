@@ -1,5 +1,9 @@
 <?php
 
+require_once(dirname(__FILE__).'/../../../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../../../init.php');
+require_once(dirname(__FILE__).'/../../msmollie.php');
+require_once(_PS_MODULE_DIR_ . 'msmollie/classes/MollieLogger.php');
 use Mollie\Api\Exceptions\ApiException;
 use Mollie\Api\MollieApiClient;
 use Mollie\Api\Resources\Payment;
@@ -19,6 +23,19 @@ use Mollie\Api\Resources\Payment;
 
 class MSMollieValidationModuleFrontController extends ModuleFrontController
 {
+
+
+    private $logger;
+    public $context;
+    public $module;
+
+    public function __construct()
+    {
+        $this->logger = new MollieLogger();
+        $this->module = Module::getInstanceByName('msmollie');
+        $this->context = Context::getContext();
+    }
+
     /**
      * @throws Exception
      */

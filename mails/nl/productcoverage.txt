@@ -1,8 +1,6 @@
 [{shop_url}]
 
-Uw voorraaddekking is nu minder dan het gespecificeerde minimum van: {warning_coverage}
-
-Huidige voorraaddekking: {current_coverage}
+Uw voorraaddekking is nu minder dan het gespecificeerde minimum van: {warning_coverage} Huidige voorraaddekking: {current_coverage}
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

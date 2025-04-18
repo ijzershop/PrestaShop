@@ -106,7 +106,7 @@ class ExportOrdersMultipleCollies
         $this->afzenderHuisnr = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERHUISNR');
         $this->afzenderPostcode = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPOSTCODE');
         $this->afzenderPlaats = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS');
-        $this->afzenderLand = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERLAND');
+        $this->afzenderLand = 'NL';
         $this->prepareLabelsFolder();
     }
 
@@ -287,7 +287,7 @@ class ExportOrdersMultipleCollies
             $shippingTask->afzender = $this->afZender;
             $shippingTask->afznaam = $this->afzenderNaam;
             $shippingTask->afznaam2 = $this->afzenderNaam2;
-            $shippingTask->afzastraat = $this->afzenderStraat;
+            $shippingTask->afzstraat = $this->afzenderStraat;
             $shippingTask->afzhuisnr = $this->afzenderHuisnr;
             $shippingTask->afzpostcode = $this->afzenderPostcode;
             $shippingTask->afzplaats = $this->afzenderPlaats;
@@ -401,7 +401,7 @@ class ExportOrdersMultipleCollies
 
                     $shippingTask->aRegel[$i + 1] = $collieRow;
                 }
-
+// dd($shippingTask, $login);
                 try {
                     $transport = $client->addOpdracht($login, $shippingTask);
                     if ($transport) {
@@ -896,7 +896,7 @@ class ExportOrdersMultipleCollies
             $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
             $ordersAddedShipped = $this->getOrders($this->updateStatus, $this->addedSelectCarrier);
             $allOrders = array_merge($orders,$ordersAdded, $ordersAddedShipped);
-
+        
             foreach ($allOrders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }

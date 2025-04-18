@@ -67,6 +67,7 @@ $(document).ready(() => {
   $('#form-nav').on('click', '.nav-item', () => {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
+    resetEditor();
   });
 
   $('.summary-description-container a[data-toggle="tab"]').on('shown.bs.tab', resetEditor);
@@ -77,16 +78,24 @@ $(document).ready(() => {
  * Reset active tinyMce editor (triggered when switch language, or switching tabs)
  */
 function resetEditor() {
+  if (!window.tinyMCE) {
+    return;
+  }
+
   const languageEditorsSelector = '.summary-description-container div.translation-field.active textarea.autoload_rte';
   $(languageEditorsSelector).each((index, textarea) => {
-    if (window.tinyMCE) {
-      const editor = window.tinyMCE.get(textarea.id);
+    const editor = window.tinyMCE.get(textarea.id);
 
-      if (editor) {
-        // Reset content to force refresh of editor
-        editor.setContent(editor.getContent());
-      }
+    if (!editor) {
+      return;
     }
+
+    // Reset content to force refresh of editor
+    editor.setContent(editor.getContent());
+    setTimeout(() => {
+      editor.execCommand('mceInsertContent', false, '', {skip_focus: true});
+      editor.execCommand('mceAutoResize');
+    }, 250);
   });
 }
 
@@ -827,51 +836,48 @@ window.form = (function () {
   }
   return {
     init() {
-      //
-      // console.log(jwerty);
-      //
-      // /** prevent form submit on ENTER keypress */
-      // jwerty.key('enter', (e) => {
-      //   e.preventDefault();
-      // });
-      //
-      // /** create keyboard event for save */
-      // jwerty.key('alt+shift+S', (e) => {
-      //   e.preventDefault();
-      //   send();
-      // });
-      //
-      // /** create keyboard event for save & duplicate */
-      // jwerty.key('alt+shift+D', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .duplicate').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & new */
-      // jwerty.key('alt+shift+P', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .new-product').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & go catalog */
-      // jwerty.key('alt+shift+Q', (e) => {
-      //   e.preventDefault();
-      //   send($('.product-footer .go-catalog').attr('data-redirect'));
-      // });
-      //
-      // /** create keyboard event for save & go preview */
-      // jwerty.key('alt+shift+V', (e) => {
-      //   e.preventDefault();
-      //   const productFooter = $('.product-footer .preview');
-      //   send(productFooter.attr('data-redirect'), productFooter.attr('target'));
-      // });
-      //
-      // /** create keyboard event for save & active or desactive product */
-      // jwerty.key('alt+shift+O', (e) => {
-      //   e.preventDefault();
-      //   const step1CheckBox = $('#form_step1_active');
-      //   step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
-      // });
+      /** prevent form submit on ENTER keypress */
+      jwerty.key('enter', (e) => {
+        e.preventDefault();
+      });
+
+      /** create keyboard event for save */
+      jwerty.key('alt+shift+S', (e) => {
+        e.preventDefault();
+        send();
+      });
+
+      /** create keyboard event for save & duplicate */
+      jwerty.key('alt+shift+D', (e) => {
+        e.preventDefault();
+        send($('.product-footer .duplicate').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & new */
+      jwerty.key('alt+shift+P', (e) => {
+        e.preventDefault();
+        send($('.product-footer .new-product').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & go catalog */
+      jwerty.key('alt+shift+Q', (e) => {
+        e.preventDefault();
+        send($('.product-footer .go-catalog').attr('data-redirect'));
+      });
+
+      /** create keyboard event for save & go preview */
+      jwerty.key('alt+shift+V', (e) => {
+        e.preventDefault();
+        const productFooter = $('.product-footer .preview');
+        send(productFooter.attr('data-redirect'), productFooter.attr('target'));
+      });
+
+      /** create keyboard event for save & active or desactive product */
+      jwerty.key('alt+shift+O', (e) => {
+        e.preventDefault();
+        const step1CheckBox = $('#form_step1_active');
+        step1CheckBox.prop('checked', !step1CheckBox.is(':checked'));
+      });
 
       elem.submit((event) => {
         replaceBadLocaleCharacters();

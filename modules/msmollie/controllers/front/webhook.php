@@ -1,18 +1,35 @@
 <?php
 
+require_once(dirname(__FILE__).'/../../../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../../../init.php');
+require_once(dirname(__FILE__).'/../../msmollie.php');
+require_once(_PS_MODULE_DIR_ . 'msmollie/classes/MollieLogger.php');
 use Mollie\Api\MollieApiClient;
 
 /**
  *
  */
 class MSMollieWebhookModuleFrontController extends ModuleFrontController {
+
+
+    private $logger;
+
+    public function __construct()
+    {
+        $this->logger = new MollieLogger();
+        $this->module = Module::getInstanceByName('msmollie');
+        $this->context = Context::getContext();
+    }
+
+
+
     public function postProcess(): void
     {
         try {
             // Get payment ID from POST data
             $paymentId = Tools::getValue('id');
             if (!$paymentId) {
-                $this->logPaymentMessage('Webhook: No payment ID received', 'error');
+                $this->logger->logPaymentMessage('Webhook: No payment ID received', 'error');
                 die();
             }
 
@@ -22,7 +39,7 @@ class MSMollieWebhookModuleFrontController extends ModuleFrontController {
                 : Configuration::get('MSMOLLIE_TEST_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
 
             if (empty($apiKey)) {
-                $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen api key', 'error');
+                $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen api key', 'error');
                 return;
             }
 
@@ -44,27 +61,27 @@ class MSMollieWebhookModuleFrontController extends ModuleFrontController {
                 case 'paid':
                     $newStatus = Configuration::get('MSMOLLIE_DEFAULT_STATUS',  $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
                     $order->setCurrentState($newStatus);
-                    $this->logPaymentMessage("Webhook | Payment completed for order {$orderId}", 'info');
+                    $this->logger->logPaymentMessage("Webhook | Payment completed for order {$orderId}", 'info');
                     break;
 
                 case 'failed':
                     $order->setCurrentState(Configuration::get('PS_OS_ERROR',  $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id));
-                    $this->logPaymentMessage("Webhook | Payment failed for order {$orderId}", 'error');
+                    $this->logger->logPaymentMessage("Webhook | Payment failed for order {$orderId}", 'error');
                     break;
 
                 case 'expired':
                     $order->setCurrentState(Configuration::get('PS_OS_CANCELED',  $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id));
-                    $this->logPaymentMessage("Webhook | Payment expired for order {$orderId}", 'warning');
+                    $this->logger->logPaymentMessage("Webhook | Payment expired for order {$orderId}", 'warning');
                     break;
 
                 case 'canceled':
                     $order->setCurrentState(Configuration::get('PS_OS_CANCELED',  $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id));
-                    $this->logPaymentMessage("Webhook | Payment canceled for order {$orderId}", 'info');
+                    $this->logger->logPaymentMessage("Webhook | Payment canceled for order {$orderId}", 'info');
                     break;
 
                 case 'pending':
                     $order->setCurrentState(Configuration::get('MSMOLLIE_WAITING_PAYMENT_STATUS',  $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id));
-                    $this->logPaymentMessage("Payment pending for order {$orderId}", 'info');
+                    $this->logger->logPaymentMessage("Payment pending for order {$orderId}", 'info');
                     break;
             }
 
@@ -72,7 +89,7 @@ class MSMollieWebhookModuleFrontController extends ModuleFrontController {
             die();
 
         } catch (Exception $e) {
-            $this->logPaymentMessage('Webhook error: ' . $e->getMessage(), 'error');
+            $this->logger->logPaymentMessage('Webhook error: ' . $e->getMessage(), 'error');
             http_response_code(500);
             die();
         }

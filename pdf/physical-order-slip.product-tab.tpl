@@ -42,13 +42,7 @@
       <td {if isset($layout.before_discount)} colspan="8" {else} colspan="7" {/if}>
         <table width="100%">
           <tr class="{$bgcolor_class}">
-            <td class="product left" width="5%">
-                {if empty($order_detail.product_reference)}
-                  ---
-                {else}
-                    {$order_detail.product_reference}
-                {/if}
-              <br/>
+            <td class="product left" width="5%" style="vertical-align: top;">{if empty($order_detail.product_reference)}---{else}{$order_detail.product_reference}{/if}
             </td>
             <td class="product left" width="35%">{AttributeGroup::stripSawCutModuleAttributeGroupName($order_detail.product_name)} <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if (int)$order_detail.id_category_default != (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id)}{$order_detail.product_desc_short|strip_tags}{else}{$order_detail.product_desc_short nofilter}{/if}{/if}</span><br/></td>
             <td class="product center" width="10%">21%</td>

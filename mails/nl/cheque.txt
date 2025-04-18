@@ -2,9 +2,9 @@
 
 Bestelling {order_name} - Wachtende op betaling met cheque
 
-Uw bestelling met referentie {order_name}  is succesvol geplaatst en zal  verstuurd worden zodra wij uw betaling ontvangen hebben .
-
 U hebt ervoor gekozen om te betalen via cheque. Hier is de informatie die u nodig heeft om te betalen via cheque:
+
+Uw bestelling met referentie {order_name}  is succesvol geplaatst en zal  verstuurd worden zodra wij uw betaling ontvangen hebben .
 
 Bedrag:   {total_paid}
 

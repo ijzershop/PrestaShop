@@ -1,6 +1,7 @@
 [{shop_url}]
 
 Bedankt voor het abonneren op onze nieuwsbrief. Klik op de volgende link om uw inschrijving te bevestigen:
+
 {verif_url}
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!

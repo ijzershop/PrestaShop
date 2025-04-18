@@ -2,11 +2,13 @@
 
 Retour Details
 
-Bestelling: {order_name} Geplaatst op {date}
+Bestelling: {order_name}
+Geplaatst op {date}
 
 Klant: {firstname} {lastname}, ({email})
 
-Klantbericht: {message}
+Klantbericht:
+{message}
 
 Referentie	Product	Aantal   {items}
 

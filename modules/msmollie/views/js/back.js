@@ -37,11 +37,14 @@ document.addEventListener('DOMContentLoaded', function() {
           message: message,
         },
         success: function(response) {
-          if (response.success) {
+          data = JSON.parse(response);
+          if (data.success) {
             // Close modal
             $('#paymentModal').modal('hide');
             // Show success message
-            showSuccessMessage(response.message);
+            $.growl.notice({'message': data.message});
+          } else {
+            $.growl.error({'message': data.message});
           }
         }
       });

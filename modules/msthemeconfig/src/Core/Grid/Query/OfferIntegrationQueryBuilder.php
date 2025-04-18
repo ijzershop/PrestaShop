@@ -15,7 +15,6 @@ namespace MsThemeConfig\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\Query\Expr\Join;
 use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
@@ -25,27 +24,28 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
-    private $searchCriteriaApplicator;
+    private DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator;
 
     /**
      * @var int
      */
-    private $languageId;
+    private int $languageId;
 
     /**
      * @var int
      */
-    private $shopId;
+    private int $shopId;
 
     /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $languageId
+     * @param int $shopId
      */
     public function __construct(
         Connection $connection,
-                                                  $dbPrefix,
+                   $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
         $languageId,
         $shopId
@@ -53,16 +53,15 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
         parent::__construct($connection, $dbPrefix);
 
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
-        $this->languageId = $languageId;
-        $this->shopId = $shopId;
+        $this->languageId = (int) $languageId;
+        $this->shopId = (int) $shopId;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
+    public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('q.id_oi_offer,
@@ -87,7 +86,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-
         return $this->getQueryBuilder($searchCriteria->getFilters())
             ->select('COUNT(DISTINCT q.id_oi_offer)');
     }
@@ -101,7 +99,6 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters): QueryBuilder
     {
-
         $allowedFilters = [
             'id_oi_offer',
             'code',
@@ -119,84 +116,45 @@ class OfferIntegrationQueryBuilder extends AbstractDoctrineQueryBuilder
             'phone' => 'q.phone',
             'date_exp' => 'q.date_exp',
             'date_upd' => 'q.date_upd'
-            ];
+        ];
 
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'offer_integration', 'q');
         $qb->setParameter('shopId', $this->shopId);
         $qb->setParameter('langId', $this->languageId);
-//dd($filters);
+
         foreach ($filters as $name => $value) {
             if (!in_array($name, $allowedFilters, true)) {
                 continue;
             }
 
-
             if ('id_oi_offer' === $name && !empty($value)) {
                 $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
                 $qb->setParameter($name, '%' . $value . '%');
-
                 continue;
             }
 
-            if ('code' === $name && !empty($value)) {
+            if (in_array($name, ['code', 'name', 'email', 'phone']) && !empty($value)) {
                 $searchTerms = explode(" ", $value);
+                $paramName = $name . '_param';
 
-                foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                    $qb->setParameter($name, '%' . $term . '%');
+                foreach ($searchTerms as $i => $term) {
+                    $currentParamName = $paramName . $i;
+                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $currentParamName);
+                    $qb->setParameter($currentParamName, '%' . $term . '%');
                 }
                 continue;
             }
 
-            if ('name' === $name && !empty($value)) {
-                $searchTerms = explode(" ", $value);
+            if (in_array($name, ['date_exp', 'date_upd']) && is_array($value)) {
+                $from = $value['from'] ?? '0000-00-00';
+                $to = $value['to'] ?? date('Y-m-d');
 
-                foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                    $qb->setParameter($name, '%' . $term . '%');
+                if (!empty($from) && !empty($to)) {
+                    $qb->andWhere($allowedFiltersMap[$name] . ' BETWEEN :from_' . $name . ' AND :to_' . $name);
+                    $qb->setParameter('from_' . $name, $from);
+                    $qb->setParameter('to_' . $name, $to);
                 }
-                continue;
-            }
-
-            if ('email' === $name && !empty($value)) {
-                $searchTerms = explode(" ", $value);
-
-                foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                    $qb->setParameter($name, '%' . $term . '%');
-                }
-                continue;
-            }
-
-            if ('phone' === $name && !empty($value)) {
-                $searchTerms = explode(" ", $value);
-
-                foreach ($searchTerms as $i => $term){
-                    $qb->andWhere($allowedFiltersMap[$name] . ' LIKE :' . $name);
-                    $qb->setParameter($name, '%' . $term . '%');
-                }
-                continue;
-            }
-
-
-            if ('date_exp' === $name && (!empty($from) && !empty($to))) {
-                $from  = $value['from'] ?? '0000-00-00';
-                $to  = $value['to'] ?? date('yyyy-mm-dd');
-
-                $qb->andWhere($allowedFiltersMap[$name] . ' BETWEEN :from AND :to');
-                $qb->setParameter('from', $from);
-                $qb->setParameter('to', $to);
-                continue;
-            }
-
-            if ('date_upd' === $name && (!empty($from) && !empty($to))) {
-                $from  = $value['from'] ?? '0000-00-00';
-                $to  = $value['to'] ?? date('yyyy-mm-dd');
-
-                $qb->andWhere($allowedFiltersMap[$name] . ' BETWEEN :from AND :to');
-                $qb->setParameter('from', $from);
-                $qb->setParameter('to', $to);
                 continue;
             }
         }

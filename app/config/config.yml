@@ -107,4 +107,14 @@ api_platform:
     paths:
       - '%kernel.project_dir%/app/config/api_platform'
 
-  metadata_backward_compatibility_layer: false
+  metadata_backward_compatibility_layer: true
+
+doctrine:
+  orm:
+    mappings:
+      # In front container we must define the mapping manually because PrestaShopBundle cannot do it
+      PrestaShopBundle\Entity:
+        type: annotation
+        dir: "%kernel.project_dir%/src/PrestaShopBundle/Entity"
+        is_bundle: false
+        prefix: PrestaShop

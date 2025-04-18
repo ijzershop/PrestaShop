@@ -2,9 +2,9 @@
 
 Goed nieuws, dit product is terug op voorraad!
 
-{product}
+Klik op de volgende link om de productpagina te bezoeken en te bestellen:
 
-Klik op de volgende link om de productpagina te bezoeken en te bestellen: [{product}]({product_link})
+[{product}]({product_link})
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

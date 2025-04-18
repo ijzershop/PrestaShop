@@ -3,292 +3,73 @@
 {% block title %}{{ 'Contact'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
-<!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
 
-            <tr>
-              <td
-                 class="" width="604px"
-              >
-
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
+  {#       Start White Block         #}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-right:30px;padding-left:30px;padding-bottom:10px;background-color:#ffffff">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
         <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-              <div style="Margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px;text-align:center;vertical-align:top;">
-                        <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-
-        <tr>
-
-            <td
-               class="" style="vertical-align:top;width:554px;"
-            >
-          <![endif]-->
-                        <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;padding:0;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <!-- TITLE BEGINING -->
-                                    <tr>
-                                      <td align="left" style="font-size:0px;padding:0px 20px;padding-top:0;padding-bottom:10px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#777777;">
-                                          {{ 'Message from a {shop_name} customer'|trans({}, 'Emails.Body', locale) }}
-                                        </div>
-                                      </td>
-                                    </tr>
-                                    <!-- TITLE ENDING -->
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]>
-            </td>
-
+          <td align="left" style="padding:0;Margin:0;width:560px">
+            <table cellspacing="0" width="100%" role="presentation" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    {{ 'Message from a {shop_name} customer'|trans({}, 'Emails.Body', locale) }}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    <span class="label">{{ 'Customer Email Address:'|trans({}, 'Emails.Body', locale)|raw }}</span> <span style="font-weight:600; text-decoration: underline;">{email}</span>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    <span class="label">{{ 'Order reference:'|trans({}, 'Emails.Body', locale)|raw }}</span>
+                    <span> {order_reference}</span>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    <span class="label">{{ 'Attached file:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {attached_file}</span>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    {{ 'Customer message:'|trans({}, 'Emails.Body', locale)|raw }}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+                    {message}
+                  </p>
+                </td>
+              </tr>
+            </table></td>
         </tr>
+      </table></td>
+  </tr>
+  {#       End white Block         #}
 
-                  </table>
-                <![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
 
-              </td>
-            </tr>
-          <![endif]-->
-              <!-- MESSAGE BOX BEGINING -->
-              <!--[if mso | IE]>
-            <tr>
-              <td
-                 class="" width="604px"
-              >
 
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-              <div style="Margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:ltr;font-size:0px;padding:15px 45px 25px;text-align:center;vertical-align:top;">
-                        <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+{% endblock %}
 
-        <tr>
-
-            <td
-               class="" style="vertical-align:top;width:504px;"
-            >
-          <![endif]-->
-                        <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <tr>
-                                      <td align="left" style="font-size:0px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#777777;">
-                                          <span class="label">{{ 'Customer Email Address:'|trans({}, 'Emails.Body', locale)|raw }}</span> <span style="font-weight:600; text-decoration: underline;">{email}</span>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td align="left" style="font-size:0px;padding-top:0px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#777777;">
-                                          <span class="label">{{ 'Order reference:'|trans({}, 'Emails.Body', locale)|raw }}</span>
-                                          <span> {order_reference}</span>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                    <tr>
-                                      <td align="left" style="font-size:0px;padding-top:0px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#777777;">
-                                          <span class="label">{{ 'Attached file:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {attached_file}</span>
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]>
-            </td>
-
-        </tr>
-
-                  </table>
-                <![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-
-              </td>
-            </tr>
-          <![endif]-->
-              <!-- MESSAGE BOX ENDING -->
-              <!-- SUBTITLE BEGINING -->
-              <!--[if mso | IE]>
-            <tr>
-              <td
-                 class="" width="604px"
-              >
-
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-              <div style="Margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 50px 0;text-align:left;vertical-align:top;">
-                        <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-
-        <tr>
-
-            <td
-               class="" style="vertical-align:top;width:504px;"
-            >
-          <![endif]-->
-                        <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;padding:0;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <tr>
-                                      <td align="left" style="font-size:0px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#777777;">{{ 'Customer message:'|trans({}, 'Emails.Body', locale)|raw }}
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]>
-            </td>
-
-        </tr>
-
-                  </table>
-                <![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-
-              </td>
-            </tr>
-          <![endif]-->
-              <!-- SUBTITLE ENDING -->
-              <!-- MESSAGE BEGINING -->
-              <!--[if mso | IE]>
-            <tr>
-              <td
-                 class="" width="604px"
-              >
-
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
-              <div style="Margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:ltr;font-size:0px;padding:15px 45px 25px;text-align:center;vertical-align:top;">
-                        <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-
-        <tr>
-
-            <td
-               class="" style="vertical-align:top;width:504px;"
-            >
-          <![endif]-->
-                        <div class="mj-column-per-100 outlook-group-fix" style="font-size:13px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;padding-top:10px;padding-bottom:10px;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <tr>
-                                      <td align="left" style="font-size:0px;word-break:break-word;">
-                                        <div style="font-family:Open-sans, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#777777;"> {message} </div>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]>
-            </td>
-
-        </tr>
-
-                  </table>
-                <![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-
-              </td>
-            </tr>
-          <![endif]-->
-              <!-- MESSAGE ENDING -->
-              <!--[if mso | IE]>
-                  </table>
-                <![endif]-->
-
+{% block footer_blocks %}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;background-color:#ffffff">
+      {{ footer_blocks|raw }}
+    </td>
+  </tr>
 {% endblock %}
 
 {% block styles %}

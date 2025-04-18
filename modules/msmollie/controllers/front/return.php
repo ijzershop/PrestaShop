@@ -1,20 +1,38 @@
 <?php
 
+
+require_once(dirname(__FILE__).'/../../../../config/config.inc.php');
+require_once(dirname(__FILE__).'/../../../../init.php');
+require_once(dirname(__FILE__).'/../../msmollie.php');
+require_once(_PS_MODULE_DIR_ . 'msmollie/classes/MollieLogger.php');
 use Mollie\Api\MollieApiClient;
 
 /**
  *
  */
 class MSMollieReturnModuleFrontController extends ModuleFrontController {
+
+    private $logger;
+
+    public function __construct()
+    {
+        $this->logger = new MollieLogger();
+        $this->module = Module::getInstanceByName('msmollie');
+        $this->context = Context::getContext();
+    }
+
     /**
      * @return void
      */
     public function postProcess(): void
     {
+
         $cartId = Tools::getValue('cart_id');
         $moduleId = Tools::getValue('module_id');
         $secureKey = Tools::getValue('secure_key');
         $method = Tools::getValue('method');
+
+
         $this->errors = [];
 
         try {
@@ -24,18 +42,17 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                                     WHERE id_cart = '.(int)$cartId);
 
             if(!$existingTempOrder) {
-                $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen temp order gevonden', 'error');
+                $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen temp order gevonden', 'error');
                 return;
             }
 
 
             $payment  = OrderPayment::getByOrderReference($existingTempOrder['reference']);
-
             $customer = new Customer($existingTempOrder['id_customer']);
             $paymentId = $payment[0]->transaction_id ?? null;
 
             if (!$paymentId) {
-                $this->logPaymentMessage('Webhook: No payment ID received', 'error');
+                $this->logger->logPaymentMessage('Webhook: No payment ID received', 'error');
                 return;
             }
 
@@ -45,7 +62,7 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                 : Configuration::get('MSMOLLIE_TEST_API_KEY', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
 
             if (empty($apiKey)) {
-                $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen api key', 'error');
+                $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Er is geen api key', 'error');
                 return;
             }
 
@@ -57,19 +74,21 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
             // Initialize Mollie client
             $mollie = new MollieApiClient();
             $mollie->setApiKey(trim($apiKey));
-            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Api Key is set '. $apiKey, 'info');
+            $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Api Key is set '. $apiKey, 'info');
             // Add status recheck loop
             $maxAttempts = 10;
+            $set = false;
             for ($i = 0; $i < $maxAttempts; $i++) {
                 sleep(1); // Wait 1 second
                 $paymentCheck = $mollie->payments->get(trim($paymentId));
-
                 // Update order status based on Mollie status
                 if($paymentCheck->status == 'paid') {
+                    $set = true;
                     $newStatus = Configuration::get('MSMOLLIE_DEFAULT_STATUS', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id);
-                    $this->logPaymentMessage("Webhook | Payment completed for order {$existingTempOrder['id_order']}", 'info');
+                    $this->logger->logPaymentMessage("Webhook | Payment completed for order {$existingTempOrder['id_order']}", 'info');
 
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $paymentCheck, true);
 
 
                     // Create the order
@@ -89,33 +108,39 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                     );
 
                     if(!$validate){
-                        $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
+                        $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
                     }
+
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $paymentCheck, false);
+
 
                     Tools::redirect('https://' . $this->context->shop->domain_ssl . '/order-bevestiging?id_cart=' . $cartId . '&id_module=' . $moduleId . '&id_order=' . $existingTempOrder['id_order'] . '&key=' . $secureKey);
                     break;
                 }
 
                 if($paymentCheck->status == 'canceled') {
+                    $set = true;
                     /**
                      *
                      * Canceled so the cart is reinit and payment record is removed.
                      *
                      */
 
-                    $this->logPaymentMessage("Webhook | Payment canceled for order {$existingTempOrder['id_order']}", 'info');
+                    $this->logger->logPaymentMessage("Webhook | Payment canceled for order {$existingTempOrder['id_order']}", 'info');
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $payment);
+
                     $this->errors[] = $this->module->l('Betaling geannuleerd, u kunt het nogmaals proberen.');
 
 
                     try {
-                        
+
                         $mollie->payments->delete(trim($paymentId));
-                            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Mollie payment record removed', 'error');
+                            $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Mollie payment record removed', 'error');
                     } catch (Exception $e) {
-                            $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig'. $e->getMessage(), 'error');
+                            $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig'. $e->getMessage(), 'error');
                     }
-                        
+
 
                     $this->context->cart = $cart;
                     $this->context->cart->id_lang = $this->context->language->id;
@@ -130,7 +155,9 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
 
 
                 if($paymentCheck->status == 'failed') {
+                    $set = true;
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $payment);
 
                     // Create the order
                     $validate =  $this->module->validateOrder(
@@ -149,7 +176,7 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                     );
 
                     if(!$validate){
-                        $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
+                        $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
                     }
 
                     $emptyCart =  new Cart();
@@ -162,7 +189,7 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                     $this->context->customer = $customer;
 
 
-                    $this->logPaymentMessage("Webhook | Payment failed for order {$existingTempOrder['id_order']}", 'error');
+                    $this->logger->logPaymentMessage("Webhook | Payment failed for order {$existingTempOrder['id_order']}", 'error');
                     $this->errors[] = $this->module->l('Betaal fout! <br/>Er is een probleem met de betaling van uw bestelling. Neem even contact met ons op, wij helpen u graag verder.');
 
                     $order = Order::getByCartId($cart->id);
@@ -172,9 +199,10 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                 }
 
                 if($paymentCheck->status == 'expired'){
-
-                    $this->logPaymentMessage("Webhook | Payment expired for order {$existingTempOrder['id_order']}", 'warning');
+                    $set = true;
+                    $this->logger->logPaymentMessage("Webhook | Payment expired for order {$existingTempOrder['id_order']}", 'warning');
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $payment);
                     $this->errors[] = $this->module->l('Betaling verlopen, u heeft te lang gewacht met het afronden van de betaling, hierdoor is uw sessie afgesloten. Wilt u verder gaan, kijk goed naar uw geselecteerde betaal optie en klik dan weer op afrekenen');
 
                     $this->context->cart = $cart;
@@ -190,7 +218,9 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
 
 
                 if($paymentCheck->status == 'pending'){
+                    $set = true;
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $payment);
                     // Create the order
                     $validate =  $this->module->validateOrder(
                         (int)$cart->id,
@@ -208,17 +238,19 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                     );
 
                     if(!$validate){
-                        $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
+                        $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
                     }
 
-                    $this->logPaymentMessage("Payment pending for order {$existingTempOrder['id_order']}", 'info');
+                    $this->logger->logPaymentMessage("Payment pending for order {$existingTempOrder['id_order']}", 'info');
                 }
             }
 
 
-            if($maxAttempts == $i){
+            if($maxAttempts == $i && !$set){
                 // still status open. hopefully the webhook will provide support
                     $this->removeTempOrderRecord($existingTempOrder['id_order']);
+                    $this->updateOrderPaymentRecord($existingTempOrder['reference'], $payment);
+
                     // Create the order
                     $validate =  $this->module->validateOrder(
                         (int)$cart->id,
@@ -236,21 +268,23 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
                     );
 
                     if(!$validate){
-                        $this->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
+                        $this->logger->logPaymentMessage('MSMollieValidationModuleFrontController: postProcess: Order is niet geldig', 'error');
                     }
 
-                    $this->logPaymentMessage("Payment pending for order {$existingTempOrder['id_order']}", 'info');
+                    $this->logger->logPaymentMessage("Payment pending for order {$existingTempOrder['id_order']}", 'info');
 
                    $this->info[] = $this->module->l('Uw betaling word momenteel verwerkt, dit kan tot 30 minuten duren. Als uw betaling is ontvangen krijgt u automatisch een bestelbevestiging. Heeft u verder nog vragen neem dan even contact met ons op, wij helpen u graag verder.');
-                    
+
                     $order = Order::getByCartId($cart->id);
-                    $this->redirectWithNotifications('/index.php?controller=order-detail&id_order='.$order->id);
+                    dd('ók', $order);
+                $this->redirectWithNotifications('/index.php?controller=order-detail&id_order='.$order->id);
             }
 
 
         } catch (Exception $e) {
-            $this->logPaymentMessage('Webhook error: ' . $e->getMessage(), 'error');
+            $this->logger->logPaymentMessage('Webhook error: ' . $e->getMessage(), 'error');
             $this->errors[] = 'Payment Return error: ' . $e->getMessage();
+            dd('false', $e);
             $this->redirectWithNotifications('index.php');
         }
     }
@@ -265,9 +299,9 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
             $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'orders WHERE id_order = ' . (int)$id_order;
             Db::getInstance()->execute($sql);
         } catch (Exception $e) {
-            $this->logPaymentMessage('removeTempOrderRecord: ' . $e->getMessage(), 'error');
+            $this->logger->logPaymentMessage('removeTempOrderRecord: ' . $e->getMessage(), 'error');
         }
-        $this->logPaymentMessage('removeTempOrderRecord: Removed temp record', 'info');
+        $this->logger->logPaymentMessage('removeTempOrderRecord: Removed temp record', 'info');
     }
 
 
@@ -359,6 +393,39 @@ class MSMollieReturnModuleFrontController extends ModuleFrontController {
         $history->id_employee = (int)0;
         $use_existings_payment = !$order->hasInvoice();
         $history->changeIdOrderState((int)$id_order_state, $order->id, $use_existings_payment);
+    }
+
+    /**
+     * @param string|null $reference
+     * @param $payment
+     * @param $delete
+     * @return void
+     */
+    private function updateOrderPaymentRecord(?string $reference, $payment, $delete = true)
+    {
+        try {
+            $orderPayment = OrderPayment::getByOrderReference($reference);
+
+
+            if($orderPayment){
+                $orderPayment = new OrderPayment($orderPayment[0]->id ?? null);
+
+                if($delete){
+                    $orderPayment->delete();
+                } else {
+                    $orderPayment->card_number = $payment->details->cardNumber ?? '';
+                    $orderPayment->card_holder = $payment->details->cardHolder ?? '';
+                    $orderPayment->card_brand = $payment->details->cardLabel ?? '';
+                    $orderPayment->save();
+                }
+
+                $this->logger->logPaymentMessage('updateOrderPaymentRecord: Record '. $payment->transaction_id . ' removed!', 'info');
+            }
+
+
+        } catch (Exception $e) {
+            $this->logger->logPaymentMessage('updateOrderPaymentRecord: ' . $e->getMessage(), 'error');
+        }
     }
 
 

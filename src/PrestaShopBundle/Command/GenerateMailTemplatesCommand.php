@@ -103,7 +103,13 @@ class GenerateMailTemplatesCommand extends Command
             $coreOutputFolder ?: '',
             $modulesOutputFolder ?: ''
         );
-        $this->commandBus->handle($generateCommand);
+
+        $result = $this->commandBus->handle($generateCommand);
+        if($result) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**

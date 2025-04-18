@@ -14,12 +14,10 @@
  * @abstract TCPDF - Example: PDF/A-1b mode
  * @author Nicola Asuni
  * @since 2021-03-26
- * @group A-1b
- * @group pdf
  */
 
-// Include the main TCPDF library (search for installation path).
-require_once('tcpdf_include.php');
+// Load the autoloader, move one folder back from examples
+require_once __DIR__ . '/../vendor/autoload.php';
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);

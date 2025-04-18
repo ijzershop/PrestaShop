@@ -588,6 +588,7 @@ class FrontControllerCore extends Controller
             }
         }
 
+        $this->setPluginContext($templateVars);
         $this->context->smarty->assign($templateVars);
 
         Media::addJsDef([

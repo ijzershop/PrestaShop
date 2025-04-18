@@ -221,10 +221,10 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             }
         }
 
-
         if (Tools::getValue('action') == 'fetch_products_for_retour') {
             $idOrder = $_POST['id_order'];
             $postcode = $_POST['postalcode'];
+
             return $this->_fetchProductsForRetourForm($idOrder, $postcode);
         }
 
@@ -238,7 +238,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         $urlNl = $this->apiPath . '/nl?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&streetNumber=' . urlencode($houseNumber) . '&premise=' . urlencode($extension);
         $urlBe = $this->apiPath . '/be?authKey=' . $this->token . '&postalCode=' . urlencode($postcode) . '&street=' . urlencode($street) . '&streetNumber=' . urlencode($houseNumber);
-
 
         $valid = false;
         $zip_code_format = Country::getZipCodeFormat((int)$id_country);

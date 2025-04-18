@@ -23,14 +23,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 {foreach $list as $product}
-  <p
-    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-    <b>{$product['quantity']}X {AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}</b>
-    {if count($product['customization']) == 1}
-      <br>
-      {foreach $product['customization'] as $customization}
-    <small style="font-style: italic;">{$customization['customization_text'] nofilter}</small>
-      {/foreach}
-  {/if}
-  </p>
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+         style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+    <tr>
+      <td align="right" bgcolor="#4472c4" class="es-text-9909" style="text-align:right;padding:5px;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+           {$product['quantity']}X
+      </td>
+      <td align="left" bgcolor="#4472c4" class="es-text-9909" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+        {AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}
+      </td>
+    </tr>
+    {if $product['customization']}
+    <tr>
+      <td align="left" bgcolor="#4472c4" class="es-text-9909"
+          style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+      </td>
+      <td <td align="left" bgcolor="#4472c4" class="es-text-9909"
+              style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px">
+        {foreach $product['customization'] as $customization}
+          {$customization['customization_text'] nofilter}
+        {/foreach}
+      </td>
+    </tr>
+    {/if}
+    <tr>
+      <td style="border-bottom: 1px solid rgba(255,255,255,0.50)" colspan="2"></td>
+    </tr>
+  </table>
 {/foreach}

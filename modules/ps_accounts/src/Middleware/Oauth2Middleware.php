@@ -21,11 +21,12 @@
 namespace PrestaShop\Module\PsAccounts\Middleware;
 
 use Exception;
+use PrestaShop\Module\PsAccounts\Log\Logger;
+use PrestaShop\Module\PsAccounts\Provider\OAuth2\Oauth2Client;
 use PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopLogoutTrait;
 use PrestaShop\Module\PsAccounts\Provider\OAuth2\PrestaShopSession;
 use PrestaShop\Module\PsAccounts\Provider\OAuth2\ShopProvider;
 use PrestaShop\Module\PsAccounts\Service\PsAccountsService;
-use PrestaShop\Module\PsAccounts\Vendor\League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Ps_accounts;
 
 class Oauth2Middleware
@@ -33,49 +34,69 @@ class Oauth2Middleware
     use PrestaShopLogoutTrait;
 
     /**
-     * @var Ps_accounts
+     * @var PsAccountsService
      */
-    private $module;
+    private $psAccountsService;
 
     /**
-     * @var bool
+     * @var PrestaShopSession
      */
-    private $bypassLoginPage = false;
+    private $prestaShopSession;
 
-    public function __construct(Ps_accounts $ps_accounts)
+    /**
+     * @var ShopProvider
+     */
+    private $shopProvider;
+
+    public function __construct(Ps_accounts $module)
     {
-        $this->module = $ps_accounts;
+        $this->psAccountsService = $module->getService(PsAccountsService::class);
+        $this->prestaShopSession = $module->getService(PrestaShopSession::class);
+        $this->shopProvider = $module->getService(ShopProvider::class);
+    }
+
+    /**
+     * @return void
+     *
+     * @deprecated since v7.1.2
+     */
+    public function execute()
+    {
+        try {
+            if (isset($_GET['logout'])) {
+                $this->executeLogout();
+            }
+        } catch (Exception $e) {
+            Logger::getInstance()->err($e->getMessage());
+        }
     }
 
     /**
      * @return void
      */
-    public function execute()
+    public function handleLogout()
     {
         try {
-            /** @var PsAccountsService $psAccountsService */
-            $psAccountsService = $this->module->getService(PsAccountsService::class);
-
-            $session = $this->getOauth2Session();
-
             if (isset($_GET['logout'])) {
-                if ($psAccountsService->getLoginActivated()) {
-                    $this->oauth2Logout();
-                    // FIXME: too much implicit logic here
-                    // We reach this line after redirect at callback time
-                    $this->onLogoutCallback();
-                } else {
-                    $session->clear();
-                }
-            } else {
-                // We keep token fresh !
-                $session->getOrRefreshAccessToken();
+                $this->executeLogout();
             }
-        } catch (IdentityProviderException $e) {
-            $this->module->getLogger()->err($e->getMessage());
         } catch (Exception $e) {
-            $this->module->getLogger()->err($e->getMessage());
+            Logger::getInstance()->err($e->getMessage());
         }
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function executeLogout()
+    {
+        if ($this->psAccountsService->getLoginActivated() &&
+            !isset($_GET[Oauth2Client::QUERY_LOGOUT_CALLBACK_PARAM])) {
+            $this->oauth2Logout();
+        }
+        $this->getOauth2Session()->clear();
     }
 
     /**
@@ -85,7 +106,7 @@ class Oauth2Middleware
      */
     protected function getProvider()
     {
-        return $this->module->getService(ShopProvider::class);
+        return $this->shopProvider;
     }
 
     /**
@@ -95,7 +116,7 @@ class Oauth2Middleware
      */
     protected function getOauth2Session()
     {
-        return $this->module->getService(PrestaShopSession::class);
+        return $this->prestaShopSession;
     }
 
     /**
@@ -108,17 +129,5 @@ class Oauth2Middleware
         // return $this->module->hasParameter('ps_accounts.oauth2_url_session_logout');
         // FIXME
         return true;
-    }
-
-    /**
-     * @return void
-     *
-     * @throws Exception
-     */
-    protected function onLogoutCallback()
-    {
-        if ($this->bypassLoginPage) {
-            \Tools::redirectLink($this->getProvider()->getRedirectUri());
-        }
     }
 }

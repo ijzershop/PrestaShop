@@ -87,7 +87,7 @@ class CustomProductCarrierRepository extends AbstractRepository implements Repos
         $this->generateFullQuery($langIso, true);
 
         $this->query
-            ->where('pc.id_carrier_reference IN(' . implode(',', array_map('intval', $contentIds ?: [-1])) . ')')
+            ->where("CONCAT(pc.id_product, '-', IFNULL(pc.id_carrier_reference, 0)) IN('" . implode("','", array_map('strval', $contentIds ?: [-1])) . "')")
             ->limit($limit)
         ;
 
@@ -127,11 +127,27 @@ class CustomProductCarrierRepository extends AbstractRepository implements Repos
     {
         $this->generateMinimalQuery(self::TABLE_NAME, 'pc');
 
+        $this->query->select("CONCAT(pc.id_product, '-', COALESCE(pc.id_carrier_reference, 0)) AS id_custom_product_carrier");
+
         $this->query
             ->where('pc.id_product = ' . (int) $idProduct)
             ->where('pc.id_shop = ' . parent::getShopContext()->id)
         ;
 
         return $this->runQuery(true);
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<mixed>
+     */
+    public function getAllAvailableProductCarrierIdsForProduct($productId)
+    {
+        $this->generateMinimalQuery('carrier', 'c');
+
+        $this->query->select("CONCAT('" . $productId . "', '-', c.id_carrier) AS custom_product_carrier_id");
+
+        return $this->runQuery();
     }
 }

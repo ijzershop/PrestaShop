@@ -20,7 +20,8 @@ use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleError;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedNamespace;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedNamespaceFactory;
-use Spaze\PHPStan\Rules\Disallowed\DisallowedNamespaceHelper;
+use Spaze\PHPStan\Rules\Disallowed\Normalizer\Normalizer;
+use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedNamespaceRuleErrors;
 
 /**
  * @implements Rule<Node>
@@ -28,22 +29,31 @@ use Spaze\PHPStan\Rules\Disallowed\DisallowedNamespaceHelper;
 class NamespaceUsages implements Rule
 {
 
-	/** @var DisallowedNamespaceHelper */
-	private $disallowedHelper;
+	/** @var DisallowedNamespaceRuleErrors */
+	private $disallowedNamespaceRuleErrors;
 
-	/** @var DisallowedNamespace[] */
+	/** @var list<DisallowedNamespace> */
 	private $disallowedNamespace;
+
+	/** @var Normalizer */
+	private $normalizer;
 
 
 	/**
-	 * @param DisallowedNamespaceHelper $disallowedNamespaceHelper
+	 * @param DisallowedNamespaceRuleErrors $disallowedNamespaceRuleErrors
 	 * @param DisallowedNamespaceFactory $disallowNamespaceFactory
-	 * @param array<array{namespace:string, message?:string, allowIn?:string[]}> $forbiddenNamespaces
+	 * @param Normalizer $normalizer
+	 * @param array<array{namespace:string, message?:string, allowIn?:list<string>}> $forbiddenNamespaces
 	 */
-	public function __construct(DisallowedNamespaceHelper $disallowedNamespaceHelper, DisallowedNamespaceFactory $disallowNamespaceFactory, array $forbiddenNamespaces)
-	{
-		$this->disallowedHelper  = $disallowedNamespaceHelper;
+	public function __construct(
+		DisallowedNamespaceRuleErrors $disallowedNamespaceRuleErrors,
+		DisallowedNamespaceFactory $disallowNamespaceFactory,
+		Normalizer $normalizer,
+		array $forbiddenNamespaces
+	) {
+		$this->disallowedNamespaceRuleErrors = $disallowedNamespaceRuleErrors;
 		$this->disallowedNamespace = $disallowNamespaceFactory->createFromConfig($forbiddenNamespaces);
+		$this->normalizer = $normalizer;
 	}
 
 
@@ -56,7 +66,7 @@ class NamespaceUsages implements Rule
 	/**
 	 * @param Node $node
 	 * @param Scope $scope
-	 * @return RuleError[]
+	 * @return list<RuleError>
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
@@ -108,7 +118,7 @@ class NamespaceUsages implements Rule
 		foreach ($namespaces as $namespace) {
 			$errors = array_merge(
 				$errors,
-				$this->disallowedHelper->getDisallowedMessage(ltrim($namespace, '\\'), $description ?? 'Namespace', $scope, $this->disallowedNamespace)
+				$this->disallowedNamespaceRuleErrors->getDisallowedMessage($this->normalizer->normalizeNamespace($namespace), $description ?? 'Namespace', $scope, $this->disallowedNamespace)
 			);
 		}
 

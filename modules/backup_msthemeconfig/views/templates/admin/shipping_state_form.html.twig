@@ -1,0 +1,203 @@
+<style>
+.shippingStatus table td, .shippingStatus table td b{
+  font-size: 1rem;
+}
+</style>
+<div class="w-100 shippingStatus">
+       <div class="card bg-info">
+         <div class="card-header">
+           <h3 id="showShippingStatusLabel">Verzending Status voor bestelling {{ reference }}</h3>
+         </div>
+         <div class="card-body">
+           <table class="table">
+             <tr>
+               <td class="text-nowrap  font-weight-bold" style="width:50%">Zending Nummer</td>
+               <td>{{ shipping_number | raw }}</td>
+             </tr>
+             <tr style="{% if scheduled_delivery_moment.planned_delivery_date is not empty %}display:table-row;{% else %}display:none;{% endif %}">
+               <td class="text-nowrap font-weight-bold" style="width:50%">Geschat levermoment</td>
+               <td>
+                 {{ date(scheduled_delivery_moment.planned_delivery_date)|date('d-m-Y') }} tussen {{ scheduled_delivery_moment.from }} - {{ scheduled_delivery_moment.to }}
+               </td>
+             </tr>
+             <tr>
+               <td colspan="2">
+                 <ul id="mainShippingStatusOrderHistory" class="mx-auto w-100 list-unstyled">
+                   {% for state in main_history %}
+                     <li><table width="100%">
+                         <tr style="background-color: {{ state.color }};color:#ffffff;" class="border-bottom">
+                           <td valign="top"><b>{{ state.name }} op {{ date(state.date)|date('d-m-Y') }}</b></td>
+                     </li>
+                   {% endfor %}
+                 </ul>
+               </td>
+             </tr>
+           </table>
+         </div>
+       </div>
+      </div>
+      </div>
+<br>
+      {# Collies Loop #}
+        {% for collie in collies %}
+          <div class="w-100 card p-2">
+          <h3>Collie {{ loop.index }}</h3>
+              <table class="table table-hover">
+                <tr style="{% if collie.scheduled_delivery_moment.planned_delivery_date is not empty %}display:table-row;{% else %}display:none;{% endif %}">
+                  <td class="text-nowrap font-weight-bold" style="width:50%">Geschat levermoment</td>
+                  <td>
+                    {{ date(collie.scheduled_delivery_moment.planned_delivery_date)|date('d-m-Y') }} tussen {{ collie.scheduled_delivery_moment.from }} - {{ collie.scheduled_delivery_moment.to }}
+                  </td>
+                </tr>
+                <tr style="{% if collie.delivered.delivered_on is not empty %}display:table-row;{% else %}display:none;{% endif %}">
+                  <td class="text-nowrap" style="width:50%">Geleverd op</td>
+                  <td>{{ date(collie.delivered.delivered_on)|date('d-m-Y') }} om {{ collie.delivered.delivered_at }}</td>
+                </tr>
+                <tr>
+                  <td class="text-nowrap  font-weight-bold" style="width:50%">Barcode</td>
+                  <td>{{ collie.barcode | raw }}</td>
+                </tr>
+                {% if collie.package.weight is not empty %}
+                <tr>
+                  <td class="text-nowrap" style="width:50%">Gewicht</td>
+                  <td>{{ collie.package.weight | raw  }}<sub>Kg</sub></td>
+                </tr>
+                {% endif %}
+                {% if collie.package.length is not empty %}
+                <tr>
+                  <td class="text-nowrap" style="width:50%">Formaat</td>
+                  <td>{{ collie.package.length | raw  }}<small>cm</small> X {{ collie.package.height | raw  }}<small>cm</small></td>
+                </tr>
+                {% endif %}
+                <tr style="{% if collie.delivered.delivered_on is not empty %}display:table-row;{% else %}display:none;{% endif %}" id="showShippingStatusSignatureBox">
+                  <td style="width:50%">Ontvanger</td>
+                  <td>
+                    <img src="data:image/jpeg;base64,{{collie.delivered.signature}}" class="w-100 border" alt="De handtekening van de ontvanger">
+                    <br>
+                    <strong class="w-100">Getekend door: {{ collie.delivered.signature_name }}</strong>
+                  </td>
+                </tr>
+              </table>
+
+            <ul id="showShippingStatusOrderHistory" class="mx-auto w-100 list-unstyled">
+              {% for key, state in collie.history %}
+                {% if state.from == 'api' %}
+                  <li>
+                    <table class="w-100">
+                      <tr class="border-bottom">
+                        <td valign="middle" width="68%"><b>{{ state.name }}</b> op <b>{{ date(state.date)|date('d-m-Y')  }} {{ state.time }}</b> bij depot: <b>{{ state.depot }}</b></td>
+                        <td>
+                          <button class="btn btn-link p-0 text-decoration-none" data-toggle="collapse" data-target="#col_{{loop.index}}_{{key}}" aria-expanded="true" aria-controls="col_{{loop.index}}">Depot adres <span class="material-icons">visibility</span></button>
+                          <br/>
+                          <i id="col_{{loop.index}}_{{key}}" class="collapse">
+                            {% if state.depot == '1000' %}
+                              TransMission Almere B.V.<br/>
+                              Wormerweg 6<br/>
+                              1311 XB Almere<br/>
+                              Tel: 036 5460460<br/>
+                              Fax: 036 5460470<br/>
+                              Email: info@transmissionalmere.nl<br/>
+                              <br/>
+                              Klantenservice:<br/>
+                              Email: klantenservice@transmissionalmere.nl<br/>
+                              Tel: 036-5460460<br/>
+                            {% elseif state.depot == '1600' %}
+                              Pyxis Distribution B.V.<br/>
+                              Veilingweg 1<br/>
+                              1696 AJ Oostblokker<br/>
+                              Tel: 0251 745030<br/>
+                              Email: klantenservice@pyxis-logistics.com
+                            {% elseif state.depot == '1700' %}
+                              TransMission Hoorn B.V.<br/>
+                              Veilingweg 1<br/>
+                              1695 GC Blokker<br/>
+                              Tel: 0251-745030<br/>
+                              Email: klantenservice@transmission-hoorn.nl
+                            {% elseif state.depot == '2700' %}
+                              Bode Scholten B.V.<br/>
+                              Fokkerstraat 9<br/>
+                              2722 NH Zoetermeer<br/>
+                              Tel: 079 3435000<br/>
+                              Fax: 079 3435001<br/>
+                            {% elseif state.depot == '3300' %}
+                              B.V. Centraal Bodehuis Wisman’s Expeditie<br/>
+                              Kelvinstraat 5<br/>
+                              3316 GM Dordrecht<br/>
+                              Tel: 078 6545222<br/>
+                              Fax: 078 6178700<br/>
+                              Email: klantenservice@wisman-transport.nl<br/>
+                            {% elseif state.depot == '4100' %}
+                              Van den Haak B.V.<br/>
+                              Poppenbouwing 19<br/>
+                              4191 NZ Geldermalsen<br/>
+                              Tel: 0345 585400<br/>
+                              Fax: 0345 581111<br/>
+                              Email: klantenservice@vdhaak.nl<br/>
+                            {% elseif state.depot == '4600' %}
+                              Koopman TransMission Bergen op Zoom<br/>
+                              Klein Molenbeekseweg 10<br/>
+                              4625 BW Bergen op Zoom<br/>
+                              Tel: 0164 273332<br/>
+                              Fax: 0164 273369<br/>
+                              Email: klantenservice@transmission-boz.nl<br/>
+                            {% elseif state.depot == '5200' %}
+                              Van Schijndel Opslag en Transport B.V.<br/>
+                              Industrieweg 1<br/>
+                              5268 BC Helvoirt<br/>
+                              Tel: 0411 642173<br/>
+                              Fax: 0411 642379<br/>
+                              Email: klantenservice@van-schijndel.nl<br/>
+                            {% elseif state.depot == '6000' %}
+                              TransMission Weert<br/>
+                              Graafschap Hornelaan 139a<br/>
+                              6001 AC Weert<br/>
+                              Tel: 0495 820940<br/>
+                              Email: klantenservice@transmission-weert.nl<br/>
+                            {% elseif state.depot == '7400' %}
+                              Zwier Veldhoen<br/>
+                              Brunswijkstraat 10<br/>
+                              7418 EM  Deventer<br/>
+                              Tel: 0570 503030<br/>
+                              Fax: 0570 628889<br/>
+                              Email: klantenservice@zwierveldhoen.nl<br/>
+                            {% elseif state.depot == '7500' %}
+                              HST TransMission B.V.<br/>
+                              Transportcentrum 2<br/>
+                              7547 RW Enschede<br/>
+                              Tel: 053 4800048<br/>
+                              Fax: 053 4800049<br/>
+                              Email: klantenservice@hst.nl<br/>
+                            {% elseif state.depot == '8400' %}
+                              Sluyter Logistics B.V.<br/>
+                              DR. A.F. Philipsweg 80<br/>
+                              9403 AD Assen<br/>
+                              Tel: 088 465 00 51<br/>
+                              Fax: 088 465 00 77<br/>
+                              Email: klantenservice.sla@sluyter-logistics.nl<br/>
+                            {% elseif state.depot == '9800' %}
+                              Koopman TransMission<br/>
+                              Van Starkenborghkanaal NZ 45<br/>
+                              9804 PB Noordhorn<br/>
+                              Tel: 0594 509560<br/>
+                              Email: transmission@koopman.nl
+                            {% endif %}
+                          </i>
+                        </td>
+                      </tr>
+                    </table>
+
+                    </li>
+                {% else %}
+                  <li><table>
+                      <tr class="border-bottom">
+                        <td valign="top" width="68%"><b>{{ state.name }} op {{ date(state.date)|date('d-m-Y') }}</b></td>
+                        <td></td>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+</div>
+        {% endfor %}
+
+
+

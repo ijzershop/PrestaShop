@@ -1,0 +1,9 @@
+doctrine:
+  orm:
+    mappings:
+      Pricemodifier:
+        is_bundle: false
+        type: annotation  # or whatever mapping type you use
+        dir: '%kernel.project_dir%/modules/pricemodifier/src/Entity'
+        prefix: 'Modernesmid\Module\Pricemodifier\Entity'
+        alias: Pricemodifier

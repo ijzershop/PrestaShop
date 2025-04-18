@@ -1,0 +1,20 @@
+
+
+{% block javascripts %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+  <div class="col">
+    <input  type="hidden" name="id_order" value="{{ id_order }}">
+    <input  type="hidden" name="id_cart" value="{{ id_cart }}">
+    <input  type="hidden" name="id_customer" value="{{ id_customer }}">
+    <input  type="hidden" name="id_message" value="{{ id_message }}">
+    <textarea placeholder="Voer hier het bericht voor op de pakbon in!" class="form-control" name="delivery_slip_message" id="delivery_slip_message" data-order-id="{{ id_order }}" cols="30" rows="5" maxlength="70">{{ message }}</textarea>
+  </div>
+
+</div>
+{% endblock %}
+

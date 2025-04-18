@@ -20,5 +20,5 @@ return array(
     'Console' => array($vendorDir . '/pear/console_getopt'),
     'Behat\\Gherkin' => array($vendorDir . '/behat/gherkin/src'),
     'Archive_Tar' => array($vendorDir . '/pear/archive_tar'),
-    '' => array($vendorDir . '/cssjanus/cssjanus/src', $vendorDir . '/pear/pear-core-minimal/src'),
+    '' => array($vendorDir . '/cssjanus/cssjanus/src'),
 );

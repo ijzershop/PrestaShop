@@ -1,0 +1,97 @@
+{% use "@PrestaShop/Admin/TwigTemplateForm/bootstrap_4_horizontal_layout.html.twig" %}
+<style>
+  .page-subtitle{
+    display:none;
+  }
+
+  .tab-btn{
+    margin: 5px 0;
+    padding:  5px;
+  }
+
+  .card{
+    width: 100%;
+    padding:0 15px 15px 15px;
+    display: inline-block;
+  }
+
+  .card-header{
+    text-align: right;
+    font-size: 1em;
+    border-bottom: 1px solid #cccccc;
+    font-weight: bold;
+  }
+
+  .star{
+    font-size: 1.6em;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  .card-sub-header{
+    color:#ffffff;
+    background-color: #0a6aa1;
+    font-size: 1.6em;
+    font-weight: bold;
+    line-height: 1.2em;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 5px;
+  }
+  .margin-top-1{
+    margin-top: 1em!important;
+  }
+  .margin-top-2{
+    margin-top: 2em!important;
+  }
+
+  button .toggle-panel{
+    color:#ffffff;
+    font-size: 1.6em;
+    line-height: 0;
+    text-decoration: none;
+  }
+
+  button .toggle-panel:before{
+    content: '-';
+  }
+
+  button.collapsed .toggle-panel:before{
+    content: '+';
+  }
+
+  .select2-container {
+    min-width: 100%!important;
+  }
+
+  .bootstrap .collapse.in {
+    display: block;
+  }
+</style>
+
+{% block content %}
+  <div class="panel">
+    <h3><i class="icon icon-credit-card"></i> {% trans %}Offerte intergratie{% endtrans %} <button class="btn btn-xs btn-link collapsed pull-right" data-toggle="collapse" data-target="#info-config" type="button" role="tab" aria-controls="info-config" aria-selected="true"> <i class="material-icons">visibility</i></button></h3>
+  </div>
+
+  <div class="panel">
+    <dl class="dl-horizontal">
+      <dt>Aanbiedingscode</dt>
+      <dd>{$offer.code}</dd>
+      <dt>Aanvrager</dt>
+      <dd>{$offer.name}</dd>
+      <dt>Emailadres</dt>
+      <dd>{$offer.email}</dd>
+      <dt>Datum aangemaakt</dt>
+      <dd>{$offer.date_add|date_format:"%d-%m-%Y"}</dd>
+      <dt>Verloop datum</dt>
+      <dd>{$offer.date_exp|date_format:"%d-%m-%Y %H:%m"}</dd>
+    </dl>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script type="application/javascript">
+
+  </script>
+{% endblock %}
+

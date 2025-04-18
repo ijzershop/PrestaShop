@@ -16,7 +16,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Modernesmid\Module\Pricemodifier\Controller\Admin\Classes\ConvertUploadedFile;
 
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Modernesmid\Module\Pricemodifier\EntityPrice\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;

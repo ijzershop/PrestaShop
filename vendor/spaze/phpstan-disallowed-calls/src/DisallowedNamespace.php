@@ -3,19 +3,24 @@ declare(strict_types = 1);
 
 namespace Spaze\PHPStan\Rules\Disallowed;
 
+use Spaze\PHPStan\Rules\Disallowed\Exceptions\NotImplementedYetException;
+
 class DisallowedNamespace implements Disallowed
 {
 
 	/** @var string */
 	private $namespace;
 
+	/** @var list<string> */
+	private $excludes;
+
 	/** @var string|null */
 	private $message;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private $allowIn;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private $allowExceptIn;
 
 	/** @var string|null */
@@ -27,21 +32,24 @@ class DisallowedNamespace implements Disallowed
 
 	/**
 	 * @param string $namespace
+	 * @param list<string> $excludes
 	 * @param string|null $message
-	 * @param string[] $allowIn
-	 * @param string[] $allowExceptIn
+	 * @param list<string> $allowIn
+	 * @param list<string> $allowExceptIn
 	 * @param string|null $errorIdentifier
 	 * @param string|null $errorTip
 	 */
 	public function __construct(
 		string $namespace,
+		array $excludes,
 		?string $message,
 		array $allowIn,
 		array $allowExceptIn,
 		?string $errorIdentifier,
 		?string $errorTip
 	) {
-		$this->namespace = ltrim($namespace, '\\');
+		$this->namespace = $namespace;
+		$this->excludes = $excludes;
 		$this->message = $message;
 		$this->allowIn = $allowIn;
 		$this->allowExceptIn = $allowExceptIn;
@@ -53,6 +61,15 @@ class DisallowedNamespace implements Disallowed
 	public function getNamespace(): string
 	{
 		return $this->namespace;
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	public function getExcludes(): array
+	{
+		return $this->excludes;
 	}
 
 
@@ -73,6 +90,18 @@ class DisallowedNamespace implements Disallowed
 	public function getAllowExceptIn(): array
 	{
 		return $this->allowExceptIn;
+	}
+
+
+	public function getAllowInCalls(): array
+	{
+		throw new NotImplementedYetException();
+	}
+
+
+	public function getAllowExceptInCalls(): array
+	{
+		throw new NotImplementedYetException();
 	}
 
 

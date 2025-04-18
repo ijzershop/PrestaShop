@@ -1,0 +1,28 @@
+{# **
+ * Price Modifier
+ * Copyright since 2021 JB Stoker and Contributors
+ * <JB Stoker> Property
+ *
+
+ * @author    JB Stoker <jelmer@ijzershop.nl>
+ * @copyright Since 2021 JB Stoker
+ * @license   https://opensource.org/licenses/MIT
+ * #}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content_header %}
+
+{% endblock %}
+
+{% block content %}
+
+  {% block price_modifications_list_panel %}
+      <div class="col-12">
+        {% include '@Modules/msthemeconfig/views/templates/admin/grid/grid_panel.html.twig' with {'grid': offerIntegrationGrid} %}
+      </div>
+  {% endblock %}
+{% endblock %}
+
+
+

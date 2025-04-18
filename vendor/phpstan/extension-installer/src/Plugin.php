@@ -8,8 +8,14 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Semver\Constraint\ConstraintInterface;
+use Composer\Semver\Constraint\MultiConstraint;
+use Composer\Semver\Intervals;
 use Composer\Util\Filesystem;
+use function array_key_exists;
 use function array_keys;
+use function class_exists;
+use function count;
 use function dirname;
 use function file_exists;
 use function file_put_contents;
@@ -19,6 +25,7 @@ use function is_file;
 use function ksort;
 use function md5;
 use function md5_file;
+use function sort;
 use function sprintf;
 use function strpos;
 use function var_export;
@@ -43,6 +50,9 @@ final class GeneratedConfig
 	public const EXTENSIONS = %s;
 
 	public const NOT_INSTALLED = %s;
+
+	/** @var string|null */
+	public const PHPSTAN_VERSION_CONSTRAINT = %s;
 
 	private function __construct()
 	{
@@ -97,9 +107,20 @@ PHP;
 		}
 		$notInstalledPackages = [];
 		$installedPackages = [];
+		$ignoredPackages = [];
 
 		$data = [];
 		$fs = new Filesystem();
+		$ignore = [];
+
+		$packageExtra = $composer->getPackage()->getExtra();
+
+		if (isset($packageExtra['phpstan/extension-installer']['ignore'])) {
+			$ignore = $packageExtra['phpstan/extension-installer']['ignore'];
+		}
+
+		$phpstanVersionConstraints = [];
+
 		foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
 			if (
 				$package->getType() !== 'phpstan-extension'
@@ -119,27 +140,60 @@ PHP;
 				continue;
 			}
 
+			if (in_array($package->getName(), $ignore, true)) {
+				$ignoredPackages[] = $package->getName();
+				continue;
+			}
+
 			$installPath = $installationManager->getInstallPath($package);
+			if ($installPath === null) {
+				continue;
+			}
 
 			$absoluteInstallPath = $fs->isAbsolutePath($installPath)
 				? $installPath
 				: getcwd() . DIRECTORY_SEPARATOR . $installPath;
+
+			$packageRequires = $package->getRequires();
+			$phpstanConstraint = null;
+			if (array_key_exists('phpstan/phpstan', $packageRequires)) {
+				$phpstanConstraint = $packageRequires['phpstan/phpstan']->getConstraint();
+				if ($phpstanConstraint->getLowerBound()->isZero()) {
+					continue;
+				}
+				if ($phpstanConstraint->getUpperBound()->isPositiveInfinity()) {
+					continue;
+				}
+				$phpstanVersionConstraints[] = $phpstanConstraint;
+			}
 
 			$data[$package->getName()] = [
 				'install_path' => $absoluteInstallPath,
 				'relative_install_path' => $fs->findShortestPath(dirname($generatedConfigFilePath), $absoluteInstallPath, true),
 				'extra' => $package->getExtra()['phpstan'] ?? null,
 				'version' => $package->getFullPrettyVersion(),
+				'phpstanVersionConstraint' => $phpstanConstraint !== null ? $this->constraintIntoString($phpstanConstraint) : null,
 			];
 
 			$installedPackages[$package->getName()] = true;
 		}
 
+		$phpstanVersionConstraint = null;
+		if (count($phpstanVersionConstraints) > 0 && class_exists(Intervals::class)) {
+			if (count($phpstanVersionConstraints) === 1) {
+				$multiConstraint = $phpstanVersionConstraints[0];
+			} else {
+				$multiConstraint = new MultiConstraint($phpstanVersionConstraints);
+			}
+			$phpstanVersionConstraint = $this->constraintIntoString(Intervals::compactConstraint($multiConstraint));
+		}
+
 		ksort($data);
 		ksort($installedPackages);
 		ksort($notInstalledPackages);
+		sort($ignoredPackages);
 
-		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true));
+		$generatedConfigFileContents = sprintf(self::$generatedFileTemplate, var_export($data, true), var_export($notInstalledPackages, true), var_export($phpstanVersionConstraint, true));
 		file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 		$io->write('<info>phpstan/extension-installer:</info> Extensions installed');
 
@@ -154,6 +208,21 @@ PHP;
 		foreach (array_keys($notInstalledPackages) as $name) {
 			$io->write(sprintf('> <comment>%s:</comment> not supported', $name));
 		}
+
+		foreach ($ignoredPackages as $name) {
+			$io->write(sprintf('> <comment>%s:</comment> ignored', $name));
+		}
+	}
+
+	private function constraintIntoString(ConstraintInterface $constraint): string
+	{
+		return sprintf(
+			'%s%s, %s%s',
+			$constraint->getLowerBound()->isInclusive() ? '>=' : '>',
+			$constraint->getLowerBound()->getVersion(),
+			$constraint->getUpperBound()->isInclusive() ? '<=' : '<',
+			$constraint->getUpperBound()->getVersion()
+		);
 	}
 
 }

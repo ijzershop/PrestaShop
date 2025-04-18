@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header">
+    Development
+  </div>
+  <div class="card-body">
+
+      {# Systeem opties #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Kortingen
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseSystem" aria-expanded="false" aria-controls="collapseSystem">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseSystem">
+
+{# 1e korting regel#}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            1e kortingsregel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_DISCOUNT_RULE_FIRST"
+                    class="w-100 form-control select2-data-input" data-type="discounts"
+                    id="MSTHEMECONFIG_DISCOUNT_RULE_FIRST">
+              {{ MSTHEMECONFIG_DISCOUNT_RULE_FIRST|raw }}
+            </select>
+            <p class="help-block">
+              1e kortingsregel die op de winkelwagen word toegepast
+            </p>
+          </div>
+        </div>
+{# 2e korting regel #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            2e kortingsregel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_DISCOUNT_RULE_SECOND"
+                    class="w-100 form-control select2-data-input" data-type="discounts"
+                    id="MSTHEMECONFIG_DISCOUNT_RULE_SECOND">
+              {{ MSTHEMECONFIG_DISCOUNT_RULE_SECOND|raw }}
+            </select>
+            <p class="help-block">
+              2e kortingsregel die op de winkelwagen word toegepast
+            </p>
+          </div>
+        </div>
+{# 3e korting regel #}
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            3e kortingsregel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_DISCOUNT_RULE_THIRD"
+                    class="w-100 form-control select2-data-input" data-type="discounts"
+                    id="MSTHEMECONFIG_DISCOUNT_RULE_THIRD">
+              {{ MSTHEMECONFIG_DISCOUNT_RULE_THIRD|raw }}
+            </select>
+            <p class="help-block">
+              3e kortingsregel die op de winkelwagen word toegepast
+            </p>
+          </div>
+        </div>
+
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 required text-right">
+            Geen kortingsregel
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_NO_DISCOUNT_RULE"
+                    class="w-100 form-control select2-data-input" data-type="discounts"
+                    id="MSTHEMECONFIG_NO_DISCOUNT_RULE">
+              {{ MSTHEMECONFIG_NO_DISCOUNT_RULE|raw }}
+            </select>
+            <p class="help-block">
+              Geen kortingsregel die op de winkelwagen word toegepast, als bij de balie of backoffice geen automatische winkelwagen korting gegeven moet worden. Deze word ook niet getoond op de factuur!
+            </p>
+          </div>
+        </div>
+
+
+
+
+
+      </div>
+
+  </div>
+</div>

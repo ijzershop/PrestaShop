@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Feature;
 use Modernesmid\Module\Pricemodifier\Controller\Admin\PriceModificationsAjaxController;
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Modernesmid\Module\Pricemodifier\EntityPrice\PriceModification;
 use Modernesmid\Module\Pricemodifier\Repository\PriceModificationRepository;
 use PDO;
 use Category;

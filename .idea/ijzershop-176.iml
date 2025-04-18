@@ -9,12 +9,11 @@
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_facetedsearch/tests/php" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/tools/build/tests/Unit" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/msthemeconfig/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_wirepayment/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/modules/ps_shoppingcart/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_themecusto/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/ps_imageslider/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/modules/mollie/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/modules/msthemeconfig/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/doctrine/collections" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/symfony/filesystem" />
@@ -22,16 +21,12 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/gamification/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/composer" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/ezyang/htmlpurifier" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/friendsofphp/php-cs-fixer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/maennchen/zipstream-php" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/markbaker/complex" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/markbaker/matrix" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/myclabs/php-enum" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/nikic/php-parser" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/phpoffice/phpspreadsheet" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/phpstan/extension-installer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/phpstan/phpstan" />
@@ -39,7 +34,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/prestashop/autoindex" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/prestashop/header-stamp" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/prestashop/php-dev-tools" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/http-client" />
@@ -59,7 +53,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php81" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/process" />
@@ -113,7 +106,6 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-ctype" />
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/modules/mollie_backup/vendor/vlucas/phpdotenv" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/php-http/message-factory" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/api-platform/core" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/beberlei/doctrineextensions" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/bjeavons/zxcvbn-php" />
@@ -211,7 +203,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-idn" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php73" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php80" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-php81" />
@@ -241,10 +232,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/manifest" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phar-io/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-cs-fixer/diff" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-common" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/reflection-docblock" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpdocumentor/type-resolver" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/extension-installer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-code-coverage" />
@@ -268,7 +255,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/spaze/phpstan-disallowed-calls" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/phpunit-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/theseer/tokenizer" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/guzzle" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/promises" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig/vendor/guzzlehttp/psr7" />
@@ -324,9 +310,15 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/string" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_mbo_backup/vendor/symfony/workflow" />
       <excludeFolder url="file://$MODULE_DIR$/modules/autoupgrade/vendor/segmentio/analytics-php" />
-      <excludeFolder url="file://$MODULE_DIR$/modules/ps_imageslider/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/modules/seoexpert_backup/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mollie/mollie-api-php" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/api-platform/core_compare" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/doctrine/lexer" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/myclabs/php-enum" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/php-cs-fixer/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/pricemodifier/vendor/symfony/polyfill-php73" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

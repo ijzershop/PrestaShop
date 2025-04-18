@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Spaze\PHPStan\Rules\Disallowed;
 
+use Spaze\PHPStan\Rules\Disallowed\Exceptions\NotImplementedYetException;
+
 class DisallowedConstant implements Disallowed
 {
 
@@ -12,10 +14,10 @@ class DisallowedConstant implements Disallowed
 	/** @var string|null */
 	private $message;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private $allowIn;
 
-	/** @var string[] */
+	/** @var list<string> */
 	private $allowExceptIn;
 
 	/** @var string|null */
@@ -28,8 +30,8 @@ class DisallowedConstant implements Disallowed
 	/**
 	 * @param string $constant
 	 * @param string|null $message
-	 * @param string[] $allowIn
-	 * @param string[] $allowExceptIn
+	 * @param list<string> $allowIn
+	 * @param list<string> $allowExceptIn
 	 * @param string|null $errorIdentifier
 	 * @param string|null $errorTip
 	 */
@@ -41,7 +43,7 @@ class DisallowedConstant implements Disallowed
 		?string $errorIdentifier,
 		?string $errorTip
 	) {
-		$this->constant = ltrim($constant, '\\');
+		$this->constant = $constant;
 		$this->message = $message;
 		$this->allowIn = $allowIn;
 		$this->allowExceptIn = $allowExceptIn;
@@ -73,6 +75,18 @@ class DisallowedConstant implements Disallowed
 	public function getAllowExceptIn(): array
 	{
 		return $this->allowExceptIn;
+	}
+
+
+	public function getAllowInCalls(): array
+	{
+		throw new NotImplementedYetException();
+	}
+
+
+	public function getAllowExceptInCalls(): array
+	{
+		throw new NotImplementedYetException();
 	}
 
 

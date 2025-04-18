@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-header">
+    Algemeen
+  </div>
+  <div class="card-body">
+
+      {#   Account Token   #}
+      <div class="form-group col-xs-12" data-tab-id="main_settings">
+        <br>
+        <label class="control-label col-xs-4 text-right">Account token</label>
+        <div class="col-xs-8">
+          <div class="input-group"><span class="input-group-addon"><i class="icon-key"></i></span>
+            <input type="text" name="MSTHEMECONFIG_TOKEN" id="MSTHEMECONFIG_TOKEN"
+                   value="{{ MSTHEMECONFIG_TOKEN }}" class="form-control">
+          </div>
+          <p class="help-block">Enter your token given by Moderne Smid BV</p>
+        </div>
+      </div>
+
+      {#  Favicon Prefix  #}
+      <div class="form-group col-xs-12" data-tab-id="main_settings">
+        <label class="control-label col-xs-4 text-right">Favicon prefix</label>
+        <div class="col-xs-8">
+          <input type="text" name="MSTHEMECONFIG_FAVICON_SHOP"
+                 id="MSTHEMECONFIG_FAVICON_SHOP" value="{{ MSTHEMECONFIG_FAVICON_SHOP }}"
+                 class="form-control">
+          <p class="help-block">Enter the favicon folder prefix</p>
+        </div>
+      </div>
+
+  </div>
+</div>

@@ -11,7 +11,7 @@ use PHPStan\Rules\RuleError;
 use PHPStan\ShouldNotHappenException;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCall;
 use Spaze\PHPStan\Rules\Disallowed\DisallowedCallFactory;
-use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
+use Spaze\PHPStan\Rules\Disallowed\RuleErrors\DisallowedCallsRuleErrors;
 
 /**
  * Reports on dynamically calling exit() & die().
@@ -22,24 +22,24 @@ use Spaze\PHPStan\Rules\Disallowed\DisallowedHelper;
 class ExitDieCalls implements Rule
 {
 
-	/** @var DisallowedHelper */
-	private $disallowedHelper;
+	/** @var DisallowedCallsRuleErrors */
+	private $disallowedCallsRuleErrors;
 
-	/** @var DisallowedCall[] */
+	/** @var list<DisallowedCall> */
 	private $disallowedCalls;
 
 
 	/**
-	 * @param DisallowedHelper $disallowedHelper
+	 * @param DisallowedCallsRuleErrors $disallowedCallsRuleErrors
 	 * @param DisallowedCallFactory $disallowedCallFactory
 	 * @param array $forbiddenCalls
 	 * @phpstan-param ForbiddenCallsConfig $forbiddenCalls
 	 * @noinspection PhpUndefinedClassInspection ForbiddenCallsConfig is a type alias defined in PHPStan config
 	 * @throws ShouldNotHappenException
 	 */
-	public function __construct(DisallowedHelper $disallowedHelper, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
+	public function __construct(DisallowedCallsRuleErrors $disallowedCallsRuleErrors, DisallowedCallFactory $disallowedCallFactory, array $forbiddenCalls)
 	{
-		$this->disallowedHelper = $disallowedHelper;
+		$this->disallowedCallsRuleErrors = $disallowedCallsRuleErrors;
 		$this->disallowedCalls = $disallowedCallFactory->createFromConfig($forbiddenCalls);
 	}
 
@@ -53,12 +53,13 @@ class ExitDieCalls implements Rule
 	/**
 	 * @param Exit_ $node
 	 * @param Scope $scope
-	 * @return RuleError[]
+	 * @return list<RuleError>
+	 * @throws ShouldNotHappenException
 	 */
 	public function processNode(Node $node, Scope $scope): array
 	{
 		$kind = $node->getAttribute('kind', Exit_::KIND_DIE) === Exit_::KIND_EXIT ? 'exit' : 'die';
-		return $this->disallowedHelper->getDisallowedMessage(null, $scope, $kind, $kind, $this->disallowedCalls);
+		return $this->disallowedCallsRuleErrors->get(null, $scope, $kind, $kind, null, $this->disallowedCalls);
 	}
 
 }

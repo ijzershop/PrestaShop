@@ -368,6 +368,7 @@ class DispatcherCore
      */
     public function dispatch()
     {
+
         $controller_class = '';
 
         // Get current controller

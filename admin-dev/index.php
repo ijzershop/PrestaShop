@@ -28,6 +28,9 @@ use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+error_reporting(E_ALL);
+ini_set('display_errors', 'on');
+
 
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
@@ -69,6 +72,8 @@ $apcLoader->register(true);
 if (_PS_MODE_DEV_) {
     Debug::enable();
 }
+
+
 require_once __DIR__.'/../app/AppKernel.php';
 
 $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
@@ -81,16 +86,18 @@ $catch = strpos($request->getRequestUri(), Api::API_BASE_PATH) !== false;
 
 try {
     require_once __DIR__.'/../autoload.php';
+
     $response = $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, $catch);
     $response->send();
     $kernel->terminate($request, $response);
 } catch (NotFoundHttpException $exception) {
+
     define('ADMIN_LEGACY_CONTEXT', true);
     // correct Apache charset (except if it's too late)
     if (!headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');
     }
-
     // Prepare and trigger LEGACY admin dispatcher
     Dispatcher::getInstance()->dispatch();
 }
+

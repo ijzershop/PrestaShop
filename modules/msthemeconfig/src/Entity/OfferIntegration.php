@@ -12,6 +12,7 @@ namespace MsThemeConfig\Entity;
 
 use DateTime;
 use Doctrine\DBAL\Types\DateTimeType;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -85,6 +86,7 @@ class OfferIntegration
 
     public function __construct()
     {
+        $this->date_upd = new DateTime();
     }
 
     /**
@@ -182,10 +184,11 @@ class OfferIntegration
     }
 
 
+// Fix the DateTime return types to allow null where appropriate
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getDateExp(): DateTime
+    public function getDateExp(): ?DateTime
     {
         return $this->date_exp;
     }
@@ -209,9 +212,11 @@ class OfferIntegration
         return $this->date_upd;
     }
 
+// Fix parameter type for setUpdatedAt
+
     /**
-     * @param DateTimeType $date_upd
-     *
+     * @param DateTime $date_upd
+     * @return OfferIntegration
      */
     public function setUpdatedAt(DateTime $date_upd)
     {

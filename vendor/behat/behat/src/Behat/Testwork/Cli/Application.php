@@ -95,7 +95,7 @@ final class Application extends BaseApplication
      *
      * @return integer 0 if everything went fine, or an error code
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         // xdebug's default nesting level of 100 is not enough
         if (extension_loaded('xdebug')
@@ -184,7 +184,7 @@ final class Application extends BaseApplication
         $extension = new ContainerLoader($this->extensionManager);
         $extension->load($container, $this->loadConfiguration($input));
         $container->addObjectResource($extension);
-        $container->compile();
+        $container->compile(true);
 
         return $container;
     }
@@ -223,7 +223,7 @@ final class Application extends BaseApplication
         return $this->getName();
     }
 
-    protected function configureIO(InputInterface $input, OutputInterface $output)
+    protected function configureIO(InputInterface $input, OutputInterface $output): void
     {
         if (true === $input->hasParameterOption(array('--colors'))) {
             $output->setDecorated(true);

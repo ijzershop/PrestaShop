@@ -4,21 +4,21 @@ declare(strict_types=1);
 namespace Modernesmid\Module\Pricemodifier\Controller\Admin;
 
 use DateTime;
-use Modernesmid\Module\Pricemodifier\Entity\PriceModification;
+use Db;
+use DbQuery;
+use Modernesmid\Module\Pricemodifier\EntityPrice\PriceModification;
 use ParseError;
 use PrestaShop\OAuth2\Client\Provider\PrestaShop;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
-use PrestaShop\PrestaShop\Adapter\Entity\DbQuery;
-use PrestaShop\PrestaShop\Adapter\Entity\Feature;
-use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopException;
-use PrestaShop\PrestaShop\Adapter\Entity\Product;
-use PrestaShop\PrestaShop\Adapter\Entity\Shop;
-use PrestaShop\PrestaShop\Adapter\Entity\Tools;
+use Feature;
+use PrestaShopException;
+use Product;
+use Shop;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  *
@@ -241,13 +241,22 @@ class PriceModificationsAjaxController extends FrameworkBundleAdminController
             'product_lang',
             'pl',
             'p.`id_product` = pl.`id_product`
-            AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
+    AND pl.`id_lang` = ' . (int)$id_lang . Shop::addSqlRestrictionOnLang('pl')
         );
         $sql->leftJoin('category_lang', 'cl', 'cl.`id_category` = p.`id_category_default`');
-        $sql->where('p.`id_product` NOT IN ('.$ids.')');
-        $sql->where('p.`id_category_default` NOT IN (6, 382)');
+
+        // Handle empty $ids case
+        if (empty($ids)) {
+            $sql->where('p.`id_product` > 0'); // Alternative condition when $ids is empty
+        } else {
+            $sql->where('p.`id_product` NOT IN ('.$ids.')');
+        }
+
+        $sql->where('p.`id_category_default` NOT IN(6, 382)');
         $sql->where('p.`reference` != "CP"');
         $sql->groupBy('p.`id_product`');
+
+        // Store the result
         $db->executeS($sql);
 
         $totalRecords = $db->numRows();

@@ -1,0 +1,292 @@
+.column-customer a, .column-reference {
+  color: #000 !important;
+  font-weight: 700;
+  font-size: 1.2em !important;
+  text-transform: capitalize
+}
+.cc-koopman input {
+  display: none;
+  z-index: 999
+}
+.cc-koopman.btn {
+  padding: 5px;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.koopman-current-status-badge {
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 5px 5px 0 0;
+  width: 100% !important;
+  padding: 1rem .5rem;
+}
+.koopman-current-status-badge .type-cc {
+  width: 100% !important
+}
+.koopman-current-status-badge-label {
+  font-size: .7rem
+}
+.koopman-current-status-badge.status_10 {
+  color: #fff
+}
+.reverse {
+  transform: rotate(180deg);
+}
+.disabled-btn{
+  opacity: .5;
+}
+.collie-table td.disabled {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+  opacity: .5;
+}
+.temp_disabled {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+  animation-duration: 2s;
+  animation-iteration-count: 100;
+  animation-name: rotatingDisabled;
+  animation-timing-function: linear;
+}
+.temp_disabled_row {
+  cursor: not-allowed!important;
+  pointer-events: none!important;
+}
+
+@keyframes rotatingDisabled {
+  from { transform: rotate(  0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.calculated_weight{
+  font-size: 1.2rem;
+  position: absolute;
+  right: 20px;
+}
+.qty-weight-button{
+  width: 52px;
+  display: inline-block;
+  height: 55px;
+  line-height: 48px;
+  font-size: 28px;
+  border: transparent;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('/upload/icon-weight.svg');
+}
+.qty-button {
+  width: 52px;
+  display: inline-block;
+  height: 38px;
+  line-height: 36px;
+  font-size: 40px;
+}
+.collie-input{
+  font-size: 24px;
+  font-weight: bold;
+}
+.collie-type-footer{
+  border-top: 1px solid black;
+  padding: .9em;
+
+}
+.fancybox-close{
+  position: fixed;
+  top: 8px;
+  right: 10px;
+}
+.fancybox-inner{
+  overflow: inherit!important;
+}
+.collie-nav .page-item .page-link {
+  margin: 4px;
+  z-index: 1;
+  color: #fff;
+  background-color: #ffffff!important;
+  border-color: #007bff;
+}
+.collie-nav .page-item.active .page-link img {
+  filter: invert(0);
+}
+.collie-nav .page-item.active .page-link {
+  z-index: 1;
+  background-color: #007bff!important;
+  border-color: #007bff;
+}
+.collie-nav .page-item .page-link img{
+  width: 60px;
+  height: 60px;
+}
+.collie-nav .page-item .page-link {
+  border-radius: 50% !important;
+  height: 6.5rem;
+  width: 6.5rem;
+  line-height: 4.8rem;
+  text-align: center;
+}
+.total_collies.input-group,
+.total_weight.input-group{
+  max-width: 400px;
+}
+.total_collies.input-group .btn{
+  background-color: #3d57ae !important;
+  border: 1px solid #3d57ae;
+}
+.total_weight.input-group .btn{
+  background-color: #028102 !important;
+  border: 1px solid #028102;
+}
+.total_collies.input-group .btn,
+.total_weight.input-group .btn{
+  border-radius: 50% !important;
+  height: 4rem;
+  line-height: 2.8rem;
+  font-size: 2rem;
+  width: 4rem;
+}
+.total_collies.input-group input.form-control,
+.total_weight.input-group input.form-control{
+  border: none;
+  text-align: center;
+  font-size: 2rem;
+  max-width: 200px;
+}
+.total_collies.input-group label,
+.total_weight.input-group label{
+  line-height: 2.8rem;
+  width: 60px !important;
+  font-weight: bold;
+}
+tfoot tr.footer{
+  border-width: 2px 0 2px 0;
+  border-color: #0c3b44;
+  border-style: solid;
+}
+.collie-type-footer button{
+  border-radius: 50% !important;
+  height: 10em;
+  width: 10em;
+}
+.print-button.disabled, .dropdown-dropdown-pallet-button.disabled{
+  opacity: .5;
+}
+.print-button{
+  margin: 5px 0;
+  width: 10em;
+  height: 10em;
+  line-height: 1em;
+  border-radius: 50% !important;
+  background-color: #3d57ae !important;
+  border-style: double;
+  border-width: 10px;
+  border-color: #ffffff !important;
+  display: inline-block;
+}
+.dropdown-pallet-button{
+  margin: 5px 0;
+  width: 6.8em;
+  height: 6.8em;
+  line-height: 1em;
+  border-radius: 50% !important;
+  background-color: #3d57ae !important;
+  display: inline-block;
+
+}
+.dropdown-pallet-button img{
+  width: 2.5em;
+  height: 2.5em;
+  fill: #ffffff !important;
+}
+.dropleft .dropdown-menu{
+  border-radius: 0px;
+  box-shadow: none !important;
+  background-color: #ffffff;
+  border:2px solid #cccccc;
+  min-width:43rem;
+  height: 10rem;
+  padding:5px 0;
+}
+
+.dropleft .dropdown-menu > .dropdown-item{
+  height: 8rem;
+  width: 8rem;
+  border-radius: 50% !important;
+  background-color: #3d57ae !important;
+  padding: 2.7rem 0;
+  text-align: center;
+  line-height: 1.2rem;
+  color: #ffffff;
+  border-style: double;
+  border-width: 10px;
+  border-color: #ffffff !important;
+  margin: 10px 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: inline-block;
+}
+.dropleft .dropdown-menu > .dropdown-item:first-child{
+  background-color: #f54c3e !important;
+}
+
+.print-button img, .dropdown-pallet-button img{
+  width: 3.5em;
+  height: 3.5em;
+  fill: #ffffff !important;
+}
+.cc-koopman label{
+  padding: 40% 0;
+  font-size: .8rem;
+  cursor: pointer;
+}
+.cc-koopman{
+  width: 6.8em;
+  height: 6.8em;
+  line-height: 1em;
+  border-radius: 50%!important;
+  font-weight: bold;
+  cursor: pointer;
+}
+.collie-table td{
+  padding:0!important;
+}
+.afgehaald-btn {
+  background-color: #028102;
+  color: #ffffff;
+}
+.aftehalen-btn {
+  background-color: #caff82!important;
+  color: #ffffff;
+}
+.backorder-btn{
+  background-color: #3498D8!important;
+  color: #ffffff;
+}
+.workshop-btn{
+  background-color: #70b580!important;
+  color: #ffffff;
+}
+.toegevoegd-btn{
+  background-color: #ffffff!important;
+  border: 1px solid #000000;
+  color: #000000;
+}
+.beingprepared-btn label{
+  padding: 30% 0!important;
+  width: 5rem !important;
+  font-size: .8rem;
+}
+.beingprepared-btn{
+  background-color: #ffc107!important;
+  color: #ffffff;
+}
+.collie-table tbody{
+  height: 485px!important;
+}
+.collie-table tfoot .input-group.total_collies input{
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.collie-table tfoot .btn{
+  user-select: none;
+}

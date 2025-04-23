@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,9 +9,12 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class ChannableCronModuleFrontController extends ModuleFrontController
 {
@@ -27,26 +30,27 @@ class ChannableCronModuleFrontController extends ModuleFrontController
     public function postProcess()
     {
         if (!Tools::getValue('key')) {
-            die('Not authenticated');
+            header('HTTP/1.1 401 Unauthorized');
+            exit('Not authenticated');
         }
         if (!WebserviceKey::keyExists(Tools::getValue('key')) || !WebserviceKey::isKeyActive(Tools::getValue('key'))) {
-            die('Not authenticated');
+            header('HTTP/1.1 401 Unauthorized');
+            exit('Not authenticated');
         }
 
         if (Tools::getValue('buildCategories') == '1') {
-            if ((int)Tools::getValue('maxCategories') > 0) {
-                self::$maxCategories = (int)Tools::getValue('maxCategories');
+            if ((int) Tools::getValue('maxCategories') > 0) {
+                self::$maxCategories = (int) Tools::getValue('maxCategories');
             }
             $this->buildCategories();
-
         } elseif (Tools::getValue('buildProductsAssocs') == '1') {
-            if ((int)Tools::getValue('maxAssocs') > 0) {
-                self::$maxAssocs = (int)Tools::getValue('maxAssocs');
+            if ((int) Tools::getValue('maxAssocs') > 0) {
+                self::$maxAssocs = (int) Tools::getValue('maxAssocs');
             }
             $this->buildProductAssocs();
         } elseif (Tools::getValue('buildProductsJson') == '1') {
-            if ((int)Tools::getValue('maxProducts') > 0) {
-                self::$maxProducts = (int)Tools::getValue('maxProducts');
+            if ((int) Tools::getValue('maxProducts') > 0) {
+                self::$maxProducts = (int) Tools::getValue('maxProducts');
             }
             $this->buildProductsJson();
         } elseif (Tools::getValue('resetRunningQueue') == '1') {
@@ -54,7 +58,7 @@ class ChannableCronModuleFrontController extends ModuleFrontController
         } else {
             $this->module->sendProductUpdate();
         }
-        exit();
+        exit;
     }
 
     /**
@@ -63,19 +67,19 @@ class ChannableCronModuleFrontController extends ModuleFrontController
      */
     protected function buildProductAssocs()
     {
-        ChannableCache::fetchCaches('CAT_TREE_', self::$cache_lifetime, (int)Context::getContext()->language->id);
-        echo date('Y-m-d H:i:s') . ' Fetching categories' . '<br>';
+        ChannableCache::fetchCaches('CAT_TREE_', self::$cache_lifetime, (int) Context::getContext()->language->id);
+        echo date('Y-m-d H:i:s') . ' Fetching categories<br>';
         $allCategories = [];
-        $allCategoriesTmp = Channable::getSimpleCategoriesWithParentInfos((int)Context::getContext()->language->id);
+        $allCategoriesTmp = Channable::getSimpleCategoriesWithParentInfos((int) Context::getContext()->language->id);
         foreach ($allCategoriesTmp as $allCategoryTmp) {
             if (!isset(ChannableCache::$cachedObjectsExist[self::$cache_lifetime]['CAT_TREE_' . $allCategoryTmp['id_category']])) {
                 $allCategories[$allCategoryTmp['id_category']] = $allCategoryTmp;
             }
         }
         ChannableCache::fetchCaches('PROD_CATS_', self::$cache_lifetime);
-        echo date('Y-m-d H:i:s') . ' Fetching products' . '<br>';
+        echo date('Y-m-d H:i:s') . ' Fetching products<br>';
         $allProducts = [];
-        $allProductsTmp = Product::getSimpleProducts((int)$this->context->language->id, $this->context);
+        $allProductsTmp = Product::getSimpleProducts((int) $this->context->language->id, $this->context);
         foreach ($allProductsTmp as $allProductTmp) {
             if (!isset(ChannableCache::$cachedObjectsExist[self::$cache_lifetime]['PROD_CATS_' . $allProductTmp['id_product']])) {
                 $allProducts[$allProductTmp['id_product']] = $allProductTmp;
@@ -86,31 +90,31 @@ class ChannableCronModuleFrontController extends ModuleFrontController
             if ($count > self::$maxAssocs) {
                 break;
             }
-            $productCategoriesCache = ChannableCache::getByKey('PROD_CATS_' . $id_product, self::$cache_lifetime, true, (int)Context::getContext()->language->id);
-            if ((int)$productCategoriesCache->id == 0) {
+            $productCategoriesCache = ChannableCache::getByKey('PROD_CATS_' . $id_product, self::$cache_lifetime, true, (int) Context::getContext()->language->id);
+            if ((int) $productCategoriesCache->id == 0) {
                 $categories_ids = $this->fetchCategories($id_product);
-                $product_categories_raw_titles = array();
-                $product_categories_raw = array();
-                foreach (explode(",", $categories_ids) as $category_id) {
-                    $treeCache = ChannableCache::getByKey('CAT_TREE_' . (int)$category_id, self::$cache_lifetime, true, (int)Context::getContext()->language->id);
-                    if ((int)$treeCache->id > 0) {
+                $product_categories_raw_titles = [];
+                $product_categories_raw = [];
+                foreach (explode(',', $categories_ids) as $category_id) {
+                    $treeCache = ChannableCache::getByKey('CAT_TREE_' . (int) $category_id, self::$cache_lifetime, true, (int) Context::getContext()->language->id);
+                    if ((int) $treeCache->id > 0) {
                         $product_categories_raw_title = $treeCache->cache_value;
                     } else {
-                        $defaultTree = $this->getParentsCategories((int)$category_id, $allCategories);
-                        $tmp = array();
+                        $defaultTree = $this->getParentsCategories((int) $category_id, $allCategories);
+                        $tmp = [];
                         foreach ($defaultTree as $cnt => $d) {
                             $tmp[] = $d['name'];
                         }
-                        $treeCache->cache_value = join(" > ", $tmp);
+                        $treeCache->cache_value = join(' > ', $tmp);
                         $treeCache->save();
-                        $product_categories_raw_title = join(" > ", $tmp);
+                        $product_categories_raw_title = join(' > ', $tmp);
                     }
                     $product_categories_raw_titles[] = $product_categories_raw_title;
-                    $product_categories_raw[] = array(
-                        'id' => (int)$category_id,
+                    $product_categories_raw[] = [
+                        'id' => (int) $category_id,
                         'tree' => $product_categories_raw_title,
-                        'found' => false
-                    );
+                        'found' => false,
+                    ];
                 }
 
                 foreach ($product_categories_raw as $pcr_key => $product_category_raw) {
@@ -123,7 +127,7 @@ class ChannableCronModuleFrontController extends ModuleFrontController
                     }
                 }
 
-                $categories = array();
+                $categories = [];
                 if (sizeof($product_categories_raw) > 0) {
                     foreach ($product_categories_raw as $product_category_raw) {
                         $categories[] = $product_category_raw['tree'];
@@ -132,7 +136,7 @@ class ChannableCronModuleFrontController extends ModuleFrontController
                 $productCategoriesCache->cache_value = json_encode($categories);
                 $productCategoriesCache->save();
                 echo date('Y-m-d H:i:s') . ' [' . $count . '] Saving ' . $id_product . '<br>';
-                $count++;
+                ++$count;
             }
         }
         echo date('Y-m-d H:i:s') . ' finished';
@@ -144,10 +148,10 @@ class ChannableCronModuleFrontController extends ModuleFrontController
      */
     protected function buildCategories()
     {
-        ChannableCache::fetchCaches('CAT_TREE_', self::$cache_lifetime, (int)Context::getContext()->language->id);
-        echo date('Y-m-d H:i:s') . ' Fetching categories' . '<br>';
+        ChannableCache::fetchCaches('CAT_TREE_', self::$cache_lifetime, (int) Context::getContext()->language->id);
+        echo date('Y-m-d H:i:s') . ' Fetching categories<br>';
         $allCategories = [];
-        $allCategoriesTmp = Channable::getSimpleCategoriesWithParentInfos((int)Context::getContext()->language->id);
+        $allCategoriesTmp = Channable::getSimpleCategoriesWithParentInfos((int) Context::getContext()->language->id);
         foreach ($allCategoriesTmp as $allCategoryTmp) {
             if (!isset(ChannableCache::$cachedObjectsExist[self::$cache_lifetime]['CAT_TREE_' . $allCategoryTmp['id_category']])) {
                 $allCategories[$allCategoryTmp['id_category']] = $allCategoryTmp;
@@ -158,17 +162,17 @@ class ChannableCronModuleFrontController extends ModuleFrontController
             if ($count > self::$maxCategories) {
                 break;
             }
-            $treeCache = ChannableCache::getByKey('CAT_TREE_' . $id_category, self::$cache_lifetime, true, (int)Context::getContext()->language->id);
-            if ((int)$treeCache->id == 0) {
+            $treeCache = ChannableCache::getByKey('CAT_TREE_' . $id_category, self::$cache_lifetime, true, (int) Context::getContext()->language->id);
+            if ((int) $treeCache->id == 0) {
                 $tree = $this->getParentsCategories($id_category, $allCategories);
-                $tmp = array();
+                $tmp = [];
                 foreach ($tree as $cnt => $d) {
                     $tmp[] = $d['name'];
                 }
-                $treeCache->cache_value = join(" > ", $tmp);
+                $treeCache->cache_value = join(' > ', $tmp);
                 $treeCache->save();
                 echo date('Y-m-d H:i:s') . ' [' . $count . '] Saving ' . $id_category . '<br>';
-                $count++;
+                ++$count;
             }
         }
         echo date('Y-m-d H:i:s') . ' finished';
@@ -180,7 +184,7 @@ class ChannableCronModuleFrontController extends ModuleFrontController
      */
     protected function buildProductsJson()
     {
-        $webservice = new WebserviceKey((int)Configuration::get('CHANNABLE_API_ID'));
+        $webservice = new WebserviceKey((int) Configuration::get('CHANNABLE_API_ID'));
         $products = ChannableProductsQueue::getNonRunningQueue(self::$maxProducts);
         $count = 0;
         foreach ($products as $prod) {
@@ -190,12 +194,12 @@ class ChannableCronModuleFrontController extends ModuleFrontController
             $feed_url = $this->context->link->getModuleLink(
                 'channable',
                 'feed',
-                array(
+                [
                     'key' => $webservice->key,
                     'rebuild_cache' => 1,
                     'manual_product_id' => $prod['id_product'],
-                    'limit' => '0,100'
-                )
+                    'limit' => '0,100',
+                ]
             );
             $data = $this->get_content(
                 $feed_url
@@ -214,14 +218,14 @@ class ChannableCronModuleFrontController extends ModuleFrontController
                                 'PRODUCT_JSON_' . $json['id'],
                                 false,
                                 true,
-                                (int)Context::getContext()->language->id
+                                (int) Context::getContext()->language->id
                             );
                             $cacheObject->cache_value = json_encode(
                                 $json
                             );
                             $cacheObject->save();
                             echo date('Y-m-d H:i:s') . ' [' . $count . '] Cached ' . $json['id'] . '<br>';
-                            $count++;
+                            ++$count;
                         } else {
                             echo date('Y-m-d H:i:s') . ' [' . $count . '] No data, product not valid for feed: ' . $prod['id_product'] . '<br>';
                         }
@@ -242,16 +246,16 @@ class ChannableCronModuleFrontController extends ModuleFrontController
         echo date('Y-m-d H:i:s') . ' finished';
     }
 
-
     /**
      * @param $id_category
      * @param $allCategories
+     *
      * @return array
      */
     protected function getParentsCategories($id_category, $allCategories)
     {
-        $cache = ChannableCache::getByKey('PARENTS_CAT_' . (int)$id_category, self::$cache_lifetime, true, (int)Context::getContext()->language->id);
-        if ((int)$cache->id > 0) {
+        $cache = ChannableCache::getByKey('PARENTS_CAT_' . (int) $id_category, self::$cache_lifetime, true, (int) Context::getContext()->language->id);
+        if ((int) $cache->id > 0) {
             return json_decode($cache->cache_value, true);
         } else {
             $tree = [];
@@ -261,43 +265,49 @@ class ChannableCronModuleFrontController extends ModuleFrontController
             while ($id_parent > 1 && $count < 100) {
                 $tree[] = $allCategories[$id_parent];
                 $id_parent = $allCategories[$id_parent]['id_parent'];
-                $count++;
+                ++$count;
             }
             $tree = array_reverse($tree);
             $cache->cache_value = json_encode($tree);
             $cache->save();
+
             return $tree;
         }
     }
 
     /**
      * @param $id_product
+     *
      * @return string
      */
     protected function fetchCategories($id_product)
     {
-        $cache = ChannableCache::getByKey('PRODUCTS_CAT_' . (int)$id_product, self::$cache_lifetime, true, (int)Context::getContext()->language->id);
+        $cache = ChannableCache::getByKey('PRODUCTS_CAT_' . (int) $id_product, self::$cache_lifetime, true, (int) Context::getContext()->language->id);
         if ($cache->id > 0) {
             return $cache->cache_value;
         } else {
-            $categories = ProductCore::getProductCategories((int)$id_product);
-            $cache->cache_value = join(",", $categories);
+            $categories = ProductCore::getProductCategories((int) $id_product);
+            $cache->cache_value = join(',', $categories);
             $cache->save();
+
             return $cache->cache_value;
         }
     }
 
     /**
      * @param $URL
+     *
      * @return bool|string
      */
-    protected function get_content($URL){
+    protected function get_content($URL)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_URL, $URL);
         $data = curl_exec($ch);
         curl_close($ch);
+
         return $data;
     }
 }

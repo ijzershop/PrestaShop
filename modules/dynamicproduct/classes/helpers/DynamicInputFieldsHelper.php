@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -185,5 +185,39 @@ class DynamicInputFieldsHelper
         }
 
         return $content;
+    }
+
+    /**
+     * @param int $field_position
+     * @param int $id_group
+     * @param int $id_step
+     *
+     * @return float|int
+     */
+    public static function getFieldPosition($field_position, $id_group, $id_step)
+    {
+        $group_position = 0;
+        $group_step = 0;
+        $step_position = 0;
+        if ($id_group) {
+            $group_position = (int) \Db::getInstance()->getValue(
+                'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . $id_group
+            );
+            $group_step = (int) \Db::getInstance()->getValue(
+                'SELECT id_step FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . $id_group
+            );
+        }
+        if ($id_step) {
+            $step_position = (int) \Db::getInstance()->getValue(
+                'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . $id_step
+            );
+        }
+        if ($group_step) {
+            $step_position = (int) \Db::getInstance()->getValue(
+                'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . (int) $group_step
+            );
+        }
+
+        return $field_position + $group_position * 100 + $step_position * 10000;
     }
 }

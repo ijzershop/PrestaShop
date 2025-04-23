@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -55,14 +55,14 @@ class DynamicGroupsHelper
                         $new_group['id_control_field'] = 0;
                         $new_group['id_source_group'] = $group['id'];
                         $new_group['group']['label'] .= " ($i)";
-                        $fields = $new_group['fields'];
+                        $group_fields = $new_group['fields'];
                         $new_group_fields = [];
-                        foreach ($fields as $field) {
+                        foreach ($group_fields as $field) {
                             $new_field = array_merge([], $field);
-                            //                            $new_field['id'] = 10000 * $i + $new_field['id'];
+                            // $new_field['id'] = 10000 * $i + $new_field['id'];
                             $new_field['id_group'] = $id_group;
                             $new_field['name'] .= "_$i";
-                            $new_field['duplicated'] = true;
+                            $new_field['duplicated'] = 1;
                             $new_group_fields[] = $new_field;
                             $new_fields[] = $new_field;
                         }
@@ -70,9 +70,20 @@ class DynamicGroupsHelper
                         $grouped_fields[$id_group] = $new_group;
                     }
                 }
+
+                $field_names = array_keys($fields);
+                foreach ($group['fields'] as $field) {
+                    foreach ($field_names as $field_name) {
+                        if (preg_match('/^' . $field['name'] . '_(\d+)$/', $field_name, $m)) {
+                            if (isset($m[1]) && $m[1] > $value) {
+                                unset($fields[$field_name]);
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        return [$grouped_fields, $new_fields];
+        return [$grouped_fields, $fields, $new_fields];
     }
 }

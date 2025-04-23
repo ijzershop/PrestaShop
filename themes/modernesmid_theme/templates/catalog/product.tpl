@@ -393,100 +393,148 @@
     let carrierPickupTime = "{{Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME', Context::getContext()->language->id)}}";
     let carrierPickupTimeSkippedDates = "{{Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES', Context::getContext()->language->id)}}";
 
-    function setTimeUntilShipping(){
-      // Get current date and time
-      const now = new Date();
+    // Parse the skipped dates once, not on every interval
+    let freedayArray = carrierPickupTimeSkippedDates.split(', ');
 
-      let fixedString = carrierPickupTimeSkippedDates.replace("/(\s+|\+|\")/", "");
-      const freedayArray = fixedString.split(', ');
+    // Parse the pickup time once
+    var timeArray = carrierPickupTime.split(':');
+    var targetHour = timeArray.length === 3 ? parseInt(timeArray[0], 10) : 16;
+    var targetMinute = timeArray.length === 3 ? parseInt(timeArray[1], 10) : 0;
+    var targetSecond = timeArray.length === 3 ? parseInt(timeArray[2], 10) : 0;
 
-      let targetDate = new Date();
-      let timeArray = carrierPickupTime.split(':')
-      if(timeArray.length === 3){
+    // Cache DOM elements
+    var daysElement = document.getElementById('next-shipping-time-days');
+    var hoursElement = document.getElementById('next-shipping-time-hours');
+    var minutesElement = document.getElementById('next-shipping-time-minutes');
 
-        targetDate.setHours(timeArray[0]);
-        targetDate.setMinutes(timeArray[1]);
-        targetDate.setSeconds(timeArray[2]);
+    // Track previous values to avoid unnecessary DOM updates
+    var prevDaysText = '';
+    var prevHoursText = '';
+    var prevMinutesText = '';
+
+    function formatDateForComparison(date) {
+      return date.getDate().toString().padStart(2, '0') + '/' + (date.getMonth()+1).toString().padStart(2, '0') + '/' + date.getFullYear();
+    }
+
+    function isSkippedDate(date) {
+      let dateString = formatDateForComparison(date);
+
+      if(freedayArray.indexOf(dateString) !== -1){
+        return true;
       } else {
-        targetDate.setHours(16);
-        targetDate.setMinutes(0);
-        targetDate.setSeconds(0);
+        return false;
       }
+    }
 
+    function getNextValidShippingDate() {
+      var now = new Date();
+      var targetDate = new Date(now);
+      // Set target time
+      targetDate.setHours(targetHour, targetMinute, targetSecond, 0);
 
-      // Skip Saturdays and Sundays
-      while(targetDate.getDay() === 0 ||
-       targetDate.getDay() === 6 ||
-       freedayArray.indexOf((targetDate.getMonth()+1)+'/'+targetDate.getDate()+'/'+targetDate.getFullYear()) > -1 ||
-      (targetDate.getTime() - now.getTime()) < 0)
-      {
+      // If target time has already passed today, move to next day
+      if (targetDate.getTime() <= now.getTime()) {
         targetDate.setDate(targetDate.getDate() + 1);
       }
 
-      // get total seconds between the times
-      let difference = targetDate.getTime() - now.getTime();
+      // Skip weekends
+      if (targetDate.getDay() === 0) { // Sunday
+        targetDate.setDate(targetDate.getDate() + 1);
+      }
+      if (targetDate.getDay() === 6) { // Saturday
+        targetDate.setDate(targetDate.getDate() + 2);
+      }
 
+      // Skip holidays
+      while (isSkippedDate(targetDate)) {
+        targetDate.setDate(targetDate.getDate() + 1);
 
-      let diff = Math.abs(difference) / 1000;
-      // calculate (and subtract) whole days
-      let days = Math.floor(diff / 86400);
-      // calculate (and subtract) whole hours
-      let hours = Math.floor(diff / 3600) % 24;
-      // calculate (and subtract) whole minutes
-      let minutes = Math.floor(diff / 60) % 60;
-
-      let daysText = '';
-      let hoursText = '';
-      let minutesText = '';
-
-      if(days === 0){
-        daysText = '';
-      } else {
-        if(days === 1){
-          daysText = days + ' Dag ';
-        } else {
-          daysText = days + ' Dagen ';
-          if(minutes === 0){
-            daysText += ' en '
-          }
+        // Check for weekends again after moving the date
+        if (targetDate.getDay() === 0) { // Sunday
+          targetDate.setDate(targetDate.getDate() + 1);
+        }
+        if (targetDate.getDay() === 6) { // Saturday
+          targetDate.setDate(targetDate.getDate() + 2);
         }
       }
 
-      if(hours === 0){
-        hoursText = '';
-      } else {
-        if(hours === 1){
-          hoursText = hours + ' uur ';
-        } else {
-          hoursText = hours + ' uren ';
+
+      return targetDate;
+    }
+
+    function formatTimeDifference(diff) {
+      // Calculate days, hours, minutes
+      var days = Math.floor(diff / 86400);
+      var hours = Math.floor((diff % 86400) / 3600);
+      var minutes = Math.floor((diff % 3600) / 60);
+
+      // Format text with proper pluralization
+      var daysText = '';
+      var hoursText = '';
+      var minutesText = '';
+
+      if (days > 0) {
+        daysText = days + ' ' + (days === 1 ? 'Dag' : 'Dagen') + ' ';
+        if (hours === 0 && minutes > 0) {
+          daysText += 'en ';
         }
-        if(minutes > 0){
+      }
+
+      if (hours > 0) {
+        hoursText = hours + ' ' + (hours === 1 ? 'uur' : 'uren') + ' ';
+        if (minutes > 0) {
           hoursText += 'en ';
         }
       }
 
-      if(minutes === 0){
-        minutesText = '';
-      } else {
-        if(minutes === 1){
-          minutesText = minutes + ' minuut ';
-        } else {
-          minutesText = minutes + ' minuten ';
-        }
+      if (minutes > 0) {
+        minutesText = minutes + ' ' + (minutes === 1 ? 'minuut' : 'minuten') + ' ';
       }
 
-      document.getElementById('next-shipping-time-days').textContent = daysText;
-      document.getElementById('next-shipping-time-hours').textContent = hoursText;
-      document.getElementById('next-shipping-time-minutes').textContent = minutesText;
+      return {
+        daysText: daysText,
+        hoursText: hoursText,
+        minutesText: minutesText
+      };
     }
 
+    function setTimeUntilShipping() {
+      var now = new Date();
+      var targetDate = getNextValidShippingDate();
+      // Calculate time difference in seconds
+      var diff = Math.max(0, Math.floor((targetDate.getTime() - now.getTime()) / 1000));
+      var formattedTime = formatTimeDifference(diff);
 
+      var daysText = formattedTime.daysText;
+      var hoursText = formattedTime.hoursText;
+      var minutesText = formattedTime.minutesText;
+
+      // Update DOM only if values changed (reduces reflows)
+      if (daysText !== prevDaysText) {
+        daysElement.textContent = daysText;
+        prevDaysText = daysText;
+      }
+
+      if (hoursText !== prevHoursText) {
+        hoursElement.textContent = hoursText;
+        prevHoursText = hoursText;
+      }
+
+      if (minutesText !== prevMinutesText) {
+        minutesElement.textContent = minutesText;
+        prevMinutesText = minutesText;
+      }
+    }
+
+    // Initial call
     setTimeUntilShipping();
-    setInterval(setTimeUntilShipping, 60*1000);
+
+    // Update every minute
+    setInterval(setTimeUntilShipping, 60 * 1000);
   </script>
 
 
-<footer class="page-footer">
+  <footer class="page-footer">
   {block name='page_footer'}
 {*  Product data JSON+ld  *}
   <script type="application/ld+json">{$product->jsonld_product_seo nofilter}</script>
@@ -497,6 +545,4 @@
   {/block}
 </footer>
 {/block}
-</div>
-</section>
 {/block}

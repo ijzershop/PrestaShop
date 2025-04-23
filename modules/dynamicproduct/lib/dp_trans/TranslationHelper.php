@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,7 +47,7 @@ class TranslationHelper
         $source = 'TranslationHelper';
 
         return [
-            // start admin -177737261
+            // start admin -2090260976
             '3357' => $this->module->l('if', $source),
             '3555' => $this->module->l('or', $source),
             '65665' => $this->module->l('Add', $source),
@@ -200,6 +200,7 @@ class TranslationHelper
             '1620782841' => $this->module->l('Delete this step', $source),
             '1642806840' => $this->module->l('Databases', $source),
             '1652081830' => $this->module->l('Click to toggle the field visibility', $source),
+            '1711938836' => $this->module->l('Display selected option image in summary', $source),
             '1721653182' => $this->module->l('Deselect All', $source),
             '1741737838' => $this->module->l('Click to insert an option', $source),
             '1772226151' => $this->module->l('If empty, then the field name will be used', $source),
@@ -416,13 +417,11 @@ class TranslationHelper
             '78727453' => $this->module->l('Range', $source),
             '80208647' => $this->module->l('Steps', $source),
             '234648590' => $this->module->l('Click to expand/collapse this section', $source),
-            '361237766' =>
-                 $this->module->l('You can disable it in the main configuration page of the module', $source),
+            '361237766' => $this->module->l('You can disable it in the main configuration page of the module', $source),
             '414535005' => $this->module->l('Max size', $source),
             '437675785' => $this->module->l('Max number of files', $source),
             '449032306' => $this->module->l('Please select a product first', $source),
-            '573578838' =>
-                 $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
+            '573578838' => $this->module->l('This product is no longer in stock with the selected values, please select smaller values.', $source),
             '741835352' => $this->module->l('Min width', $source),
             '832143231' => $this->module->l('Read more', $source),
             '936937052' => $this->module->l('Import files', $source),
@@ -436,8 +435,7 @@ class TranslationHelper
             '1620385193' => $this->module->l('Delete this file', $source),
             '1721902021' => $this->module->l('Please select a country...', $source),
             '1814419550' => $this->module->l('Drag and drop file to upload', $source),
-            '1824335046' =>
-                 $this->module->l('Click the create customization button to insert this customization into the order.', $source),
+            '1824335046' => $this->module->l('Click the create customization button to insert this customization into the order.', $source),
             '1949421469' => $this->module->l('Only _max_files_ file(s) can be uploaded', $source),
             '1964022964' => $this->module->l('You can save this customization without adding it to cart.', $source),
             '2034149939' => $this->module->l('This section is displayed to admins only.', $source),
@@ -448,8 +446,7 @@ class TranslationHelper
             '-987857235' => $this->module->l('pixels', $source),
             '-512469298' => $this->module->l('Accepted file types', $source),
             '-1213154046' => $this->module->l('Unknown step', $source),
-            '-1310964303' =>
-                 $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
+            '-1310964303' => $this->module->l('An error prevented the dynamic product module from displaying the fields', $source),
             '-1893379118' => $this->module->l('Loading...', $source),
             '-116694267' => $this->module->l('Dynamic Product: Debug mode enabled', $source),
             '-979257952' => $this->module->l('Please pick a valid HEX color (#FFFFFF)', $source),
@@ -468,8 +465,7 @@ class TranslationHelper
             '-1904389485' => $this->module->l('The customization was saved successfully', $source),
             '-119700608' => $this->module->l('The link was copied to your clipboard', $source),
             '-1985356111' => $this->module->l('This message is only displayed to Admins', $source),
-            '-2041532723' =>
-                 $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
+            '-2041532723' => $this->module->l('The customizations you save as an Admin can be viewed by anyone', $source),
             '-1272271923' => $this->module->l('Save in my profile', $source),
             '-2121343663' => $this->module->l('Get customization link', $source),
             '-843746907' => $this->module->l('Copy link', $source),

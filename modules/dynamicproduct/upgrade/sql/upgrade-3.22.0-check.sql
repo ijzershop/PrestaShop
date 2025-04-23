@@ -1,0 +1,3 @@
+SELECT show_image_in_summary
+FROM ps_dynamicproduct_unit_value
+LIMIT 1;

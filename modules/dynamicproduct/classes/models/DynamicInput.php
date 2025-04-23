@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -31,18 +31,10 @@ if (!defined('_PS_VERSION_')) {
 
 use Cache;
 use Cart;
-use Configuration;
-use Context;
 use Customization;
-use Db;
-use DbQuery;
 use DynamicProduct\classes\DynamicTools;
 use DynamicProduct\classes\helpers\LegacyInputFields;
-use OrderDetail;
 use Product;
-use StockAvailable;
-use Tools;
-use Validate;
 
 class DynamicInput extends DynamicObject
 {
@@ -157,7 +149,7 @@ class DynamicInput extends DynamicObject
     }
 
     /**
-     * @param Cart $cart
+     * @param \Cart $cart
      */
     public static function updateCartQuantities($cart, $add = false)
     {
@@ -174,8 +166,8 @@ class DynamicInput extends DynamicObject
                     $dynamic_input->id_customization
                 );
                 $cart_quantity = $dynamic_quantity - $customization_quantity;
-                if ($cart_quantity && !StockAvailable::dependsOnStock($dynamic_input->id_product)) {
-                    StockAvailable::updateQuantity(
+                if ($cart_quantity && !\StockAvailable::dependsOnStock($dynamic_input->id_product)) {
+                    \StockAvailable::updateQuantity(
                         $dynamic_input->id_product,
                         $dynamic_input->id_attribute,
                         $cart_quantity * ($add ? 1 : -1)
@@ -206,7 +198,7 @@ class DynamicInput extends DynamicObject
             ON cp.id_cart = cc.id_cart AND cp.id_product_attribute = cc.id_product_attribute
             WHERE cc.`id_cart` = ' . (int) $id_cart . ' AND cc.`in_cart` = 1 AND cd.id_module = ' . (int) $module->id;
 
-        return Db::getInstance()->executeS($sql);
+        return \Db::getInstance()->executeS($sql);
     }
 
     public function assignCartQuantity()
@@ -233,7 +225,7 @@ class DynamicInput extends DynamicObject
         $input_fields = DynamicInputField::getByIdInput($this->id, $this->context->language->id);
         foreach ($input_fields as $input_field) {
             $displayed = !$input_field->isSkipped() && !$input_field->isSkippedName();
-            if (!$displayed && Tools::getValue('display') !== 'full') {
+            if (!$displayed && \Tools::getValue('display') !== 'full') {
                 continue;
             }
             $values = $input_field->getObjectValues();
@@ -258,8 +250,8 @@ class DynamicInput extends DynamicObject
         }
 
         $cache_key = "DynamicInput::getInputsByIdCart($id_cart)";
-        if (DynamicTools::canUseCache() && Cache::isStored($cache_key)) {
-            return Cache::retrieve($cache_key);
+        if (DynamicTools::canUseCache() && \Cache::isStored($cache_key)) {
+            return \Cache::retrieve($cache_key);
         }
         $dynamic_inputs = [];
         $rows = self::getInputRowsByIdCart($id_cart);
@@ -267,12 +259,12 @@ class DynamicInput extends DynamicObject
             foreach ($rows as $row) {
                 $id_input = $row['id_input'];
                 $dynamic_input = new self((int) $id_input);
-                if (Validate::isLoadedObject($dynamic_input)) {
+                if (\Validate::isLoadedObject($dynamic_input)) {
                     $dynamic_inputs[$id_input] = $dynamic_input;
                 }
             }
         }
-        Cache::store($cache_key, $dynamic_inputs);
+        \Cache::store($cache_key, $dynamic_inputs);
 
         return $dynamic_inputs;
     }
@@ -286,8 +278,8 @@ class DynamicInput extends DynamicObject
     public static function getInputsByProduct($id_product, $id_attribute = false)
     {
         $cache_key = "DynamicInput::getInputsByProduct($id_product, $id_attribute)";
-        if (DynamicTools::canUseCache() && Cache::isStored($cache_key)) {
-            return Cache::retrieve($cache_key);
+        if (DynamicTools::canUseCache() && \Cache::isStored($cache_key)) {
+            return \Cache::retrieve($cache_key);
         }
         $module = DynamicTools::getModule();
         $id_cart = $module->provider->getCart();
@@ -301,17 +293,17 @@ class DynamicInput extends DynamicObject
             WHERE di.`id_product` = ' . (int) $id_product .
             ($id_attribute !== false ? ' AND di.`id_attribute` = ' . (int) $id_attribute : '')
             . ' AND cc.`in_cart` = 1 AND cc.`id_cart` = ' . (int) $id_cart;
-        $rows = Db::getInstance()->executeS($sql);
+        $rows = \Db::getInstance()->executeS($sql);
         if (is_array($rows)) {
             foreach ($rows as $row) {
                 $id_input = $row['id_input'];
                 $dynamic_input = new DynamicInput((int) $id_input);
-                if (Validate::isLoadedObject($dynamic_input)) {
+                if (\Validate::isLoadedObject($dynamic_input)) {
                     $dynamic_inputs[$id_input] = $dynamic_input;
                 }
             }
         }
-        Cache::store($cache_key, $dynamic_inputs);
+        \Cache::store($cache_key, $dynamic_inputs);
 
         return $dynamic_inputs;
     }
@@ -323,20 +315,20 @@ class DynamicInput extends DynamicObject
      *
      * @return DynamicInput
      */
-    public static function getInputByCustomization($id_customization)
+    public static function getInputByCustomization($id_customization, $use_cache = true)
     {
         $cache_key = "DynamicInput::getInputByCustomization($id_customization)";
-        if (DynamicTools::canUseCache() && Cache::isStored($cache_key)) {
-            return Cache::retrieve($cache_key);
+        if ($use_cache && DynamicTools::canUseCache() && \Cache::isStored($cache_key)) {
+            return \Cache::retrieve($cache_key);
         }
 
         $sql = 'SELECT id_input FROM `' . _DB_PREFIX_ . 'dynamicproduct_input`
             WHERE `id_customization` = ' . (int) $id_customization;
 
-        $id_input = Db::getInstance()->getValue($sql);
+        $id_input = \Db::getInstance()->getValue($sql);
         $dynamic_input = new DynamicInput($id_input);
 
-        Cache::store($cache_key, $dynamic_input);
+        \Cache::store($cache_key, $dynamic_input);
 
         return $dynamic_input;
     }
@@ -349,14 +341,14 @@ class DynamicInput extends DynamicObject
             if (!$customization) {
                 return;
             }
-            Context::getContext()->cart->deleteProduct(
+            \Context::getContext()->cart->deleteProduct(
                 $customization['id_product'],
                 $customization['id_product_attribute'],
                 $id_customization,
                 $customization['id_address_delivery']
             );
-            $customizationObj = new Customization($id_customization);
-            if (Validate::isLoadedObject($customizationObj)) {
+            $customizationObj = new \Customization($id_customization);
+            if (\Validate::isLoadedObject($customizationObj)) {
                 $customizationObj->delete();
             }
         }
@@ -386,7 +378,7 @@ class DynamicInput extends DynamicObject
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `price` = ' . (float) $price .
             ' WHERE `id_customization` = ' . (int) $this->id_customization .
             ' AND `id_module` = ' . (int) $this->module->id;
-        $success = Db::getInstance()->execute($sql);
+        $success = \Db::getInstance()->execute($sql);
         if ($success) {
             $this->price = $price;
             $this->save();
@@ -398,7 +390,7 @@ class DynamicInput extends DynamicObject
         $sql = 'UPDATE `' . _DB_PREFIX_ . 'customized_data` SET `weight` = ' . (float) $weight .
             ' WHERE `id_customization` = ' . (int) $this->id_customization .
             ' AND `id_module` = ' . (int) $this->module->id;
-        $success = Db::getInstance()->execute($sql);
+        $success = \Db::getInstance()->execute($sql);
         if ($success) {
             $this->weight = $weight;
             $this->save();
@@ -406,16 +398,16 @@ class DynamicInput extends DynamicObject
     }
 
     /**
-     * @return OrderDetail
+     * @return \OrderDetail
      */
     public function getOrderDetail()
     {
         $sql = 'SELECT id_order_detail
         FROM `' . _DB_PREFIX_ . 'order_detail`
         WHERE `id_customization` = ' . (int) $this->id_customization;
-        $id_order_detail = (int) Db::getInstance()->getValue($sql);
+        $id_order_detail = (int) \Db::getInstance()->getValue($sql);
 
-        return new OrderDetail($id_order_detail);
+        return new \OrderDetail($id_order_detail);
     }
 
     private function getProductPriceWithReduction()
@@ -424,9 +416,9 @@ class DynamicInput extends DynamicObject
             return 0;
         }
 
-        return Product::getPriceStatic(
+        return \Product::getPriceStatic(
             $this->id_product,
-            !Product::getTaxCalculationMethod(),
+            !\Product::getTaxCalculationMethod(),
             $this->id_attribute,
             6,
             null,
@@ -454,6 +446,24 @@ class DynamicInput extends DynamicObject
         $maxSizesFromProduct = self::getMaxSizesFromProduct($product);
 
         return self::getMaxSizesFromArray($maxSizesFromInputs, $maxSizesFromProduct);
+    }
+
+    public static function getCartMaxSizes(?\Cart $cart)
+    {
+        $products = $cart->getProducts();
+        $maxSizes = [
+            'width' => 0,
+            'height' => 0,
+            'depth' => 0,
+        ];
+
+        foreach ($products as $product) {
+            $product = new \Product($product['id_product'], false, \Context::getContext()->language->id);
+            $sizes = self::getMaxSizes($product);
+            $maxSizes = self::getMaxSizesFromArray($sizes, $maxSizes);
+        }
+
+        return $maxSizes;
     }
 
     private static function getMaxSizesFromArray(array $maxSizesFromInputs, array $maxSizesFromProduct)
@@ -488,9 +498,13 @@ class DynamicInput extends DynamicObject
 
             if (count($id_inputs)) {
                 $inputs_list = implode(',', $id_inputs);
-                $sql = 'SELECT `name`, `value` as value
+                $key = "getMaxSizesFromInputs($inputs_list)";
+                if (\Cache::isStored($key)) {
+                    $input_fields = \Cache::retrieve($key);
+                } else {
+                    $sql = 'SELECT `name`, `value` as value
                         FROM ' . _DB_PREFIX_ . 'dynamicproduct_input_field
-                        WHERE `id_input` IN (' . pSQL($inputs_list) . ')
+                        WHERE `id_input` IN (' . $inputs_list . ')
                         AND `name` IN (
                             "width",
                             "width_m",
@@ -502,7 +516,10 @@ class DynamicInput extends DynamicObject
                             "depth_m",
                             "depth_mm"
                         )';
-                $input_fields = Db::getInstance()->executeS($sql);
+                    $input_fields = \Db::getInstance()->executeS($sql);
+                    \Cache::store($key, $input_fields);
+                }
+
                 foreach ($input_fields as $input_field) {
                     foreach ($suffixes as $suffix => $coefficient) {
                         $name = $input_field['name'];
@@ -531,7 +548,7 @@ class DynamicInput extends DynamicObject
             'in' => 0.393701,
         ];
 
-        $dimension_unit = Configuration::get('PS_DIMENSION_UNIT');
+        $dimension_unit = \Configuration::get('PS_DIMENSION_UNIT');
 
         foreach ($sizes as $key => $size) {
             if (isset($convert[$dimension_unit])) {
@@ -560,7 +577,7 @@ class DynamicInput extends DynamicObject
         WHERE `id_cart` = ' . (int) $id_cart .
             ' AND `id_product` = ' . (int) $product->id .
             ' AND `id_customization` = 0';
-        if ((int) Db::getInstance()->getValue($sql)) {
+        if ((int) \Db::getInstance()->getValue($sql)) {
             return $sizes;
         }
 
@@ -573,27 +590,27 @@ class DynamicInput extends DynamicObject
 
     public static function getCustomizationInfos($id_customization)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('*');
         $sql->from('customization');
         $sql->where('id_customization = ' . (int) $id_customization);
 
-        return Db::getInstance()->getRow($sql);
+        return \Db::getInstance()->getRow($sql);
     }
 
     public static function getCustomizationQuantity($id_input)
     {
-        $sql = new DbQuery();
+        $sql = new \DbQuery();
         $sql->select('c.quantity');
         $sql->from('customization', 'c');
         $sql->leftJoin('customized_data', 'cd', 'c.id_customization = cd.id_customization');
         $sql->where('cd.value = "|' . (int) $id_input . '|" OR cd.value = ' . (int) $id_input);
 
-        return (int) Db::getInstance()->getValue($sql);
+        return (int) \Db::getInstance()->getValue($sql);
     }
 
     /**
-     * @param Cart $cart
+     * @param \Cart $cart
      * @param $id_product
      * @param $id_attribute
      * @param $id_customization
@@ -625,7 +642,7 @@ class DynamicInput extends DynamicObject
 
             if ($is_field) {
                 $dynamic_field = new DynamicField($id_field);
-                $field_available = Validate::isLoadedObject($dynamic_field);
+                $field_available = \Validate::isLoadedObject($dynamic_field);
                 $newly_disabled = $input_field->visible && !$dynamic_field->active;
             }
 
@@ -680,8 +697,13 @@ class DynamicInput extends DynamicObject
         $product_url = $this->module->provider->getProductLink($this->id_product, $this->id_attribute);
         $product_url = DynamicTools::removeAnchor($product_url);
         $params = [
-            'id_input' => $this->id,
+            'edit_customization' => $this->id_customization,
         ];
+        if (!$this->id_customization) {
+            $params = [
+                'edit_input' => $this->id,
+            ];
+        }
         if ($is_admin && $this->module->provider->isAdmin()) {
             $params['is_admin_edit'] = true;
         }
@@ -731,10 +753,11 @@ class DynamicInput extends DynamicObject
 
     public function delete()
     {
-        $input_fields = $this->getInputFields(Context::getContext()->language->id);
+        $input_fields = $this->getInputFields(\Context::getContext()->language->id);
         foreach ($input_fields as $input_field) {
             $input_field->delete();
         }
-        parent::delete();
+
+        return parent::delete();
     }
 }

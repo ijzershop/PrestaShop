@@ -1,0 +1,20 @@
+
+
+> dynamicproduct@3.22.36 archive /Users/unloco/code/prestashop/tunisoft/tunisoft/apps/dynamicproduct
+> npm run bump && npm run zip
+
+
+> dynamicproduct@3.22.36 bump
+> standard-version
+
+[1G[0K[32m✔[39m bumping version in package.json from [1m3.22.36[22m to [1m3.22.37[22m
+[32m✔[39m bumping version in dynamicproduct.php from [1m3.22.36[22m to [1m3.22.37[22m
+[32m✔[39m outputting changes to [1mCHANGELOG.md[22m
+[32m✔[39m committing [1mdynamicproduct.php[22m and [1mpackage.json[22m and [1mCHANGELOG.md[22m
+[32m✔[39m tagging release [1mv[22m[1m3.22.37[22m
+[34mℹ[39m Run `[1mgit push --follow-tags origin legacy[22m` to publish
+[1G[0K\[1G[0K
+> dynamicproduct@3.22.37 zip
+> bun scripts/zip.mjs
+
+[1G[0K[1G[0K\[1G[0K

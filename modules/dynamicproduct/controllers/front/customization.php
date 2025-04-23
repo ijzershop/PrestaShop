@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -49,6 +49,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         $dp_input = (int) Tools::getValue('dp_id_input');
         $fields = Tools::getValue('fields');
         $dp_cart = (int) Tools::getValue('dp_cart', 0);
+        $dp_customer = (int) Tools::getValue('dp_customer', 0);
 
         $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
 
@@ -65,7 +66,8 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             $add_to_cart,
             true,
             $dp_input,
-            $dp_cart
+            $dp_cart,
+            $dp_customer
         );
 
         $this->respond($result);
@@ -77,6 +79,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         $id_attribute = $this->id_attribute;
         $quantity = (int) Tools::getValue('quantity');
         $fields = Tools::getValue('fields');
+        $dp_customer = (int) Tools::getValue('dp_customer', 0);
 
         $customization_helper = new DynamicCustomizationHelper($this->module, $this->context);
 
@@ -89,7 +92,10 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             $fields,
             $id_customizations,
             false,
-            false
+            false,
+            0,
+            0,
+            $dp_customer
         );
 
         $this->respond($result);
@@ -123,7 +129,7 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
         foreach ($input_fields_old as $input_field) {
             $input_field->delete();
         }
-        $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+        $customization_helper->saveInputFields($this->id_product, $input_fields, $dynamic_input->id);
 
         $price_equation = DynamicEquation::getPriceEquation($this->id_product);
         $price = DynamicEquation::calculatePriceFormula(
@@ -283,11 +289,19 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
 
         $true_conditions = DynamicEquation::getTrueConditions();
 
+        $id_customization = $customization_helper->saveCustomization(
+            $this->id_product,
+            $id_product_attribute,
+            0,
+            0
+        );
+
         $dynamic_input = $customization_helper->saveDynamicInput(
             $this->id_product,
             $id_product_attribute,
             0,
             0,
+            $id_customization,
             0,
             $price_equation_result,
             $weight_equation_result,
@@ -298,9 +312,11 @@ class DynamicProductCustomizationModuleFrontController extends DynamicFrontContr
             $this->module->provider->isAdmin()
         );
 
-        $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+        $customization_helper->saveInputFields($this->id_product, $input_fields, $dynamic_input->id);
         $this->respond([
             'link' => $dynamic_input->getEditLink(),
+            'id_module' => $this->module->id,
+            'id_customizations' => [$id_product_attribute => $id_customization],
         ]);
     }
 }

@@ -41,8 +41,11 @@
 .channable_top_marged {
 	margin-top: 20px !important;
 }
+#carriers_fields .carrier_entity_selector,
+#marketplace_shipping_fields .msa_selector,
 #customer_group_fields .cga_selector,
 select[name=fields_available],
+select.country_entity_selector,
 .channable_assigned_fields_row {
 	margin-bottom: 4px;
 }

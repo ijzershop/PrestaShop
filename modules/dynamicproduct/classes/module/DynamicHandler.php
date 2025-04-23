@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -209,67 +209,67 @@ class DynamicHandler
             }
         }
 
+        $attributes_mapping = [];
+        if ($copy_options['combination_values'] && $copy_options['fields']) {
+            DynamicCombinationField::deleteByProduct($id_product_new);
+            DynamicCombinationValue::deleteByProduct($id_product_new);
 
-            if ($copy_options['combination_values'] && $copy_options['fields']) {
-                DynamicCombinationField::deleteByProduct($id_product_new);
-                DynamicCombinationValue::deleteByProduct($id_product_new);
+            $combination_values = DynamicCombinationValue::getValuesByIdProduct($id_product_old);
+            $combination_values = DynamicCombinationValue::organizeByAttributes($combination_values);
+            $attributes_old = \Product::getProductAttributesIds($id_product_old);
+            $attributes_new = \Product::getProductAttributesIds($id_product_new);
 
-                $combination_values = DynamicCombinationValue::getValuesByIdProduct($id_product_old);
-                $combination_values = DynamicCombinationValue::organizeByAttributes($combination_values);
-                $attributes_old = \Product::getProductAttributesIds($id_product_old);
-                $attributes_new = \Product::getProductAttributesIds($id_product_new);
+            $attributes_mapping = DynamicTools::mapAttributes($attributes_old, $attributes_new);
 
-                $attributes_mapping = DynamicTools::mapAttributes($attributes_old, $attributes_new);
+            foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
+                if (isset($combination_values[$id_attribute_old])) {
+                    /** @var DynamicCombinationValue[] $attribute_values */
+                    $attribute_values = $combination_values[$id_attribute_old];
+                    foreach ($attribute_values as $combination_value) {
+                        $combination_value->id_product = $id_product_new;
+                        $combination_value->id_attribute = $id_attribute_new;
+                        $combination_value->id_field = $this->module->provider->getNewID(
+                            $fields_new,
+                            $combination_value->id_field
+                        );
+                        $combination_value->add();
+                    }
+                }
+            }
 
-                foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
-                    if (isset($combination_values[$id_attribute_old])) {
-                        /** @var DynamicCombinationValue[] $attribute_values */
-                        $attribute_values = $combination_values[$id_attribute_old];
-                        foreach ($attribute_values as $combination_value) {
-                            $combination_value->id_product = $id_product_new;
-                            $combination_value->id_attribute = $id_attribute_new;
-                            $combination_value->id_field = $this->module->provider->getNewID(
-                                $fields_new,
-                                $combination_value->id_field
+            $combination_fields = DynamicCombinationField::getByIdProduct($id_product_old);
+            foreach ($combination_fields as $combination_field) {
+                $combination_field->id_product = $id_product_new;
+                $combination_field->id_field = $this->module->provider->getNewID(
+                    $fields_new,
+                    $combination_field->id_field
+                );
+                $combination_field->add();
+            }
+        }
+
+        if ($copy_options['combinations_visibility'] && $copy_options['fields']) {
+            \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
+            $hidden_fields = $this->module->provider->getVisibilityValues($id_product_old);
+            foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
+                if (isset($hidden_fields[$id_attribute_old])) {
+                    $values = $hidden_fields[$id_attribute_old];
+                    foreach ($values as $id_field => $visible) {
+                        if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
+                            \Db::getInstance()->insert(
+                                $this->module->name . '_visibility',
+                                [
+                                    'id_product' => (int) $id_product_new,
+                                    'id_attribute' => (int) $id_attribute_new,
+                                    'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
+                                    'visible' => (int) $visible,
+                                ]
                             );
-                            $combination_value->add();
-                        }
-                    }
-                }
-
-                $combination_fields = DynamicCombinationField::getByIdProduct($id_product_old);
-                foreach ($combination_fields as $combination_field) {
-                    $combination_field->id_product = $id_product_new;
-                    $combination_field->id_field = $this->module->provider->getNewID(
-                        $fields_new,
-                        $combination_field->id_field
-                    );
-                    $combination_field->add();
-                }
-            }
-
-            if ($copy_options['combinations_visibility'] && $copy_options['fields']) {
-                \Db::getInstance()->delete('dynamicproduct_visibility', 'id_product = ' . (int) $id_product_new);
-                $hidden_fields = $this->module->provider->getVisibilityValues($id_product_old);
-                foreach ($attributes_mapping as $id_attribute_old => $id_attribute_new) {
-                    if (isset($hidden_fields[$id_attribute_old])) {
-                        $values = $hidden_fields[$id_attribute_old];
-                        foreach ($values as $id_field => $visible) {
-                            if (isset($fields_new[$id_field]) || (int) $id_field === 0) {
-                                \Db::getInstance()->insert(
-                                    $this->module->name . '_visibility',
-                                    [
-                                        'id_product' => (int) $id_product_new,
-                                        'id_attribute' => (int) $id_attribute_new,
-                                        'id_field' => (int) $this->module->provider->getNewID($fields_new, $id_field),
-                                        'visible' => (int) $visible,
-                                    ]
-                                );
-                            }
                         }
                     }
                 }
             }
+        }
 
         if ($copy_options['proportions']) {
             if ($clear) {
@@ -1642,6 +1642,7 @@ class DynamicHandler
             $id_input = $dynamic_input->id;
             list($id_input_new, $input_has_errors) = $dynamic_input->duplicateInput($id_cart_new);
             $has_errors |= $input_has_errors;
+            $new_value = '';
             if ($id_input_new) {
                 $new_value = '|' . $id_input_new . '|';
                 $old_value = '|' . $id_input . '|';

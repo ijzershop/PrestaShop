@@ -2,7 +2,47 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [3.21.34](https://github.com/unlocomqx/tunisoft/compare/v3.21.32...v3.21.34) (2024-11-23)
+### [3.22.37](https://github.com/unlocomqx/tunisoft/compare/v3.22.36...v3.22.37) (2025-03-31)
+
+### [3.22.36](https://github.com/unlocomqx/tunisoft/compare/v3.22.35...v3.22.36) (2025-03-31)
+
+### [3.22.35](https://github.com/unlocomqx/tunisoft/compare/v1.209.9...v3.22.35) (2025-03-27)
+
+### [3.22.21](https://github.com/unlocomqx/tunisoft/compare/v1.209.4...v3.22.21) (2025-03-13)
+
+
+### Bug Fixes
+
+* Fix reordering orders created by Admin ([7bde14b](https://github.com/unlocomqx/tunisoft/commit/7bde14bc481498cbeb02ef98de99d53e79fcb74a))
+
+### [3.22.20](https://github.com/unlocomqx/tunisoft/compare/v1.208.8...v3.22.20) (2025-03-05)
+
+### [3.22.19](https://github.com/unlocomqx/tunisoft/compare/v3.22.18...v3.22.19) (2025-03-04)
+
+## [3.22.0](https://github.com/unlocomqx/tunisoft/compare/v1.205.32...v3.22.0) (2025-01-28)
+
+
+### Features
+
+* Add option image to cart summary ([f437aa8](https://github.com/unlocomqx/tunisoft/commit/f437aa8ad839f92de08679c0629c7ab8d34c86f7))
+
+### [3.21.66](https://github.com/unlocomqx/tunisoft/compare/v3.21.64...v3.21.66) (2025-01-07)
+
+
+### Bug Fixes
+
+* Fallback to default lang when no field translation is available ([237f3f0](https://github.com/unlocomqx/tunisoft/commit/237f3f0955c096b1331315cc8fc48ce745fbb593))
+
+### [3.21.64](https://github.com/unlocomqx/tunisoft/compare/v3.21.63...v3.21.64) (2025-01-07)
+
+### [3.21.42](https://github.com/unlocomqx/tunisoft/compare/v3.21.41...v3.21.42) (2024-11-29)
+
+
+### Bug Fixes
+
+* Include deleted fields in html summary ([078a225](https://github.com/unlocomqx/tunisoft/commit/078a225d585b329d209f3128bfa7fb6c563f5ca3))
+
+### [3.21.41](https://github.com/unlocomqx/tunisoft/compare/v1.204.0...v3.21.41) (2024-11-28)
 
 ## [3.21.0](https://github.com/unlocomqx/tunisoft/compare/v3.19.1...v3.21.0) (2024-09-11)
 

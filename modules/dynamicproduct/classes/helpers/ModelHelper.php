@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,12 +33,8 @@ class ModelHelper
 {
     private static $model_fields = [];
 
-    public static function groupByLang($rows, $id_lang, $lang_fields)
+    public static function groupByLang($rows, $lang_fields)
     {
-        if ($id_lang) {
-            return $rows;
-        }
-
         $options = [];
 
         foreach ($rows as $row) {
@@ -147,5 +143,24 @@ class ModelHelper
         }
 
         return $grouped;
+    }
+
+    public static function pickLang(array $rows, $id_lang, $id_default_lang, array $lang_fields)
+    {
+        if (!$id_lang) {
+            return $rows;
+        }
+
+        foreach ($rows as &$row) {
+            foreach ($lang_fields as $lang_field) {
+                $val = $row[$lang_field][$id_lang] ?? '';
+                if (empty($val)) {
+                    $val = $row[$lang_field][$id_default_lang] ?? '';
+                }
+                $row[$lang_field] = $val;
+            }
+        }
+
+        return $rows;
     }
 }

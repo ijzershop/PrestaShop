@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -60,7 +60,7 @@ class DynamicInputField extends DynamicObject
     public $display_value;
     public $sku;
     public $selected_options = [];
-    public $duplicated = false;
+    public $duplicated = 0;
 
     public $image_url;
     public $thumb_url;
@@ -79,55 +79,55 @@ class DynamicInputField extends DynamicObject
     public const LOAD_ALL = 2;
 
     private static $null_values = [
-        _DP_INPUT_ => 0,
-        _DP_TEXT_ => '',
-        _DP_DATE_ => '',
-        _DP_IMAGE_ => '',
-        _DP_DROPDOWN_ => 0,
-        _DP_CHECKBOX_ => 0,
-        _DP_SWITCH_ => 0,
-        _DP_FILE_ => '',
-        _DP_SLIDER_ => 0,
-        _DP_THUMBNAILS_ => 0,
-        _DP_TEXTAREA_ => '',
-        _DP_RADIO_ => 0,
-        _DP_COLORPICKER_ => '',
-        _DP_PHP_ => 0,
+      _DP_INPUT_ => 0,
+      _DP_TEXT_ => '',
+      _DP_DATE_ => '',
+      _DP_IMAGE_ => '',
+      _DP_DROPDOWN_ => 0,
+      _DP_CHECKBOX_ => 0,
+      _DP_SWITCH_ => 0,
+      _DP_FILE_ => '',
+      _DP_SLIDER_ => 0,
+      _DP_THUMBNAILS_ => 0,
+      _DP_TEXTAREA_ => '',
+      _DP_RADIO_ => 0,
+      _DP_COLORPICKER_ => '',
+      _DP_PHP_ => 0,
     ];
 
     protected $webserviceParameters = [
-        'objectNodeName' => 'dynamic_input_field',
-        'objectsNodeName' => 'dynamic_input_fields',
-        'fields' => [
-            'id_input' => ['required' => true, 'xlink_resource' => 'dynamic_inputs'],
-            'id_field' => [],
-            'name' => [],
-            'label' => ['getter' => 'getLabel'],
-            'value' => ['getter' => 'displayValue'],
-            'secondary_value' => [],
-            'sku' => ['getter' => 'renderSKU'],
-            'type' => [],
-            'visible' => [],
-            'data' => [],
-            'position' => [],
-        ],
+      'objectNodeName' => 'dynamic_input_field',
+      'objectsNodeName' => 'dynamic_input_fields',
+      'fields' => [
+        'id_input' => ['required' => true, 'xlink_resource' => 'dynamic_inputs'],
+        'id_field' => [],
+        'name' => [],
+        'label' => ['getter' => 'getLabel'],
+        'value' => ['getter' => 'displayValue'],
+        'secondary_value' => [],
+        'sku' => ['getter' => 'renderSKU'],
+        'type' => [],
+        'visible' => [],
+        'data' => [],
+        'position' => [],
+      ],
     ];
 
     public static $definition = [
-        'table' => 'dynamicproduct_input_field',
-        'primary' => 'id_input_field',
-        'fields' => [
-            'id_input' => ['type' => self::TYPE_INT],
-            'id_field' => ['type' => self::TYPE_INT],
-            'name' => ['type' => self::TYPE_STRING],
-            'value' => ['type' => self::TYPE_HTML],
-            'secondary_value' => ['type' => self::TYPE_STRING],
-            'options' => ['type' => self::TYPE_STRING],
-            'type' => ['type' => self::TYPE_INT],
-            'visible' => ['type' => self::TYPE_BOOL],
-            'data' => ['type' => self::TYPE_STRING],
-            'position' => ['type' => self::TYPE_INT],
-        ],
+      'table' => 'dynamicproduct_input_field',
+      'primary' => 'id_input_field',
+      'fields' => [
+        'id_input' => ['type' => self::TYPE_INT],
+        'id_field' => ['type' => self::TYPE_INT],
+        'name' => ['type' => self::TYPE_STRING],
+        'value' => ['type' => self::TYPE_HTML],
+        'secondary_value' => ['type' => self::TYPE_STRING],
+        'options' => ['type' => self::TYPE_STRING],
+        'type' => ['type' => self::TYPE_INT],
+        'visible' => ['type' => self::TYPE_BOOL],
+        'data' => ['type' => self::TYPE_STRING],
+        'position' => ['type' => self::TYPE_INT],
+      ],
     ];
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
@@ -179,7 +179,7 @@ class DynamicInputField extends DynamicObject
 
     protected function setDynamicField($id_lang = null)
     {
-        $this->field = DynamicField::getFieldFromCache($this->id_field, $id_lang);
+        $this->field = DynamicField::getFieldFromCache($this->id_field, $id_lang, true);
     }
 
     public function getDynamicField()
@@ -253,7 +253,7 @@ class DynamicInputField extends DynamicObject
                 }
             } elseif ($option['value'] === $this->value) {
                 $this->selected_options = [$option['id']];
-                $this->secondary_value = $option['secondary_value'];
+                $this->secondary_value = $option['secondary_value'] ?? 0;
                 break;
             }
         }
@@ -272,7 +272,7 @@ class DynamicInputField extends DynamicObject
             $id_group = $this->field['id_group'];
             $group = DynamicProductFieldGroup::getGroupFromCache($id_group);
 
-            if ($group && $group['id_control_field']) {
+            if ($group && (int) $group['id_control_field']) {
                 $field_name = $this->name;
                 $matches = preg_grep('/^' . $field_name . '_\d+$/', array_keys($input_fields));
                 $total = 0;
@@ -413,14 +413,14 @@ class DynamicInputField extends DynamicObject
         foreach ($input_fields as $input_field) {
             $value = str_replace(
                 [
-                    "[[$input_field->name]]",
-                    "[$input_field->name]",
-                    "{{$input_field->name}}",
+                  "[[$input_field->name]]",
+                  "[$input_field->name]",
+                  "{{$input_field->name}}",
                 ],
                 [
-                    htmlspecialchars($input_field->secondary_value),
-                    htmlspecialchars($input_field->value_formatted),
-                    htmlspecialchars($input_field->display_value ?? ''),
+                  htmlspecialchars($input_field->secondary_value),
+                  htmlspecialchars($input_field->value_formatted),
+                  htmlspecialchars($input_field->display_value ?? ''),
                 ],
                 $value
             );
@@ -445,14 +445,14 @@ class DynamicInputField extends DynamicObject
         foreach ($input_fields as $input_field) {
             $value = str_replace(
                 [
-                    "[[$input_field->name]]",
-                    "[$input_field->name]",
-                    "{{$input_field->name}}",
+                  "[[$input_field->name]]",
+                  "[$input_field->name]",
+                  "{{$input_field->name}}",
                 ],
                 [
-                    htmlspecialchars($input_field->secondary_value),
-                    htmlspecialchars($input_field->value_formatted),
-                    htmlspecialchars($input_field->display_value ?? ''),
+                  htmlspecialchars($input_field->secondary_value),
+                  htmlspecialchars($input_field->value_formatted),
+                  htmlspecialchars($input_field->display_value ?? ''),
                 ],
                 $value
             );
@@ -474,7 +474,7 @@ class DynamicInputField extends DynamicObject
 
         $option = $this->field['options'][$this->selected_options[0]];
 
-        return $option->sku;
+        return $option['sku'];
     }
 
     public function isWithinLimit(array $interval_condition, array $input_fields)
@@ -482,7 +482,7 @@ class DynamicInputField extends DynamicObject
         $value = $this->getValueForCalculation($input_fields);
 
         return $value >= $interval_condition['min']
-            && ($value < $interval_condition['max'] || (float) $interval_condition['max'] === 0.0);
+          && ($value < $interval_condition['max'] || (float) $interval_condition['max'] === 0.0);
     }
 
     public function isWithinValues(array $interval_condition, array $input_fields)
@@ -688,7 +688,7 @@ class DynamicInputField extends DynamicObject
 
         $fields_helper = new DynamicFieldsHelper($module, $context);
         $fields_helper->addFields($id_product, $id_attribute, $fields, $load, $values);
-        list($grouped_fields, $new_fields) = $fields_helper->duplicateFields($id_product, $fields);
+        list($grouped_fields, $fields, $new_fields) = $fields_helper->duplicateFields($id_product, $fields);
         $fields_helper->addFields($id_product, $id_attribute, $fields, $load, $values, $new_fields);
         $fields_helper->addAttributes($id_product, $id_attribute, $fields);
         $fields_helper->addFeatures($id_product, $fields);
@@ -698,7 +698,7 @@ class DynamicInputField extends DynamicObject
         foreach ($fields as $field) {
             if (!empty($field['name'])) {
                 $input_fields[$field['name']] =
-                    self::getInputFieldFromData($field, $context->language->id, $fields['changed']);
+                  self::getInputFieldFromData($field, $context->language->id, $fields['changed']);
             }
         }
 
@@ -758,8 +758,8 @@ class DynamicInputField extends DynamicObject
     {
         $input_field = InputFieldFactory::create($field['type']);
 
-        if (isset($field['duplicated']) && $field['duplicated']) {
-            $input_field->duplicated = true;
+        if (isset($field['duplicated']) && (int) $field['duplicated']) {
+            $input_field->duplicated = 1;
         }
 
         foreach (self::$definition['fields'] as $field_name => $field_info) {
@@ -805,8 +805,8 @@ class DynamicInputField extends DynamicObject
         }
 
         if ($input_field->name == 'quantity'
-            && $changed['value'] != 'quantity'
-            && \Tools::getIsset('quantity')
+          && $changed['value'] != 'quantity'
+          && \Tools::getIsset('quantity')
         ) {
             $input_field->value = \Tools::getValue('quantity', 1);
         }
@@ -860,6 +860,11 @@ class DynamicInputField extends DynamicObject
     public function displayValue()
     {
         return $this->value;
+    }
+
+    public function shouldShowImageInSummary()
+    {
+        return $this->field['settings']['show_image_in_summary'];
     }
 
     private function getTemplateName()

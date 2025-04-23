@@ -32,13 +32,13 @@
     "src": "../img/colorpicker/colorpicker_overlay.png"
   },
   "../scss/front/product-buttons-legacy.scss": {
-    "file": "assets/product-buttons-legacy-DHYLYSIH.js",
+    "file": "assets/product-buttons-legacy-D3aW4Osg.js",
     "name": "product-buttons",
     "src": "../scss/front/product-buttons-legacy.scss",
     "isDynamicEntry": true
   },
   "../scss/front/product-buttons.scss": {
-    "file": "assets/product-buttons-PofbxFEH.css",
+    "file": "assets/product-buttons-CaxizcO6.css",
     "src": "../scss/front/product-buttons.scss"
   },
   "_await_block-CLYzRB-j.js": {
@@ -49,8 +49,8 @@
       "_trans-helper-DC6ZyHVT.js"
     ]
   },
-  "_await_block-legacy-CZde9pvJ.js": {
-    "file": "assets/await_block-legacy-CZde9pvJ.js",
+  "_await_block-legacy-aiWJuOL3.js": {
+    "file": "assets/await_block-legacy-aiWJuOL3.js",
     "name": "await_block",
     "imports": [
       "_scheduler-legacy-Dbdx7ujG.js",
@@ -115,9 +115,9 @@
       "_index-legacy-BS_xlRzj.js"
     ]
   },
-  "_product-config-!~{00d}~.js": {
+  "_product-config-!~{00c}~.js": {
     "file": "assets/product-config-s2py6NGx.css",
-    "src": "_product-config-!~{00d}~.js"
+    "src": "_product-config-!~{00c}~.js"
   },
   "_product-config-legacy-tnRa-JDn.js": {
     "file": "assets/product-config-legacy-tnRa-JDn.js",
@@ -172,33 +172,18 @@
     ]
   },
   "admin/order-legacy.ts": {
-    "file": "assets/order-legacy-B7_e5DNk.js",
+    "file": "assets/order-legacy-Dcn-KRjG.js",
     "name": "order",
     "src": "admin/order-legacy.ts",
     "isEntry": true,
     "imports": [
       "_scheduler-legacy-Dbdx7ujG.js",
       "_trans-helper-legacy-CqHHI95M.js",
-      "_await_block-legacy-CZde9pvJ.js"
-    ]
-  },
-  "admin/order-summary-legacy.ts": {
-    "file": "assets/order_summary-legacy-C7Y2en_J.js",
-    "name": "order_summary",
-    "src": "admin/order-summary-legacy.ts",
-    "isEntry": true
-  },
-  "admin/order-summary.ts": {
-    "file": "assets/order_summary-D2ZtWKVK.js",
-    "name": "order_summary",
-    "src": "admin/order-summary.ts",
-    "isEntry": true,
-    "css": [
-      "assets/order_summary-D5m_MhNh.css"
+      "_await_block-legacy-aiWJuOL3.js"
     ]
   },
   "admin/order.ts": {
-    "file": "assets/order-DpqIUxoC.js",
+    "file": "assets/order-C-11dURE.js",
     "name": "order",
     "src": "admin/order.ts",
     "isEntry": true,
@@ -212,7 +197,7 @@
     ]
   },
   "admin/product-config-legacy.ts": {
-    "file": "assets/product_config-legacy-jpztpXt2.js",
+    "file": "assets/product_config-legacy-D0ccVKKO.js",
     "name": "product_config",
     "src": "admin/product-config-legacy.ts",
     "isEntry": true,
@@ -221,7 +206,7 @@
       "_index-legacy-BS_xlRzj.js",
       "_scheduler-legacy-Dbdx7ujG.js",
       "_utils-legacy-DY-ZizlI.js",
-      "_await_block-legacy-CZde9pvJ.js",
+      "_await_block-legacy-aiWJuOL3.js",
       "_trans-helper-legacy-CqHHI95M.js",
       "_codemirror-legacy-CEZv_Gvr.js"
     ],
@@ -230,7 +215,7 @@
     ]
   },
   "admin/product-config.ts": {
-    "file": "assets/product_config-DQ6eaguq.js",
+    "file": "assets/product_config-juh7cZwY.js",
     "name": "product_config",
     "src": "admin/product-config.ts",
     "isEntry": true,
@@ -254,7 +239,7 @@
     ]
   },
   "admin/products-list-legacy.ts": {
-    "file": "assets/products_list-legacy-Dgi5nrtx.js",
+    "file": "assets/products_list-legacy-B8wLwqZJ.js",
     "name": "products_list",
     "src": "admin/products-list-legacy.ts",
     "isEntry": true,
@@ -263,7 +248,7 @@
     ]
   },
   "admin/products-list.ts": {
-    "file": "assets/products_list-Zbws1VKB.js",
+    "file": "assets/products_list-ChubiUE2.js",
     "name": "products_list",
     "src": "admin/products-list.ts",
     "isEntry": true,
@@ -290,7 +275,7 @@
     ]
   },
   "front/product-buttons-legacy.ts": {
-    "file": "assets/product_buttons-legacy-DmoueE-r.js",
+    "file": "assets/product_buttons-legacy-B2efF0zz.js",
     "name": "product_buttons",
     "src": "front/product-buttons-legacy.ts",
     "isEntry": true,
@@ -304,7 +289,7 @@
     ]
   },
   "front/product-buttons.ts": {
-    "file": "assets/product_buttons-DRr3JaL-.js",
+    "file": "assets/product_buttons-Ym29ybar.js",
     "name": "product_buttons",
     "src": "front/product-buttons.ts",
     "isEntry": true,
@@ -317,7 +302,7 @@
     ]
   },
   "product/index-legacy.ts": {
-    "file": "assets/index-legacy-BcHMLITP.js",
+    "file": "assets/index-legacy-DxN2Kyj9.js",
     "name": "index",
     "src": "product/index-legacy.ts",
     "isDynamicEntry": true,
@@ -337,7 +322,7 @@
     ]
   },
   "product/index.ts": {
-    "file": "assets/index-_Tz03aN7.js",
+    "file": "assets/index-DF2omiA9.js",
     "name": "index",
     "src": "product/index.ts",
     "isDynamicEntry": true,

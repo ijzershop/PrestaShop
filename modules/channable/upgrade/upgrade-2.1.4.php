@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,16 +9,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 function upgrade_module_2_1_4($module)
 {
     Configuration::updateValue('CHANNABLE_USE_GUEST_CHECKOUT', 1);
+
     return $module;
 }

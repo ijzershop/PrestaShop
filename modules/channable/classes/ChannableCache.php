@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,17 +9,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 class ChannableCache extends ObjectModel
 {
-
     public $id;
 
     public $cache_key;
@@ -27,30 +25,30 @@ class ChannableCache extends ObjectModel
     public $cache_value;
 
     public $id_lang;
-    
+
     public $date_add;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'channable_cache',
         'primary' => 'id_channable_cache',
-        'fields' => array(
-            'cache_key' => array(
+        'fields' => [
+            'cache_key' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'cache_value' => array(
-                'type' => self::TYPE_STRING
-            ),
-            'id_lang' => array(
+                'size' => 255,
+            ],
+            'cache_value' => [
+                'type' => self::TYPE_STRING,
+            ],
+            'id_lang' => [
                 'type' => self::TYPE_INT,
-                'validate' => 'isInt'
-            ),
-            'date_add' => array(
+                'validate' => 'isInt',
+            ],
+            'date_add' => [
                 'type' => self::TYPE_DATE,
-                'validate' => 'isDateFormat'
-            )
-        )
-    );
+                'validate' => 'isDateFormat',
+            ],
+        ],
+    ];
 
     public static $cachedObjectsExist = [];
 
@@ -62,11 +60,11 @@ class ChannableCache extends ObjectModel
     {
         $sql = 'SELECT w.id_channable_cache, w.cache_key, w.date_add FROM `' . _DB_PREFIX_ . 'channable_cache` w
                  WHERE w.`cache_key` LIKE \'' . pSQL($cache_key_part) . '%\'
-                   AND w.`id_lang` = ' . (int)$id_lang;
+                   AND w.`id_lang` = ' . (int) $id_lang;
         if ($results = Db::getInstance()->ExecuteS($sql)) {
             foreach ($results as $result) {
                 if ($max_age) {
-                    if (date('YmdHis', strtotime($result['date_add'])) >= date("YmdHis", strtotime("-" . (int)$max_age . " seconds"))) {
+                    if (date('YmdHis', strtotime($result['date_add'])) >= date('YmdHis', strtotime('-' . (int) $max_age . ' seconds'))) {
                         if (!isset(self::$cachedObjectsExist[$max_age])) {
                             self::$cachedObjectsExist[$max_age] = [];
                         }
@@ -87,18 +85,20 @@ class ChannableCache extends ObjectModel
      * @param false $max_age
      * @param bool $create_new
      * @param int $id_lang
+     *
      * @return ChannableCache|false
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
     public static function getByKey($cache_key, $max_age = false, $create_new = true, $id_lang = 1)
     {
         $sql = 'SELECT w.id_channable_cache, w.date_add FROM `' . _DB_PREFIX_ . 'channable_cache` w
-                 WHERE w.`cache_key` = \'' . pSQL($cache_key) . '\' AND w.`id_lang` = ' . (int)$id_lang;
+                 WHERE w.`cache_key` = \'' . pSQL($cache_key) . '\' AND w.`id_lang` = ' . (int) $id_lang;
         if (Channable::useCache()) {
             if ($result = Db::getInstance()->getRow($sql)) {
                 if ($max_age) {
-                    if (date('YmdHis', strtotime($result['date_add'])) >= date("YmdHis", strtotime("-" . (int)$max_age . " seconds"))) {
+                    if (date('YmdHis', strtotime($result['date_add'])) >= date('YmdHis', strtotime('-' . (int) $max_age . ' seconds'))) {
                         return new self($result['id_channable_cache']);
                     } else {
                         $delObj = new self($result['id_channable_cache']);
@@ -112,17 +112,21 @@ class ChannableCache extends ObjectModel
         if ($create_new) {
             $cache = new self();
             $cache->cache_key = $cache_key;
-            $cache->date_add = date("Y-m-d H:i:s");
-            $cache->id_lang = (int)$id_lang;
+            $cache->date_add = date('Y-m-d H:i:s');
+            $cache->id_lang = (int) $id_lang;
+
             return $cache;
         }
+
         return false;
     }
 
     /**
      * @param false $null_values
      * @param bool $auto_date
+     *
      * @return bool|void
+     *
      * @throws PrestaShopException
      */
     public function save($null_values = false, $auto_date = true)
@@ -130,7 +134,7 @@ class ChannableCache extends ObjectModel
         if (Channable::useCache()) {
             return parent::save($null_values, $auto_date);
         }
+
         return;
     }
-    
 }

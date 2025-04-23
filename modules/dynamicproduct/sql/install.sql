@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_unit_value`
     `display_in_popup`                    tinyint(1)     NOT NULL DEFAULT 0,
     `hide_when_empty`                     tinyint(1)     NOT NULL DEFAULT 0,
     `show_in_summary`                     tinyint(1)     NOT NULL DEFAULT 0,
+    `show_image_in_summary`               tinyint(1)     NOT NULL DEFAULT 0,
     `is_dynamic_value`                    tinyint(1)     NOT NULL DEFAULT 1,
     `ps_style`                            tinyint(1)     NOT NULL DEFAULT 0,
     `show_dropzone`                       tinyint(1)     NOT NULL DEFAULT 0,
@@ -637,4 +638,12 @@ CREATE TABLE IF NOT EXISTS `ps_tunisoft_customization_field`
     `id_module`              int(11) NOT NULL,
     PRIMARY KEY (`id_customization_field`, `id_module`)
 ) ENGINE = InnoDb
+  DEFAULT CHARSET = utf8;
+
+CREATE TABLE IF NOT EXISTS `ps_dynamicproduct_custom_orders`
+(
+    `id_custom_orders` int(11) NOT NULL AUTO_INCREMENT,
+    `id_order`             int(10) NOT NULL,
+    PRIMARY KEY (`id_custom_orders`)
+) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;

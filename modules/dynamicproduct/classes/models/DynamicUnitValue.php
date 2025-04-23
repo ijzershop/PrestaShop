@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -57,6 +57,7 @@ class DynamicUnitValue extends DynamicObject
     public $display_in_popup;
     public $hide_when_empty;
     public $show_in_summary;
+    public $show_image_in_summary;
     public $is_dynamic_value = 1;
     public $price_unit;
     public $ps_style;
@@ -97,6 +98,7 @@ class DynamicUnitValue extends DynamicObject
             'display_in_popup' => ['type' => self::TYPE_INT],
             'hide_when_empty' => ['type' => self::TYPE_INT],
             'show_in_summary' => ['type' => self::TYPE_INT],
+            'show_image_in_summary' => ['type' => self::TYPE_INT],
             'is_dynamic_value' => ['type' => self::TYPE_INT],
             /* Lang fields */
             'price_unit' => [
@@ -127,6 +129,7 @@ class DynamicUnitValue extends DynamicObject
         $sql->select('id_unit_value');
         $sql->from(self::$definition['table']);
         $sql->where('id_field = ' . (int) $id_field);
+        $sql->orderBy('id_unit_value');
         $id_unit_value = \Db::getInstance()->getValue($sql);
         $dynamic_unit_value = new self($id_unit_value, $id_lang);
         $dynamic_unit_value->id_field = (int) $id_field;

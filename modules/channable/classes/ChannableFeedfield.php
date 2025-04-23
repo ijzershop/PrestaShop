@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,30 +9,28 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 class ChannableFeedfield extends ObjectModel
 {
-
     public $id;
-    
+
     public $tablename;
 
     public $field_in_db;
 
     public $field_in_feed;
-    
+
     public $date_add;
-    
-    public static $fields_in_feed = array(
-        'product' => array(
-            'id_product', 
+
+    public static $fields_in_feed = [
+        'product' => [
+            'id_product',
             'condition',
             'visibility',
             'active',
@@ -46,74 +44,105 @@ class ChannableFeedfield extends ObjectModel
             'height',
             'width',
             'depth',
-            'id_category_default'),
-        'product_shop' => array(
+            'id_category_default'],
+        'product_shop' => [
             'id_product',
             'visibility',
             'active',
-            'price'),
-        'product_lang' => array(
+            'price'],
+        'product_lang' => [
             'name',
             'description',
             'description_short',
             'meta_title',
-            'meta_description'),
-        'product_attribute' => array(
+            'meta_description'],
+        'product_attribute' => [
             'id_product_attribute',
             'ean13',
             'reference',
-            'price'),
-        'product_attribute_shop' => array(
-            ),
-        'manufacturer' => array(
-            'name'
-            ),
-        );
+            'price'],
+        'product_attribute_shop' => [
+        ],
+        'manufacturer' => [
+            'name',
+        ],
+        'specific_price' => [
+            'id_specific_price',
+            'id_specific_price_rule',
+            'id_cart',
+            'id_product',
+            'id_shop',
+            'id_shop_group',
+            'id_currency',
+            'id_country',
+            'id_group',
+            'id_customer',
+            'id_product_attribute',
+            'reduction_tax',
+            'reduction_type',
+        ],
+    ];
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'channable_feedfields',
         'primary' => 'id_channable_feedfields',
-        'fields' => array(
-            'tablename' => array(
+        'fields' => [
+            'tablename' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'field_in_db' => array(
+                'size' => 255,
+            ],
+            'field_in_db' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'field_in_feed' => array(
+                'size' => 255,
+            ],
+            'field_in_feed' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'date_add' => array(
+                'size' => 255,
+            ],
+            'date_add' => [
                 'type' => self::TYPE_DATE,
-                'validate' => 'isDateFormat'
-            )
-        )
-    );
-    
+                'validate' => 'isDateFormat',
+            ],
+        ],
+    ];
+
+    public static $cached_fields;
+
+    /**
+     * @return array|null
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function getAllFeedfields()
     {
-        $return = array();
-        $sql = 'SELECT cf.* FROM `' . _DB_PREFIX_ . 'channable_feedfields` cf';
-        if ($results = Db::getInstance()->executeS($sql)) {
-            foreach ($results as $row) {
-                $return[] = array('id' => $row['id_channable_feedfields'],
-                    'tablename' => $row['tablename'],
-                    'field_in_db' => $row['field_in_db'],
-                    'field_in_feed' => $row['field_in_feed']
-                );
+        if (is_null(self::$cached_fields)) {
+            $return = [];
+            $sql = 'SELECT cf.* FROM `' . _DB_PREFIX_ . 'channable_feedfields` cf';
+            if ($results = Db::getInstance()->executeS($sql)) {
+                foreach ($results as $row) {
+                    $return[] = ['id' => $row['id_channable_feedfields'],
+                        'tablename' => $row['tablename'],
+                        'field_in_db' => $row['field_in_db'],
+                        'field_in_feed' => $row['field_in_feed'],
+                    ];
+                }
             }
+            self::$cached_fields = $return;
         }
-        return $return;
+
+        return self::$cached_fields;
     }
-    
+
+    /**
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function getAllFieldsOfProductTables()
     {
-        $fields = array();
+        $fields = [];
         foreach (self::$fields_in_feed as $tablename => $fields_in_feed) {
-            $fields[$tablename] = array();
+            $fields[$tablename] = [];
             $sql = 'SHOW COLUMNS FROM `' . _DB_PREFIX_ . pSQL($tablename) . '`';
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
@@ -121,9 +150,15 @@ class ChannableFeedfield extends ObjectModel
                 }
             }
         }
-        return $fields;        
+
+        return $fields;
     }
-    
+
+    /**
+     * @param array $fields
+     *
+     * @return array
+     */
     public static function excludeFieldsAlreadyInFeedController(array $fields)
     {
         foreach ($fields as $fieldgroup => $groupfields) {
@@ -133,20 +168,30 @@ class ChannableFeedfield extends ObjectModel
                 }
             }
         }
+
         return $fields;
     }
-    
+
+    /**
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     */
     public static function getAvailableFieldsFiltered()
     {
         $fields = self::getAllFieldsOfProductTables();
         $fields = self::excludeFieldsAlreadyInFeedController($fields);
+
         return $fields;
     }
-    
+
+    /**
+     * @return bool
+     */
     public static function removeAllFeedfields()
     {
         $sql = 'TRUNCATE TABLE `' . _DB_PREFIX_ . 'channable_feedfields`';
+
         return Db::getInstance()->execute($sql);
     }
-    
 }

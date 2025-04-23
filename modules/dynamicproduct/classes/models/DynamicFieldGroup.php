@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -98,8 +98,10 @@ class DynamicFieldGroup extends DynamicObject
         '
         );
 
-        $groups = ModelHelper::groupByLang($groups, $id_lang, ['label']);
+        $id_default_lang = \Configuration::get('PS_LANG_DEFAULT');
+        $groups = ModelHelper::groupByLang($groups, ['label']);
+        $groups = ModelHelper::pickLang($groups, $id_lang, $id_default_lang, ['label']);
 
-        return ModelHelper::castNumericValues($groups, self::class);
+        return array_values(ModelHelper::castNumericValues($groups, self::class));
     }
 }

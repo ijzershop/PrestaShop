@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,17 +9,16 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 function upgrade_module_2_8_7($module)
 {
-    $sql = array();
+    $sql = [];
     $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'channable_products_queue` (
     `id_channable_products_queue` int(11) NOT NULL AUTO_INCREMENT,
     `id_product` int(11) NOT NULL,
@@ -28,7 +27,7 @@ function upgrade_module_2_8_7($module)
     PRIMARY KEY  (`id_channable_products_queue`)
 ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
-    $sql[] = 'INSERT INTO  `' . _DB_PREFIX_ . 'channable_products_queue` 
+    $sql[] = 'INSERT INTO  `' . _DB_PREFIX_ . 'channable_products_queue`
         (id_product, running, date_add)
         SELECT id_product, 0, NOW() FROM `' . _DB_PREFIX_ . 'product`
     ';

@@ -3,7 +3,7 @@
 * for Support please visit www.patworx.de
 *
 *  @author patworx multimedia GmbH <service@patworx.de>
-*  @copyright  2016-2018 patworx multimedia GmbH
+*  @copyright  2016-2025 patworx multimedia GmbH
 *  @license    Released under the GNU General Public License
 */
 

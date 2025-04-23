@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,17 +9,15 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 class ChannableWebhook extends ObjectModel
 {
-
     public $id;
 
     public $active;
@@ -27,48 +25,49 @@ class ChannableWebhook extends ObjectModel
     public $action;
 
     public $address;
-    
+
     public $date_add;
 
-    public static $definition = array(
+    public static $definition = [
         'table' => 'channable_webhooks',
         'primary' => 'id_channable_webhook',
-        'fields' => array(
-            'active' => array(
+        'fields' => [
+            'active' => [
                 'type' => self::TYPE_INT,
-                'validate' => 'isInt'
-            ),
-            'action' => array(
+                'validate' => 'isInt',
+            ],
+            'action' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'address' => array(
+                'size' => 255,
+            ],
+            'address' => [
                 'type' => self::TYPE_STRING,
-                'size' => 255
-            ),
-            'date_add' => array(
+                'size' => 255,
+            ],
+            'date_add' => [
                 'type' => self::TYPE_DATE,
-                'validate' => 'isDateFormat'
-            )
-        )
-    );
-    
+                'validate' => 'isDateFormat',
+            ],
+        ],
+    ];
+
     public static function getAllWebhooks()
     {
-        $return = array();
+        $return = [];
         $sql = 'SELECT w.* FROM `' . _DB_PREFIX_ . 'channable_webhooks` w';
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $row) {
-                $return[] = array('id' => $row['id_channable_webhook'],
+                $return[] = ['id' => $row['id_channable_webhook'],
                     'active' => $row['active'],
                     'action' => $row['action'],
-                    'address' => $row['address']
-                );
+                    'address' => $row['address'],
+                ];
             }
         }
+
         return $return;
     }
-    
+
     public static function getExistingOrNewWebhook($address)
     {
         $sql = 'SELECT w.* FROM `' . _DB_PREFIX_ . 'channable_webhooks` w
@@ -78,8 +77,8 @@ class ChannableWebhook extends ObjectModel
         }
         $webhook = new self();
         $webhook->address = $address;
-        $webhook->date_add = date("Y-m-d H:i:s");
+        $webhook->date_add = date('Y-m-d H:i:s');
+
         return $webhook;
     }
-    
 }

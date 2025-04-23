@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -79,6 +79,9 @@ class DynamicFieldsHelper
                 $this->addField($fields, [
                     'id_product' => (int) $id_product,
                     'id_field' => (int) $dynamic_field['id'],
+                    'position' => (int) $dynamic_field['position'],
+                    'id_group' => (int) $dynamic_field['id_group'],
+                    'id_step' => (int) $dynamic_field['id_step'],
                     'name' => $dynamic_field['name'],
                     'value' => $initial_value,
                     'value_formatted' => $initial_value,
@@ -240,6 +243,15 @@ class DynamicFieldsHelper
             $fields[$name] = array_merge($fields[$name], $field);
         } else {
             $fields[$name] = $field;
+        }
+
+        // assign position
+        if (isset($field['position'])) {
+            $fields[$name]['position'] = DynamicInputFieldsHelper::getFieldPosition(
+                $field['position'],
+                $field['id_group'],
+                $field['id_step']
+            );
         }
     }
 

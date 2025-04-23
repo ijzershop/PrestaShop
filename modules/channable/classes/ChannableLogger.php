@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,13 +9,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 class ChannableLogger
 {
-
     /**
      * @var ChannableLogger
      */
@@ -27,7 +28,7 @@ class ChannableLogger
     private static $loglevels = [
         1 => 'ERROR',
         2 => 'INFO',
-        3 => 'DEBUG'
+        3 => 'DEBUG',
     ];
 
     /**
@@ -44,7 +45,7 @@ class ChannableLogger
      */
     public function __construct()
     {
-        $this->loglevel = (int)Configuration::get('CHANNABLE_LOGLEVEL');
+        $this->loglevel = (int) Configuration::get('CHANNABLE_LOGLEVEL');
     }
 
     /**
@@ -52,7 +53,7 @@ class ChannableLogger
      *
      * @param $message
      * @param int $loglevel
-     * @param \Exception $exception|false
+     * @param Exception $exception|false
      * @param array $dataarray
      */
     public function addLog(
@@ -61,27 +62,26 @@ class ChannableLogger
         $exception = false,
         $dataarray = []
     ) {
-
         if ($this->loglevel >= $loglevel) {
             $backtrace = debug_backtrace();
             $fileinfo = '';
             $callsinfo = '';
             if (!empty($backtrace[0]) && is_array($backtrace[0])) {
-                $fileinfo = $backtrace[0]['file'] . ": " . $backtrace[0]['line'];
-                for ($x=1; $x<5; $x++) {
+                $fileinfo = $backtrace[0]['file'] . ': ' . $backtrace[0]['line'];
+                for ($x = 1; $x < 5; ++$x) {
                     if (!empty($backtrace[$x]) && is_array($backtrace[$x])) {
-                        $callsinfo.= "\r\n" . $backtrace[$x]['file'] . ": " . $backtrace[$x]['line'];
+                        $callsinfo .= "\r\n" . $backtrace[$x]['file'] . ': ' . $backtrace[$x]['line'];
                     }
                 }
             }
-            $logstr = date("Y-m-d H:i:s");
-            $logstr.= ' [' . self::$loglevels[$loglevel] . '] ';
-            $logstr.= $message;
-            $logstr.= ' - ' . $fileinfo;
-            $logstr.= "\r\n";
+            $logstr = date('Y-m-d H:i:s');
+            $logstr .= ' [' . self::$loglevels[$loglevel] . '] ';
+            $logstr .= $message;
+            $logstr .= ' - ' . $fileinfo;
+            $logstr .= "\r\n";
             if ($callsinfo != '') {
-                $logstr.= 'Backtrace :';
-                $logstr.= $callsinfo . "\r\n";
+                $logstr .= 'Backtrace :';
+                $logstr .= $callsinfo . "\r\n";
             }
             $this->writeToLogfile($logstr);
             if ($loglevel == 1) {
@@ -89,16 +89,16 @@ class ChannableLogger
             }
             if ($exception) {
                 $exceptionlog = 'Exception thrown: ';
-                $exceptionlog.= $exception->getCode() . ': ' . $exception->getMessage() . ' - ';
-                $exceptionlog.= $exception->getFile() . ': ' . $exception->getLine();
-                $exceptionlog.= "\r\n";
+                $exceptionlog .= $exception->getCode() . ': ' . $exception->getMessage() . ' - ';
+                $exceptionlog .= $exception->getFile() . ': ' . $exception->getLine();
+                $exceptionlog .= "\r\n";
                 $this->writeToLogfile($exceptionlog);
             }
             if (sizeof($dataarray) > 0) {
                 $arraylog = 'Data-Array :';
-                $arraylog.= "\r\n";
-                $arraylog.= print_r($dataarray, true);
-                $arraylog.= "\r\n";
+                $arraylog .= "\r\n";
+                $arraylog .= print_r($dataarray, true);
+                $arraylog .= "\r\n";
                 $this->writeToLogfile($arraylog);
             }
         }
@@ -114,18 +114,17 @@ class ChannableLogger
         file_put_contents($this->getLogFileName(), $string, FILE_APPEND);
     }
 
-
     /**
      * @return string
      */
     protected function getLogDir()
     {
-        if (is_dir(_PS_ROOT_DIR_.'/log')) {
-            return _PS_ROOT_DIR_.'/log/';
+        if (is_dir(_PS_ROOT_DIR_ . '/log')) {
+            return _PS_ROOT_DIR_ . '/log/';
         } elseif (is_dir(_PS_ROOT_DIR_ . '/app/logs')) {
-            return _PS_ROOT_DIR_.'/app/logs/';
+            return _PS_ROOT_DIR_ . '/app/logs/';
         } else {
-            return _PS_ROOT_DIR_.'/var/logs/';
+            return _PS_ROOT_DIR_ . '/var/logs/';
         }
     }
 
@@ -145,7 +144,7 @@ class ChannableLogger
         if (!self::$instance) {
             self::$instance = new self();
         }
+
         return self::$instance;
     }
-
 }

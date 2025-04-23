@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -122,8 +122,9 @@ class DynamicThumbnailsOption extends DynamicObject
             ORDER BY `position` ASC
         ');
 
-        $options = ModelHelper::groupByLang($rows, $id_lang, ['label']);
-
+        $id_default_lang = \Configuration::get('PS_LANG_DEFAULT');
+        $options = ModelHelper::groupByLang($rows, ['label']);
+        $options = ModelHelper::pickLang($options, $id_lang, $id_default_lang, ['label']);
         $options = ModelHelper::castNumericValues($options, self::class);
 
         $base_url = $module->provider->getDataDirUrl('images/thumbnails');
@@ -270,6 +271,7 @@ class DynamicThumbnailsOption extends DynamicObject
         }
 
         $this->deleted = true;
-        $this->save();
+
+        return $this->save();
     }
 }

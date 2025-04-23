@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -65,6 +65,7 @@ class ModuleFixer
     /** @var \Context */
     private $context;
 
+    private $messages = [];
     private $errors = [];
 
     public function __construct($module)
@@ -84,6 +85,7 @@ class ModuleFixer
             'module_link' => $this->getModuleLink(),
             'module_hooks' => $module_hooks,
             'unregistered_hooks' => $unregistered_hooks,
+            'messages' => $this->messages,
             'errors' => $this->errors,
             'templates_fixed' => $this->areTemplatesFixed(),
             'cron_link' => $this->context->link->getModuleLink(
@@ -128,6 +130,9 @@ class ModuleFixer
         if (\Tools::isSubmit('fix_templates')) {
             $this->fixTemplates();
         }
+        if (\Tools::isSubmit('sync_orders')) {
+            $this->syncOrders();
+        }
         if (\Tools::isSubmit('cleanup')) {
             $this->cleanUp();
         }
@@ -161,6 +166,31 @@ class ModuleFixer
         }
     }
 
+    public function syncOrders()
+    {
+        $sql = '
+            SELECT o.id_order
+            FROM ps_orders o
+                     LEFT JOIN ps_dynamicproduct_input i ON i.id_cart = o.id_cart
+                     LEFT JOIN ps_cart_product cp ON cp.id_customization = i.id_customization
+            WHERE i.id_input IS NOT NULL AND o.id_order NOT IN (SELECT id_order FROM ps_dynamicproduct_custom_orders)
+            GROUP BY o.id_order';
+        $sql = str_replace('ps_', _DB_PREFIX_, $sql);
+        $orders = \Db::getInstance()->executeS($sql);
+
+        foreach ($orders as $order) {
+            \Db::getInstance()->insert('dynamicproduct_custom_orders', [
+                'id_order' => (int) $order['id_order'],
+            ]);
+        }
+
+        if (count($orders) > 0) {
+            $this->messages[] = count($orders) . ' ' . $this->module->l('order(s) synced successfully.');
+        } else {
+            $this->messages[] = $this->module->l('It looks like all orders were already synced.');
+        }
+    }
+
     private function areTemplatesFixed()
     {
         $fixes = $this->getFixes();
@@ -168,6 +198,10 @@ class ModuleFixer
             if (is_file($fix['path'])) {
                 $contents = \Tools::file_get_contents($fix['path']);
                 if (strpos($contents, $fix['replace']) === false) {
+                    if (strpos($contents, $fix['search']) === false) {
+                        continue;
+                    }
+
                     return false;
                 }
             }
@@ -204,10 +238,46 @@ class ModuleFixer
                 'replace' => "{\$customization['customization_text'] nofilter}",
             ],
             [
-                'path' => (defined('_PS_ADMIN_DIR_') ? _PS_ADMIN_DIR_ : _PS_ROOT_DIR_ . '/admin') .
+                'path' => _PS_THEME_DIR_ .
+                    '/mails/en/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/modules/ets_ordermanager/views/PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/modules/ets_ordermanager/views/templates/admin/_configure/templates/orders/_customized_data.tpl',
+                'search' => '{$data[\'value\']|escape:\'html\':\'UTF-8\'}',
+                'replace' => '{$data[\'value\']}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/modules/orderedit/views/PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                    '/modules/pms_admin_order/views/Module/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ADMIN_DIR_ .
                     '/themes/new-theme/public/order_create.bundle.js',
-                'search' => "o.find(je).text(t.value)",
-                'replace' => "o.find(je).html(t.value)",
+                'search' => 'o.find(a.default.listedProductCustomizationValue).text(e.value)',
+                'replace' => 'o.find(a.default.listedProductCustomizationValue).html(e.value)',
+            ],
+            [
+                'path' => _PS_ADMIN_DIR_ .
+                    '/themes/new-theme/public/order_create.bundle.js',
+                'search' => 'o.find(je).text(t.value)',
+                'replace' => 'o.find(je).html(t.value)',
             ],
         ];
     }

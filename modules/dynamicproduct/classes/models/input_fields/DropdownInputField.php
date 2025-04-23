@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -29,6 +29,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use DynamicProduct\classes\models\DynamicDropdownOption;
 use DynamicProduct\classes\models\DynamicInputField;
 
 class DropdownInputField extends DynamicInputField
@@ -81,5 +82,26 @@ class DropdownInputField extends DynamicInputField
         }
 
         return null;
+    }
+
+    public function getImagesUrls()
+    {
+        if (is_array($this->selected_options) && count($this->selected_options) === 1) {
+            $options = $this->field['options'];
+            if (!isset($options[$this->selected_options[0]])) {
+                return [];
+            }
+            $id_option = $this->selected_options[0];
+            $option = new DynamicDropdownOption($id_option);
+            if (\Validate::isLoadedObject($option) && $option->hasImage()) {
+                return [
+                  'thumb_url' => $option->thumb_url,
+                  'image_url' => $option->image_url,
+                  'image_path' => $option->getPath('image'),
+                ];
+            }
+        }
+
+        return [];
     }
 }

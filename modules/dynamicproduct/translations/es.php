@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -28,7 +28,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_cfb1926301def71fee208c87b72381f3'] = 'Producto dinámico';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_e5b1eba6a27ec379c4a0c31212948ff0'] = 'Permita que sus clientes personalicen su pedido modificando varios aspectos de sus productos.';
 $_MODULE['<{dynamicproduct}prestashop>dynamicproduct_023f969d7a7356f2c99114712dbe1e6c'] = 'Debe habilitar las overrides (en Rendimiento) para que el módulo funcione correctamente';
@@ -168,6 +168,14 @@ $_MODULE['<{dynamicproduct}prestashop>modulefixer_aae074ea284b29c2383db7c6bbac78
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_813ff6b359729dc977ec2514226b8f49'] = 'Se excedió el límite de tiempo del servidor, vuelva a ejecutar la limpieza';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_09ea3e2ea18814fcc3909ea1dd5358b6'] = 'Se eliminaron %s personalizaciones no utilizadas';
 $_MODULE['<{dynamicproduct}prestashop>modulefixer_fda67625149a59ec4b619ada215bf131'] = 'Limpiar datos';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_9fd091397e348471b046d772918ddd45'] = 'Sincronización de pedidos';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_56fa1132b8520664926f9018f5f1d508'] = 'Las referencias de los pedidos personalizados se almacenan en una tabla de módulos separada para permitir marcarlos como personalizados en la página de pedidos.';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_99bb8dd201b95f30afdbd1d352fa203d'] = 'Dado que se trata de una nueva función, es posible que las referencias no estén sincronizadas.';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_864c89cabf85841bb0358bff1cdd56e3'] = 'Haz clic en el botón de abajo para empezar a sincronizar las referencias. (puede tardar un poco)';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_9fec7a6c9775983557d9e67356831c4d'] = 'Sincronizar pedidos';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_3a9d1de49db820fffb76e147008b1380'] = 'Esta operación se realiza una sola vez. Los nuevos pedidos se sincronizarán automáticamente.';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_5b45c44dcc53e1df41972d9e81e81342'] = 'pedido(s) sincronizado(s) correctamente.';
+$_MODULE['<{dynamicproduct}prestashop>modulefixer_715604dea72af5abdbeb13e73aeeb826'] = 'Parece que todos los pedidos ya estaban sincronizados.';
 $_MODULE['<{dynamicproduct}prestashop>mathparser_174e36f92179baca3c75a59c9b8c4067'] = 'La expresión está vacía.';
 $_MODULE['<{dynamicproduct}prestashop>mathparser_f61830b29d91c62509ce059d87f28c25'] = 'La variable %s no existe.';
 $_MODULE['<{dynamicproduct}prestashop>mathparser_781730eac5ff5754a51ab6bb7f81235a'] = 'La variable %s no es numérica.';
@@ -339,6 +347,7 @@ $_MODULE['<{dynamicproduct}prestashop>translationhelper_474c1219b0e41415e1115456
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_9af88458629cc27bc77b7fef99d031f5'] = 'Eliminar este paso';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ea2ef9b0d095bf991f4973633b485340'] = 'Archivos CSV';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_6daf7b8fc08c631cc8d3537bf889ff0a'] = 'Haga clic para alternar la visibilidad del campo';
+$_MODULE['<{dynamicproduct}prestashop>translationhelper_11f7a60cc0ef1fec2bed234885b415e7'] = 'Mostrar la imagen de la opción seleccionada en el resumen';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_ddda55b80f65cae4157306794a168c37'] = 'Deseleccionar todo';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_22b334d50b5bb7d61218bd544095e2f9'] = 'Haga clic para insertar una opción';
 $_MODULE['<{dynamicproduct}prestashop>translationhelper_f11cedfc3583dc1a844ab66473311905'] = 'Si está vacío, se usará el nombre del campo';

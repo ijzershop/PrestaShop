@@ -1,5 +1,5 @@
 {*
-* 2007-2018 PrestaShop
+* 2007-2025 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    PrestaShop SA <contact@prestashop.com>
-*  @copyright 2007-2018 PrestaShop SA
+*  @copyright 2007-2025 PrestaShop SA
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,9 +27,13 @@
 	<div class="alert alert-success">{$success_message|escape:'htmlall':'UTF-8'}</div>
 {/if}
 
+{if isset($update_key_message)}
+	<div class="alert alert-warning">Please update your webservice key to ensure highest security.</div>
+{/if}
+
 <div class="panel">
 	<h3>{l s='ABOUT CHANNABLE' mod='channable'}</h3>
-	<img src="{$module_dir|escape:'html'}views/img/channable.png" class="img_responsive channable_logo" />
+	<img src="{$module_dir|escape:'html':'UTF-8'}views/img/channable.png" class="img_responsive channable_logo" />
 	<p>
 		{l s='Channable offers a cloud-based datafeed management tool, which makes online advertisement much easier for online retailers and marketing agencies. Within the tool you can set up clever rules in order to create optimized product feeds and/or connect with the APIs of several platforms, such as Amazon or Admarkt. Free technical support is included.' mod='channable'}
 	</p>
@@ -109,7 +113,7 @@
 			<p class="channable_orderstates_config_head channable_top_marged">
 				{l s='Taxrate to calculate imported shipping price excl. tax:' mod='channable'}
 			</p>
-			<input type="text" name="carrier_import_tax" id="carrier_import_tax" value="{$carrier_import_tax}">
+			<input type="text" name="carrier_import_tax" id="carrier_import_tax" value="{$carrier_import_tax|escape:'htmlall':'UTF-8'}">
 		</div>
 	</div>
 	<div class="row">
@@ -175,8 +179,32 @@
 			</p>
 			<select name="send_product_stock_interval" id="send_product_stock_interval">
 				{foreach from=[5,10,15,30,45,60,120] item=minutes}
-					<option value="{$minutes}" {if Configuration::get('CHANNABLE_CRON_BACKEND_TIMEDIFF_MIN') == $minutes}selected{/if}>{$minutes}</option>
+					<option value="{$minutes|escape:'htmlall':'UTF-8'}" {if Configuration::get('CHANNABLE_CRON_BACKEND_TIMEDIFF_MIN') == $minutes}selected{/if}>{$minutes|escape:'htmlall':'UTF-8'}</option>
 				{/foreach}
+			</select>
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<p class="channable_orderstates_config_head channable_top_marged">
+				{l s='Default string for orders with empty name fields:' mod='channable'}
+			</p>
+			<input type="text" name="order_import_name_default" id="order_import_name_default" value="{$order_import_name_default|escape:'htmlall':'UTF-8'}">
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<p class="channable_orderstates_config_head channable_top_marged">
+				{l s='Sync stock between shops in multishop environment:' mod='channable'}
+			</p>
+			<select name="enable_shop_stock_sync" id="enable_shop_stock_sync">
+				<option value="0">No</option>
+				<option value="1" {if Configuration::get('CHANNABLE_SHOP_STOCK_SYNC') == '1'}selected{/if}>Yes</option>
+			</select>
+		</div>
+		<div class="col-xs-12 col-sm-6">
+			<p class="channable_orderstates_config_head channable_top_marged">
+				{l s='Use submitted phone number as mobile number:' mod='channable'}
+			</p>
+			<select name="enable_phone_as_mobile" id="enable_phone_as_mobile">
+				<option value="0">No</option>
+				<option value="1" {if Configuration::get('CHANNABLE_USE_PHONE_FOR_MOBILE') == '1'}selected{/if}>Yes</option>
 			</select>
 		</div>
 	</div>
@@ -298,12 +326,12 @@
           </div>
           {foreach from=$customer_group_assignments item=cga key=nr}
             <div class="row">
-              <div class="col-xs-6"><input type="text" name="cga[{$nr}][s]" value="{$cga.s|escape:'html':'UTF-8'}"></div>
+              <div class="col-xs-6"><input type="text" name="cga[{$nr|escape:'htmlall':'UTF-8'}][s]" value="{$cga.s|escape:'html':'UTF-8'}"></div>
               <div class="col-xs-6">
-                <select name="cga[{$nr}][g]" class="cga_selector">
+                <select name="cga[{$nr|escape:'htmlall':'UTF-8'}][g]" class="cga_selector">
                   <option value="0">---</option>
                   {foreach from=$customer_groups item=cg}
-                    <option value="{$cg.id_group}" {if $cg.id_group == $cga.g}selected{/if}>{$cg.name|escape:'html':'UTF-8'}</option>
+                    <option value="{$cg.id_group|escape:'htmlall':'UTF-8'}" {if $cg.id_group == $cga.g}selected{/if}>{$cg.name|escape:'html':'UTF-8'}</option>
                   {/foreach}
                 </select>
               </div>
@@ -315,16 +343,12 @@
       </div>
     </div>
     <div class="panel-footer">
-      <button type="submit" value="1"	id="module_customergroup_assignment_form_submit_btn" name="submitChannableCustomergroupAssignmentModule" class="btn btn-default pull-right">
+      <button type="submit" value="1" id="module_customergroup_assignment_form_submit_btn" name="submitChannableCustomergroupAssignmentModule" class="btn btn-default pull-right">
         <i class="process-icon-save"></i> {l s='Save' mod='channable'}
       </button>
     </div>
   </div>
 </form>
-
-
-
-
 
 {if isset($feedfields_assigned) && is_array($feedfields_assigned)}
 	<script>
@@ -335,3 +359,132 @@
 		{literal}}{/literal});
 	</script>
 {/if}
+
+
+<form method="post" action="{$form_url|escape:'html':'UTF-8'}">
+	<div class="panel">
+		<h3>{l s='Expert: Assign marketplace to specific shipping status' mod='channable'}</h3>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-6">
+				<div id="marketplace_shipping_fields">
+					<div class="row">
+						<div class="col-xs-6"><strong>{l s='String in channel name contains:' mod='channable'}</strong></div>
+						<div class="col-xs-6"><strong>{l s='Shipping status to set:' mod='channable'}</strong></div>
+					</div>
+					{foreach from=$marketplace_assignments item=msa key=nr}
+						<div class="row">
+							<div class="col-xs-6"><input type="text" name="msa[{$nr|escape:'htmlall':'UTF-8'}][s]" value="{$msa.s|escape:'html':'UTF-8'}"></div>
+							<div class="col-xs-6">
+								<select name="msa[{$nr|escape:'htmlall':'UTF-8'}][g]" class="msa_selector">
+									<option value="0">---</option>
+									{foreach from=$order_states item=os}
+										<option value="{$os.id_order_state|escape:'html':'UTF-8'}" {if $os.id_order_state == $msa.g}selected{/if}>{$os.name|escape:'html':'UTF-8'}</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+					{/foreach}
+
+				</div>
+
+			</div>
+		</div>
+		<div class="panel-footer">
+			<button type="submit" value="1"	id="module_marketplace_assignment_form_submit_btn" name="submitChannableMarketplaceAssignmentModule" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save' mod='channable'}
+			</button>
+		</div>
+	</div>
+</form>
+
+
+<form method="post" action="{$form_url|escape:'html':'UTF-8'}">
+	<div class="panel">
+		<h3>{l s='Expert: Assign carriers based on product or category' mod='channable'}</h3>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-6">
+				<div id="carriers_fields">
+					<div class="row">
+						<div class="col-xs-4"><strong>{l s='Entity (product or category):' mod='channable'}</strong></div>
+						<div class="col-xs-4"><strong>{l s='Entity ID:' mod='channable'}</strong></div>
+						<div class="col-xs-4"><strong>{l s='Assigned Carrier:' mod='channable'}</strong></div>
+					</div>
+					{foreach from=$carrier_assignments item=csa key=nr}
+						<div class="row">
+							<div class="col-xs-4">
+								<select name="csa[{$csa.id|escape:'htmlall':'UTF-8'}][entity_type]" class="carrier_entity_selector">
+									<option value="product" {if $csa.entity_type == 'product'}selected{/if}>{l s='Product' mod='channable'}</option>
+									<option value="category" {if $csa.entity_type == 'category'}selected{/if}>{l s='Category' mod='channable'}</option>
+								</select>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" inputmode="numeric" name="csa[{$csa.id|escape:'htmlall':'UTF-8'}][id_entity]" value="{$csa.id_entity|escape:'html':'UTF-8'}">
+							</div>
+							<div class="col-xs-4">
+								<select name="csa[{$csa.id|escape:'htmlall':'UTF-8'}][id_carrier]" class="carrier_selector">
+									<option value="0">---</option>
+									{foreach from=$carriers item=c}
+										<option value="{$c.id_carrier|escape:'html':'UTF-8'}" {if $c.id_carrier == $csa.id_carrier}selected{/if}>{$c.name|escape:'html':'UTF-8'}</option>
+									{/foreach}
+								</select>
+							</div>
+						</div>
+					{/foreach}
+
+				</div>
+				<p>
+					{l s='To remove an assignment, just set the entity ID to 0 or empty.' mod='channable'}
+				</p>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<button type="submit" value="1"	id="module_carrier_assignment_form_submit_btn" name="submitChannableCarrierAssignmentModule" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save' mod='channable'}
+			</button>
+		</div>
+	</div>
+</form>
+
+
+<form method="post" action="{$form_url|escape:'html':'UTF-8'}">
+	<div class="panel">
+		<h3>{l s='Expert: Taxrate to calculate imported shipping price excl. tax based on delivery address country' mod='channable'}</h3>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-6">
+				<div id="carriers_fields">
+					<div class="row">
+						<div class="col-xs-4"><strong>{l s='Country:' mod='channable'}</strong></div>
+						<div class="col-xs-4"><strong>{l s='Tax rate:' mod='channable'}</strong></div>
+					</div>
+					{foreach from=$tax_country_assignments item=coa key=nr}
+						<div class="row">
+							<div class="col-xs-4">
+								<select name="coa[{$nr|escape:'htmlall':'UTF-8'}][country_id]" class="country_entity_selector">
+									<option value="0">---</option>
+									{foreach from=$shop_countries item=country}
+										<option value="{$country.id_country|escape:'htmlall':'UTF-8'}" {if $country.id_country == $coa.country_id}selected{/if}>{$country.name|escape:'htmlall':'UTF-8'}</option>
+									{/foreach}
+								</select>
+							</div>
+							<div class="col-xs-4">
+								<input type="text" inputmode="numeric" name="coa[{$nr|escape:'htmlall':'UTF-8'}][tax_rate]" value="{$coa.tax_rate|escape:'html':'UTF-8'}">
+							</div>
+						</div>
+					{/foreach}
+
+				</div>
+				<p>
+					{l s='To remove an assignment, just set the Tax rate to empty.' mod='channable'}
+				</p>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<button type="submit" value="1"	id="module_texrate_assignment_form_submit_btn" name="submitChannableTaxRateModule" class="btn btn-default pull-right">
+				<i class="process-icon-save"></i> {l s='Save' mod='channable'}
+			</button>
+		</div>
+	</div>
+</form>

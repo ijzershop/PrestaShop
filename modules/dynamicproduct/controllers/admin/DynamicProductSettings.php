@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -59,15 +59,15 @@ class DynamicProductSettingsController extends ModuleAdminController
         parent::__construct();
         $this->context = Context::getContext();
         $this->action = Tools::getValue('action');
-        $this->id_product = (int)Tools::getValue('id_product');
-        $this->id_default_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $this->id_product = (int) Tools::getValue('id_product');
+        $this->id_default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
     }
 
     public function postProcess()
     {
         $source = basename(__FILE__, '.php');
         $restricted = DynamicTools::getRestricted('_DP_RESTRICTED_');
-        if ((int)$this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted)) {
+        if ((int) $this->context->employee->id_profile !== 1 && in_array($this->id_product, $restricted)) {
             exit(json_encode([
                 'error' => true,
                 'message' => $this->module->l('This product is for viewing only!', $source),
@@ -142,11 +142,11 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     private function processAddProductToOrder()
     {
-        $id_order = (int)Tools::getValue('id_order');
-        $id_product = (int)Tools::getValue('id_product');
-        $id_attribute = (int)Tools::getValue('id_attribute');
-        $id_input = (int)Tools::getValue('id_input');
-        $quantity = (int)Tools::getValue('quantity', 1);
+        $id_order = (int) Tools::getValue('id_order');
+        $id_product = (int) Tools::getValue('id_product');
+        $id_attribute = (int) Tools::getValue('id_attribute');
+        $id_input = (int) Tools::getValue('id_input');
+        $quantity = (int) Tools::getValue('quantity', 1);
 
         $order = new Order($id_order);
         $id_cart = $order->id_cart;
@@ -163,7 +163,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             'quantity' => $quantity,
             'in_cart' => 1,
         ]);
-        $id_customization = (int)Db::getInstance()->Insert_ID();
+        $id_customization = (int) Db::getInstance()->Insert_ID();
 
         Db::getInstance()->insert('customized_data', [
             'id_customization' => $id_customization,
@@ -220,7 +220,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             $id_customization
         );
 
-        $id_order_invoice = (int)Db::getInstance()->getValue('
+        $id_order_invoice = (int) Db::getInstance()->getValue('
             SELECT id_order_invoice 
             FROM ' . _DB_PREFIX_ . 'order_invoice 
             WHERE id_order = ' . $id_order
@@ -286,7 +286,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             $this->module->handler->addCustomField($this->id_product);
         }
 
-        if ($name === 'active' && (int)$value === 0) {
+        if ($name === 'active' && (int) $value === 0) {
             $this->module->handler->setCustomFieldRequired($this->id_product, false);
         }
 
@@ -296,11 +296,11 @@ class DynamicProductSettingsController extends ModuleAdminController
     private function processCopyProductConfig()
     {
         $options = Tools::getValue('options', []);
-        $clear = (int)($options['clear'] ?? 1);
-        $link = (int)($options['link'] ?? 0);
+        $clear = (int) ($options['clear'] ?? 1);
+        $link = (int) ($options['link'] ?? 0);
 
-        $id_target_product = (int)Tools::getValue('id_target_product');
-        $id_source_product = (int)Tools::getValue('id_source_product');
+        $id_target_product = (int) Tools::getValue('id_target_product');
+        $id_source_product = (int) Tools::getValue('id_source_product');
 
         if ($link) {
             if ($clear) {
@@ -323,8 +323,8 @@ class DynamicProductSettingsController extends ModuleAdminController
                 'message' => 'This function is not available in the demo mode!',
             ]);
         }
-        $id_category = (int)Tools::getValue('id_category');
-        $id_product = (int)Tools::getValue('id_product');
+        $id_category = (int) Tools::getValue('id_category');
+        $id_product = (int) Tools::getValue('id_product');
 
         // allow linking to multiple categories
         // DynamicProductConfigLink::removeLinks($id_product);
@@ -351,7 +351,7 @@ class DynamicProductSettingsController extends ModuleAdminController
             ]);
         }
 
-        $id_target_product = (int)Tools::getValue('id_target_product');
+        $id_target_product = (int) Tools::getValue('id_target_product');
         $this->module->handler->clearConfig($id_target_product);
         DynamicProductConfigLink::removeLink($id_target_product);
         $this->respond();
@@ -359,7 +359,7 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     private function processGetCategoryProducts()
     {
-        $id_category = (int)Tools::getValue('id_target_category');
+        $id_category = (int) Tools::getValue('id_target_category');
 
         $category = new Category($id_category);
         $products = $category->getProducts(
@@ -376,14 +376,14 @@ class DynamicProductSettingsController extends ModuleAdminController
         );
         $this->respond([
             'products' => array_map(function ($product) {
-                return (int)$product['id_product'];
+                return (int) $product['id_product'];
             }, $products),
         ]);
     }
 
     private function processExportConfig()
     {
-        $link_images = (int)Tools::getValue('link_images');
+        $link_images = (int) Tools::getValue('link_images');
         $data = $this->module->handler->exportConfig($this->id_product, $link_images);
         $this->respond([
             'data' => $data,
@@ -464,7 +464,7 @@ class DynamicProductSettingsController extends ModuleAdminController
 
     public function respond($data = [], $success = 1)
     {
-        $success = $success && (int)!array_key_exists('error', $data);
+        $success = $success && (int) !array_key_exists('error', $data);
         $arr = [
             'success' => $success,
         ];

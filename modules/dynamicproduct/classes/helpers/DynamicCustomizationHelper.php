@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicCommonField;
 use DynamicProduct\classes\models\DynamicEquation;
 use DynamicProduct\classes\models\DynamicInput;
 use DynamicProduct\classes\models\DynamicInputField;
@@ -52,11 +53,12 @@ class DynamicCustomizationHelper
         int $id_attribute,
         int $quantity,
         array $fields,
-        ?array $id_customizations = null,
+        array $id_customizations = null,
         bool $add_to_cart = true,
         bool $save_customization = true,
         int $dp_input = 0,
-        int $dp_cart = 0
+        int $dp_cart = 0,
+        int $dp_customer = 0
     ) {
         $id_inputs = [];
 
@@ -128,6 +130,7 @@ class DynamicCustomizationHelper
                 $id_product,
                 $id_product_attribute,
                 $id_cart,
+                $dp_customer,
                 $id_customization,
                 $quantity,
                 $price_equation_result,
@@ -146,7 +149,7 @@ class DynamicCustomizationHelper
                 $dynamic_input
             );
 
-            $customization_helper->saveInputFields($input_fields, $dynamic_input->id);
+            $customization_helper->saveInputFields($id_product, $input_fields, $dynamic_input->id);
 
             $cart = $this->context->cart;
             if ($add_to_cart) {
@@ -236,6 +239,7 @@ class DynamicCustomizationHelper
         $id_product,
         $id_attribute,
         $id_cart,
+        $id_customer,
         $id_customization,
         $quantity,
         $price_equation_result,
@@ -251,8 +255,8 @@ class DynamicCustomizationHelper
         $dynamic_input->id_attribute = (int) $id_attribute;
         $dynamic_input->id_cart = (int) $id_cart;
         $dynamic_input->cart_quantity = (int) $quantity;
-        $dynamic_input->id_customer = (int) $this->module->provider->getCustomer();
-        $dynamic_input->id_guest = (int) $this->module->provider->getGuest();
+        $dynamic_input->id_customer = (int) $id_customer ? $id_customer : (int) $this->module->provider->getCustomer();
+        $dynamic_input->id_guest = (int) $id_customer ? 0 : (int) $this->module->provider->getGuest();
         $dynamic_input->hash = \Tools::getValue('hash');
         $dynamic_input->true_conditions = json_encode($true_conditions);
         $dynamic_input->name = $name;
@@ -269,39 +273,31 @@ class DynamicCustomizationHelper
     }
 
     /**
+     * @param int $id_product
      * @param DynamicInputField[] $input_fields
      * @param $id_input
      */
-    public function saveInputFields($input_fields, $id_input)
+    public function saveInputFields($id_product, $input_fields, $id_input)
     {
         foreach ($input_fields as $input_field) {
             $input_field->id = null;
 
             $field = $input_field->getDynamicField();
             $field_position = (int) $field['position'];
-            $group_position = 0;
-            $group_step = 0;
-            $step_position = 0;
-            if ((int) $field['id_group']) {
-                $group_position = (int) \Db::getInstance()->getValue(
-                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . (int) $field['id_group']
-                );
-                $group_step = (int) \Db::getInstance()->getValue(
-                    'SELECT id_step FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_field_group WHERE id_product_field_group = ' . (int) $field['id_group']
-                );
-            }
-            if ((int) $field['id_step']) {
-                $step_position = (int) \Db::getInstance()->getValue(
-                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . (int) $field['id_step']
-                );
-            }
-            if ($group_step) {
-                $step_position = (int) \Db::getInstance()->getValue(
-                    'SELECT position FROM ' . _DB_PREFIX_ . 'dynamicproduct_product_step WHERE id_product_step = ' . (int) $group_step
-                );
+            $id_group = (int) $field['id_group'];
+            $id_step = (int) $field['id_step'];
+            if ($field['id_product'] !== $id_product) {
+                $common_field = DynamicCommonField::getByFieldAndProduct($field['id'], $id_product);
+                if (\Validate::isLoadedObject($common_field)) {
+                    $field_position = $common_field->position;
+                    $id_group = (int) $common_field->id_group;
+                    $id_step = (int) $common_field->id_step;
+                }
             }
 
-            $input_field->position = $field_position + $group_position * 100 + $step_position * 10000;
+            $position = DynamicInputFieldsHelper::getFieldPosition($field_position, $id_group, $id_step);
+
+            $input_field->position = $position;
             $input_field->id_input = (int) $id_input;
             if ($input_field->data && !is_string($input_field->data)) {
                 $input_field->data = json_encode($input_field->data);

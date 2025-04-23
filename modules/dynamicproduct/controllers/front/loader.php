@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -43,11 +43,11 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
     {
         $source = basename(__FILE__, '.php');
 
-        $is_hot_mode = (int)Tools::getValue('is_hot_mode');
-        $id_product = (int)Tools::getValue('id_product');
-        $id_source_product = (int)Tools::getValue('id_source_product');
-        $id_attribute = (int)Tools::getValue('id_attribute');
-        $is_admin_edit = (int)Tools::getValue('is_admin_edit');
+        $is_hot_mode = (int) Tools::getValue('is_hot_mode');
+        $id_product = (int) Tools::getValue('id_product');
+        $id_source_product = (int) Tools::getValue('id_source_product');
+        $id_attribute = (int) Tools::getValue('id_attribute');
+        $is_admin_edit = (int) Tools::getValue('is_admin_edit');
         $url_values = Tools::getValue('url_values', []);
 
         $product_config = DynamicConfig::getByProduct($id_product);
@@ -120,7 +120,7 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
                 'id_attribute' => $id_attribute,
                 'is_admin' => $is_admin,
                 'is_admin_edit' => $is_admin_edit && $is_admin,
-                'is_create_customization' => (int)Tools::getValue('is_create_customization') && $is_admin,
+                'is_create_customization' => (int) Tools::getValue('is_create_customization') && $is_admin,
                 'uri' => $this->module->getPathUri(),
                 'data_uri' => $this->module->provider->getDataDirUrl(),
                 'config' => $product_config,
@@ -133,7 +133,7 @@ class DynamicProductLoaderModuleFrontController extends DynamicFrontController
                 'calculation' => $calculation,
                 'error' => $error,
                 'id_cart' => Tools::getValue('dp_cart', 0),
-                'id_customer' => Tools::getValue('dp_customer', 0),
+                'dp_customer' => Tools::getValue('dp_customer', 0),
                 'scripts_hashes' => ScriptsHelper::getHashes(),
                 'controllers' => [
                     'calculator' => $this->context->link->getModuleLink($this->module->name, 'calculator'),

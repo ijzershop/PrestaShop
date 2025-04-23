@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2022 patworx.de
+ * 2007-2025 patworx.de
  *
  * DISCLAIMER
  *
@@ -9,12 +9,11 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  *  @author    patworx multimedia GmbH <service@patworx.de>
- *  @copyright 2007-2022 patworx multimedia GmbH
+ *  @copyright 2007-2025 patworx multimedia GmbH
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-
-if (! defined('_PS_VERSION_')) {
-    exit();
+if (!defined('_PS_VERSION_')) {
+    exit;
 }
 
 function upgrade_module_2_7_1($module)
@@ -22,7 +21,7 @@ function upgrade_module_2_7_1($module)
     Configuration::updateValue('CHANNABLE_DO_CRON_FROM_BACKEND', 1);
     Configuration::updateValue('CHANNABLE_CRON_BACKEND_TIMEDIFF_MIN', 5);
 
-    $sql = array();
+    $sql = [];
     $sql[] = 'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'channable_stock_update` (
     `id_channable_stock_update` int(11) NOT NULL AUTO_INCREMENT,
     `id_product` int(11) NOT NULL,
@@ -37,5 +36,6 @@ function upgrade_module_2_7_1($module)
             return false;
         }
     }
+
     return $module;
 }

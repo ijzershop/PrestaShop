@@ -695,8 +695,7 @@
 
   $(document).ready(function() {
 
-    let today = new Date();
-    let year = today.getFullYear();
+
 
     $.datepicker.regional['nl'] = {
       closeText: "Sluiten",
@@ -719,6 +718,8 @@
 
     let pickedDatesDataString = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
     let pickedDatesArray = '';
+    let today = new Date();
+    let year = today.getFullYear();
 
     try {
       let fixedString = pickedDatesDataString.replace("/(\s+|\+|\")/", "");
@@ -726,20 +727,73 @@
     } catch (e) {
       pickedDatesArray = ['12/25/'+year, '01/01/'+year];
     }
+    console.log(pickedDatesArray);
     $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker({
       addDates: pickedDatesArray,
       numberOfMonths: [3,4],
       stepMonths: 12,
-      defaultDate: '1/01/'+year,
+      defaultDate: '01/01/'+year,
+      dateFormat: 'dd/mm/yy',
       showWeek: true,
       beforeShowDay: $.datepicker.noWeekends,
-      useCurrent: false,
+      useCurrent: true,
       minDate: 1,
       onSelect: function () {
-        let data = $(this).val();
+        // Get the selected date
+        let selectedDate = $(this).val();
 
-        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(data.replace('"', ''));
+        // Get the current value from the input field
+        let currentValue = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
+
+        // Initialize dates array
+        let datesArray = [];
+
+        // Parse existing dates if there are any
+        if (currentValue && currentValue.trim() !== '') {
+          try {
+            // Handle both comma-separated list and JSON format
+            if (currentValue.indexOf('[') === 0) {
+              // It's already JSON
+              datesArray = JSON.parse(currentValue);
+            } else {
+              // It's a comma-separated list
+              datesArray = currentValue.split(', ').filter(function(date) {
+                return date.trim() !== '';
+              });
+            }
+          } catch (e) {
+            // If parsing fails, start with empty array
+            console.error('Error parsing dates:', e);
+            datesArray = [];
+          }
+        }
+
+        // Check if the selected date is already in the array
+        let dateIndex = datesArray.indexOf(selectedDate);
+
+        if (dateIndex === -1) {
+          // Date not in array, add it
+          datesArray.push(selectedDate);
+        } else {
+          // Date already in array, remove it (toggle behavior)
+          datesArray.splice(dateIndex, 1);
+        }
+
+        // Sort the dates for better readability
+        datesArray.sort();
+
+        // Convert back to comma-separated string (for backward compatibility)
+        let newValue = datesArray.join(', ');
+
+        // Update the input field
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(newValue);
+        //
+        // // Optional: Update the datepicker to reflect the current selection
+        // // This depends on the specific multiDatesPicker API
+        // $(this).multiDatesPicker('resetDates', 'picked');
+        // $(this).multiDatesPicker('addDates', datesArray);
       }
+
     });
 
     $('#resetCalendar').on('click', function(e){

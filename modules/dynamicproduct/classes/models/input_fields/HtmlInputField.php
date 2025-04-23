@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -47,5 +47,18 @@ class HtmlInputField extends DynamicInputField
         }
 
         return $this->field['description'];
+    }
+
+    public function getDynamicValue($input_fields)
+    {
+        $html = parent::getDynamicValue($input_fields);
+        $is_pdf = isset($this->context->session) && $this->context->session->get('dp_is_pdf');
+        if ($is_pdf) {
+            $base_url = \Context::getContext()->shop->getBaseURL();
+            $base_path = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR;
+            $html = str_replace('src="' . $base_url, 'src="' . $base_path, $html);
+        }
+
+        return $html;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -33,9 +33,9 @@ use DynamicProduct\classes\helpers\ConfigLinkHelper;
 use DynamicProduct\classes\helpers\DynamicCalculatorHelper;
 use DynamicProduct\classes\helpers\DynamicCustomizationHelper;
 use DynamicProduct\classes\helpers\DynamicInputFieldsHelper;
-use DynamicProduct\classes\helpers\DynamicOrdersHelper;
 use DynamicProduct\classes\helpers\DynamicProductCost;
 use DynamicProduct\classes\helpers\DynamicUploadHelper;
+use DynamicProduct\classes\helpers\PreviewHelper;
 use DynamicProduct\classes\helpers\ProductHelper;
 use DynamicProduct\classes\helpers\SummaryHelper;
 use DynamicProduct\classes\models\DynamicCondition;
@@ -53,6 +53,7 @@ use DynamicProduct\classes\models\DynamicStep;
 use DynamicProduct\classes\models\DynamicUnit;
 use DynamicProduct\classes\models\ExecOrder;
 use DynamicProduct\classes\models\FieldFormula;
+use DynamicProduct\classes\models\input_fields\UploadInputField;
 use DynamicProduct\classes\module\DynamicCalculator;
 use DynamicProduct\classes\module\DynamicHandler;
 use DynamicProduct\classes\module\DynamicInstaller;
@@ -116,22 +117,11 @@ class DynamicProduct extends Module
         'calculation' => [],
     ];
 
-    public $hooks = [
-        'displayHeader',
-        'displayProductAdditionalInfo',
-        'displayCustomization',
-        'DynamicProduct',
-        'displayProductPriceBlock',
-        'displayBackOfficeHeader',
-        'actionAdminControllerSetMedia',
-        'displayAdminProductsExtra',
-    ];
-
     public function __construct()
     {
         $this->name = 'dynamicproduct';
         $this->tab = 'front_office_features';
-        $this->version = '3.21.34';
+        $this->version = '3.22.38';
         $this->author = 'Tuni-Soft';
         $this->need_instance = 0;
         $this->module_key = 'e7d243d9b0b857ca2dba85c8d3b0afda';
@@ -280,10 +270,16 @@ class DynamicProduct extends Module
         Media::addJsDef([
             'dp_id_input' => 0,
         ]);
-        if (Tools::getIsset('id_input')) {
-            $id_input = (int) Tools::getValue('id_input');
+        if (Tools::getIsset('edit_customization') || Tools::getIsset('edit_input')) {
+            $id_customization = (int) Tools::getValue('edit_customization');
+            $id_input = (int) Tools::getValue('edit_input');
 
-            $dp_input = new DynamicInput($id_input);
+            if ($id_customization) {
+                $dp_input = DynamicInput::getInputByCustomization($id_customization);
+            } else {
+                $dp_input = new DynamicInput($id_input);
+            }
+
             if (!Validate::isLoadedObject($dp_input)) {
                 return;
             }
@@ -536,6 +532,7 @@ class DynamicProduct extends Module
 
     public function getBaseUrl()
     {
+        /* @noinspection PhpRedundantOptionalArgumentInspection */
         return $this->context->shop->getBaseURL(true);
     }
 
@@ -717,6 +714,7 @@ class DynamicProduct extends Module
                         'id_attribute' => $id_attribute,
                         'is_admin_edit' => (int) (Tools::getIsset('is_admin_edit') && $is_admin),
                         'is_create_customization' => (int) (Tools::getValue('action') === 'create_customization' && $is_admin),
+                        'dp_customer' => (int) Tools::getValue('dp_customer', 0),
                         'controllers' => [
                             'loader' => $this->context->link->getModuleLink($this->name, 'loader'),
                         ],
@@ -841,6 +839,57 @@ class DynamicProduct extends Module
 
         $product_cost = new DynamicProductCost($this, $this->context);
         $product_cost->updateCost($order->id);
+
+        $dynamic_inputs = DynamicInput::getInputsByIdCart($id_cart);
+        if (count($dynamic_inputs)) {
+            Db::getInstance()->insert($this->name . '_custom_orders', [
+                'id_order' => $order->id,
+            ]);
+        }
+    }
+
+    public function hookActionPresentProductListing($params)
+    {
+        $presentedProduct = clone $params['presentedProduct'];
+
+        $id_customization = (int) $presentedProduct['id_customization'];
+        if (!$id_customization) {
+            return;
+        }
+
+        $dynamic_input = DynamicInput::getInputByCustomization($id_customization);
+        if (!Validate::isLoadedObject($dynamic_input)) {
+            return;
+        }
+
+        $input_fields = $dynamic_input->getInputFields($this->context->language->id);
+        $preview_helper = new PreviewHelper($this, $this->context);
+        $preview_helper->addPreviewField($input_fields);
+
+        if (!isset($input_fields['preview'])) {
+            return;
+        }
+        /** @var UploadInputField $preview_field */
+        $preview_field = $input_fields['preview'];
+        if (!isset($preview_field->data[0])) {
+            return;
+        }
+
+        $preview = $preview_field->data[0];
+        $thumb_url = $preview_field->getThumbUrl($preview['file']);
+
+        $image = json_decode(json_encode($presentedProduct['default_image']), true);
+        $image['bySize'][ImageType::getFormattedName('cart')]['url'] = $thumb_url;
+        $image['bySize'][ImageType::getFormattedName('large')]['url'] = $thumb_url;
+        $image['bySize'][ImageType::getFormattedName('medium')]['url'] = $thumb_url;
+        $image['bySize'][ImageType::getFormattedName('small')]['url'] = $thumb_url;
+        $image['large']['url'] = $thumb_url;
+        $image['medium']['url'] = $thumb_url;
+        $image['small']['url'] = $thumb_url;
+        $image['id_customization'] = $id_customization;
+
+        $presentedProduct->default_image = json_decode(json_encode($image), true);
+        $params['presentedProduct'] = $presentedProduct;
     }
 
     public function hookActionOrderStatusPostUpdate($params)
@@ -950,6 +999,9 @@ class DynamicProduct extends Module
         $this->context->smarty->assign([
             'is_pdf' => false,
         ]);
+        if (isset($this->context->session)) {
+            $this->context->session->set('dp_is_pdf', false);
+        }
         $is_admin = $params['is_admin'] ?? $this->isAdminController();
         $is_order_state = $this->provider->isOrderStateRequest();
         if ($is_admin && !$is_order_state) {
@@ -996,8 +1048,12 @@ class DynamicProduct extends Module
 
                 return null;
             }
-            if ($params['type'] === 'unit_price') {
+            if ($params['type'] === 'unit_price' && !$dynamic_config->display_dynamic_price) {
                 return $dynamic_config->displayed_price_label;
+            }
+
+            if ($params['type'] === 'dynamicproduct_price') {
+                return $dynamic_config->displayed_price . ' ' . $dynamic_config->displayed_price_label;
             }
         }
 
@@ -1022,7 +1078,7 @@ class DynamicProduct extends Module
                     if ($displayed_price || $dynamic_config->display_dynamic_price) {
                         $this->calculator->assignProductPrices($product, $displayed_price, $product);
                         $product['price_min'] = $product['price'];
-                        if (!(float) $product['price_max']) {
+                        if (!(float) ($product['price_max'] ?? 0)) {
                             $product['price_max'] = $product['price'];
                         }
                     }
@@ -1201,7 +1257,7 @@ class DynamicProduct extends Module
                 if (version_compare(_PS_VERSION_, '8.0.0', '<')) {
                     Media::addJsDef([
                         'dp_dir' => $this->getUrl(),
-                        'do_product_settings' => $link->getAdminLink('DynamicProductSettings'),
+                        'dp_product_settings' => $link->getAdminLink('DynamicProductSettings'),
                         'dp_product_config_url' => DynamicTools::addQueryToUrl(
                             $link->getAdminLink('DynamicProductDev'),
                             [
@@ -1227,25 +1283,12 @@ class DynamicProduct extends Module
             }
         }
 
-        if ($controller_name === 'AdminOrders' || $controller_name === 'AdminCarts') {
-            Media::addJsDef([
-                'dp_uri' => $this->getPathUri(),
-                'dp_orders' => DynamicOrdersHelper::getCustomizedOrders(),
-            ]);
-            $entries_helper = new DynamicEntriesHelper($this, $this->context);
-            $css = $entries_helper->getCSS('admin/order-summary.ts');
-            if (is_array($css)) {
-                foreach ($css as $css_file) {
-                    $this->context->controller->addCSS($this->getPathUri() . 'lib/media/dist/' . $css_file);
-                }
-            }
-        }
-
         if ($controller_name === 'AdminOrders') {
             Media::addJsDef([
                 'dp_uri' => $this->getPathUri(),
                 'dp_product_redirect' => $link->getModuleLink($this->name, 'redirect', [
                     'id_product' => '__ID_PRODUCT__',
+                    'dp_customer' => '__ID_CUSTOMER__',
                     'action' => 'create_customization',
                 ]),
                 'dp_product_settings' => $link->getAdminLink('DynamicProductSettings'),
@@ -1489,11 +1532,13 @@ class DynamicProduct extends Module
             $is_reorder = Tools::getIsset('submitReorder');
             $recalc = $recalc_price || $recalc_weight || $is_reorder;
 
+            $force = $force || $is_reorder;
+
             if ($recalc) {
                 $quantity_input_field = new DynamicInputField();
                 $quantity_input_field->name = 'quantity';
                 $quantity_input_field->value = (int) $quantity;
-                $customization_input = DynamicInput::getInputByCustomization($id_customization);
+                $customization_input = DynamicInput::getInputByCustomization($id_customization, !$is_reorder);
                 if (Validate::isLoadedObject($customization_input)
                     && ((int) $customization_input->cart_quantity !== (int) $quantity || $force)) {
                     $db_input_fields = $customization_input->getInputFields($id_lang);
@@ -1535,7 +1580,7 @@ class DynamicProduct extends Module
                     if ($save_input_fields) {
                         $customization_helper = new DynamicCustomizationHelper($this, $this->context);
                         $old_input_fields = $customization_input->getInputFields();
-                        $customization_helper->saveInputFields($input_fields, $customization_input->id);
+                        $customization_helper->saveInputFields($id_product, $input_fields, $customization_input->id);
                         foreach ($old_input_fields as $input_field) {
                             $input_field->delete();
                         }
@@ -1556,6 +1601,7 @@ class DynamicProduct extends Module
         $id_cart_old = $params['id_cart_old'];
         $id_cart_new = $params['id_cart_new'];
         $this->handler->duplicateInputs($id_cart_old, $id_cart_new);
+        $this->hookActionCartSave(['cart' => new Cart($id_cart_new)]);
     }
 
     public function hookDisplayInputSummary($id_input, $params = [])
@@ -1569,8 +1615,14 @@ class DynamicProduct extends Module
             || $controller === 'pdfinvoice'
             || $controller === 'validation'
             || $has_post
+            || strpos(strtolower($controller), 'pdf') !== false
             || $this->isAdminPdfController()
             || Tools::getIsset('viewopartdevis');
+
+        if (isset($this->context->session)) {
+            $this->context->session->set('dp_is_pdf', $is_pdf);
+        }
+
         $is_order_detail = in_array($controller, ['orderdetail', 'orderconfirmation']);
 
         $input = new DynamicInput($id_input, $id_lang);
@@ -1630,6 +1682,10 @@ class DynamicProduct extends Module
             || strpos($_SERVER['REQUEST_URI'], 'generate-invoice-pdf') !== false
             || strpos($_SERVER['REQUEST_URI'], 'generate-delivery-slip-pdf') !== false
             || !empty($_POST);
+
+        if (isset($this->context->session)) {
+            $this->context->session->set('dp_is_pdf', $is_pdf);
+        }
 
         $summary_helper = new SummaryHelper($this, $this->context);
         $summary_name = 'admin_input';
@@ -1860,7 +1916,6 @@ class DynamicProduct extends Module
                 ->setName($this->trans('Dynamic', [], 'Admin.Global'))
                 ->setOptions([
                     'src_field' => 'dp_active_logo',
-                    'alt_field' => 'legend',
                 ])
         );
     }
@@ -1942,5 +1997,115 @@ class DynamicProduct extends Module
             $data->getRecordsTotal(),
             $data->getQuery()
         );
+    }
+
+    public function hookActionOrderGridDefinitionModifier($params)
+    {
+        /** @var PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition $definition */
+        $definition = $params['definition'];
+        $columns = $definition->getColumns();
+        $items = $columns->toArray();
+        $filters = $definition->getFilters();
+        $filters->add(
+            (new Filter('dp_customized', YesAndNoChoiceType::class))
+                ->setAssociatedColumn('dp_customized')
+        );
+        $definition->setFilters($filters);
+
+        $columns->addAfter(
+            'id_order',
+            (new ImageColumn('dp_customized'))
+                ->setName($this->trans('Dynamic', [], 'Admin.Global'))
+                ->setOptions([
+                    'src_field' => 'dp_customized_logo',
+                ])
+        );
+    }
+
+    public function hookActionOrderGridQueryBuilderModifier($params)
+    {
+        /** @var QueryBuilder $search_query */
+        $search_query = $params['search_query_builder'];
+
+        $search_query->addSelect('IF(dp_cus.`id_order`, 1, 0) AS dp_customized');
+
+        $search_query->leftJoin(
+            'o',
+            _DB_PREFIX_ . 'dynamicproduct_custom_orders',
+            'dp_cus',
+            'dp_cus.`id_order` = o.`id_order`'
+        );
+
+        /** @var PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters $searchCriteria */
+        $searchCriteria = $params['search_criteria'];
+        $filters = $searchCriteria->getFilters();
+        if (isset($filters['dp_customized'])) {
+            if ((int) $filters['dp_customized'] === 1) {
+                $search_query->andWhere('IF(dp_cus.`id_order`, 1, 0) = 1');
+            } else {
+                $search_query->andWhere('IF(dp_cus.`id_order`, 1, 0) = 0');
+            }
+        }
+    }
+
+    public function hookActionOrderGridDataModifier($params)
+    {
+        /** @var PrestaShop\PrestaShop\Core\Grid\Data\GridData $data */
+        $data = $params['data'];
+        $items = $data->getRecords()->all();
+        foreach ($items as $index => $item) {
+            if (isset($item['dp_customized']) && $item['dp_customized']) {
+                $item['dp_customized_logo'] = $this->getUrl() . 'views/img/logos/active.png';
+            } else {
+                $item['dp_customized_logo'] = $this->getUrl() . 'views/img/pixel.png';
+            }
+            $items[$index] = $item;
+        }
+
+        $params['data'] = new PrestaShop\PrestaShop\Core\Grid\Data\GridData(
+            new PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection($items),
+            $data->getRecordsTotal(),
+            $data->getQuery()
+        );
+    }
+
+    public function hookActionFilterDeliveryOptionList($params)
+    {
+        // If there is no cart to work on, do nothing
+        if (empty($this->context->cart)) {
+            return;
+        }
+
+        $max_sizes = DynamicProduct\classes\models\DynamicInput::getCartMaxSizes($this->context->cart);
+
+        foreach ($params['delivery_option_list'] as $id_address_delivery => &$options) {
+            foreach ($options as $option_key => &$option) {
+                foreach ($option['carrier_list'] as $key => $carrier_data) {
+                    $carrier = $carrier_data['instance'];
+                    $max_product_size = max($max_sizes['width'], $max_sizes['height'], $max_sizes['depth']);
+                    $max_carrier_size = max($carrier->max_width, $carrier->max_height, $carrier->max_depth);
+                    if ($max_carrier_size > 0 && $max_product_size > $max_carrier_size) {
+                        unset($options[$option_key]);
+
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public function hookActionGetProductPropertiesAfterUnitPrice($params)
+    {
+        $row = $params['product'];
+        if ($this->provider->isAfter1730()) {
+            $id_product = (int) ($row['id_product'] ?? $row['id']);
+            $dynamic_config = DynamicProduct\classes\models\DynamicConfig::getByProduct($id_product);
+            if ($dynamic_config->active) {
+                $displayed_price = $dynamic_config->displayed_price;
+                if ($displayed_price || $dynamic_config->display_dynamic_price) {
+                    $this->calculator->assignProductPrices($row, $displayed_price, $params['product']);
+                }
+            }
+        }
     }
 }

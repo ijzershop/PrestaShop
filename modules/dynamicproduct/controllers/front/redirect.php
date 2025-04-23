@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2024 TuniSoft
+ * 2007-2025 TuniSoft
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    TuniSoft (tunisoft.solutions@gmail.com)
- * @copyright 2007-2024 TuniSoft
+ * @copyright 2007-2025 TuniSoft
  * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  *  International Registered Trademark & Property of PrestaShop SA
  */
@@ -35,7 +35,8 @@ class DynamicProductRedirectModuleFrontController extends ModuleFrontController
 {
     public function process()
     {
-        $id_product = (int)Tools::getValue('id_product');
+        $id_product = (int) Tools::getValue('id_product');
+        $dp_customer = (int) Tools::getValue('dp_customer', 0);
         $action = Tools::getValue('action');
 
         $product = new Product($id_product, true, $this->context->language->id);
@@ -48,6 +49,7 @@ class DynamicProductRedirectModuleFrontController extends ModuleFrontController
 
         Tools::redirect(DynamicTools::addQueryToUrl($product_link, [
             'action' => $action,
+            'dp_customer' => $dp_customer,
         ]));
         exit;
     }

@@ -1,5 +1,5 @@
 {*
-* 2007-2024 TuniSoft
+* 2007-2025 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    TuniSoft <tunisoft.solutions@gmail.com>
-*  @copyright 2007-2024 TuniSoft
+*  @copyright 2007-2025 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -111,7 +111,7 @@
                 <span class="dp-input-field-{$input_field->name|escape:'htmlall':'UTF-8'}"
                       style="{if $group.label}padding-left: 1em;{/if}">
                       {if $input_field->label}
-                          <strong>{$input_field->label|escape:'htmlall':'UTF-8'}:</strong>
+                          <strong>{$input_field->getDynamicLabel($input->input_fields)|escape:'htmlall':'UTF-8'}:</strong>
                       {/if}
                     {if $input_field->getTemplatePath()}
                         {include file=$input_field->getTemplatePath()}

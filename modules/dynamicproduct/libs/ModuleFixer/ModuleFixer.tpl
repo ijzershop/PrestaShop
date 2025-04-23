@@ -1,5 +1,5 @@
 {*
-* 2007-2024 TuniSoft
+* 2007-2025 TuniSoft
 *
 * NOTICE OF LICENSE
 *
@@ -18,10 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author    TuniSoft <tunisoft.solutions@gmail.com>
-*  @copyright 2007-2024 TuniSoft
+*  @copyright 2007-2025 TuniSoft
 *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{foreach $messages as $message}
+	<div class="alert alert-success">{$message|escape:'htmlall':'UTF-8'}</div>
+{/foreach}
+
 <div class="panel">
 	<h3><i class="icon icon-credit-card"></i> {l s='Hooks' mod='dynamicproduct'}</h3>
 
@@ -96,6 +100,31 @@
 	<div class="panel-footer">
 		<a href="{$module_link|escape:'htmlall':'UTF-8'}"
 		   class="btn btn-default pull-left"
+		><i class="process-icon-back"></i> {l s='Back' mod='dynamicproduct'}</a>
+	</div>
+</div>
+
+<div class="panel" id="dp-fix-templates">
+	<h3><i class="icon icon-credit-card"></i> {l s='Order sync' mod='dynamicproduct'}</h3>
+
+	<div class="well">
+		<p class="help-block">{l s='The references of customized orders are stored in a separate module table to allow marking them as customized in the orders page.' mod='dynamicproduct'}</p>
+		<p class="help-block">{l s='Since this is a new feature, the references might not be synced.' mod='dynamicproduct'}</p>
+		<p class="help-block">{l s='Click the button below to start syncing the references. (might take a while)' mod='dynamicproduct'}</p>
+
+			<form action="" method="post">
+				<button type="submit"
+								name="sync_orders"
+								class="btn btn-primary"
+				>{l s='Sync orders' mod='dynamicproduct'}</button>
+			</form>
+
+		<p class="alert alert-info" style="margin-top: 1em;">{l s='This is a one-time operation. New orders will be synced automatically.' mod='dynamicproduct'}</p>
+	</div>
+
+	<div class="panel-footer">
+		<a href="{$module_link|escape:'htmlall':'UTF-8'}"
+			 class="btn btn-default pull-left"
 		><i class="process-icon-back"></i> {l s='Back' mod='dynamicproduct'}</a>
 	</div>
 </div>

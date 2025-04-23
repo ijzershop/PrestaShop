@@ -1,5 +1,114 @@
 # Changelog
 
+### 3.3.5
+
+- Added "reduction" to be exported as specific price table value
+
+### 3.3.4
+
+- Order grid optimization
+- New config option: Country based shipping VAT calculation
+
+### 3.3.3
+
+- Fix for older PHP (7.x) versions
+
+### 3.3.2
+
+- PrestaShop V9 Beta requirements
+
+### 3.3.1
+
+- Add id_address_delivery and id_address_invoice to cart-table at order creation
+
+### 3.3.0
+
+- New feature to import specific price table values
+
+### 3.2.9
+
+- New field "Return Tracking Code" at order management to submit to Channable
+
+### 3.2.8
+
+- Added additional logging for debugging
+- Compatibility update (PS 8.2.0)
+
+### 3.2.7
+
+- Added filter possibility for order grid
+
+### 3.2.6
+
+- Compatibility update for 3rd-party "wkproductcustomfield" plugin latest version
+- New setting option to use phone number as mobile number 
+
+### 3.2.5
+
+- HTTP Status codes optimized
+
+### 3.2.4
+
+- Optimized grid view hook handling for older PS versions (<= 1.7.6.x)
+
+### 3.2.3
+
+- Adaption at feed generation for outdated PHP versions (7.0/7.1/7.2)
+
+### 3.2.2
+
+- Fix feed generation
+
+### 3.2.1
+
+- Fix vulnerability, thanks to TouchWeb.fr & 202 Ecommerce
+
+### 3.2.0
+
+- New feature "map different shipping status per marketplace"
+- Workarround for miscalculated raw prices in specific scenarios
+
+### 3.1.9
+
+- Added additional hooks for order creation (channableOrderCreation)
+- Compatibility Update
+
+### 3.1.8
+
+- Added optional stock sync for multishop environments
+
+### 3.1.7
+
+- Added additional information shipping -> "pickup point name" for created orders
+- Added additional information shipping -> "shipping center id" for created orders
+
+### 3.1.6
+
+- Compatibility PrestaShop 8.1.3
+- New configuration option "Default string for orders with empty name fields"
+
+### 3.1.5
+
+- Reformat submitted phone numbers to not trigger PrestaShop internal validation on order creation
+
+### 3.1.4
+
+- Added support for new information "shipment_method" in Order submissions
+- PS Compatibility update
+
+### 3.1.3
+
+- Change in customer temporary password generation for validation rule
+
+### 3.1.2
+
+- Fix for missing possible attribute image
+- Compatibility jsonEncode & jsonDecode
+
+### 3.1.1
+
+- Warehouse config var fix for PrestaShop >= 1.7.8
+
 ### 3.1.0
 
 - Compatibility PrestaShop 8.1

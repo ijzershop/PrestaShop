@@ -50,12 +50,12 @@ class MSMollieWebhookModuleFrontController extends ModuleFrontController {
 
             // Get order by transaction_id
             $sql = new DbQuery();
-            $sql->select('id_order')
+            $sql->select('order_reference')
                 ->from('order_payment')
                 ->where('transaction_id = "'.pSQL($paymentId).'"');
 
             $orderId = Db::getInstance()->getValue($sql);
-            $order = new Order($orderId);
+            $order = Order::getByReference($orderId);
             // Update order status based on Mollie status
             switch ($payment->status) {
                 case 'paid':

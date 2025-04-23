@@ -667,7 +667,7 @@
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop\Admin\Sell\Order\Order" />
     </key>
   </component>
-  <component name="RunManager" selected="PHP Script.OrderSlipGenerator.php">
+  <component name="RunManager" selected="Batch.ijzershop_ngrok">
     <configuration name="ijzershop_ngrok" type="BatchConfigurationType" factoryName="Batch" temporary="true">
       <module name="ijzershop-176" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -710,13 +710,6 @@
       <item itemvalue="PHP Script.modernesmidthemeconfigurator.php" />
       <item itemvalue="PHP Script.msthemeconfig.php" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="PHP Script.OrderSlipGenerator.php" />
-        <item itemvalue="Batch.ngrok" />
-        <item itemvalue="Batch.ijzershop_ngrok" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -1798,7 +1791,7 @@
       <workItem from="1745304875513" duration="48000" />
       <workItem from="1745304935973" duration="9959000" />
       <workItem from="1745322767595" duration="3138000" />
-      <workItem from="1745390459672" duration="1289000" />
+      <workItem from="1745390459672" duration="9766000" />
     </task>
     <servers />
   </component>
@@ -2529,56 +2522,6 @@
       <path value="$PROJECT_DIR$/modules/customdeliveryslipsexport" />
       <path value="$PROJECT_DIR$/modules/ps_shoppingcart" />
     </ignored-roots>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php-line-method">
-          <url>file://$PROJECT_DIR$/controllers/admin/AdminProductsController.php</url>
-          <line>76</line>
-          <properties>
-            <option name="className" value="\AdminProductsControllerCore" />
-            <option name="methodName" value="init" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_label_button_2.html.twig</url>
-          <line>9</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ExportOrdersMultipleCollies.php</url>
-          <line>323</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/order_conf.html.twig</url>
-          <line>76</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/modules/ps_accounts.php</url>
-          <line>36</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/modules/msmollie/controllers/front/ajax.php</url>
-          <line>25</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/order_conf.html.twig</url>
-          <line>156</line>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/mails/themes/modernesmid/core/bankwire.html.twig</url>
-          <line>15</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

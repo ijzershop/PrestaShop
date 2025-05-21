@@ -589,13 +589,14 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;Batch.ijzershop_ngrok.executor&quot;: &quot;Run&quot;,
+    &quot;Batch.ijzershop_ngrok.executor&quot;: &quot;Debug&quot;,
     &quot;Batch.ngrok.executor&quot;: &quot;Run&quot;,
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
     &quot;PHP Built-in Web Server.Localhost.executor&quot;: &quot;Run&quot;,
     &quot;PHP Script.FixStockAvailable.php.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.AccountsToCodyMigration&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ClientConfigCleanupMigration&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
@@ -710,12 +711,17 @@
       <item itemvalue="PHP Script.modernesmidthemeconfigurator.php" />
       <item itemvalue="PHP Script.msthemeconfig.php" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Batch.ijzershop_ngrok" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PS-251.23774.436" />
-        <option value="bundled-php-predefined-a98d8de5180a-aaeaa8632555-com.jetbrains.php.sharedIndexes-PS-251.23774.436" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PS-251.25410.148" />
+        <option value="bundled-php-predefined-a98d8de5180a-c5828cf854d9-com.jetbrains.php.sharedIndexes-PS-251.25410.148" />
         <option value="php-doctrine_annotations-88dc7a6578bb-c0362245" />
         <option value="php-doctrine_collections-88dc7a6578bb-1b7250da" />
         <option value="php-doctrine_collections-88dc7a6578bb-747a9a62" />
@@ -782,7 +788,7 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewState">
-    <option name="selectedTab" value="Smarty" />
+    <option name="selectedTab" value="Twig" />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -1791,7 +1797,35 @@
       <workItem from="1745304875513" duration="48000" />
       <workItem from="1745304935973" duration="9959000" />
       <workItem from="1745322767595" duration="3138000" />
-      <workItem from="1745390459672" duration="9766000" />
+      <workItem from="1745390459672" duration="15598000" />
+      <workItem from="1745478788305" duration="2564000" />
+      <workItem from="1745563485780" duration="8331000" />
+      <workItem from="1745831019201" duration="3377000" />
+      <workItem from="1745906370023" duration="15394000" />
+      <workItem from="1745994504467" duration="4321000" />
+      <workItem from="1746000410552" duration="17512000" />
+      <workItem from="1746080337060" duration="7495000" />
+      <workItem from="1746161102414" duration="6592000" />
+      <workItem from="1746427955933" duration="9496000" />
+      <workItem from="1746505407867" duration="8922000" />
+      <workItem from="1746603921938" duration="14767000" />
+      <workItem from="1746687697022" duration="2341000" />
+      <workItem from="1747032614529" duration="10033000" />
+      <workItem from="1747116736521" duration="3494000" />
+      <workItem from="1747206193352" duration="19305000" />
+      <workItem from="1747290207624" duration="92000" />
+      <workItem from="1747290320419" duration="6536000" />
+      <workItem from="1747378036521" duration="248000" />
+      <workItem from="1747378405404" duration="2075000" />
+      <workItem from="1747381982347" duration="4004000" />
+      <workItem from="1747386086578" duration="55000" />
+      <workItem from="1747386156910" duration="60000" />
+      <workItem from="1747386231168" duration="5144000" />
+      <workItem from="1747637323404" duration="9099000" />
+      <workItem from="1747728245251" duration="5195000" />
+      <workItem from="1747739798486" duration="625000" />
+      <workItem from="1747810340457" duration="13208000" />
+      <workItem from="1747830185862" duration="3968000" />
     </task>
     <servers />
   </component>
@@ -2522,6 +2556,26 @@
       <path value="$PROJECT_DIR$/modules/customdeliveryslipsexport" />
       <path value="$PROJECT_DIR$/modules/ps_shoppingcart" />
     </ignored-roots>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/modules/msthemeconfig/views/templates/admin/panels/panel-koopman.html.twig</url>
+          <line>726</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php-line-method">
+          <url>file://$PROJECT_DIR$/modules/msthemeconfig/src/Class/ExportOrdersMultipleCollies.php</url>
+          <line>857</line>
+          <properties>
+            <option name="className" value="\MsThemeConfig\Class\ExportOrdersMultipleCollies" />
+            <option name="methodName" value="getOutputAddedToOrder" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

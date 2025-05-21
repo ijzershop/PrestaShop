@@ -573,8 +573,8 @@ final class DmsAdminGetOrderForViewingHandler extends AbstractOrderHandler imple
                 $trackingUrl = null;
                 $trackingNumber = $item['tracking_number'];
 
-                if ($item['url'] && $trackingNumber) {
-                    $trackingUrl = str_replace('@', $trackingNumber, $item['url']);
+                if ($item['tracking_url']) {
+                    $trackingUrl = $item['tracking_url'];
                 }
 
                 $weight = sprintf('%.3f %s', $item['weight'], $this->configuration->get('PS_WEIGHT_UNIT'));

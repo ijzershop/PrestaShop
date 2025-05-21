@@ -60,7 +60,12 @@ class Ps_WirepaymentValidationModuleFrontController extends ModuleFrontControlle
             '{bankwire_address}' => nl2br(Configuration::get('BANK_WIRE_ADDRESS') ?: ''),
         ];
 
-        $this->module->validateOrder($cart->id, (int) Configuration::get('PS_OS_BANKWIRE'), $total, $this->module->displayName, null, $mailVars, (int) $currency->id, false, $customer->secure_key);
+
+        try {
+            $this->module->validateOrder($cart->id, (int) Configuration::get('PS_OS_BANKWIRE'), $total, $this->module->displayName, null, $mailVars, (int) $currency->id, false, $customer->secure_key);
+        } catch (Exception $e) {
+
+        }
         Tools::redirect('index.php?controller=order-confirmation&id_cart=' . $cart->id . '&id_module=' . $this->module->id . '&id_order=' . $this->module->currentOrder . '&key=' . $customer->secure_key);
     }
 }

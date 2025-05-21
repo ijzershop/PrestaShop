@@ -19,6 +19,7 @@ class MSMollieWebhookModuleFrontController extends ModuleFrontController {
         $this->logger = new MollieLogger();
         $this->module = Module::getInstanceByName('msmollie');
         $this->context = Context::getContext();
+        parent::__construct();
     }
 
 

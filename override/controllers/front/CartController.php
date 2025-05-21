@@ -201,12 +201,12 @@ class CartController extends CartControllerCore
             if (Tools::getIsset('add') || Tools::getIsset('update')) {
                 $this->processChangeProductInCart();
                 if(!$this->ajax){
-                    Tools::redirect(preg_replace ('/\?.+$/',  '', Tools::getCurrentUrl()));
+                    Tools::redirect(preg_replace('/\?.+$/', '', Tools::getCurrentUrl()) . '?action=show');
                 }
             } elseif (Tools::getIsset('delete')) {
                 $this->processDeleteProductInCart();
                 if(!$this->ajax){
-                    Tools::redirect(preg_replace ('/\?.+$/',  '', Tools::getCurrentUrl()));
+                    Tools::redirect(preg_replace('/\?.+$/', '', Tools::getCurrentUrl()) . '?action=show');
                 }
             } elseif (CartRule::isFeatureActive()) {
                 if (Tools::getIsset('addDiscount')) {

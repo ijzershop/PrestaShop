@@ -1376,7 +1376,9 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
   event.stopImmediatePropagation();
 
   let rowId = Math.random().toString(36).substr(2, 9);
+
   const cart = $(this).attr('data-cart');
+
   const htmlBlock = '<li class="cart-item custom-product-item w-100 p-2"> ' +
     '<div class="product-line-grid col-12">' +
     '<div class="row pb-1"> ' +
@@ -1384,23 +1386,18 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
     '</div> ' +
     '<div class="row"> ' +
     '<div class="product-line-grid-body col-12 text-center text-sm-left"> ' +
-    '<div class="row">' +
+    '<div class="row">'+
     '<table class="w-100">' +
     '<tr>' +
-    '<td style="width:20%"><input type="number" class="form-control" min="1" step="0.5" name="custom_product_total" placeholder="Aantal"/></td>' +
-    '<td style="width:30%">' +
-    '<div class="input-group">' +
-    '<div class="input-group-prepend">' +
-    '<span class="input-group-text">€</span></div>' +
-    '<input type="number" min="0.05" max="999999999999" step="0.05" class="form-control" name="custom_product_price" placeholder="Prijs"/>' +
-    '</div></td>' +
     '<td>' +
-    '<div class="form-check px-2 pt-2">' +
+    '<div class="form-check px-2">' +
     '<input value="0" name="custom_product_tax_checkbox" id="custom_product_tax_checkbox_excl"  data-id="' + rowId + '" type="radio"  aria-label="incl./excl btw checkbox">' +
     '<label class="form-check-label" for="custom_product_tax_checkbox_excl">\n' +
     'Excl. Btw' +
     '</label>' +
     '</div>' +
+    '</td>' +
+    '<td style="border-width: 0 5px 0 0;border-style: solid;">' +
     '<div class="form-check p-2">' +
     '<input value="1" name="custom_product_tax_checkbox" id="custom_product_tax_checkbox_incl"  data-id="' + rowId + '" checked type="radio" aria-label="incl./excl btw checkbox">' +
     '<label class="form-check-label" for="custom_product_tax_checkbox_incl">\n' +
@@ -1409,17 +1406,42 @@ $(document).on('click', '#addCustomProductByEmployee', function (event) {
     '</div>' +
     '</td>' +
     '<td>' +
-    '<div class="form-check  px-2 pt-2">' +
+    '<div class="form-check  px-2">' +
     '<input value="0" name="type" id="onoffswitch_checkbox_refund"  data-id="' + rowId + '" type="radio"  aria-label="payment or discount">' +
     '<label class="form-check-label" for="onoffswitch_checkbox_refund">\n' +
     'Teruggave' +
     '</label>' +
     '</div>' +
+    '</td>' +
+    '<td>' +
     '<div class="form-check p-2">' +
     '<input value="1" name="type" id="onoffswitch_checkbox_payment"  data-id="' + rowId + '" type="radio" checked aria-label="payment or discount">' +
     '<label class="form-check-label" for="onoffswitch_checkbox_payment">\n' +
     'Betaling' +
     '</label>' +
+    '</div>' +
+    '</td>' +
+    '</tr>' +
+    '</table>' +
+    '</div>' +
+    '<div class="row mt-2">' +
+    '<table class="w-100">' +
+    '<tr>' +
+    '<td style="width:20%"><input type="number" class="form-control" min="1" step="0.5" name="custom_product_total" value="1" placeholder="Aantal"/></td>' +
+    '<td style="width:50%">' +
+    '<div class="input-group" style="width:100%">' +
+    '<div class="input-group-prepend">' +
+    '<span class="input-group-text">€</span>' +
+    '</div>' +
+    '<input type="number" min="0.05" max="999999999999" step="0.05" class="form-control" data-id="' + rowId + '"  name="custom_product_price" placeholder="Prijs"/>' +
+    '<div class="input-group-append">' +
+    '<select class="percentage-discount-select form-control" name="discount_percentage" data-id="' + rowId + '" style="width:75px;height:60px;text-align: center">' +
+    '<option value="0" selected>0%</option>' +
+    '<option value="5">5%</option>' +
+    '<option value="10">10%</option>' +
+    '<option value="21">21%</option>' +
+    '</select>' +
+    '</div>' +
     '</div>' +
     '</td>' +
     '<td>' +
@@ -1471,11 +1493,12 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
   event.preventDefault();
   event.stopImmediatePropagation();
 
-  var rowId = $(this).attr('data-id');
+  let rowId = $(this).attr('data-id');
   const parentRow = $(this).parents('.product-line-grid');
   const label = parentRow.find('[name="custom_product_label"]').val();
   const qty = parentRow.find('[name="custom_product_total"]').val();
   const price = parentRow.find('[name="custom_product_price"]').val();
+  const discount = parentRow.find('[name="discount_percentage"]').val();
   const productType = parentRow.find('[name="type"]:checked').val();
   const withTax = parentRow.find('[name="custom_product_tax_checkbox"]:checked').val();
 
@@ -1511,6 +1534,7 @@ $(document).on('click', '.saveCustomProductEmployee', function (event) {
       price: price,
       description: description,
       switchinput: productType,
+      discount: discount,
       with_tax: withTax,
     },
   })

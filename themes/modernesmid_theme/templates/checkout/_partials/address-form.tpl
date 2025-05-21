@@ -9,22 +9,37 @@
 {/block}
 
 {block name="address_form_url"}
-    <form
-      id="checkout-form"
-      method="POST"
-      action="{url entity='order' params=['id_address' => $id_address]}"
-      data-id-address="{$id_address}"
-      data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
-      novalidate="novalidate"
-    >
-{/block}
+<form
+  id="checkout-form"
+  method="POST"
+  action="{url entity='order' params=['id_address' => $id_address]}"
+  data-id-address="{$id_address}"
+  data-refresh-url="{url entity='order' params=['ajax' => 1, 'action' => 'addressForm']}"
+  novalidate="novalidate"
+>
+  {/block}
+
+
 
 {block name='form_fields' append}
+
+{*  {if isset($id_address_delivery) && $id_address_delivery <= 0}*}
+{*    <input type="hidden" name="new_delivery_address" value="{$id_address_delivery}">*}
+{*  {/if}*}
+
+{*  {if isset($id_address_invoice) && !$use_same_address}*}
+{*    <input type="hidden" name="new_invoice_address" value="{$id_address_invoice}">*}
+{*  {elseif !$use_same_address}*}
+{*    <input type="hidden" name="newAddress" value="invoice">*}
+{*  {/if}*}
+
+  <input type="hidden" name="use_same_address" value="{if $use_same_address}1{else}0{/if}">
+
   <input type="hidden" name="saveAddress" value="{$type}">
   {if $type === "delivery"}
     <div class="form-group row col-12">
       <div class="col-md-9 col-md-offset-3">
-        <input name = "use_same_address" id="use_same_address" type = "checkbox" value = "1" {if $use_same_address} checked {/if}>
+        <input name = "use_same_address" id="use_same_address" type="checkbox" value="1" {if $use_same_address} checked {/if}>
         <label for="use_same_address">{l s='Use this address for invoice too' d='Shop.Theme.Checkout'}</label>
       </div>
     </div>

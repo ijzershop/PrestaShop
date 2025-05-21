@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace MsThemeConfig\Class;
 
 use Configuration;
@@ -8,12 +10,14 @@ use DbQuery;
 use Exception;
 use mysqli_result;
 use Order;
+use OrderCarrier;
 use PDOStatement;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use SoapClient;
 use stdClass;
 use Tools;
+use MsThemeConfig\Class\KoopmanErrorCodes;
+
 
 /**
  * Class ExportOrders.
@@ -21,10 +25,13 @@ use Tools;
 class ExportOrdersMultipleCollies
 {
     //Verzonden status waar de orders na dagafsluiting op worden gezet
-    private bool $debug;
+    public bool $debug;
     public Context $context;
     public array $ordersOk;
-    public array $soapOptions;
+
+    // JWT token related properties
+    public string $apiToken;
+    public int $tokenExpiry;
 
     public bool $redirect = true;
     public bool $updateBool;
@@ -57,8 +64,18 @@ class ExportOrdersMultipleCollies
     public string $apiUserName;
     public string $apiVerlader;
     public string $output = '';
-    public string $soapUrl;
+
+    // API endpoints
+    public string $apiBaseUrl;
+    public string $apiAuthEndpoint;
+    public string $apiOrderEndpoint;
+    public string $apiAddressEndpoint;
+    public string $apiShippingListEndpoint;
+
     public string|array $labelsFolder;
+
+    // Add this property to the class
+    public KoopmanTemplateRenderer $templateRenderer;
 
     /**
      * @param $id_order
@@ -66,18 +83,17 @@ class ExportOrdersMultipleCollies
      */
     public function __construct($id_order, array $collies = [])
     {
-        $this->idOrder = $id_order;
+
+        $this->idOrder = (int)$id_order;
         $this->debug = false;
         $this->collies = $collies;
         $this->context = Context::getContext();
         $this->ordersOk = [];
-        $this->idLang = $this->context->language->id;
-        $this->idShop = $this->context->shop->id;
-        $this->idShopGroup = $this->context->shop->id_shop_group;
+        $this->idLang = (int)$this->context->language->id;
+        $this->idShop = (int)$this->context->shop->id;
+        $this->idShopGroup = (int)$this->context->shop->id_shop_group;
         $this->statusShipped = (int)Configuration::get('KOOPMANORDEREXPORT_STATUS_TRANSFERRED', $this->idLang, $this->idShopGroup, $this->idShop);
-        $this->soapOptions = ['stream_context' => stream_context_create(['ssl' => ['verify_peer' => false, 'verify_peer_name' => false,],]),];
         $folder = Configuration::get('KOOPMANORDEREXPORT_LABELS_FOLDER', $this->idLang, $this->idShopGroup, $this->idShop);
-
         $this->labelsFolder = str_replace('private_html', 'public_html', $_SERVER['DOCUMENT_ROOT'] . '/upload/' . $folder);
 
         $this->packageLaneProfile1 = (int)$this->getConfig('KOOPMANORDEREXPORT_SELECT_PACKAGELANE_1_PROFILE');
@@ -93,12 +109,30 @@ class ExportOrdersMultipleCollies
         $this->updateBool = (bool)$this->getConfig('KOOPMANORDEREXPORT_UPDATE_BOOL');
         $this->updateStatus = (int)$this->getConfig('KOOPMANORDEREXPORT_UPDATE_STATUS');
 
-        $this->soapUrl = $this->getConfig('KOOPMANORDEREXPORT_SOAP_URL');
+        // Update API configuration
+//        $this->apiBaseUrl = $this->getConfig('KOOPMANORDEREXPORT_API_BASE_URL');
+//        $this->apiAuthEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_AUTH_ENDPOINT');
+//        $this->apiOrderEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_ORDER_ENDPOINT');
+//        $this->apiAddressEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_ADDRESS_ENDPOINT');
+//        $this->apiShippingListEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_SHIPPING_LIST_ENDPOINT');
+//
+//        $this->apiUserName = $this->getConfig('KOOPMANORDEREXPORT_API_USERNAME');
+//        $this->apiPass = $this->getConfig('KOOPMANORDEREXPORT_API_PASSWORD');
+//        $this->apiDepot = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
+//        $this->apiVerlader = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
 
-        $this->apiUserName = $this->getConfig('KOOPMANORDEREXPORT_API_USERNAME');
-        $this->apiPass = $this->getConfig('KOOPMANORDEREXPORT_API_PASSWORD');
-        $this->apiDepot = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
-        $this->apiVerlader = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
+
+        $this->apiBaseUrl = 'https://staging.trans-mission.nl/api';
+        $this->apiAuthEndpoint = '/login/';
+        $this->apiOrderEndpoint = '/shipments/shipment';
+        $this->apiAddressEndpoint = '/addresses/address';
+        $this->apiShippingListEndpoint = '/shipments';
+
+        $this->apiUserName = 'test@ijzershop.nl';
+        $this->apiPass = 'Test#130268';
+        $this->apiDepot = '9800';
+        $this->apiVerlader = '130268';
+
         $this->afZender = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER');
         $this->afzenderNaam = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM');
         $this->afzenderNaam2 = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM2');
@@ -108,6 +142,73 @@ class ExportOrdersMultipleCollies
         $this->afzenderPlaats = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_AFZENDERPLAATS');
         $this->afzenderLand = 'NL';
         $this->prepareLabelsFolder();
+
+
+        // Initialize JWT token
+        $this->apiToken = '';
+        $this->tokenExpiry = 0;
+
+        $this->templateRenderer = new KoopmanTemplateRenderer();
+
+    }
+
+    /**
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    public function getShipmentStatus()
+    {
+        try {
+            $db = Db::getInstance();
+            $sql = new DbQuery();
+            $sql->select('*');
+            $sql->from('order_carrier', 'oc');
+            $sql->where('oc.id_order = ' . (int)$this->idOrder);
+
+            $result = $db->executeS($sql);
+            if($result){
+                $records = explode(',', $result[0]['tracking_number']);
+                $transportResult = [];
+
+                $records[]  = 'T98130268127837';
+
+                foreach($records as $transportNumber){
+                    if(!empty($transportNumber)) {
+                        $date = date('Y-n-j');
+                        $transportData = $this->makeApiRequest('/shipments/statusses/' . $transportNumber . '/' . $date, [], 'GET');
+
+                        $transportResult[$transportNumber] = $transportData;
+                    }
+                }
+
+                return json_encode($transportResult, 1);
+            }
+            return json_encode([]);
+        } catch (Exception $e){
+            die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
+        }
+
+    }
+
+
+    /**
+     * Handle API error response
+     *
+     * @param string $errorCode The error code from the API
+     * @param array $errorDetails Additional error details
+     * @return string Human-readable error message
+     */
+    private function handleApiError(string $errorCode, array $errorDetails = []): string
+    {
+        $errorMessage = KoopmanErrorCodes::getErrorMessage($errorCode);
+
+//        // Add additional error handling logic based on specific error codes
+//        if ($errorCode === KoopmanErrorCodes::ERR_ADDRESS_POSTALCODE_INVALID) {
+//            // Special handling for invalid postal code
+//            // ...
+//        }
+
+        return $errorMessage;
     }
 
     /**
@@ -128,7 +229,6 @@ class ExportOrdersMultipleCollies
      */
     private function prepareLabelsFolder(): void
     {
-
         if (!is_dir($this->getLaneFolder())) {
             @mkdir($this->getLaneFolder(), 0755);
         }
@@ -149,7 +249,7 @@ class ExportOrdersMultipleCollies
             $code .= '?' . '>';
             file_put_contents($this->getLaneFolder() . '/labels.php', $code);
         } catch (Exception $e) {
-            die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
+            die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
         }
     }
 
@@ -163,11 +263,146 @@ class ExportOrdersMultipleCollies
         $lane_2 = $this->packageLaneProfile2;
         $lane_3 = $this->packageLaneProfile3;
 
-        return match ((int)$this->context->employee->id_profile) {
+        return match ($this->context->employee->id_profile) {
             $lane_2 => $this->labelsFolder . '/lane_2',
             $lane_3 => $this->labelsFolder . '/lane_3',
             default => $this->labelsFolder . '/lane_1',
         };
+    }
+
+    /**
+     * Get JWT token for API authentication
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function getAuthToken(): string
+    {
+        // Check if we have a valid token
+        if (!empty($this->apiToken) && $this->tokenExpiry > time()) {
+            return $this->apiToken;
+        }
+
+        // Prepare authentication data
+        $authData = [
+            'user' => $this->apiUserName,
+            'password' => $this->apiPass
+        ];
+
+        // Make API call to get token
+        $ch = curl_init($this->apiBaseUrl . $this->apiAuthEndpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        // Add this line to disable SSL verification
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // Change from JSON to form data
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($authData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/x-www-form-urlencoded',
+            'Accept: application/json'
+        ]);
+
+        $response = curl_exec($ch);
+        if ($response === false) {
+            $error = curl_error($ch);
+            throw new Exception("cURL error: " . $error);
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            throw new Exception("Authentication failed with status code: " . $httpCode . " and response: " . $response);
+        }
+
+        $tokenData = json_decode($response, true);
+        if (!isset($tokenData['access_token'])) {
+            throw new Exception("Invalid token response: " . $response);
+        }
+
+        // Store token and expiry time (assuming token expires in 1 hour)
+        $this->apiToken = $tokenData['access_token'];
+        $this->tokenExpiry = time() + ($tokenData['expires_in'] ?? 3600);
+
+        return $this->apiToken;
+    }
+
+    /**
+     * Make API request with JWT authentication
+     *
+     * @param string $endpoint
+     * @param array $data
+     * @param string $method
+     * @return array
+     * @throws Exception
+     */
+    public function makeApiRequest(string $endpoint, array $data = [], string $method = 'GET'): array
+    {
+        $token = $this->getAuthToken();
+        $ch = curl_init($this->apiBaseUrl . $endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Add this line to disable SSL verification
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        } elseif ($method === 'PUT') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        } elseif ($method === 'DELETE') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        } elseif ($method === 'GET' && !empty($data)) {
+            $endpoint .= '?' . http_build_query($data);
+            curl_setopt($ch, CURLOPT_URL, $this->apiBaseUrl . $endpoint);
+
+
+        }
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: Bearer ' . $token
+        ]);
+
+        $response = curl_exec($ch);
+
+        if ($response === false) {
+            $error = curl_error($ch);
+            throw new Exception("cURL error: " . $error);
+        }
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            throw new Exception("API request failed with status code: " . $httpCode . " and response: " . $response);
+        }
+
+
+        return json_decode($response, true);
+    }
+
+    /**
+     * Get address information from API
+     *
+     * @param array $address
+     * @return array
+     */
+    private function getAddressNL(array $address): array
+    {
+        try {
+            return $this->makeApiRequest($this->apiAddressEndpoint, [
+                'type' => 'delivery',
+                'address1' => $address['address1'],
+                'postalcode' => $address['postalcode'],
+                'housenumber' => $address['housenumber'],
+                'city' => $address['city'],
+                'country_code' => $address['country_code'],
+                ], 'POST');
+
+        } catch (Exception $e) {
+            die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
+        }
     }
 
     /**
@@ -176,12 +411,10 @@ class ExportOrdersMultipleCollies
      **/
     public function export(): bool
     {
-
-
         try {
             $orders = $this->getOrders($this->selectStatus, $this->selectCarrier, 1, $this->idOrder);
         } catch (PrestaShopDatabaseException $e) {
-            die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
+            die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
         }
 
         if (empty($orders)) {
@@ -192,13 +425,13 @@ class ExportOrdersMultipleCollies
             try {
                 $this->processOrdersNew($orders, $this->collies);
             } catch (PrestaShopDatabaseException|PrestaShopException $e) {
-                die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
+                die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
             }
         } else {
             try {
                 $this->processOrdersNew($orders);
             } catch (PrestaShopDatabaseException|PrestaShopException $e) {
-                die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
+                die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
             }
         }
 
@@ -207,7 +440,7 @@ class ExportOrdersMultipleCollies
             try {
                 $this->setNewStateForOrders($orders, $this->updateStatus);
             } catch (PrestaShopDatabaseException|PrestaShopException $e) {
-                die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
+                die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
             }
         }
 
@@ -253,167 +486,104 @@ class ExportOrdersMultipleCollies
      *
      * @param $orders
      * @param array $collies
-     * @return void
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    private function processOrdersNew($orders, array $collies = []): void
+    private function processOrdersNew($orders, array $collies = [])
     {
         if (empty($orders)) {
             die("Error met melding: Geen order id's beschikbaar<br/>");
         }
 
-        try {
-            $client = new SoapClient($this->soapUrl, $this->soapOptions);
-        } catch (Exception $e) {
-            die(sprintf('Error met %s en melding: error (new SoapClient) - %s<br/>', $e->getCode(), $e->getMessage()));
-        }
-        $login = new stdClass();
-        $login->username = $this->apiUserName;
-        $login->password = $this->apiPass;
-        $login->depot = $this->apiDepot;
-        $login->verlader = $this->apiVerlader;
-
-
         foreach ($orders as $row) {
-
-            $shippingTask = new stdClass();
-            $shippingTask->type = 'T'; // T = Stukgoed Levering
-
             $orderId = $row['id_order'];
             $orderReference = $row['reference'];
-            $shippingTask->nrorder = $orderReference;
-            //Verzender gegevens
-            $shippingTask->afzender = $this->afZender;
-            $shippingTask->afznaam = $this->afzenderNaam;
-            $shippingTask->afznaam2 = $this->afzenderNaam2;
-            $shippingTask->afzstraat = $this->afzenderStraat;
-            $shippingTask->afzhuisnr = $this->afzenderHuisnr;
-            $shippingTask->afzpostcode = $this->afzenderPostcode;
-            $shippingTask->afzplaats = $this->afzenderPlaats;
-            $shippingTask->afzland = $this->afzenderLand;
-            //Klant gegevens
-            $orderFirstName = $this->sanitizeTextForTransmission($row['firstname']);
-            $orderLastName = $this->sanitizeTextForTransmission($row['lastname']);
-            $orderCompany = $this->sanitizeTextForTransmission($row['company']);
-            $orderAddress1 = $this->sanitizeTextForTransmission($row['address1']);
-            $orderHouseNumber = $this->sanitizeTextForTransmission($row['house_number']);
-            $orderHouseNumberExt = $this->sanitizeTextForTransmission($row['house_number_extension']);
-            $orderPostcode = $this->sanitizeTextForTransmission($row['postcode']);
-            $orderCity = $this->sanitizeTextForTransmission($row['city']);
-            $orderIsoCode = $this->sanitizeTextForTransmission($row['iso_code']);
-            $orderPhone = $this->sanitizeTextForTransmission($row['phone']);
-            $orderEmail = $this->sanitizeTextForTransmission($row['email']);
-
-            $shippingTask->geanaam = $orderFirstName . ' ' . $orderLastName;
-            $shippingTask->geanaam2 = $orderCompany;
-            $shippingTask->geastraat = $orderAddress1;
-            $shippingTask->geahuisnr = $orderHouseNumber . ' ' . $orderHouseNumberExt;
-            $shippingTask->geapostcode = $orderPostcode;
-            $shippingTask->geaplaats = $orderCity;
-            $shippingTask->gealand = $orderIsoCode;
-            $shippingTask->geatelefoon = $orderPhone;
-            $shippingTask->geaemail = $orderEmail;
-
-            $msg = $this->getFirstClientMessage($orderId);
-            if (!empty($msg)) {
-                $shippingTask->instructie = $msg[0]['message'];
-            }
-
-            if ($shippingTask->gealand == 'nl') { // haal straat + plaats op bij koopman voor NL
-                try {
-                    $addresses = $client->getAdresNL_2($login, $orderPostcode);
-                } catch (Exception $e) {
-                    if ((int)$e->getCode() == 0) {
-                        $this->redirect = false;
-                        $this->getOutputChangeAddress($e, $orderAddress1, $orderHouseNumber, $orderHouseNumberExt, $orderPostcode, $orderCity);
-                    }
-                }
-
-                if (isset($addresses) && is_array($addresses)) {
-                    $klant_straat = $shippingTask->geastraat . ' ' . $shippingTask->geahuisnr;
-                    $klant_plaats = $shippingTask->geaplaats;
-
-                    if ((count($addresses) > 1) || (trim(strtolower($shippingTask->geastraat)) != trim(strtolower($addresses[0]->straat)))) {
-                        $validAddress = false;
-                        foreach ($addresses as $address) {
-                            if (trim(strtolower($address->straat)) == trim(strtolower($shippingTask->geastraat)) &&
-                                trim(strtolower($address->plaats)) == trim(strtolower($shippingTask->geaplaats))) {
-                                $validAddress = true;
-                            }
-                        }
-
-                        if (!$validAddress) {
-                            $shippingTask->geaplaats = '';
-                            $this->redirect = false;
-
-                            $this->getOutputWrongPostcode($klant_straat, $shippingTask, $klant_plaats, $addresses, $orderHouseNumber, $orderHouseNumberExt);
-                        }
-                    } else {
-                        $shippingTask->geastraat = $addresses[0]->straat;
-                        $shippingTask->geaplaats = $addresses[0]->plaats;
-                    }
-                }
-            }
+            // Check for linked orders
             if (!empty($row['added_to_reference']) && !empty($row['added_to_id']) && (int)Tools::getValue('added_check') != 1) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_to_id']);
                 $linkedReferencesArray = explode(',', $row['added_to_reference']);
                 $this->redirect = false;
-                $this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray);
-                return;
+                die($this->getOutputAddedToOrder($linkedIdArray, $linkedReferencesArray));
             }
             if (!empty($row['added_with_reference']) && !empty($row['added_with_id']) && (int)Tools::getValue('added_check') != 1) {
                 //heeft toegevoegde orders
                 $linkedIdArray = explode(',', $row['added_with_id']);
                 $linkedReferencesArray = explode(',', $row['added_with_reference']);
                 $this->redirect = false;
-                $this->getOutputAddedOrders($linkedIdArray, $linkedReferencesArray);
-                return;
+                die($this->getOutputAddedOrders($linkedIdArray, $linkedReferencesArray));
             }
 
-            if (!empty($shippingTask->geaplaats)) {
-                for ($i = 0; $i < count($collies); $i++) {
-                    $collieRow = new stdClass();
-                    $collieRow->nrcollo = $i + 1;
+            // Prepare shipping data
+            $shippingData = $this->prepareShippingData($row, $orderReference, $collies);
 
-                    //COL = Collie //MP = mini-pallet //PLH = Halve Pallet //PL = Pallet
-                    if(in_array($collies[$i]['name'], ['envelope', 'plaat', '1-meter', '2-meter'])) {
-                        $collieRow->vrzenh = 'COL';
-                    } else {
-                        switch ($collies[$i]['name']) {
-                            case 'balk-pallet':
-                            case 'pallet':
-                                $collieRow->vrzenh = 'PLH';
-                                break;
-                            case 'plaat-pallet':
-                                $collieRow->vrzenh = 'MP';
-                                break;
-                            default:
-                                $collieRow->vrzenh = 'PLH';
+            // Validate address for NL orders
+            if (strtolower($shippingData['addresses'][0]['country_code']) == 'nl') {
+                try {
+                    $addresses = $this->getAddressNL($shippingData['addresses'][0])['data'];
+
+                    if (!empty($addresses)) {
+                        $klant_straat = $shippingData['addresses'][0]['address1'];
+                        $klant_plaats = $shippingData['addresses'][0]['city'];
+
+                        if ((count($addresses) > 1) || (trim(strtolower($shippingData['addresses'][0]['address1'])) != trim(strtolower($addresses[0]['StraatNEN'])))) {
+                            $validAddress = false;
+                            foreach ($addresses as $address) {
+                                if (trim(strtolower($address['StraatNEN'])) == trim(strtolower($shippingData['addresses'][0]['address1'])) &&
+                                    trim(strtolower($address['PlaatsNEN'])) == trim(strtolower($shippingData['addresses'][0]['city']))) {
+                                    $validAddress = true;
+                                }
+                            }
+
+                            if (!$validAddress) {
+                                $shippingData['addresses'][0]['city'] = '';
+                                $this->redirect = false;
+
+                                die($this->getOutputWrongPostcode($klant_straat, (object)$shippingData['addresses'][0], $klant_plaats, $addresses, $row['house_number'], $row['house_number_extension']));
+                            }
+                        } else {
+                            $shippingData['addresses'][0]['address1'] = $addresses[0]['StraatNEN'];
+                            $shippingData['addresses'][0]['city'] = $addresses[0]['PlaatsNEN'];
                         }
                     }
-
-                    $collieRow->gewicht = $collies[$i]['weight'];
-                    $collieRow->lengte = $collies[$i]['length'];
-                    $collieRow->breedte = $collies[$i]['width'];
-                    $collieRow->hoogte = $collies[$i]['height'];
-
-                    $shippingTask->aRegel[$i + 1] = $collieRow;
+                } catch (Exception $e) {
+                    if ((int)$e->getCode() == 0) {
+                        $this->redirect = false;
+                        die($this->getOutputChangeAddress($e, $row['address1'], $row['house_number'], $row['house_number_extension'], $row['postcode'], $row['city']));
+                    }
                 }
-// dd($shippingTask, $login);
+            }
+            // If address is valid, create shipping order
+            if (!empty($shippingData['addresses'][0]['city'])) {
                 try {
-                    $transport = $client->addOpdracht($login, $shippingTask);
-                    if ($transport) {
-                        $trackingNumber = $transport->zendingnr;
+                    // Create shipping order via API
+
+                    $response = $this->makeApiRequest($this->apiOrderEndpoint, $shippingData, 'POST');
+                    $resp = $response['data'];
+                    if ($response['status'] === 200) {
+                        $trackingNumber = $resp['transport_number'];
+                        $trackingUrl = $resp['tracking_url'];
                         $trackingNumber = 'T' . substr($trackingNumber, 1); //T98
-                        $this->addTrackingNumberToOrder($orderId, $trackingNumber);
+                        $this->addTrackingNumberToOrder($orderId, $trackingNumber, $trackingUrl);
 
-                        $labels = $transport->labels;
-                        $this->redirect = true;
-                        if (file_put_contents($this->getLaneFolder() . '/' . $trackingNumber . '.pdf', trim(base64_decode($labels)))) {
+                        // Get and save label
+                        if (isset($resp['labels'])) {
+                            $labels = $resp['labels'];
+                            $this->redirect = true;
 
-                            $this->ordersOk[] = $orderId;
+                            if(array_key_exists('label_content', $labels)){
+                                if (file_put_contents($this->getLaneFolder() . '/' . $trackingNumber . '.pdf', base64_decode($labels['label_content']))) {
+                                    $this->ordersOk[] = $orderId;
+                                }
+                            } else {
+                                for($i = 0; $i < count($labels); $i++) {
+                                    if (file_put_contents($this->getLaneFolder() . '/' . $trackingNumber.'_'. $i . '.pdf', base64_decode($labels[$i]['label_content']))) {
+                                        $this->ordersOk[] = $orderId;
+                                    }
+                                }
+                            }
+
+
                         }
                     }
                 } catch (Exception $e) {
@@ -424,20 +594,10 @@ class ExportOrdersMultipleCollies
                     die(sprintf("Error met %s en melding: %s<br/>", $e->getCode(), $e->getMessage()));
                 }
 
-                if ($this->debug) {
+                // Debug mode - delete the order if in debug mode
+                if ($this->debug && isset($resp['transport_number'])) {
                     try {
-                        try {
-                            $client2 = new SoapClient($this->soapUrl, $this->soapOptions);
-                        } catch (Exception $e) {
-                            die(sprintf("Error met %s en melding: error (new SoapClient) - %s<br/>", $e->getCode(), $e->getMessage()));
-                        }
-
-                        $loginDel = new stdClass();
-                        $loginDel->username = $this->apiUserName;
-                        $loginDel->password = $this->apiPass;
-                        $loginDel->depot = $this->apiDepot;
-                        $loginDel->verlader = $this->apiVerlader;
-                        $client2->delOpdracht($loginDel, $transport->zendingnr);
+                        $this->makeApiRequest($this->apiOrderEndpoint . '/' . $resp['transport_number'], [], 'DELETE');
                     } catch (Exception $e) {
                         die(sprintf("Error met %s en melding: %s<br/>", $e->getCode(), $e->getMessage()));
                     }
@@ -445,11 +605,141 @@ class ExportOrdersMultipleCollies
             }
         }
     }
+    /**
+     * Prepare shipping data for API request
+     *
+     * @param array $row Order data
+     * @param string $orderReference Order reference
+     * @param array $collies Collies data
+     * @return array
+     * @throws PrestaShopDatabaseException
+     */
+    private function prepareShippingData(array $row, string $orderReference, array $collies = []): array
+    {
+        $shippingDate = date('d-m-Y');
+        $koopmanFreeDays = ['01-05-2025', '05-05-2025', '29-05-2025', '09-06-2025', '05-05-2025', '21-06-2025'];
 
-    /*
-    * get first public message (from the client)
-    * Toegevoegd om afleverinstructies van de klant door te geven aan koopman. GDU 28-8-2017
-    */
+        while(in_array($shippingDate, $koopmanFreeDays)) {
+            $shippingDate = date('d-m-Y', strtotime($shippingDate . ' +1 day'));
+        }
+
+        // Prepare customer data
+        $orderFirstName = $this->sanitizeTextForTransmission($row['firstname']);
+        $orderLastName = $this->sanitizeTextForTransmission($row['lastname']);
+        $orderCompany = $this->sanitizeTextForTransmission($row['company']);
+        $orderAddress1 = $this->sanitizeTextForTransmission($row['address1']);
+        $orderHouseNumber = $this->sanitizeTextForTransmission($row['house_number']);
+        $orderHouseNumberExt = $this->sanitizeTextForTransmission($row['house_number_extension']);
+        $orderPostcode = $this->sanitizeTextForTransmission($row['postcode']);
+        $orderCity = $this->sanitizeTextForTransmission($row['city']);
+        $orderIsoCode = $this->sanitizeTextForTransmission($row['iso_code']);
+        $orderPhone = $this->sanitizeTextForTransmission($row['phone']);
+        $orderEmail = $this->sanitizeTextForTransmission($row['email']);
+
+        // Get client message if available
+        $msg = $this->getFirstClientMessage($row['id_order']);
+        $instructie = !empty($msg) ? $msg[0]['message'] : '';
+
+        // Prepare shipping data
+        $shippingData = [
+            'type' => 'T', // T = Stukgoed Levering
+            'depot' => $this->apiDepot,
+            'customer_number' => $this->apiVerlader,
+            'date' =>  date('Y-m-d', strtotime($shippingDate)),
+            'labels' => 'PDF',
+            'references' => [
+                [
+                    'type' => 'NRORDER',
+                    'reference' => $orderReference,
+                ]
+             ],
+            'addresses' => [
+               [
+                   'type' => 'delivery',
+                   'name'=> $orderFirstName . ' ' . $orderLastName,
+                   'name2'=> $orderCompany,
+                   'address1'=> $orderAddress1,
+                   'housenumber'=> $orderHouseNumber . ' ' . $orderHouseNumberExt,
+                   'postalcode'=> $orderPostcode,
+                   'city'=> $orderCity,
+                   'country_code'=> $orderIsoCode,
+                   'contact' => [
+                       'language' => 'nl',
+                       'name' => $orderFirstName . ' ' . $orderLastName,
+                       'phonenumber' => $orderPhone,
+                       'email' => $orderEmail,
+                   ]
+               ],[
+                    'type' => 'consignor',
+                    'name'=> $this->afzenderNaam,
+                    'name2'=> $this->afzenderNaam2,
+                    'address1'=> $this->afzenderStraat,
+                    'housenumber'=> $this->afzenderHuisnr,
+                    'postalcode'=> $this->afzenderPostcode,
+                    'city'=> $this->afzenderPlaats,
+                    'country_code'=> $this->afzenderLand,
+                ],[
+                    'type' => 'loading',
+                    'name'=> $this->afzenderNaam,
+                    'name2'=> $this->afzenderNaam2,
+                    'address1'=> $this->afzenderStraat,
+                    'housenumber'=> $this->afzenderHuisnr,
+                    'postalcode'=> $this->afzenderPostcode,
+                    'city'=> $this->afzenderPlaats,
+                    'country_code'=> $this->afzenderLand,
+                ]
+            ],
+            'text_messages' => [
+                [
+                    'type' => 'AFLINFO',
+                    'message' => $instructie
+                ],
+            ],
+            // Collies data
+            'shipment_units' => []
+        ];
+
+
+        // Add collies data
+        if (!empty($collies)) {
+            foreach ($collies as $i => $collie) {
+                if(in_array($collie['name'], ['envelope', 'plaat', '1-meter', '2-meter'])) {
+                    $collieType = 'COL';
+                } else {
+                    switch ($collie['name']) {
+                        case 'balk-pallet':
+                        case 'pallet':
+                            $collieType = 'PLH';
+                            break;
+                        case 'plaat-pallet':
+                            $collieType = 'MP';
+                            break;
+                        default:
+                            $collieType = 'PLH';
+                    }
+                }
+
+                $shippingData['shipment_units'][] = [
+                    'number' => $i + 1,
+                    'goods_description' => 'ModerneSmid metaal producten',
+                    'packages' => '1',
+                    'exchange' => '0',
+                    'unit_type' => $collieType,
+                    'measurements' => [
+                            'weight' => $collie['weight'],
+                            'length' => $collie['length'],
+                            'width' => $collie['width'],
+                            'height' => $collie['height'],
+                            'volume' => '0.0000',
+                            'loadingmeter' => '0.00'
+                        ],
+                    'exchange_unit' => 1,
+                ];
+            }
+        }
+
+        return $shippingData;
+    }
 
     /**
      * @param $string
@@ -498,76 +788,28 @@ class ExportOrdersMultipleCollies
      * @param string $orderPostcode
      * @param string $orderCity
      * @return string
+     * @throws Exception
      */
     public function getOutputChangeAddress(Exception $e, string $orderAddress1, string $orderHouseNumber, string $orderHouseNumberExt, string $orderPostcode, string $orderCity): string
     {
-        $this->output = sprintf('<div class="w-100">
-                                                    <div class="col-12">
-                                                        <div class="card row">
-                                                          <div class="card-header">
-                                                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                          <span aria-hidden="true">&times;</span>
-                                                          </button>
-                                                            Wijzig het adres van deze bestelling
-                                                          </div>
-                                                          <div class="card-body">
-                                                            <p class="card-text">%s. Controleer en wijzig het adres.</p>
-                                                            <br/>
-                                                            <form id="updateAddressKoopman">', $e->getMessage());
-
+        $getParams = [];
         foreach ($_GET as $key => $value) {
-            $this->output .= sprintf("<input type='hidden' name='%s' value='%s'/>", $key, $value);
+            $getParams[$key] = $value;
         }
 
-        $this->output .= sprintf('<input type="hidden" name="updateAddress" value="1">
-                                                            <div class="row mb-3">
-                                                            <div class="col-6">
-                                                                <div class="form-floating">
-                                                                    <input type="text" class="form-control" name="address1" id="address1" placeholder="Straat naam" value="%s">
-                                                                    <label for="address1">Straat</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-3">
-                                                                <div class="form-floating">
-                                                                    <input type="text" class="form-control" name="house_number" id="house_number" placeholder="Huisnummer" value="%s">
-                                                                    <label for="house_number">Huis Nr.</label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-3">
-                                                                <div class="form-floating">
-                                                                    <input type="text" class="form-control" name="house_number_extension" id="house_number_extension"
-                                                                    placeholder="Toevoeging" value="%s">
-                                                                    <label for="house_number_extension">Toev.</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-3">
-                                                                <div class="col-5">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control" name="postcode" id="postcode" placeholder="Postcode" value="%s">
-                                                                        <label for="postcode">Postcode</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control" name="city" id="city" placeholder="Stad" value="%s">
-                                                                        <label for="city">Stad</label>
-                                                                    </div>
-                                                                </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <button type="button" class="btn btn-lg btn-success w-100 updateAddress">Wijzig adres & print label</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                  </div>
-                                                </div>
-                                            </div>
-                                        </div></form>', $orderAddress1, $orderHouseNumber, $orderHouseNumberExt, $orderPostcode, $orderCity);
-
-        return $this->output;
+        return $this->templateRenderer
+            ->assignMultiple([
+                'error_message' => $e->getMessage(),
+                'get_params' => $getParams,
+                'address1' => $orderAddress1,
+                'house_number' => $orderHouseNumber,
+                'house_number_extension' => $orderHouseNumberExt,
+                'postcode' => $orderPostcode,
+                'city' => $orderCity
+            ])
+            ->render('change_address.tpl');
     }
+
 
     /**
      * @param string $klant_straat
@@ -577,94 +819,32 @@ class ExportOrdersMultipleCollies
      * @param string $orderHouseNumber
      * @param string $orderHouseNumberExt
      * @return string
+     * @throws Exception
      */
     public function getOutputWrongPostcode(string $klant_straat, stdClass $shippingTask, string $klant_plaats, array $addresses, string $orderHouseNumber, string $orderHouseNumberExt): string
     {
-        $this->output = sprintf('<div class="w-100">
-                                    <div class="col-12">
-                                        <div class="card row">
-                                            <div class="card-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                Adres van klant en ingevoerde postcode komen niet overeen.
-                                            </div>
-                                            <div class="card-body">
-                                                        <div class="row mt-3 border-bottom">
-                                                            <p class="col-12"><b>Ingevuld door klant:</b></td></tr><tr><td><span class="large-text"> %s, %s %s</span></p>
-                                                        </div>
-                                                        <div class="row mt-3 border-bottom"">
-                                                            <div class="col-12">
-                                                            <b>Straat en woonplaats, bij postcode:</b>
-                                                            <ul id="street-list">', $klant_straat, $shippingTask->geapostcode, $klant_plaats);
-
-        foreach ($addresses as $ix => $adres) {
-            $this->output .= sprintf('<li class="large-text">
-                                                                    <a href="#" class="text-decoration-none insert-address" data-rowid="%s">
-                                                                    <span class="insert-address-street"  data-rowid="%s">%s</span>
-                                                                    <span class="insert-address-city"  data-rowid="%s">%s</span>
-                                                                    </a>
-                                                                    </li>', $ix, $ix, $adres->straat, $ix, $adres->plaats);
-        }
-
-        $this->output .= '</ul>
-                                                </div></div>
-                                                <div class="row mt-5"><div class="col-12"><b>Pas het adres aan</b></div></div>
-                                                <form class="mt-2" method="post" id="updateAddressKoopman">';
-
+        $getParams = [];
         foreach ($_GET as $key => $value) {
-            $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
+            $getParams[$key] = $value;
         }
 
-        $this->output .= sprintf('<input type="hidden" name="updateAddress" value="1"><div class="row mb-3">
-                                                                <div class="col-6">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="address1" id="address1" placeholder="Straat naam" value="%s">
-                                                                        <label for="address1">Straat</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="house_number" id="house_number" placeholder="Huisnummer" value="%s">
-                                                                        <label for="house_number">Huis Nr.</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-3">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="house_number_extension" id="house_number_extension" placeholder="Toevoeging" value="%s">
-                                                                        <label for="house_number_extension">Toev.</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mb-3">
-                                                                <div class="col-5">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="postcode" id="postcode" placeholder="Postcode" value="%s">
-                                                                        <label for="postcode">Postcode</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-7">
-                                                                    <div class="form-floating">
-                                                                        <input type="text" class="form-control address-input-text" name="city" id="city" placeholder="Stad" value="%s">
-                                                                        <label for="city">Stad</label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row mt-5">
-                                                                <div class="col-12">
-                                                                    <button type="button" class="btn btn-lg btn-success w-100 updateAddress">Wijzig adres & print label</button>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>', $addresses[0]->straat,
-            $orderHouseNumber,
-            $orderHouseNumberExt,
-            $addresses[0]->postcode,
-            strtolower($addresses[0]->plaats));
+        // For the first address in the list (used as default values)
+        $firstAddress = $addresses[0];
 
-        return $this->output;
+        return $this->templateRenderer
+            ->assignMultiple([
+                'klant_straat' => $klant_straat,
+                'postcode' => $shippingTask->geapostcode,
+                'klant_plaats' => $klant_plaats,
+                'addresses' => $addresses,
+                'get_params' => $getParams,
+                'default_street' => $firstAddress->straat ?? $firstAddress['straat'] ?? '',
+                'house_number' => $orderHouseNumber,
+                'house_number_extension' => $orderHouseNumberExt,
+                'default_postcode' => $firstAddress->postcode ?? $firstAddress['postcode'] ?? '',
+                'default_city' => strtolower($firstAddress->plaats ?? $firstAddress['plaats'] ?? '')
+            ])
+            ->render('wrong_postcode.tpl');
     }
 
     /**
@@ -673,62 +853,41 @@ class ExportOrdersMultipleCollies
      * @return string
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws Exception
      */
     public function getOutputAddedToOrder(array $linkedIdArray, array $linkedReferencesArray): string
     {
-        $this->output = sprintf('<div class="w-100">
-                                    <div class="col-12">
-                                        <div class="card row">
-                                            <div class="card-body">
-                                            <form class="mt-2" method="post" id="%s">
-                                            <input type="hidden" name="addedToOrderChoice" id="addedToOrderChoice" value="1"/>', 'toevoegingForm');
-
-
+        $getParams = [];
         foreach ($_GET as $key => $value) {
             if($key == 'collies'){
                 $value = str_replace('"', "'", $value);
             }
-            $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
+            $getParams[$key] = $value;
         }
 
-        $this->output .= 'Dit is een toevoeging aan bestelling met factuurnummer(s): <table class="table w-100">';
-
+        $linkedOrders = [];
         foreach ($linkedIdArray as $i => $link) {
             $orderCarrier = new Order($link);
             $shippingData = $orderCarrier->getShipping();
 
-            $this->output .= sprintf('<tr>
-                                        <td><input type="checkbox" class="form-control linked_order" value="%s" data-tracking="%s" data-weight="%s" name="linked_orders[]" checked/></td>
-                                        <td><a class="text-decoration-none" href="/admin-dev/index.php/sell/orders/%s/generate-delivery-slip-pdf" target="_blank">%s</a></td>
-                                        <td>%s<sub>kg</sub></td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        </tr>', $link,
-                $shippingData[0]['tracking_number'],
-                $shippingData[0]['weight'],
-                $link,
-                $linkedReferencesArray[$i],
-                (float)$shippingData[0]['weight'],
-                $shippingData[0]['tracking_number'],
-                $shippingData[0]['order_state_name']);
+            $linkedOrders[] = [
+                'id' => $link,
+                'reference' => $linkedReferencesArray[$i],
+                'tracking_number' => $shippingData[0]['tracking_number'],
+                'weight' => (float)$shippingData[0]['weight'],
+                'order_state_name' => $shippingData[0]['order_state_name']
+            ];
         }
 
-        $this->output .= '</table>
-                                    <div class="w-100">
-                                    <div class="btn-group w-100" role="group" aria-label="Basic example">
-                                      <button type="button" data-all="0" class="btn btn-danger">Nee, alleen deze</button>
-                                      <button type="button" data-all="1"  class="btn btn-success">Ja, alle geselecteerden</button>
-                                    </div>
-                                    </div>
-                                    </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>';
-
-        return $this->output;
+        return $this->templateRenderer
+            ->assignMultiple([
+                'get_params' => $getParams,
+                'linked_orders' => $linkedOrders,
+                'form_id' => 'toevoegingForm'
+            ])
+            ->render('added_to_order.tpl');
     }
+
 
     /**
      * @param array $linkedIdArray
@@ -736,82 +895,71 @@ class ExportOrdersMultipleCollies
      * @return string
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
+     * @throws Exception
      */
     public function getOutputAddedOrders(array $linkedIdArray, array $linkedReferencesArray): string
     {
-        $this->output = sprintf('<div class="w-100">
-                                    <div class="col-12">
-                                        <div class="card row">
-                                            <div class="card-body">
-                                            <form class="mt-2" method="post" id="%s">
-                                            <input type="hidden" name="addedToOrderChoice" id="addedToOrderChoice" value="1"', 'toevoegingForm');
-
+        $getParams = [];
         foreach ($_GET as $key => $value) {
             if($key == 'collies'){
                 $value = str_replace('"', "'", $value);
             }
-            $this->output .= sprintf('<input type="hidden" name="%s" value="%s"/>', $key, $value);
+            $getParams[$key] = $value;
         }
 
-        $this->output .= 'Deze bestelling heeft één of meerdere toevoeging(en) met factuurnummer(s): <table class="table w-100">';
-
+        $linkedOrders = [];
         foreach ($linkedIdArray as $i => $link) {
             $orderCarrier = new Order($link);
             $shippingData = $orderCarrier->getShipping();
 
-            $this->output .= sprintf('<tr>
-                                        <td><input type="checkbox" class="form-control linked_order" value="%s"  data-tracking="%s" data-weight="%s" name="linked_orders[]" checked/></td>
-                                        <td><a class="text-decoration-none" href="/admin-dev/index.php/sell/orders/%s/generate-delivery-slip-pdf" target="_blank">%s</a></td>
-                                        <td>%s<sub>kg</sub></td>
-                                        <td>%s</td>
-                                        <td>%s</td>
-                                        </tr>',
-                $link,
-                $shippingData[0]['tracking_number'],
-                $shippingData[0]['weight'],
-                $link,
-                $linkedReferencesArray[$i],
-                (float)$shippingData[0]['weight'],
-                $shippingData[0]['tracking_number'],
-                $shippingData[0]['order_state_name']);
+            $linkedOrders[] = [
+                'id' => $link,
+                'reference' => $linkedReferencesArray[$i],
+                'tracking_number' => $shippingData[0]['tracking_number'],
+                'weight' => (float)$shippingData[0]['weight'],
+                'order_state_name' => $shippingData[0]['order_state_name']
+            ];
         }
 
-        $this->output .= '</table><div class="w-100">
-                                            <div class="btn-group w-100" role="group" aria-label="actie knoppen">
-                                              <button type="button" data-all="0" class="btn btn-danger">Nee, alleen deze</button>
-                                              <button type="button" data-all="1"  class="btn btn-success">Ja, alle geselecteerden</button>
-                                            </div>
-                                            </div>
-                                            </form>
-                                            </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>';
-
-        return $this->output;
+        return $this->templateRenderer
+            ->assignMultiple([
+                'get_params' => $getParams,
+                'linked_orders' => $linkedOrders,
+                'form_id' => 'toevoegingForm'
+            ])
+            ->render('added_orders.tpl');
     }
+
 
     /**
      * @param $id_order
      * @param $trackingNumber
      * @return void
      */
-    public function addTrackingNumberToOrder($id_order, $trackingNumber = null): void
+    public function addTrackingNumberToOrder($id_order, $trackingNumber = null, $trackingUrl = null): void
     {
         if (!empty($trackingNumber)) {
             $db = Db::getInstance();
-            $requestSelect = 'SELECT `tracking_number` FROM `' . _DB_PREFIX_ . 'order_carrier` WHERE `id_order` = ' . $id_order;
-            $resultSelect = $db->getValue($requestSelect);
-            if (!empty($resultSelect)) {
-                $existingTrackNrs = explode(',', $resultSelect);
+            $requestSelect = 'SELECT `tracking_number`, `tracking_url` FROM `' . _DB_PREFIX_ . 'order_carrier` WHERE `id_order` = ' . $id_order . ' LIMIT 1';
+            $resultSelect = $db->executeS($requestSelect);
+
+
+            if (!empty($resultSelect[0])) {
+                $existingTrackNrs = explode(',', $resultSelect[0]['tracking_number']);
                 $existingTrackNrs[] = $trackingNumber;
                 $uniqueTrackNrs = array_unique($existingTrackNrs);
                 $newTrackNrs = implode(',', $uniqueTrackNrs);
+
+                $existingTrackUrl = explode(',', $resultSelect[0]['tracking_url'] ?? '');
+                $existingTrackUrl[] = $trackingUrl;
+                $uniqueTrackUrl = array_unique($existingTrackUrl);
+                $newTrackUrls = implode(',', $uniqueTrackUrl);
             } else {
                 $newTrackNrs = implode(',', [$trackingNumber]);
+                $newTrackUrls = implode(',', [$trackingUrl]);
             }
-            $db->update('order_carrier', ['tracking_number' => pSQL($newTrackNrs),], 'id_order = ' . $id_order, 1, true);
+
+            $db->update('order_carrier', ['tracking_number' => pSQL($newTrackNrs),'tracking_url' => pSQL($newTrackUrls)], 'id_order = ' . $id_order, 1, true);
         }
     }
 
@@ -864,39 +1012,32 @@ class ExportOrdersMultipleCollies
     public function dagafsluiting(): void
     {
         try {
-            $client = new SoapClient($this->soapUrl, $this->soapOptions);
-        } catch (Exception $e) {
-            die(sprintf("Error met %s en melding: error (new SoapClient) - %s<br/>", $e->getCode(), $e->getMessage()));
-        }
+            // Get shipping list via API
+            $response = $this->makeApiRequest($this->apiShippingListEndpoint);
 
-        $login = new stdClass();
-        $login->username = $this->apiUserName;
-        $login->password = $this->apiPass;
-        $login->depot = $this->apiDepot;
-        $login->verlader = $this->apiVerlader;
-
-        //verzendlijst ophalen en als pdf opslaan
-        try {
-            $shippingList = $client->getVerzendlijst($login);
-            if ($shippingList) {
+            if (isset($response['verzendlijst'])) {
+                $shippingList = $response['verzendlijst'];
                 file_put_contents(str_replace('private_html', 'public_html',
-                        $_SERVER['DOCUMENT_ROOT']) . '/upload/pakbonnen/verzendlijst_' . time() . '.pdf', trim(base64_decode($shippingList)));
+                        $_SERVER['DOCUMENT_ROOT']) . '/upload/pakbonnen/verzendlijst_' . time() . '.pdf',
+                    base64_decode($shippingList));
             }
+
+            // Send orders via API
+            $this->makeApiRequest($this->apiOrderEndpoint . '/send', [], 'POST');
+
         } catch (Exception $e) {
             die(sprintf("Error met %s en melding: %s<br/>", $e->getCode(), $e->getMessage()));
         }
-        //meld zendingen voor met sendOpdrachten
-        $client->sendOpdrachten($login);
 
-        //orders op verzonden zetten.
+        // Update order statuses
         if ($this->updateBool) {
-            //orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
+            // Orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
             $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
-            //all added to order orders
+            // All added to order orders
             $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
             $ordersAddedShipped = $this->getOrders($this->updateStatus, $this->addedSelectCarrier);
-            $allOrders = array_merge($orders,$ordersAdded, $ordersAddedShipped);
-        
+            $allOrders = array_merge($orders, $ordersAdded, $ordersAddedShipped);
+
             foreach ($allOrders as $order) {
                 $this->ordersOk[] = $order['id_order'];
             }
@@ -905,3 +1046,6 @@ class ExportOrdersMultipleCollies
         }
     }
 }
+
+
+

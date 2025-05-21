@@ -609,6 +609,7 @@ $(document).ready(() => {
     let check = validateAllAddressInputs(insertedData, formElem);
     if(check){
       checkFormatAddressApiCheckout(true).then(async fullfilled => {
+
           if (fullfilled) {
             //ga verder
             formElem.submit();
@@ -724,8 +725,6 @@ $(document).ready(() => {
       }
 
       if (!useForInvoice) {
-        validatedPayment = true;
-
         if ($('#invoice-address input[name="postcode"]').val() !== undefined) {
           postcodePayment = $('#invoice-address input[name="postcode"]').val().replace(' ', '');
         }
@@ -745,7 +744,7 @@ $(document).ready(() => {
         }
       }
 
-      if ((validated && useForInvoice) || (validated && validatedPayment && !useForInvoice)) {
+      if ((validated && useForInvoice) || (validatedPayment && !useForInvoice)) {
         $('input[name="no_shipping_phone"]').siblings('.error-small').remove();
         return true;
       }

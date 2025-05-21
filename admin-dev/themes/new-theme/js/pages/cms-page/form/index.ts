@@ -55,6 +55,10 @@ $(() => {
       multiLanguageItem: translatorInput.localeItemSelector,
     },
     $('#serp-app').data('cms-url'),
+    {
+      isPreviewEnabled: true,
+      viewLinkText: 'View my new page'
+    }
   );
 
   new window.prestashop.component.TaggableField({

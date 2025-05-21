@@ -219,7 +219,7 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
         $cartId = (string) $order['id_cart'];
         // Generate a unique order reference
         $firstInitial = !empty($customer->firstname) ? strtoupper(substr($customer->firstname, 0, 1)).'.' : '';
-        $orderReference = $order['reference'] . '|' . $firstInitial . $customer->lastname . '|' . $method . '|' . Context::getContext()->shop_name;
+        $orderReference = $order['reference'] . ' | ' . $firstInitial . $customer->lastname . ' | ' . $method . ' | ' . Context::getContext()->shop_name;
 
         $this->logPaymentMessage('Start Mollie betaling voor order: ' . $cartId, 'info', 200, true);
 
@@ -258,7 +258,7 @@ class MSMollieValidationModuleFrontController extends ModuleFrontController
             "metadata" => [
                 "cartId" => $cartId,
                 "customerId" => $order['id_customer'],
-                "reference" => $orderReference,
+                "reference" => trim($orderReference),
             ],
             "locale" => $this->context->language->iso_code . "_" . strtoupper($this->context->country->iso_code),
             "billingEmail" => $customer->email,

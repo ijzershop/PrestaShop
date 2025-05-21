@@ -65,6 +65,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         return $this;
     }
 
+    /**
+     * @param array $requestParams
+     * @return $this
+     */
     public function handleRequest(array $requestParams = [])
     {
         $this->addressForm->setAction($this->getCheckoutSession()->getCheckoutURL());
@@ -92,7 +96,23 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         ]);
 
         if (isset($requestParams['saveAddress'])) {
+            // Get the correct address ID based on the address type being saved
+            $addressType = $requestParams['saveAddress'];
+            $addressId = isset($requestParams['id_address']) ? (int)$requestParams['id_address'] : 0;
+            // If we're saving an invoice address, make sure we're not using the delivery address ID
+            if ($addressType === 'invoice' && $addressId === (int)$this->getCheckoutSession()->getIdAddressDelivery()) {
+                // If the ID matches the delivery address, set it to 0 or the current invoice address ID
+                $addressId = !$this->use_same_address  ? 0 : (int)$this->getCheckoutSession()->getIdAddressInvoice();
+            }
+
+            // Update the request parameters with the correct address ID
+            if ($addressId >= 0) {
+                $requestParams['id_address'] = $addressId;
+            }
+
             $saved = $this->addressForm->fillWith($requestParams)->submit();
+
+
             if (!$saved) {
                 $this->setCurrent(true);
                 $this->getCheckoutProcess()->setHasErrors(true);
@@ -105,13 +125,18 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 if ($requestParams['saveAddress'] === 'delivery') {
                     $this->use_same_address = isset($requestParams['use_same_address']);
                 }
+
                 $id_address = $this->addressForm->getAddress()->id;
                 if ($requestParams['saveAddress'] === 'delivery') {
                     $this->getCheckoutSession()->setIdAddressDelivery($id_address);
                     $idAddressInvoice = $this->use_same_address ? $id_address : null;
                     $this->getCheckoutSession()->setIdAddressInvoice($idAddressInvoice);
                 } else {
+                    // This is an invoice address, so only set the invoice address ID
+                    // and make sure we don't change the delivery address
                     $this->getCheckoutSession()->setIdAddressInvoice($id_address);
+                    // Ensure we're not using the same address
+                    $this->use_same_address = false;
                 }
             }
         } elseif (isset($requestParams['newAddress'])) {
@@ -231,15 +256,11 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         return $this;
     }
 
+
     public function getTemplateParameters()
     {
         $idAddressDelivery = (int) $this->getCheckoutSession()->getIdAddressDelivery();
         $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
-
-        $idAddress = (int)Tools::getValue('id_address');
-        if($idAddress == 0) {
-            $idAddress = $idAddressDelivery;
-        }
 
         $params = [
             'address_form' => $this->addressForm->getProxy(),
@@ -262,7 +283,6 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 null,
                 ['newAddress' => 'invoice']
             ),
-            'id_address' => $idAddress,
             'id_address_delivery' => $idAddressDelivery,
             'id_address_invoice' => $idAddressInvoice,
             'show_delivery_address_form' => $this->show_delivery_address_form,
@@ -291,6 +311,9 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 || !empty($errors['invoice_address_error'])
             ) {
                 $this->use_same_address = false;
+                $idAddress = $idAddressInvoice;
+            } else {
+                $idAddress = $idAddressDelivery;
             }
 
             // Add specific parameters
@@ -299,10 +322,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
                 [
                     'not_valid_addresses' => implode(',', $invalidAddresses),
                     'use_same_address' => $this->use_same_address,
+                    'id_address' => $idAddress,
                 ],
                 $errors
             );
         }
+        $this->context->smarty->assign($params);
 
         return $params;
     }

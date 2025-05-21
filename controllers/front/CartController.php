@@ -96,6 +96,7 @@ class CartControllerCore extends FrontController
      */
     public function initContent()
     {
+        parent::initContent();
         if (Configuration::isCatalogMode() && Tools::getValue('action') === 'show') {
             Tools::redirect('index.php');
         }
@@ -118,7 +119,6 @@ class CartControllerCore extends FrontController
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
-        parent::initContent();
     }
 
     public function displayAjaxUpdate()

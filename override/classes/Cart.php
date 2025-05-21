@@ -54,10 +54,13 @@ class Cart extends CartCore
             $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
         }
         $extraShippingFee = 0;
-        foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
-            $prodObj = new Product($prod['id_product']);
-            if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
-                $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $_total_shipping['without_tax'];
+
+        if(Context::getContext()->cart){
+            foreach (Context::getContext()->cart->getProducts() as $key => $prod) {
+                $prodObj = new Product($prod['id_product']);
+                if ($prodObj->oi_offer_extra_shipping > 0 && $extraShippingFee == 0) {
+                    $extraShippingFee = $_total_shipping['without_tax'] / 100 * Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_EXTRA_SHIPPING', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id) - $_total_shipping['without_tax'];
+                }
             }
         }
         return ($use_tax) ? $_total_shipping['with_tax'] + $extraShippingFee : $_total_shipping['without_tax'] + $extraShippingFee;

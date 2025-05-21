@@ -74,6 +74,7 @@
             use_same_address          = $use_same_address
             type                      = "delivery"
             form_has_continue_button  = $form_has_continue_button
+            id_address = $id_address_delivery
           }
         </div>
       {elseif $customer.addresses|count > 0}
@@ -93,6 +94,12 @@
           <p class="alert alert-danger js-address-error" name="alert-delivery" style="display: none">{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
         {/if}
 
+      {if $show_invoice_address_form}
+        </form>
+      {/if}
+
+
+
         <p class="add-address">
           <a class="btn btn-primary btn-sm text-white" href="{$new_address_delivery_url}"><i class="fasl fa-plus"></i> {l s='add new address' d='Shop.Theme.Actions'}</a>
         </p>
@@ -108,18 +115,16 @@
       {/if}
 
       {if !$use_same_address}
-
         <h2 class="h4">{l s='Your Invoice Address' d='Shop.Theme.Checkout'}</h2>
 
         {if $show_invoice_address_form}
-
-
           <div id="invoice-address">
             {render file                      = 'checkout/_partials/address-form.tpl'
-              ui                        = $address_form
-              use_same_address          = $use_same_address
-              type                      = "invoice"
-              form_has_continue_button  = $form_has_continue_button
+            ui                        = $address_form
+            use_same_address          = $use_same_address
+            type                      = "invoice"
+            form_has_continue_button  = $form_has_continue_button
+            id_address                = $id_address_invoice
             }
           </div>
         {else}
@@ -155,7 +160,10 @@
         </div>
       {/if}
 
-    </form>
+    {if !$show_invoice_address_form}
+      </form>
+    {/if}
+
     {hook h='displayAddressSelectorBottom'}
   </div>
 {/block}

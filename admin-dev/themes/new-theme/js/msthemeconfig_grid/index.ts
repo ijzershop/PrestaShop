@@ -581,7 +581,8 @@ $(() => {
       formData['offer-phone'] = $('#offer_integration_phone').val();
       formData['offer-date-exp'] = $('#offer_integration_date_exp_date').val();
     }
-
+    formData['offer-memo'] = $('#offer-memo').val();
+console.log(formData);
     $.ajax({
       method: "POST",
       url: putLink,

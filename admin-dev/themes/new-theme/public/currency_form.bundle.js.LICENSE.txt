@@ -1,10 +1,20 @@
 /*!
-  * shared v9.14.1
-  * (c) 2024 kazuya kawaguchi
+  * devtools-if v9.2.2
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 
-/*! #__NO_SIDE_EFFECTS__ */
+/*!
+  * message-compiler v9.2.2
+  * (c) 2022 kazuya kawaguchi
+  * Released under the MIT License.
+  */
+
+/*!
+  * shared v9.2.2
+  * (c) 2022 kazuya kawaguchi
+  * Released under the MIT License.
+  */
 
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
@@ -30,21 +40,3 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
-* @vue/runtime-core v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/
-
-/**
-* @vue/runtime-dom v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/
-
-/**
-* @vue/shared v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/

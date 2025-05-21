@@ -763,6 +763,11 @@ table.ui-datepicker-calendar {border-collapse: separate;}
   color: white;
 }
 
+#v-pills-koopman .ui-datepicker .ui-state-active {
+  color: #000 !important;
+  background: transparent !important;
+  border: transparent !important;
+}
 
 .ui-datepicker .ui-state-highlight{
   background: #3b56ad !important;

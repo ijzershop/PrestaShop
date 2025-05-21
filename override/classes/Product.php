@@ -59,7 +59,7 @@ class Product extends ProductCore {
         self::$definition['fields']['oi_offer_extra_shipping'] = array('type' => self::TYPE_INT,
                                                                  'shop' => 'true',
                                                                  'required' => false);
-        self::$definition['fields']['oi_offer_memo'] = array('type' => self::TYPE_STRING, 'required' => false);
+        self::$definition['fields']['oi_offer_memo'] = array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 4194303, 'required' => false);
         self::$definition['fields']['name'] = array('type' => self::TYPE_STRING,
                                                                  'lang' => true,
                                                                  'validate' => 'isCatalogName',

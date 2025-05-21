@@ -32,11 +32,13 @@ final class ButtonColumn extends AbstractColumn
                 'ModuleClass',
                 'label',
                 'acceptedStates',
-                'createdStates'
+                'createdStates',
+                'retourAcceptedStates'
             ])
             ->setAllowedTypes('ModuleClass', 'object')
             ->setAllowedTypes('label', 'string')
             ->setAllowedTypes('acceptedStates', 'array')
-            ->setAllowedTypes('createdStates', 'array');
+            ->setAllowedTypes('createdStates', 'array')
+            ->setAllowedTypes('retourAcceptedStates', 'array');
     }
 }

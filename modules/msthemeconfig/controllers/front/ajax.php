@@ -6,12 +6,8 @@ if (!defined('_PS_CORE_DIR_')) {
 require_once _PS_CORE_DIR_ . '/config/config.inc.php';
 require_once _PS_CORE_DIR_ . '/init.php';
 
-
-use MsThemeConfig\Class\ExportOrders;
 use MsThemeConfig\Class\ExportOrdersMultipleCollies;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  *
@@ -204,21 +200,28 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 'date' => date('d-m-Y H:i:s'),
             ];
 
-           $result =  Mail::Send(
-                Context::getContext()->language->id,
-                'customer_info',
-                'Klant data rapport',
-                $template_vars,
-                'info@ijzershop.nl',
-                'Administrator',
-                'ijzershop nl',
-                'Webshop Ijzershop'
-            );
-            if($result){
-                die(json_encode(['success' => true]));
-            } else {
+
+            try {
+                $result = Mail::send(
+                    Context::getContext()->language->id,
+                    'customer_info',
+                    'Klant data rapport',
+                    $template_vars,
+                    'info@ijzershop.nl',
+                    'Administrator',
+                    'ijzershop nl',
+                    'Webshop Ijzershop'
+                );
+                if($result){
+                    die(json_encode(['success' => true]));
+                } else {
+                    die(json_encode(['success' => false]));
+                }
+            } catch (\Exception $e) {
                 die(json_encode(['success' => false]));
             }
+
+
         }
 
         if (Tools::getValue('action') == 'fetch_products_for_retour') {
@@ -430,6 +433,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
     }
 
+
     /**
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -438,7 +442,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     {
         $label = $_POST['label'];
         $qty = (int)$_POST['qty'];
-        $price = $_POST['price'];
+        $price = (float)$_POST['price']; // Ensure price is treated as float
+        $discount = (float)$_POST['discount'];
         $description = $_POST['description'];
         $paid = (int)$_POST['switchinput'];
         $withTax = (int)$_POST['with_tax'];
@@ -448,14 +453,28 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         $cart = Context::getContext()->cart;
 
+        // Store original price for later use
+        $originalPrice = $price;
+
+        // Calculate discount - this should happen before tax calculations
+        $discountAmount = 0;
+        if($discount > 0){
+            $discountAmount = ($price * $discount) / 100;
+            $price = $price - $discountAmount;
+        }
+
         if ($cart->id == NULL) {
             $cart->add(true, false);
             Context::getContext()->cookie->id_cart = $cart->id;
         }
 
+        // Apply tax calculations to the already discounted price
         if ($withTax) {
-            $productPrice = number_format($price - ($price / 121) * 21, 6, '.', '');
+            // If price includes tax, we need to extract the net price
+            // Assuming 21% VAT rate
+            $productPrice = number_format($price / 1.21, 6, '.', ''); // Convert from gross to net
         } else {
+            // Price is already excluding tax
             $productPrice = number_format($price, 6, '.', '');
         }
 
@@ -470,7 +489,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $product->id_category_default = $category;
             $product->redirect_type = '301';
             $product->quantity = $qty + 10;
-            $product->price = $productPrice;
+            $product->price = $productPrice; // This is the net price (excluding tax)
             $product->minimal_quantity = 1;
             $product->show_price = 1;
             $product->on_sale = 0;
@@ -483,7 +502,6 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $product->product_type = 'standard';
             $productAdded = $product->save(false, true);
             StockAvailable::setQuantity($product->id, (int)null, $qty + 10, Context::getContext()->shop->id);
-
 
             $product->addToCategories([$category]);
 
@@ -504,18 +522,53 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 }
             }
 
-
             $res = $cart->updateQty($qty, $product->id, false, false);
+
+            // If there was a discount and the product was successfully added, add a cart rule for the discount
+            if ($discount > 0 && $productAdded) {
+                // Calculate discount amount for the cart rule (based on the quantity)
+                $totalDiscountAmount = $discountAmount * $qty;
+
+                // Create a cart rule for the discount
+                $cartRule = new CartRule();
+                $cartRule->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Korting op product ' . $label];
+                $cartRule->description = 'Berekende korting voor product op maat: ' . $label;
+                $cartRule->code = 'DISC-' . uniqid();
+                $cartRule->quantity = 1;
+                $cartRule->quantity_per_user = 1;
+                $cartRule->id_customer = $cart->id_customer;
+                $cartRule->date_from = date('Y-m-d H:i:s');
+                $cartRule->date_to = date('Y-m-d H:i:s', strtotime('+1 day'));
+                $cartRule->reduction_amount = $totalDiscountAmount;
+                $cartRule->reduction_tax = $withTax ? 1 : 0; // Apply discount on tax included price
+                $cartRule->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+                $cartRule->active = 1;
+                $cartRule->add();
+
+                // Add the cart rule to the cart
+                $cart->addCartRule($cartRule->id);
+            }
 
             return json_encode(['valid' => $res, 'cart' => $cart]);
         } else {
-            $creditPrice = (int)$qty * (float)$price;
+            $creditPrice = (int)$qty * (float)$originalPrice;
+
+
+
+            // If there's a discount, apply it to the credit price
+            if ($discount > 0) {
+                $discountAmount = ($creditPrice * $discount) / 100;
+                $creditPrice = $creditPrice - $discountAmount;
+            }
+
+            // Create a unique identifier for this specific voucher
+            $uniqueVoucherIdentifier = 'EGC-' . uniqid() . '-' . time();
 
             //is credit add voucher to cart
             $credit = new CartRule();
-            $credit->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label];
-            $credit->description = strip_tags($description);
-            $credit->id_customer = 0;
+            $credit->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label . ' (' . $uniqueVoucherIdentifier . ')'];
+            $credit->description = strip_tags($description) . ' - Created at ' . date('Y-m-d H:i:s');
+            $credit->id_customer = $cart->id_customer > 0 ? $cart->id_customer : 0;
             $credit->date_from = date('Y-m-d H:i:s');
             $credit->date_to = date('Y-m-d H:i:s', strtotime("+15 minutes"));
             $credit->quantity = 1;
@@ -523,12 +576,13 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->priority = 1;
             $credit->partial_use = 0;
 
+            // Use the unique identifier as the code
+            $credit->code = $uniqueVoucherIdentifier;
 
-            //Make a random code
-            $exist = true;
-            while ($exist) {
-                $credit->code = strtoupper("EGC-" . Tools::passwdGen(5)); //Code
-                $exist = $credit->cartRuleExists($credit->code);
+            // Double-check that this code doesn't exist
+            if ($credit->cartRuleExists($credit->code)) {
+                // If by some chance it exists, add more randomness
+                $credit->code = $uniqueVoucherIdentifier . '-' . mt_rand(1000, 9999);
             }
 
             $credit->minimum_amount = 0.00;
@@ -538,14 +592,14 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->country_restriction = 0;
             $credit->carrier_restriction = 0;
             $credit->group_restriction = 0;
-            $credit->cart_rule_restriction = 1;
+            $credit->cart_rule_restriction = 0; // Changed from 1 to 0 to avoid restrictions
             $credit->product_restriction = 0;
             $credit->shop_restriction = 0;
             $credit->free_shipping = 0;
-            $credit->reduction_percent = 0.00;
-            $credit->reduction_amount = $creditPrice;
-            $credit->reduction_tax = 1;
-            $credit->reduction_currency = 1;
+            $credit->reduction_percent = 0;
+            $credit->reduction_amount = number_format($creditPrice, 6, '.', '');
+            $credit->reduction_tax = $withTax ? 1 : 0; // Align with withTax variable
+            $credit->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
             $credit->reduction_product = 0;
             $credit->reduction_exlude_special = 0;
             $credit->gift_product = 0;
@@ -553,26 +607,38 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->highlight = 0;
             $credit->active = 1;
             $credit->id_connected_cart = $cart->id;
-            $credit->add(true);
+            // Save the cart rule
+            if (!$credit->add(true, true)) {
+                // Handle error if the cart rule couldn't be added
+                return json_encode(['valid' => false, 'error' => 'Failed to create voucher']);
+            }
 
-            $values = [
-                'id_cart_rule' => (int)$credit->id,
-            ];
+            // Clear any existing cart rules with the same properties
+            // This is a precaution to avoid conflicts
+            $existingRules = $cart->getCartRules();
+            foreach ($existingRules as $rule) {
+                if ($rule['obj']->reduction_amount == $creditPrice && $rule['obj']->id != $credit->id) {
+                    $cart->removeCartRule($rule['obj']->id);
+                }
+            }
 
-//            Db::getInstance()->insert(
-//                'cart_rule_fees',
-//                $values,
-//                false,
-//                true,
-//                DB::INSERT_IGNORE
-//            );
+            // Add the new cart rule to the cart
+            $result = $cart->addCartRule($credit->id);
 
-            $cart->addCartRule($credit->id);
+            // Verify the cart rule was added successfully
+            if (!$result) {
+                return json_encode(['valid' => false, 'error' => 'Failed to apply voucher to cart']);
+            }
 
+            // Force cart refresh to ensure the new rule is applied correctly
+            $cart->update();
 
             return json_encode(['valid' => true]);
         }
+
     }
+
+
 
     /**
      * copyImg copy an image located in $url and save it in a path
@@ -952,34 +1018,48 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     /**
      * @return false|void
      */
+    /**
+     * @return false|void
+     */
     private function _getKoopmanOrderStatus()
     {
-        try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
-        } catch (Exception $e) {
-
-            echo 'error (new SoapClient) - ' . $e->getMessage();
-
-            return false;
-        }
-
-        $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-
         $date = date('YYYY-MM-DD hh:mm');
-        $zendingnr = null;
         $renderTemplate = Tools::getValue('render_template', false);
         $ref = Tools::getValue('reference');
-
-//                $ref = 'YS-092466';
-//                $ref = 'YS-092467';
-
         try {
-            $status = $client->getOpdrachtStatus($login, $date, $zendingnr, $ref);
+            $order = Order::getByReference($ref)->getFirst();
+            if (!$order) {
+                if ($renderTemplate) {
+                    die('<div class="w-100 mt-4 text-center text-danger h2">Bestelling niet gevonden!</div>');
+                } else {
+                    die(json_encode(['error' => 'Bestelling niet gevonden!']));
+                }
+            }
 
+            $client = new ExportOrdersMultipleCollies($order->id);
+            $statusList = json_decode($client->getShipmentStatus());
+
+
+            if (empty($statusList)) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">De bestelling is nog niet aangemeld of is al verzonden!</div>');
+            }
+
+            // Find the shipment data for this specific order reference
+            $shipmentData = null;
+            foreach ($statusList as $key => $response) {
+                if (isset($response->data) && is_array($response->data)) {
+                    foreach ($response->data as $shipment) {
+                        if (isset($shipment->order_reference) && $shipment->order_reference === $ref) {
+                            $shipmentData = $shipment;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!$shipmentData) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">Geen verzendgegevens gevonden voor deze bestelling!</div>');
+            }
 
         } catch (Exception $e) {
             if ($renderTemplate) {
@@ -990,10 +1070,11 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         }
 
         $data = [];
-        $referencedOrder = Order::getByReference($ref)->getFirst();
         $mainHistory = [];
-        if ($referencedOrder) {
-            $statussesModerneSmid = $referencedOrder->getHistory($this->context->language->id);
+
+        // Get order history
+        if ($order) {
+            $statussesModerneSmid = $order->getHistory($this->context->language->id);
 
             for ($i = 0; $i < count($statussesModerneSmid); $i++) {
                 array_unshift($mainHistory, [
@@ -1005,15 +1086,17 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 ]);
             }
         }
+
         $data['reference'] = $ref;
-        $data['shipping_number'] = $status[0]->Zendingnummer;
+        $data['shipping_number'] = isset($shipmentData->transport_number) ? $shipmentData->transport_number : '';
         $data['main_history'] = $mainHistory;
 
-        if (isset($status[0]->Plandatum)) {
+        // Set scheduled delivery moment if available
+        if (isset($shipmentData->eta)) {
             $data['scheduled_delivery_moment'] = [
-                'planned_delivery_date' => $status[0]->Plandatum,
-                'from' => $status[0]->Plantijdvan,
-                'to' => $status[0]->Plantijdtot,
+                'planned_delivery_date' => isset($shipmentData->eta->date) ? $shipmentData->eta->date : '',
+                'from' => isset($shipmentData->eta->from) ? $shipmentData->eta->from : '',
+                'to' => isset($shipmentData->eta->to) ? $shipmentData->eta->to : '',
             ];
         } else {
             $data['scheduled_delivery_moment'] = [
@@ -1025,88 +1108,82 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
         $colliesData = [];
 
-        for ($s = 0; $s < count($status[0]->aOpdrachtStatusRegel); $s++) {
-            $history = [];
-            $apiHist = $status[0]->aOpdrachtStatusRegel[$s]->aRegelHistorie;
-            for ($i = 0; $i < count($apiHist); $i++) {
+        // Process shipment units (collies)
+        if (isset($shipmentData->shipment_units) && is_array($shipmentData->shipment_units)) {
+            foreach ($shipmentData->shipment_units as $unit) {
+                // Prepare history data from status information
+                $history = [];
+
+                // Add current status to history
                 $history[] = [
-                    'state_id' => $apiHist[$i]->Status,
-                    'depot' => $apiHist[$i]->Depot,
-                    'date' => $apiHist[$i]->Datum,
-                    'time' => $apiHist[$i]->Tijd,
-                    'name' => $apiHist[$i]->Omschrijving,
+                    'state_id' => isset($shipmentData->status_code) ? $shipmentData->status_code : '',
+                    'depot' => isset($shipmentData->status_depot) ? $shipmentData->status_depot : '',
+                    'date' => isset($shipmentData->status_date) ? $shipmentData->status_date : '',
+                    'time' => isset($shipmentData->status_time) ? $shipmentData->status_time : '',
+                    'name' => isset($shipmentData->status_description) ? $shipmentData->status_description : '',
                     'from' => 'api'
                 ];
-            }
 
-            $Mgewicht = '';
-            $Mlengte = '';
-            $Mhoogte = '';
-            $Mbreedte = '';
-
-            if (isset($status[0]->aOpdrachtStatusRegel[$s]->Mgewicht)) {
-                $Mgewicht = $status[0]->aOpdrachtStatusRegel[$s]->Mgewicht;
-            }
-            if (isset($status[0]->aOpdrachtStatusRegel[$s]->Mlengte)) {
-                $Mlengte = $status[0]->aOpdrachtStatusRegel[$s]->Mlengte;
-            }
-            if (isset($status[0]->aOpdrachtStatusRegel[$s]->Mhoogte)) {
-                $Mhoogte = $status[0]->aOpdrachtStatusRegel[$s]->Mhoogte;
-            }
-
-            if (isset($status[0]->aOpdrachtStatusRegel[$s]->Mbreedte)) {
-                $Mbreedte = $status[0]->aOpdrachtStatusRegel[$s]->Mbreedte;
-            }
-
-            $Hnaam = '';
-            $Htekening = '';
-            $Hdatum = '';
-            $Htijd = '';
-
-            if (isset($status[0]->aHandtekening[0]->Naam)) {
-                $Hnaam = $status[0]->aHandtekening[0]->Naam;
-                $Htekening = base64_decode($status[0]->aHandtekening[0]->Handtekening);
-                $Hdatum = $status[0]->aHandtekening[0]->Datum;
-                $Htijd = $status[0]->aHandtekening[0]->Tijd;
-            }
-            $schedule = [];
-            if (isset($status[0]->Plandatum)) {
-                $schedule = [
-                    'planned_delivery_date' => $status[0]->Plandatum,
-                    'from' => $status[0]->Plantijdvan,
-                    'to' => $status[0]->Plantijdtot,
+                // Prepare package information
+                $packageInfo = [
+                    'weight' => isset($unit->weight) ? $unit->weight : '',
+                    'length' => '',
+                    'height' => '',
                 ];
-            } else {
-                $schedule = [
-                    'planned_delivery_date' => '',
-                    'from' => '',
-                    'to' => '',
+
+                // Add measured dimensions if available
+                if (isset($unit->measured) && is_array($unit->measured) && !empty($unit->measured)) {
+                    $measured = $unit->measured[0];
+                    $packageInfo['length'] = isset($measured->length) ? $measured->length : '';
+                    $packageInfo['height'] = isset($measured->height) ? $measured->height : '';
+                }
+
+                // Prepare delivery information
+                $deliveryInfo = [
+                    'signature_name' => '',
+                    'signature' => '',
+                    'delivered_on' => '',
+                    'delivered_at' => '',
                 ];
+
+                // If status is delivered, add delivery information
+                if (isset($shipmentData->status_code) && $shipmentData->status_code == 200) { // Assuming 200 is the delivered status code
+                    $deliveryInfo['delivered_on'] = isset($shipmentData->status_date) ? $shipmentData->status_date : '';
+                    $deliveryInfo['delivered_at'] = isset($shipmentData->status_time) ? $shipmentData->status_time : '';
+                }
+
+                // Prepare scheduled delivery moment
+                $schedule = [];
+                if (isset($shipmentData->eta)) {
+                    $schedule = [
+                        'planned_delivery_date' => isset($shipmentData->eta->date) ? $shipmentData->eta->date : '',
+                        'from' => isset($shipmentData->eta->from) ? $shipmentData->eta->from : '',
+                        'to' => isset($shipmentData->eta->to) ? $shipmentData->eta->to : '',
+                    ];
+                } else {
+                    $schedule = [
+                        'planned_delivery_date' => '',
+                        'from' => '',
+                        'to' => '',
+                    ];
+                }
+
+                // Add all collected information to collies data
+                array_unshift($colliesData, [
+                    'history' => $history,
+                    'current_state' => end($history),
+                    'scheduled_delivery_moment' => $schedule,
+                    'barcode' => isset($unit->barcode) ? $unit->barcode : '',
+                    'package' => $packageInfo,
+                    'delivered' => $deliveryInfo,
+                ]);
             }
-
-            array_unshift($colliesData, [
-                'history' => $history,
-                'current_state' => end($status[0]->aOpdrachtStatusRegel[$s]->aRegelHistorie),
-                'scheduled_delivery_moment' => $schedule,
-                'barcode' => $status[0]->aOpdrachtStatusRegel[$s]->Barcode,
-                'package' => [
-                    'weight' => $Mgewicht,
-                    'length' => $Mlengte,
-                    'height' => $Mhoogte,
-                ],
-                'delivered' => [
-                    'signature_name' => $Hnaam,
-                    'signature' => $Htekening,
-                    'delivered_on' => $Hdatum,
-                    'delivered_at' => $Htijd,
-                ],
-            ]);
-
-
         }
-        $data['collies'] = $colliesData;
-        die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/shipping_state_form.html.twig', $data));
 
+        $data['collies'] = $colliesData;
+
+        // Render the template with all collected data
+        die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/shipping_state_form.html.twig', $data));
     }
 
     /**
@@ -1114,41 +1191,39 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getKoopmanOrderLabelStatus()
     {
-        try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
-        } catch (Exception $e) {
-
-            echo 'error (new SoapClient) - ' . $e->getMessage();
-
-            return false;
-        }
-
-        $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-
         $date = date('YYYY-MM-DD hh:mm');
-        $zendingnr = null;
         $renderTemplate = Tools::getValue('render_template', false);
         $ref = Tools::getValue('reference');
-        $orderDetails = [];
-
-//                $ref = 'YS-133671';
-
         try {
-            $order =  Order::getByReference($ref)->getFirst();
+            $order = Order::getByReference($ref)->getFirst();
             $orderDetails = $order->getOrderDetailList();
-        } catch (Exception $e){
-                PrestaShopLogger::addLog('failing to get order list:' . $e->getMessage());
-        }
-//                $ref = 'YS-131376';
-        try {
-            $status = $client->getAktueleOpdracht($login, $zendingnr, $ref);
-            if(empty($status)){
+            $client = new ExportOrdersMultipleCollies($order->id);
+
+            $statusList = json_decode($client->getShipmentStatus());
+
+            // Check if we have a valid response
+            if (empty($statusList)) {
                 die('<div class="w-100 mt-4 text-center text-danger h2">De bestelling is nog niet aangemeld of is al verzonden!</div>');
             }
+
+            $ref = 'YS-152083';
+            // Find the shipment data for this specific order reference
+            $shipmentData = null;
+            foreach ($statusList as $key => $response) {
+                if (isset($response->data) && is_array($response->data)) {
+                    foreach ($response->data as $shipment) {
+                        if (isset($shipment->order_reference) && $shipment->order_reference === $ref) {
+                            $shipmentData = $shipment;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!$shipmentData) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">Geen verzendgegevens gevonden voor deze bestelling!</div>');
+            }
+
         } catch (Exception $e) {
             if ($renderTemplate) {
                 die('<div class="w-100 mt-4 text-center text-danger h2">' . $e->getMessage() . '</div>');
@@ -1160,105 +1235,68 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $data = [];
         $colliesData = [];
 
-        if(isset($status->aRegel)){
-            for ($s = 0; $s < count($status->aRegel); $s++) {
-                $Mgewicht = '';
-                $Mlengte = '';
-                $Mhoogte = '';
-                $Mbreedte = '';
-                $Mnrcollie = '';
-                $Meenheid = '';
-
-                if (isset($status->aRegel[$s]->vrzenh)) {
-                    $Meenheid = $status->aRegel[$s]->vrzenh;
-                }
-
-                if (isset($status->aRegel[$s]->nrcollo)) {
-                    $Mnrcollie = $status->aRegel[$s]->nrcollo;
-                }
-
-                if (isset($status->aRegel[$s]->gewicht)) {
-                    $Mgewicht = $status->aRegel[$s]->gewicht;
-                }
-                if (isset($status->aRegel[$s]->lengte)) {
-                    $Mlengte = $status->aRegel[$s]->lengte;
-                }
-                if (isset($status->aRegel[$s]->hoogte)) {
-                    $Mhoogte = $status->aRegel[$s]->hoogte;
-                }
-
-                if (isset($status->aRegel[$s]->breedte)) {
-                    $Mbreedte = $status->aRegel[$s]->breedte;
-                }
-
-                $colliesData[] =  [
-                    'nr' => $Mnrcollie,
-                    'type' => $Meenheid,
-                    'weight' => $Mgewicht,
-                    'length' => $Mlengte,
-                    'height' => $Mhoogte,
-                    'breedte' => $Mbreedte,
+        // Process shipment units (collies)
+        if (isset($shipmentData->shipment_units) && is_array($shipmentData->shipment_units)) {
+            foreach ($shipmentData->shipment_units as $unit) {
+                $collieData = [
+                    'nr' => isset($unit->unit_number) ? $unit->unit_number : '',
+                    'type' => isset($unit->unit_type) ? $unit->unit_type : '',
+                    'weight' => isset($unit->weight) ? $unit->weight : '',
+                    'length' => '',
+                    'height' => '',
+                    'breedte' => '',
                 ];
+
+                // Check if we have measured dimensions
+                if (isset($unit->measured) && is_array($unit->measured) && !empty($unit->measured)) {
+                    $measured = $unit->measured[0];
+                    $collieData['length'] = isset($measured->length) ? $measured->length : '';
+                    $collieData['height'] = isset($measured->height) ? $measured->height : '';
+                    $collieData['breedte'] = isset($measured->width) ? $measured->width : '';
+                }
+
+                $colliesData[] = $collieData;
             }
         }
 
         $data['collies'] = $colliesData;
         $data['products'] = $orderDetails;
 
-        $data['datum'] = '';
-        if(isset($status->datum)){
-            $data['datum'] = $status->datum;
-        }
-
+        // Set basic shipment data
+        $data['datum'] = isset($shipmentData->date_transport) ? $shipmentData->date_transport : '';
         $data['nrorder'] = $ref;
-        if(isset($status->nrorder)){
-            $data['nrorder'] = $status->nrorder;
+        $data['nrzend'] = isset($shipmentData->transport_number) ? $shipmentData->transport_number : '';
+
+        // Set address data if available
+        if (isset($shipmentData->address)) {
+            $data['postcode'] = isset($shipmentData->address->postalcode) ? $shipmentData->address->postalcode : '';
+            $data['plaats'] = isset($shipmentData->address->city) ? $shipmentData->address->city : '';
+            $data['land'] = isset($shipmentData->address->country_code) ? $shipmentData->address->country_code : '';
         }
 
-        $data['nrzend'] = '';
-        if(isset($status->nrzend)){
-            $data['nrzend'] = $status->nrzend;
-        }
-        $data['naam'] = '';
-        if(isset($status->geanaam)){
-            $data['naam'] = $status->geanaam;
-        }
-        $data['naam2'] = '';
-        if(isset($status->geanaam2)){
-            $data['naam2'] = $status->geanaam2;
-        }
-        $data['straat'] = '';
-        if(isset($status->geastraat)){
-            $data['straat'] = $status->geastraat;
-        }
-        $data['huisnr'] = '';
-        if(isset($status->geahuisnr)){
-            $data['huisnr'] = $status->geahuisnr;
-        }
-        $data['postcode'] = '';
-        if(isset($status->geapostcode)){
-            $data['postcode'] = $status->geapostcode;
-        }
-        $data['plaats'] = '';
-        if(isset($status->geaplaats)){
-            $data['plaats'] = $status->geaplaats;
-        }
-        $data['land'] = '';
-        if(isset($status->gealand)){
-            $data['land'] = $status->gealand;
-        }
-        $data['telefoon'] = '';
-        if(isset($status->geatelefoon)){
-            $data['telefoon'] = $status->geatelefoon;
-        }
-        $data['email'] = '';
-        if(isset($status->geaemail)){
-            $data['email'] = $status->geaemail;
+        // Set customer data from order if not in API response
+        $customer = new Customer($order->id_customer);
+        $address = new Address($order->id_address_delivery);
+
+        $data['naam'] = $address->firstname;
+        $data['naam2'] = $address->lastname;
+        $data['straat'] = $address->address1;
+        $data['huisnr'] = $address->house_number . ' ' . $address->house_number_extension;
+        $data['telefoon'] = $address->phone;
+        $data['email'] = $customer->email;
+
+        // If we have ETA information, add it
+        if (isset($shipmentData->eta)) {
+            $data['eta'] = [
+                'date' => isset($shipmentData->eta->date) ? $shipmentData->eta->date : '',
+                'from' => isset($shipmentData->eta->from) ? $shipmentData->eta->from : '',
+                'to' => isset($shipmentData->eta->to) ? $shipmentData->eta->to : '',
+            ];
         }
 
         die($this->kernel->getContainer()->get('twig')->render('@Modules/msthemeconfig/views/templates/admin/label_state_form.html.twig', $data));
-
     }
+
 
     /**
      * @throws SmartyException
@@ -1267,70 +1305,62 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
      */
     private function _getKoopmanInitRetour()
     {
-
         $orderId = Tools::getValue('id_order');
         $order = new Order($orderId);
 
         try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
+            $client = new ExportOrdersMultipleCollies($orderId, []);
+            $statusList = json_decode($client->getShipmentStatus());
+
+            // Check if we have a valid response
+            if (empty($statusList)) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">De bestelling is nog niet aangemeld of is al verzonden!</div>');
+            }
+
+            $ref = $order->reference;
+
+            $ref = 'YS-152344';
+
+            // Find the shipment data for this specific order reference
+            $shipmentData = null;
+            $packages = [];
+
+            foreach ($statusList as $key => $response) {
+                if (isset($response->data) && is_array($response->data)) {
+                    foreach ($response->data as $shipment) {
+                        if (isset($shipment->order_reference) && $shipment->order_reference === $ref) {
+                            $shipmentData = $shipment;
+
+                            // Process shipment units (collies)
+                            if (isset($shipment->shipment_units) && is_array($shipment->shipment_units)) {
+                                foreach ($shipment->shipment_units as $unit) {
+                                    $packages[] = [
+                                        'shipping_number' => isset($unit->barcode) ? $unit->barcode : '',
+                                        'nr_collo' => isset($unit->unit_number) ? $unit->unit_number : '',
+                                        'weight' => isset($unit->weight) ? $unit->weight : '',
+                                        'height' => isset($unit->measured[0]->height) ? $unit->measured[0]->height : '',
+                                        'width' => isset($unit->measured[0]->width) ? $unit->measured[0]->width : '',
+                                        'length' => isset($unit->measured[0]->length) ? $unit->measured[0]->length : '',
+                                    ];
+                                }
+                            }
+
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (!$shipmentData) {
+                die('<div class="w-100 mt-4 text-center text-danger h2">Geen verzendgegevens gevonden voor deze bestelling!</div>');
+            }
+
         } catch (Exception $e) {
-            echo 'error (new SoapClient) - ' . $e->getMessage();
 
-            return false;
-        }
-
-        $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-
-        $ref = $order->reference;
-//        $ref = 'YS-091779';
-        try {
-            $status = $client->getOpdrachtStatus($login, null, null, $ref);
-        } catch (Exception $e) {
             die('<h3 style="color:red;font-weight:bold;width:100%;text-align:center;">' . $e->getMessage() . '</h3>');
         }
 
-        $packages = [];
-
-        foreach ($status[0]->aOpdrachtStatusRegel as $key => $value) {
-            if (isset($value->Nrcollo)) {
-                $Nrcollo = $value->Nrcollo;
-            } else {
-                $Nrcollo = '';
-            }
-            if (isset($value->Mgewicht)) {
-                $Mgewicht = $value->Mgewicht;
-            } else {
-                $Mgewicht = '';
-            }
-            if (isset($value->Mhoogte)) {
-                $Mhoogte = $value->Mhoogte;
-            } else {
-                $Mhoogte = '';
-            }
-            if (isset($value->Mlengte)) {
-                $Mlengte = $value->Mlengte;
-            } else {
-                $Mlengte = '';
-            }
-
-            if (isset($value->Mbreedte)) {
-                $Mbreedte = $value->Mbreedte;
-            } else {
-                $Mbreedte = '';
-            }
-            $packages[] = [
-                'shipping_number' => $value->Barcode,
-                'nr_collo' => $Nrcollo,
-                'weight' => $Mgewicht,
-                'height' => $Mhoogte,
-                'width' => $Mbreedte,
-                'length' => $Mlengte,
-            ];
-        }
+        // Sort packages by collo number
         usort($packages, function ($a, $b) {
             if ($a['nr_collo'] === $b['nr_collo']) {
                 return 0;
@@ -1356,8 +1386,9 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             ]
         );
 
-        die($this->context->smarty->fetch(_PS_MODULE_DIR_ . '/views/templates/admin/retourform.tpl'));
+        die($this->context->smarty->fetch(_PS_MODULE_DIR_ . '/msthemeconfig/views/templates/admin/retourform.tpl'));
     }
+
 
     /**
      * @throws PrestaShopDatabaseException
@@ -1436,7 +1467,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     }
 
     /**
-     * @return false|void
+     * @return void
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
@@ -1444,104 +1475,178 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     {
         $reference = Tools::getValue('order_reference');
         $orderId = Tools::getValue('id_order');
-        $orderMsg = Tools::getValue('order_msg');
-        try {
-            $client = new SoapClient(Configuration::get('KOOPMANORDEREXPORT_SOAP_URL', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id), $this->soapoptions);
-        } catch (Exception $e) {
-            echo 'error (new SoapClient) - ' . $e->getMessage();
 
-            return false;
-        }
+        // Initialize the ExportOrdersMultipleCollies class with order ID and collies data
+        $collies = [];
 
-        $order = new Order($orderId);
-        $deliveryAddress = new Address($order->id_address_delivery);
+        // Process collie data from form
+        $collie_type = Tools::getValue('collie_type');
+        $collie_total = Tools::getValue('collie_total');
+        $collie_reference = Tools::getValue('collie_reference');
+        $collie_length = Tools::getValue('collie_length');
+        $collie_width = Tools::getValue('collie_width');
+        $collie_height = Tools::getValue('collie_height');
+        $collie_weight = Tools::getValue('collie_weight');
 
-        $login = new stdClass();
-        $login->username = Configuration::get('KOOPMANORDEREXPORT_API_USERNAME', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->password = Configuration::get('KOOPMANORDEREXPORT_API_PASSWORD', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->depot = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_DEPOT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $login->verlader = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_VERLADER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-
-        $opdracht = new stdClass();
-        $opdracht->type = 'A'; // A = retour
-        $opdracht->nrorder = $reference;
-        $opdracht->afzender = Configuration::get('KOOPMANORDEREXPORT_KOOPMAN_AFZENDER', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id);
-        $opdracht->afznaam = 'De Moderne Smid';
-        $opdracht->afzastraat = 'Venusweg';
-        $opdracht->afzhuisnr = '15';
-        $opdracht->afzpostcode = '8938BC';
-        $opdracht->afzplaats = 'Leeuwarden';
-        $opdracht->afzland = 'NL';
-        $opdracht->geanaam = $deliveryAddress->firstname;
-        $opdracht->geanaam2 = $deliveryAddress->lastname;
-        $opdracht->geastraat = $deliveryAddress->address1;
-        $opdracht->geahuisnr = $deliveryAddress->house_number . '' . $deliveryAddress->house_number_extension;
-        $opdracht->geapostcode = $deliveryAddress->postcode;
-        $opdracht->geaplaats = $deliveryAddress->city;
-        $opdracht->geatelefoon = $deliveryAddress->phone;
-        $cust = new Customer($deliveryAddress->id_customer);
-        if (isset($cust->email)) {
-            $opdracht->geaemail = $cust->email;
-        }
-
-        $country = new Country($deliveryAddress->id_country);
-        if (isset($country->iso_code)) {
-            $opdracht->gealand = $country->iso_code;
-        }
-
-        $opdracht->instructie = $orderMsg;
-
-        if (!empty($opdracht->geaplaats)) {
-            $collie_type = Tools::getValue('collie_type');
-            $collie_total = Tools::getValue('collie_total');
-            $collie_reference = Tools::getValue('collie_reference');
-            $collie_length = Tools::getValue('collie_length');
-            $collie_width = Tools::getValue('collie_width');
-            $collie_height = Tools::getValue('collie_height');
-            $collie_weight = Tools::getValue('collie_weight');
-
-            $collie_number = 1;
+        if (!empty($collie_type)) {
             $packagesTotal = count($collie_type);
-            $loop = $packagesTotal - 1;
-            for ($x = 0; $x <= $loop; $x++) {
-                for ($t = 0; $t <= (int)$collie_total[$x] - 1; $t++) {
-                    $regel = new stdClass();
-                    $regel->nrcollo = $collie_number;
-                    $regel->vrzenh = 'COL';
-
-                    if (isset($collie_weight[$x])) {
-                        $regel->gewicht = $collie_weight[$x];
-                    }
-                    if (isset($collie_length[$x])) {
-                        $regel->lengte = $collie_length[$x];
-                    }
-                    if (isset($collie_width[$x])) {
-                        $regel->breedte = $collie_width[$x];
-                    }
-                    if (isset($collie_height[$x])) {
-                        $regel->hoogte = $collie_height[$x];
-                    }
-
-                    if (isset($collie_reference[$x])) {
-                        $regel->referentie = $collie_reference[$x];
-                    }
-
-                    $opdracht->aRegel[] = $regel;
-                    $collie_number++;
+            for ($x = 0; $x < $packagesTotal; $x++) {
+                for ($t = 0; $t < (int)$collie_total[$x]; $t++) {
+                    $collies[] = [
+                        'name' => $collie_type[$x],
+                        'reference' => isset($collie_reference[$x]) ? $collie_reference[$x] : '',
+                        'length' => isset($collie_length[$x]) ? $collie_length[$x] : 0,
+                        'width' => isset($collie_width[$x]) ? $collie_width[$x] : 0,
+                        'height' => isset($collie_height[$x]) ? $collie_height[$x] : 0,
+                        'weight' => isset($collie_weight[$x]) ? $collie_weight[$x] : 0,
+                    ];
                 }
             }
-
-            $transport = false;
-            try {
-                $transport = $client->addOpdracht($login, $opdracht);
-            } catch (Exception $e) {
-                session_start();
-                $_SESSION['koopmanError'] = $e->getMessage();
-            }
         }
-        die('<h3 style="color:green;font-weight:bold;width:100%;text-align:center;">De retour aanvraag is geslaagd</h3>');
 
+        try {
+            // Create instance of ExportOrdersMultipleCollies with order ID and collies
+            $exportOrders = new ExportOrdersMultipleCollies($orderId, $collies);
+
+            // Get order and delivery address information
+            $order = new Order($orderId);
+            $deliveryAddress = new Address($order->id_address_delivery);
+            $customer = new Customer($deliveryAddress->id_customer);
+            $country = new Country($deliveryAddress->id_country);
+
+            // Ensure we have a company name (name2) for the pickup address
+            $pickupName2 = !empty($deliveryAddress->company) ?
+                $deliveryAddress->company :
+                $deliveryAddress->firstname . ' ' . $deliveryAddress->lastname . ' (Klant)';
+
+            // Ensure we have a phone number
+            $phoneNumber = !empty($deliveryAddress->phone) ?
+                $deliveryAddress->phone :
+                (!empty($deliveryAddress->phone_mobile) ? $deliveryAddress->phone_mobile : '0000000000');
+
+            // Prepare shipping data for return order
+            $shippingData = [
+                'type' => 'A', // A = retour (as specified in ExportOrdersMultipleCollies.php line 46)
+                'depot' => $exportOrders->apiDepot,
+                'customer_number' => $exportOrders->apiVerlader,
+                'date' => date('Y-m-d'),
+                'labels' => 'PDF',
+                'references' => [
+                    [
+                        'type' => 'NRORDER',
+                        'reference' => $reference,
+                    ]
+                ],
+                'addresses' => [
+                    [
+                        'type' => 'pickup', // Where items will be picked up from (customer)
+                        'name' => $deliveryAddress->firstname . ' ' . $deliveryAddress->lastname,
+                        'name2' => $pickupName2, // Ensuring name2 is not empty
+                        'address1' => $deliveryAddress->address1,
+                        'housenumber' => $deliveryAddress->house_number . ' ' . $deliveryAddress->house_number_extension,
+                        'postalcode' => $deliveryAddress->postcode,
+                        'city' => $deliveryAddress->city,
+                        'country_code' => $country->iso_code,
+                        'contact' => [
+                            'language' => 'nl',
+                            'name' => $deliveryAddress->firstname . ' ' . $deliveryAddress->lastname,
+                            'phonenumber' => $phoneNumber, // Ensuring phone number is not empty
+                            'email' => $customer->email,
+                        ]
+                    ],
+                    [
+                        'type' => 'consignor', // Party responsible for the shipment
+                        'name' => $exportOrders->afzenderNaam,
+                        'name2' => $exportOrders->afzenderNaam2 ?: 'De Moderne Smid BV',
+                        'address1' => $exportOrders->afzenderStraat,
+                        'housenumber' => $exportOrders->afzenderHuisnr,
+                        'postalcode' => $exportOrders->afzenderPostcode,
+                        'city' => $exportOrders->afzenderPlaats,
+                        'country_code' => $exportOrders->afzenderLand,
+                    ]
+                ],
+                'shipment_units' => []
+            ];
+
+            // Add shipment units (collies) to the shipping data
+            foreach ($collies as $i => $collie) {
+                if(in_array($collie['name'], ['envelope', 'plaat', '1-meter', '2-meter'])) {
+                    $collieType = 'COL';
+                } else {
+                    switch ($collie['name']) {
+                        case 'balk-pallet':
+                        case 'pallet':
+                            $collieType = 'PLH';
+                            break;
+                        case 'plaat-pallet':
+                            $collieType = 'MP';
+                            break;
+                        default:
+                            $collieType = 'PLH';
+                    }
+                }
+
+                $shippingData['shipment_units'][] = [
+                    'number' => $i + 1,
+                    'goods_description' => 'ModerneSmid metaal producten',
+                    'packages' => '1',
+                    'exchange' => '0',
+                    'unit_type' => $collieType,
+                    'measurements' => [
+                        'weight' => $collie['weight'],
+                        'length' => $collie['length'],
+                        'width' => $collie['width'],
+                        'height' => $collie['height'],
+                        'volume' => '0.0000',
+                        'loadingmeter' => '0.00'
+                    ],
+                    'exchange_unit' => 1,
+                ];
+            }
+
+            // Make API request to create return shipment
+            $response = $exportOrders->makeApiRequest($exportOrders->apiOrderEndpoint, $shippingData, 'POST');
+            if (isset($response['status']) && $response['status'] === 200) {
+                $resp = $response['data'];
+                $trackingNumber = $resp['transport_number'];
+                $trackingUrl = $resp['tracking_url'];
+
+                // Add tracking number to order
+                $exportOrders->addTrackingNumberToOrder($orderId, $trackingNumber, $trackingUrl);
+
+
+                die('<h3 style="color:green;font-weight:bold;width:100%;text-align:center;">De retour aanvraag is geslaagd</h3>');
+            } else {
+                // Handle error response
+                $errorMessage = '';
+                if (isset($response['message'])) {
+                    $errorMessage = $response['message'];
+
+                    // Check for detailed error list
+                    if (isset($response['meta']) && isset($response['meta']['error_list'])) {
+                        $errorMessage .= ': ';
+                        foreach ($response['meta']['error_list'] as $error) {
+                            $errorMessage .= $error[1] . '; ';
+                        }
+                    }
+                } else {
+                    $errorMessage = 'Onbekende fout bij het aanmaken van de retour';
+                }
+
+                die('<h3 style="color:red;font-weight:bold;width:100%;text-align:center;">Fout: ' . $errorMessage . '</h3>');
+            }
+
+        } catch (Exception $e) {
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['koopmanError'] = $e->getMessage();
+            die('<h3 style="color:red;font-weight:bold;width:100%;text-align:center;">Fout: ' . $e->getMessage() . '</h3>');
+        }
     }
+
+
+
 
     /**
      * @throws PrestaShopDatabaseException
@@ -1557,6 +1662,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
         $collies = json_decode(str_replace("'", '"', (string)Tools::getValue('collies')), true);
 
         $export = new ExportOrdersMultipleCollies($id_order, $collies);
+
         $export->export();
 
         if($export->redirect){

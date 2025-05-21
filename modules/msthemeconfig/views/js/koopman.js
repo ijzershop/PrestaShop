@@ -57,6 +57,11 @@ $(function () {
       data: data,
     }).done(function (e) {
       $('form#retourForm .messages').html(e);
+      if(e.indexOf('De retour aanvraag is geslaagd') !== -1){
+        setTimeout(function() {
+          $('.fancybox-item.fancybox-close').trigger('click');
+        }, 4000);
+      }
     })
       .fail(function (e) {
         $('form#retourForm .messages').html(e);
@@ -68,6 +73,7 @@ $(function () {
   $('.showShippingState').on('click', function (event) {
     event.stopImmediatePropagation();
     let reference = $(this).attr('data-order-reference');
+    let profileId = $('#employee-profile-id').val();
 
     $.fancybox({
       width: 800,
@@ -999,6 +1005,7 @@ $(function () {
           });
           $("#cancelConfirm").click(function (e) {
             $.fancybox.close(e);
+            setProcessingTimeOutButton(button, orderId, 0);
           });
         }
       }

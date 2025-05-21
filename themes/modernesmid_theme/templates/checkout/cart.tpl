@@ -102,7 +102,7 @@
     let carrierPickupTimeSkippedDates = "{{Configuration::get('MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES', Context::getContext()->language->id)}}";
 
     // Parse the skipped dates once, not on every interval
-    let freedayArray = carrierPickupTimeSkippedDates.split(', ');
+    let freedayArray = carrierPickupTimeSkippedDates.replaceAll(' ', '').split(',');
 
     // Parse the pickup time once
     var timeArray = carrierPickupTime.split(':');

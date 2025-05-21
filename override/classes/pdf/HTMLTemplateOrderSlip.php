@@ -176,6 +176,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             }
         }
 
+
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
@@ -186,7 +187,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
             'tax_excluded_display' => $tax_excluded_display,
-            'total_cart_rule' => $total_cart_rule,
+            'total_cart_rule' => round($total_cart_rule, 2),
         ));
 
         $tpls = array(

@@ -15,12 +15,12 @@ Vervoerder: {carrier}
 Klantbericht:
 {message}
 
-Product	Aantal	Totaal  {products_txt} {discounts_txt}
+{items}
 
 Producten	{total_products}
 Verzending	{total_shipping_tax_excl}
 Korting	{total_discounts}
-Btw	{total_tax}
+Btw	{total_tax_paid}
 Totaal	{total_paid}
 
 - [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)

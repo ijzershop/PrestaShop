@@ -1302,7 +1302,7 @@ class ModernHook
         $message = '';
         switch ($isElegibleForDiscount){
             case 1:
-                $message = '<a>Ontvang '.implode(' of ',$discountText).'</a>';
+                $message = '<a>Ontvang '.$discountText[0].'</a>';
                 break;
             case 3:
             case 2:
@@ -2529,13 +2529,17 @@ class ModernHook
         if (Configuration::get('KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES', $this->idLang, $this->idShopGroup, $this->idShop) !== null && !empty(Configuration::get('KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES', $this->idLang, $this->idShopGroup, $this->idShop))) {
             $shippedStates = explode(',', Configuration::get('KOOPMANORDEREXPORT_SHIPPED_ACCEPTED_STATUSSES', $this->idLang, $this->idShopGroup, $this->idShop));
         }
+
+
+//        dd($shippedStates, $createdStates);
         $retourColumn = new ButtonColumn('retour');
         $retourColumn->setName('Retour');
         $retourColumn->setOptions([
             'ModuleClass' => new DmsAdminOrderController(),
             'label' => $this->context->getTranslator()->trans('Retour',[],'MsThemeConfig.Hooks'),
-            'acceptedStates' => $states,
-            'createdStates' => $createdStates
+            'acceptedStates' => $shippedStates,
+            'createdStates' => $createdStates,
+            'retourAcceptedStates' => $states
         ]);
         $columns->addBefore('date_add', $retourColumn);
 
@@ -3325,7 +3329,6 @@ class ModernHook
      */
     public function hookActionObjectOrderStatusUpdateAfter($hookParams): void
     {
-        dd(' after update');
         if (!isset($hookParams['orderState'])) {
             return;
         }

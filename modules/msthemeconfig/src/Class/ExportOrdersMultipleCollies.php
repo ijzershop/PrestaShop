@@ -76,6 +76,7 @@ class ExportOrdersMultipleCollies
 
     // Add this property to the class
     public KoopmanTemplateRenderer $templateRenderer;
+    private bool $onlyChangeOrderStatusValidatedOrders;
 
     /**
      * @param $id_order
@@ -83,6 +84,7 @@ class ExportOrdersMultipleCollies
      */
     public function __construct($id_order, array $collies = [])
     {
+        $this->onlyChangeOrderStatusValidatedOrders = false;
 
         $this->idOrder = (int)$id_order;
         $this->debug = false;
@@ -127,6 +129,9 @@ class ExportOrdersMultipleCollies
         $this->apiOrderEndpoint = '/shipments/shipment';
         $this->apiAddressEndpoint = '/addresses/address';
         $this->apiShippingListEndpoint = '/shipments';
+        $this->apiShippingStatusListEndpoint = '/shipments/statuses';
+        $this->apiDefaultStatusListEndpoint = '/definitions/type_status';
+
 
         $this->apiUserName = 'test@ijzershop.nl';
         $this->apiPass = 'Test#130268';
@@ -170,12 +175,12 @@ class ExportOrdersMultipleCollies
                 $records = explode(',', $result[0]['tracking_number']);
                 $transportResult = [];
 
-                $records[]  = 'T98130268127837';
+//                $records[]  = 'T98130268127837';
 
                 foreach($records as $transportNumber){
                     if(!empty($transportNumber)) {
                         $date = date('Y-n-j');
-                        $transportData = $this->makeApiRequest('/shipments/statusses/' . $transportNumber . '/' . $date, [], 'GET');
+                        $transportData = $this->makeApiRequest($this->apiShippingStatusListEndpoint . '/' . $transportNumber . '/' . $date, [], 'GET');
 
                         $transportResult[$transportNumber] = $transportData;
                     }
@@ -447,6 +452,7 @@ class ExportOrdersMultipleCollies
         return true;
     }
 
+
     /**
      * Get orders array for given state.
      *
@@ -458,15 +464,15 @@ class ExportOrdersMultipleCollies
      *
      * @throws PrestaShopDatabaseException
      */
-    private function getOrders($state, $carrier, int $max = 1000, $id_order = null): array
-    {
+    private function getOrders($state, $carrier, int $max = 1000, $id_order = null): array {
         $sql = new DbQuery();
-        $sql->select('o.*, c.*, a.*, co.*, at.reference as added_to_reference, at.id_order as added_to_id,
-         GROUP_CONCAT(aw.reference) as added_with_reference, GROUP_CONCAT(aw.id_order) as added_with_id');
+        $sql->select('o.*, c.*, a.*, co.*, car.name as carrier_name, at.reference as added_to_reference, at.id_order as added_to_id,
+     GROUP_CONCAT(aw.reference) as added_with_reference, GROUP_CONCAT(aw.id_order) as added_with_id');
         $sql->from('orders', 'o');
         $sql->leftJoin('customer', 'c', 'c.id_customer = o.id_customer');
         $sql->leftJoin('address', 'a', 'a.id_address = o.id_address_delivery');
         $sql->leftJoin('country', 'co', 'co.id_country = a.id_country');
+        $sql->leftJoin('carrier', 'car', 'car.id_carrier = o.id_carrier');
         $sql->leftJoin('orders', 'at', 'at.reference = o.added_to_order');
         $sql->leftJoin('orders', 'aw', 'aw.added_to_order = o.reference');
         if (isset($id_order)) { //als id is meegegeven dan maakt state en carrier niet meer uit
@@ -1004,17 +1010,88 @@ class ExportOrdersMultipleCollies
         return true;
     }
 
+
+
     /**
-     * @return void
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * Process daily closing (dagafsluiting)
+     * Gets shipping list from API and updates order statuses
+     *
+     * @return array Returns information about processed orders
      */
-    public function dagafsluiting(): void
+    public function dagafsluiting(): array
     {
         try {
-            // Get shipping list via API
-            $response = $this->makeApiRequest($this->apiShippingListEndpoint);
+            // Get status descriptions from the API
+            $statusDescriptions = [];
+            try {
+                // First try to get status descriptions from the default status endpoint
+                $statusListResponse = $this->makeApiRequest($this->apiDefaultStatusListEndpoint, [], 'GET');
+                if (isset($statusListResponse['data']) && is_array($statusListResponse['data'])) {
+                    foreach ($statusListResponse['data'] as $status) {
+                        if (isset($status['code']) && isset($status['description'])) {
+                            $statusDescriptions[$status['code']] = $status['description'];
+                        }
+                    }
+                }
+            } catch (Exception $e) {
+                // If that fails, try the shipping status endpoint
+                try {
+                    $statusListResponse = $this->makeApiRequest($this->apiShippingStatusListEndpoint, [], 'GET');
+                    if (isset($statusListResponse['data']) && is_array($statusListResponse['data'])) {
+                        foreach ($statusListResponse['data'] as $status) {
+                            if (isset($status['code']) && isset($status['description'])) {
+                                $statusDescriptions[$status['code']] = $status['description'];
+                            }
+                        }
+                    }
+                } catch (Exception $e2) {
+                    // If both fail, we'll use a default mapping
+                    $statusDescriptions = [
+                        10 => 'Data received',  //'Verzending aangemeld',
+                        20 => 'Scheduled for pickup',  //'Ingeboekt voor ophalen',
+                        30 => 'In transit',  //'In transport',
+                        40 => 'Delivered',  //'Afgeleverd',
+                        50 => 'Exception',  //'Uitzondering',
+                        188 => 'Out for delivery',  //'In levering',
+                        312 => 'Delivery attempted'  //'Afeleveren mislukt'
+                    ];
+                }
+            }
 
+            // Get all shipments from the API (without status filter to get more data)
+            $response = $this->makeApiRequest($this->apiShippingStatusListEndpoint);
+
+            // Prepare result array with status information
+            $processedShipments = [];
+            $apiTrackingNumbers = []; // Track all tracking numbers from API
+            $matchedTrackingNumbers = []; // Track which API tracking numbers were matched
+
+            if (isset($response['data']) && is_array($response['data'])) {
+                foreach ($response['data'] as $shipment) {
+                    $statusCode = $shipment['status_code'] ?? 0;
+                    $transportNumber = $shipment['transport_number'] ?? '';
+
+                    // Store tracking number for later comparison
+                    if (!empty($transportNumber)) {
+                        $apiTrackingNumbers[] = $transportNumber;
+                    }
+
+                    $receiverAddress = $shipment['address']['postalcode'] . ' | ' ?? '';
+                    $receiverAddress .= $shipment['address']['city'] . ' | '  ?? '';
+                    $receiverAddress .= $shipment['address']['country_code'] ?? '';
+
+                    $processedShipments[] = [
+                        'receiver' => $receiverAddress ,
+                        'transport_number' => $transportNumber,
+                        'reference' => $shipment['order_reference'] ?? '',
+                        'status_code' => $statusCode,
+                        'status_description' => $statusDescriptions[$statusCode] ?? 'Status Code: ' . $statusCode,
+                        'processed' => false // Will be updated after sending
+                    ];
+                }
+            }
+
+            // Save shipping list PDF if available
             if (isset($response['verzendlijst'])) {
                 $shippingList = $response['verzendlijst'];
                 file_put_contents(str_replace('private_html', 'public_html',
@@ -1022,30 +1099,343 @@ class ExportOrdersMultipleCollies
                     base64_decode($shippingList));
             }
 
-            // Send orders via API
-            $this->makeApiRequest($this->apiOrderEndpoint . '/send', [], 'POST');
+            // Store the processed shipments information for later use or display
+            $this->processedShipments = $processedShipments;
+
+            // Initialize tracking arrays for statistics
+            $ordersFound = [];
+            $ordersNotFound = [];
+            $carrierStats = [];
+            $combinedStats = ['total' => 0, 'found' => 0, 'not_found' => 0];
+            $this->orderStatuses = [];
+            $this->updatedOrders = []; // Track ALL orders from database
+            $this->notUpdatedOrders = []; // Track ONLY Transmission records that didn't match
+
+            // Get all orders that need to be processed
+            $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
+            $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
+            $ordersAddedShipped = $this->getOrders($this->updateStatus, $this->addedSelectCarrier);
+            // Merge all orders
+            $allOrders = array_merge($orders, $ordersAdded, $ordersAddedShipped, $orders);
+
+            $carrierIds = [];
+            // Get all active carriers from database for reference
+            $activeCarriers = $this->getAllActiveCarriers();
+
+            // Match PrestaShop orders with Transmission shipments
+            foreach ($allOrders as $order) {
+                $orderId = (int)$order['id_order'];
+                $carrierId = (int)$order['id_carrier'];
+                $orderReference = $order['reference'];
+
+                if (!in_array($carrierId, $carrierIds)) {
+                    $carrierIds[] = $carrierId;
+                }
+
+                $carrierName = $order['carrier_name'] ?? $this->getCarrierName($carrierId);
+
+                // Initialize carrier stats if not exists
+                if (!isset($carrierStats[$carrierId])) {
+                    $carrierStats[$carrierId] = [
+                        'name' => $carrierName,
+                        'total' => 0,
+                        'found' => 0,
+                        'not_found' => 0,
+                        'orders' => [] // Track orders for this carrier
+                    ];
+                }
+
+                $carrierStats[$carrierId]['total']++;
+                $combinedStats['total']++;
+
+                // Get tracking numbers for this order from the database directly
+                $db = Db::getInstance();
+                $sql = new DbQuery();
+                $sql->select('tracking_number');
+                $sql->from('order_carrier');
+                $sql->where('id_order = ' . (int)$orderId);
+                $result = $db->executeS($sql);
+
+                // Create order details for this order
+                $orderDetails = [
+                    'id' => $orderId,
+                    'reference' => $orderReference,
+                    'carrier_id' => $carrierId,
+                    'carrier_name' => $carrierStats[$carrierId]['name'],
+                    'tracking_numbers' => $result[0]['tracking_number'] ?? '',
+                    'current_state' => $order['current_state'],
+                    'new_state' => $this->statusShipped,
+                    'customer_name' => $order['firstname'] . ' ' . $order['lastname'],
+                    'total_paid' => $order['total_paid'],
+                    'date_add' => $order['date_add'],
+                    'api_status' => 'Niet geverifieerd', // Default status
+                    'matched' => false // Default to not matched
+                ];
+
+                // Add order to carrier stats
+                $carrierStats[$carrierId]['orders'][] = [
+                    'id' => $orderId,
+                    'reference' => $orderReference,
+                    'tracking' => $result[0]['tracking_number'] ?? ''
+                ];
+
+// Inside the dagafsluiting() method, where we process orders with tracking numbers
+
+                if (!empty($result) && isset($result[0]['tracking_number'])) {
+                    $trackingNumbers = explode(',', $result[0]['tracking_number']);
+// First trim all values, then filter out empty ones and those <= 5 characters
+                    $trackingNumbers = array_map('trim', $trackingNumbers);
+                    $trackingNumbers = array_filter($trackingNumbers, function($value) {
+                        return $value !== '' && strlen($value) > 5;
+                    });
+                    $orderFound = false;
+
+                    // Initialize tracking status array for this order
+                    $trackingStatuses = [];
+
+                    // Initialize order status array
+                    $this->orderStatuses[$orderId] = [];
+
+                    // Check each tracking number against API results
+                    foreach ($trackingNumbers as $trackingNumber) {
+                        if (empty($trackingNumber)) continue;
+
+                        $trackingFound = false;
+                        $trackingStatus = [
+                            'number' => $trackingNumber,
+                            'status' => 'Niet gevonden bij Transmission',
+                            'status_code' => 'N/A',
+                            'status_description' => 'Komt niet voor in verzendlijst Transmission'
+                        ];
+
+                        foreach ($this->processedShipments as &$shipment) {
+                            if ($shipment['transport_number'] === $trackingNumber) {
+                                // Store status information with the order
+                                $this->orderStatuses[$orderId][] = [
+                                    'tracking_number' => $trackingNumber,
+                                    'status_code' => $shipment['status_code'],
+                                    'status_description' => $shipment['status_description'],
+                                    'processed' => true
+                                ];
+
+                                // Update tracking status
+                                $trackingStatus = [
+                                    'number' => $trackingNumber,
+                                    'status' => 'Gevonden bij Transmission',
+                                    'status_code' => $shipment['status_code'],
+                                    'status_description' => $shipment['status_description']
+                                ];
+
+                                $shipment['processed'] = true;
+                                $trackingFound = true;
+                                $orderFound = true;
+
+                                // Mark this tracking number as matched
+                                $matchedTrackingNumbers[] = $trackingNumber;
+                                break;
+                            }
+                        }
+
+                        if (!$trackingFound) {
+                            // Tracking number not found in API results
+                            $this->orderStatuses[$orderId][] = [
+                                'tracking_number' => $trackingNumber,
+                                'status_code' => 'N/A',
+                                'status_description' => 'Komt niet voor in verzendlijst Transmission',
+                                'processed' => false
+                            ];
+                        }
+
+                        // Add tracking status to the array
+                        $trackingStatuses[] = $trackingStatus;
+                    }
+
+                    // Store tracking statuses in order details
+                    $orderDetails['tracking_statuses'] = $trackingStatuses;
+
+                    // Update statistics
+                    if ($orderFound) {
+                        $ordersFound[] = $orderId;
+                        $carrierStats[$carrierId]['found']++;
+                        $combinedStats['found']++;
+                        $this->ordersOk[] = $orderId;
+
+                        // If at least one tracking number is found, mark the order as matched
+                        $orderDetails['api_status'] = 'Gevonden bij Transmission';
+                        $orderDetails['matched'] = true;
+                    } else {
+                        $ordersNotFound[] = $orderId;
+                        $carrierStats[$carrierId]['not_found']++;
+                        $combinedStats['not_found']++;
+
+                        $orderDetails['matched'] = false;
+
+                        if(count($trackingNumbers) > 0){
+                            // Update API status in order details
+                            $orderDetails['api_status'] = 'Niet gevonden bij Transmission';
+                            $orderDetails['reason'] = 'Niet gevonden bij Transmission';
+                        } else {
+                            // Update API status in order details
+                            $orderDetails['api_status'] = 'Geen tracking nummer beschikbaar';
+                            $orderDetails['reason'] = 'Geen tracking nummer';
+                        }
+
+                    }
+                } else {
+                    // No tracking number for this order
+                    $ordersNotFound[] = $orderId;
+                    $carrierStats[$carrierId]['not_found']++;
+                    $combinedStats['not_found']++;
+
+                    // Update API status in order details
+                    $orderDetails['api_status'] = 'Geen tracking nummer beschikbaar';
+                    $orderDetails['reason'] = 'Geen tracking nummer';
+                    $orderDetails['matched'] = false;
+                    $orderDetails['tracking_statuses'] = []; // Empty array for no tracking numbers
+                }
+
+                // Add to updated orders list (ALL database records go here)
+                $this->updatedOrders[$orderId] = $orderDetails;
+            }
+
+            // Find Transmission shipments that weren't matched to any order
+            $unmatchedShipments = [];
+            $nextOrderId = -1; // Use negative IDs for unmatched shipments to avoid conflicts
+
+            foreach ($processedShipments as $shipment) {
+
+                if (!in_array($shipment['transport_number'], $matchedTrackingNumbers)) {
+                    // This is a shipment in Transmission that wasn't matched to any order
+                    $unmatchedShipment = [
+                        'id' => $nextOrderId--,
+                        'reference' => $shipment['reference'] ?: 'Onbekend',
+                        'carrier_id' => 0,
+                        'carrier_name' => 'Transmission',
+                        'tracking_numbers' => $shipment['transport_number'],
+                        'current_state' => $shipment['status_description'],
+                        'new_state' => '',
+                        'customer_name' => $shipment['receiver'],
+                        'api_status' => 'Alleen in Transmission',
+                        'reason' => 'Geen overeenkomende bestelling gevonden',
+                        'transmission_data' => $shipment
+                    ];
+
+                    $unmatchedShipments[] = $unmatchedShipment;
+
+                    // Add to not updated orders list (ONLY unmatched Transmission records)
+                    $this->notUpdatedOrders[$nextOrderId] = $unmatchedShipment;
+                }
+            }
+
+            // Add unmatched shipments count to statistics
+            $combinedStats['unmatched_shipments'] = count($unmatchedShipments);
+
+            // Store statistics for display
+            $this->statistics = [
+                'carrier_ids' => $carrierIds,
+                'active_carriers' => $activeCarriers,
+                'used_carriers' => $carrierStats,
+                'combined' => $combinedStats,
+                'orders_found' => $ordersFound,
+                'orders_not_found' => $ordersNotFound,
+                'updated_orders' => $this->updatedOrders,
+                'not_updated_orders' => $this->notUpdatedOrders,
+                'unmatched_shipments' => $unmatchedShipments
+            ];
+
+            // Update order statuses if needed
+            if($this->onlyChangeOrderStatusValidatedOrders){
+                if (!empty($this->ordersOk)) {
+                    // Only update orders that were found in the API
+                    $ordersToUpdate = array_filter($allOrders, function($order) {
+                        return in_array((int)$order['id_order'], $this->ordersOk);
+                    });
+
+                    if (!empty($ordersToUpdate)) {
+                        $this->setNewStateForOrders($ordersToUpdate, $this->statusShipped);
+                    }
+                }
+
+            } else {
+                    $this->setNewStateForOrders($allOrders, $this->statusShipped);
+            }
+
+
+
 
         } catch (Exception $e) {
             die(sprintf("Error met %s en melding: %s<br/>", $e->getCode(), $e->getMessage()));
         }
 
-        // Update order statuses
-        if ($this->updateBool) {
-            // Orders selecteren die met eerdere acties op 'Ligt klaar voor verzenden' staan (of andere update_status)
-            $orders = $this->getOrders($this->updateStatus, $this->selectCarrier);
-            // All added to order orders
-            $ordersAdded = $this->getOrders($this->addedSelectStatus, $this->addedSelectCarrier);
-            $ordersAddedShipped = $this->getOrders($this->updateStatus, $this->addedSelectCarrier);
-            $allOrders = array_merge($orders, $ordersAdded, $ordersAddedShipped);
+        return [
+            'stats' => $this->statistics,
+            'processed_by_api' => $this->processedShipments,
+            'order_statuses' => $this->orderStatuses
+        ];
+    }
 
-            foreach ($allOrders as $order) {
-                $this->ordersOk[] = $order['id_order'];
+
+
+    /**
+     * Get carrier name by ID
+     *
+     * @param int $carrierId
+     * @return string
+     */
+    private function getCarrierName(int $carrierId): string {
+        try {
+            $db = Db::getInstance();
+            $sql = new DbQuery();
+            $sql->select('c.name');
+            $sql->from('carrier', 'c');
+            $sql->where('c.id_carrier = ' . (int)$carrierId);
+            $sql->limit(1);
+
+            $result = $db->getValue($sql);
+
+            // If no result, try to get from deleted carriers
+            if (!$result) {
+                $sql = new DbQuery();
+                $sql->select('c.name');
+                $sql->from('carrier', 'c');
+                $sql->where('c.id_carrier = ' . (int)$carrierId);
+                $sql->where('c.deleted = 1');
+                $sql->limit(1);
+
+                $result = $db->getValue($sql);
             }
 
-            $this->setNewStateForOrders($allOrders, $this->statusShipped);
+            return $result ?: 'Onbekend verzendoptie #' . $carrierId;
+        } catch (Exception $e) {
+            return 'Onbekend verzendoptie #' . $carrierId;
         }
     }
+
+    /**
+     * Get all active carriers
+     *
+     * @return array
+     */
+    private function getAllActiveCarriers(): array {
+        try {
+            $db = Db::getInstance();
+            $sql = new DbQuery();
+            $sql->select('id_carrier, name');
+            $sql->from('carrier');
+            $sql->where('active = 1');
+            $sql->where('deleted = 0');
+
+            $result = $db->executeS($sql);
+            return $result ?: [];
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+
+
 }
+
 
 
 

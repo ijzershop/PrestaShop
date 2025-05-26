@@ -1690,9 +1690,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     private function _runKoopmanDayClosing()
     {
         $export = new ExportOrdersMultipleCollies(0);
-        $export->dagafsluiting();
-
-        die('done');
+       die(json_encode($export->dagafsluiting()));
     }
 
 

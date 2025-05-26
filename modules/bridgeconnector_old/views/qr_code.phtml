@@ -1,0 +1,98 @@
+<?php
+/**
+*    This file is part of eMagicOne Store Manager Bridge Connector.
+*
+*   eMagicOne Store Manager Bridge Connector is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   eMagicOne Store Manager Bridge Connector is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*   along with eMagicOne Store Manager Bridge Connector.  If not, see <http://www.gnu.org/licenses/>.
+*
+*  @author    eMagicOne <contact@emagicone.com>
+*  @copyright 2014-2019 eMagicOne
+*  @license   http://www.gnu.org/licenses   GNU General Public License
+*/
+$data = Tools::getIsset('data') ? Tools::getValue('data') : null;
+$content = json_decode(
+    (fopen('php://input', 'rb') !== false
+        ? file_get_contents('php://input')
+        : '{}'
+    )
+);
+
+$hash = '';
+$contentData = (array)(empty($content) ? json_decode($data) : $content);
+foreach ($contentData as $parameter => $value) {
+    if ($parameter === 'hash') {
+        $hash = $value;
+        break;
+    }
+}
+
+
+$result = '';
+$baseUrl = '';
+$dataToQr = '';
+try {
+    $result = Db::getInstance()->executeS(
+        'SELECT `username`, `password` FROM `' . _DB_PREFIX_
+        . "bridgeconnector_ma_users` WHERE `qr_code_hash` = '" . pSQL($hash) . "' AND `status` = 1"
+    );
+
+    if (is_array($result)) {
+        $array = array();
+        $defaultShopId = (int)Configuration::get('PS_SHOP_DEFAULT');
+        $shop = new Shop($defaultShopId);
+        $shopUrl = $shop->getBaseURL($defaultShopId);
+        $storeUrl = str_replace(array('http://', 'https://'), '', $shopUrl);
+        preg_replace('/\/*$/i', '', $storeUrl);
+        $array['url']       = $storeUrl;
+        $array['login']     = $result[0]['username'];
+        $array['password']  = $result[0]['password'];
+        $dataToQr = base64_encode(json_encode($array));
+
+        $shopUrl = new ShopUrl($defaultShopId);
+        $baseUrl = $shopUrl->getURL(Configuration::get('PS_SSL_ENABLED'));
+    }
+} catch (PrestaShopDatabaseException $e) {
+    die ($e->getMessage());
+} catch (PrestaShopException $e) {
+    die ($e->getMessage());
+}
+
+?>
+
+<html lang="en">
+<head>
+	<meta content="no-cache">
+	<title>QR-code for Mobile Assistant for PrestaShop</title>
+    <script type="text/javascript" src="<?php echo isset($baseUrl) ? $baseUrl : ''; ?>modules/bridgeconnector/views/js/qrcode.min.js"></script>
+	<style media="screen" type="text/css">
+		img {
+			margin:  auto;
+		}
+	</style>
+</head>
+<body>
+	<table width="100%"><tr><td id="mobassistantconnector_qrcode_img" style="padding: 30px"></td></tr></table>
+    <input type="hidden" id="mobassistantconnector_base_url_hidden" value="">
+    <script>
+        (function() {
+            let qrcode = new QRCode(document.getElementById("mobassistantconnector_qrcode_img"), {
+                width : 400,
+                height : 400
+            });
+
+            qrcode.makeCode("<?= isset($dataToQr) ? $dataToQr : ''; ?>");
+        })();
+        document.getElementById("mobassistantconnector_base_url_hidden").value= "<?= isset($baseUrl) ? $baseUrl : ''; ?>"
+    </script>
+</body>
+</html>

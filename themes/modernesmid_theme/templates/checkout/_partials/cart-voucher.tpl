@@ -66,13 +66,21 @@
                     <span class="inclusive-price">
                       {if $withTax}
                         {if $voucher.reduction_percentage > 0}
-                          {$voucher.reduction_value}
+                          {if Context::getContext()->is_counter_customer}
+                            {$voucher.reduction_amount_full}
+                          {else}
+                            {$voucher.reduction_value}
+                          {/if}
                         {else}
                           {$voucher.reduction_amount_full}
                         {/if}
                       {else}
                         {if $voucher.reduction_percentage > 0}
-                          {$voucher.reduction_value_tax_excl}
+                          {if Context::getContext()->is_counter_customer}
+                            {$voucher.reduction_amount_full_tax_exc}
+                          {else}
+                            {$voucher.reduction_value_tax_excl}
+                          {/if}
                         {else}
                           {$voucher.reduction_amount_full_tax_exc}
                         {/if}

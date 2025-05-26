@@ -50,6 +50,8 @@
     </thead>
     <tbody>
       {% for carrier in orderForViewing.shipping.carriers %}
+
+
         <tr>
           <td class="date">{{ carrier.date|date_format_lite }}</td>
           <td>&nbsp;</td>
@@ -58,11 +60,23 @@
           <td class="carrier-price">{{ carrier.price }}</td>
           <td class="carrier-tracking-number">
             {% if carrier.trackingNumber %}
-              {% if carrier.trackingUrl %}
-                <a href="{{ carrier.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ carrier.trackingNumber }}</a>
-              {% else %}
-                {{ carrier.trackingNumber }}
-              {% endif %}
+              {% set trackingNumbers = carrier.trackingNumber|split(',') %}
+              {% set trackingUrls = carrier.trackingUrl|default('')|split(',') %}
+
+              <ul class="tracking-links list-unstyled">
+                {% for trackNumber in trackingNumbers %}
+                  {% if trackNumber is not empty %}
+                    <li>
+                      {% set urlIndex = loop.index0 %}
+                      {% if trackingUrls[urlIndex] is defined and trackingUrls[urlIndex] is not empty %}
+                        <a href="{{ trackingUrls[urlIndex] }}" target="_blank" rel="noopener noreferrer nofollow">{{ trackNumber }}</a>
+                      {% else %}
+                        {{ trackNumber }}
+                      {% endif %}
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
             {% endif %}
           </td>
           <td class="text-right">

@@ -1,6 +1,18 @@
 /*!
-  * shared v9.14.1
-  * (c) 2024 kazuya kawaguchi
+  * devtools-if v9.2.2
+  * (c) 2022 kazuya kawaguchi
+  * Released under the MIT License.
+  */
+
+/*!
+  * message-compiler v9.2.2
+  * (c) 2022 kazuya kawaguchi
+  * Released under the MIT License.
+  */
+
+/*!
+  * shared v9.2.2
+  * (c) 2022 kazuya kawaguchi
   * Released under the MIT License.
   */
 
@@ -15,8 +27,6 @@
  * https://github.com/twitter/typeahead.js
  * Copyright 2013-2015 Twitter, Inc. and other contributors; Licensed MIT
  */
-
-/*! #__NO_SIDE_EFFECTS__ */
 
 /*! PhotoSwipe - v4.1.3 - 2019-01-08
 * http://photoswipe.com
@@ -59,21 +69,3 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
-/**
-* @vue/runtime-core v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/
-
-/**
-* @vue/runtime-dom v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/
-
-/**
-* @vue/shared v3.5.12
-* (c) 2018-present Yuxi (Evan) You and Vue contributors
-* @license MIT
-**/

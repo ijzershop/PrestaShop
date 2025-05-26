@@ -26,13 +26,14 @@ if (empty($apiKey)) {
 if (Tools::getValue('ajax') == 1) {
     $logger = new MollieLogger();
     if (Tools::getValue('action') == 'createPaymentLink') {
-        $email = Tools::getValue('email');
         $amount = Tools::getValue('amount');
         $type = Tools::getValue('type');
-        $message = Tools::getValue('message');
         $transactionId = Tools::getValue('transaction');
+        $email = Tools::getValue('email');
+        $message = Tools::getValue('message');
         $orderId = Tools::getValue('orderId');
         $order = new Order($orderId);
+        
         $customer = $order->getCustomer();
         // In a real implementation, this would be a call to Mollie's API
         $mollie = new MollieApiClient();
@@ -95,7 +96,7 @@ if (Tools::getValue('ajax') == 1) {
                         'currency' => 'EUR',
                         'value' => number_format($amount, 2, '.', '')
                     ],
-                    'description' => 'Refund for order #' . $orderId
+                    'description' => 'Refund for order #' . $order->reference
                 ]);
 
                 $currency = $context->currency;
@@ -113,8 +114,10 @@ if (Tools::getValue('ajax') == 1) {
                 $template_vars = [
                     '{refund_amount}' => number_format($amount, 2, ',', '.'),
                     '{message}' => $message,
-                    '{order_name}' => $orderId
+                    '{order_name}' => $order->reference,
                 ];
+
+                dd($template_vars);
 
                 Mail::Send(
                     (int)Configuration::get('PS_LANG_DEFAULT'),

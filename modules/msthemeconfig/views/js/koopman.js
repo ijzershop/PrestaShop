@@ -57,6 +57,11 @@ $(function () {
       data: data,
     }).done(function (e) {
       $('form#retourForm .messages').html(e);
+      if(e.indexOf('De retour aanvraag is geslaagd') !== -1){
+        setTimeout(function() {
+          $('.fancybox-item.fancybox-close').trigger('click');
+        }, 4000);
+      }
     })
       .fail(function (e) {
         $('form#retourForm .messages').html(e);
@@ -68,6 +73,7 @@ $(function () {
   $('.showShippingState').on('click', function (event) {
     event.stopImmediatePropagation();
     let reference = $(this).attr('data-order-reference');
+    let profileId = $('#employee-profile-id').val();
 
     $.fancybox({
       width: 800,
@@ -443,16 +449,512 @@ $(function () {
   /**
    * Action button to create day closing after pickup of packages by carrier company
    */
+  /**
+   * Action button to create day closing after pickup of packages by carrier company
+   */
+  /**
+   * Action button to create day closing after pickup of packages by carrier company
+   */
   $(document).on('click', 'button#dag-afsluiting', function () {
     let profileId = $('#employee-profile-id').val();
 
+    // Create or get the modal container
+    if ($('#dagAfsluitingModal').length === 0) {
+      // Create the modal structure if it doesn't exist
+      const modalHTML = `
+      <div class="modal fade" id="dagAfsluitingModal" tabindex="-1" role="dialog" aria-labelledby="dagAfsluitingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="dagAfsluitingModalLabel">Dag Afsluiting</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div id="dagAfsluitingContent">
+                <div class="text-center p-5">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Laden...</span>
+                  </div>
+                  <p class="mt-3">Bezig met verwerken van dag afsluiting...</p>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+      $('body').append(modalHTML);
+    } else {
+      // If modal exists, reset content to loading state
+      $('#dagAfsluitingContent').html(`
+      <div class="text-center p-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Laden...</span>
+        </div>
+        <p class="mt-3">Bezig met verwerken van dag afsluiting...</p>
+      </div>
+    `);
+    }
+
+    // Show the modal
+    $('#dagAfsluitingModal').modal('show');
+
+    // Make the AJAX request
     $.ajax({
       url: '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1&profile=' + profileId + '&method=dag-afsluiting&token=' + token,
-      type: 'GET'
-    }).done(function () {
-      location.reload();
+      type: 'GET',
+      dataType: 'html',
+      success: function(response) {
+        // Try to parse as JSON if the response is in JSON format
+        let data = typeof response === 'string' ? JSON.parse(response) : response;
+
+        // Create a container for our modal content in the DOM
+        if ($('#dag-afsluiting-results-container').length === 0) {
+          $('body').append('<div id="dag-afsluiting-results-container" style="display:none;"></div>');
+        }
+
+        // Create HTML content for the modal
+        let modalContent = '<div class="dag-afsluiting-results">';
+
+        // Add summary section
+        if (data.stats && data.stats.combined) {
+          modalContent += '<div class="summary-section mb-4">';
+          modalContent += '<h3>Samenvatting</h3>';
+          modalContent += '<div class="row">';
+          modalContent += '<div class="col-md-3 mb-3"><div class="card bg-light"><div class="card-body text-center"><h5>Totaal Orders</h5><span class="badge badge-primary badge-pill">' + data.stats.combined.total + '</span></div></div></div>';
+          modalContent += '<div class="col-md-3 mb-3"><div class="card bg-light"><div class="card-body text-center"><h5>Gevonden</h5><span class="badge badge-success badge-pill">' + data.stats.combined.found + '</span></div></div></div>';
+          modalContent += '<div class="col-md-3 mb-3"><div class="card bg-light"><div class="card-body text-center"><h5>Niet Gevonden</h5><span class="badge badge-secondary badge-pill">' + data.stats.combined.not_found + '</span></div></div></div>';
+          modalContent += '<div class="col-md-3 mb-3"><div class="card bg-light"><div class="card-body text-center"><h5>Bijgewerkt</h5><span class="badge badge-info badge-pill">' + Object.keys(data.stats.updated_orders || {}).length + '</span></div></div></div>';
+          modalContent += '</div>';
+          modalContent += '</div>';
+        }
+
+        // Add carriers section
+        if (data.stats && data.stats.used_carriers) {
+          modalContent += '<div class="carriers-section mb-4">';
+          modalContent += '<h3>Vervoerders</h3>';
+          modalContent += '<div class="table-responsive">';
+          modalContent += '<table class="table table-striped table-bordered">';
+          modalContent += '<thead class="thead-dark"><tr><th>Naam</th><th>Totaal</th><th>Gevonden</th><th>Niet Gevonden</th></tr></thead>';
+          modalContent += '<tbody>';
+
+          Object.keys(data.stats.used_carriers).forEach(function(carrierId) {
+            const carrier = data.stats.used_carriers[carrierId];
+            modalContent += '<tr>';
+            modalContent += '<td>' + carrier.name + '</td>';
+            modalContent += '<td>' + carrier.total + '</td>';
+            modalContent += '<td>' + carrier.found + '</td>';
+            modalContent += '<td>' + carrier.not_found + '</td>';
+            modalContent += '</tr>';
+          });
+
+          modalContent += '</tbody></table>';
+          modalContent += '</div>';
+          modalContent += '</div>';
+        }
+
+        // Add updated orders section with pagination for better performance
+        if (data.stats && data.stats.updated_orders) {
+          const updatedOrders = Object.values(data.stats.updated_orders);
+          const ordersPerPage = 20;
+          const totalPages = Math.ceil(updatedOrders.length / ordersPerPage);
+
+          modalContent += '<div class="updated-orders-section mb-4">';
+          modalContent += '<h3>Bijgewerkte Orders in Prestashop</h3>';
+
+          // Add pagination controls if needed
+          if (totalPages > 1) {
+            modalContent += '<div class="pagination-controls mb-3">';
+            modalContent += '<nav aria-label="Order pagination"><ul class="pagination pagination-sm justify-content-center" id="orders-pagination">';
+
+            for (let i = 1; i <= totalPages; i++) {
+              modalContent += '<li class="page-item' + (i === 1 ? ' active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+
+            modalContent += '</ul></nav>';
+            modalContent += '</div>';
+          }
+
+          modalContent += '<div class="table-responsive">';
+          modalContent += '<table class="table table-striped table-bordered">';
+          modalContent += '<thead class="thead-dark"><tr><th>Referentie</th><th>Klant</th><th>Vervoerder</th><th>Tracking</th><th>Status</th><th>API Status</th></tr></thead>';
+          modalContent += '<tbody id="updated-orders-table-body">';
+
+          // Only show first page initially
+          const firstPageOrders = updatedOrders.slice(0, ordersPerPage);
+          firstPageOrders.forEach(function(order) {
+            modalContent += '<tr>';
+            modalContent += '<td>' + order.reference + '</td>';
+            modalContent += '<td>' + order.customer_name + '</td>';
+            modalContent += '<td>' + order.carrier_name + '</td>';
+            modalContent += '<td>' + (order.tracking_numbers || '') + '</td>';
+            modalContent += '<td>Van ' + order.current_state + ' naar ' + order.new_state + '</td>';
+
+            let apiStatusClass = 'badge-secondary';
+            if (order.api_status === 'Gevonden bij Transmission') {
+              apiStatusClass = 'badge-success';
+            } else if (order.api_status === 'Niet gevonden bij Transmission') {
+              apiStatusClass = 'badge-danger';
+            }
+
+            modalContent += '<td><span class="badge ' + apiStatusClass + '">' + order.api_status + '</span></td>';
+            modalContent += '</tr>';
+          });
+
+          modalContent += '</tbody></table>';
+          modalContent += '</div>';
+
+          // Store all orders data for pagination
+          modalContent += '<script>';
+          modalContent += 'window.allUpdatedOrders = ' + JSON.stringify(updatedOrders) + ';';
+          modalContent += '</script>';
+
+          modalContent += '</div>';
+        }
+
+        if (data.stats && data.stats.not_updated_orders) {
+          const notUpdatedOrders = Object.values(data.stats.not_updated_orders);
+          const ordersPerPage = 20;
+          const totalPages = Math.ceil(notUpdatedOrders.length / ordersPerPage);
+
+          modalContent += '<div class="not-updated-orders-section mb-4">';
+          modalContent += '<h3>Beschikbaar Transmission niet in Prestashop</h3>';
+
+          // Add pagination controls if needed
+          if (totalPages > 1) {
+            modalContent += '<div class="pagination-controls mb-3">';
+            modalContent += '<nav aria-label="Non-updated orders pagination"><ul class="pagination pagination-sm justify-content-center" id="not-updated-orders-pagination">';
+
+            for (let i = 1; i <= totalPages; i++) {
+              modalContent += '<li class="page-item' + (i === 1 ? ' active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+            }
+
+            modalContent += '</ul></nav>';
+            modalContent += '</div>';
+          }
+
+          modalContent += '<div class="table-responsive">';
+          modalContent += '<table class="table table-striped table-bordered">';
+          modalContent += '<thead class="thead-dark"><tr><th>Referentie</th><th>Bestemming</th><th>Tracking</th><th>Status</th><th>Reden</th></tr></thead>';
+          modalContent += '<tbody id="not-updated-orders-table-body">';
+
+          // Only show first page initially
+          const firstPageOrders = notUpdatedOrders.slice(0, ordersPerPage);
+          firstPageOrders.forEach(function(order) {
+            modalContent += '<tr>';
+            modalContent += '<td>' + order.reference + '</td>';
+            modalContent += '<td>' + order.customer_name + '</td>';
+            modalContent += '<td>' + (order.tracking_numbers || '') + '</td>';
+            modalContent += '<td>' + order.current_state + '</td>';
+
+            let reasonDisplay = "";
+
+            if (order.tracking_numbers) {
+              const trackingArray = order.tracking_numbers.split(",");
+              if (trackingArray.length > 0) {
+                reasonDisplay = "<ul class='mb-0 pl-3' style='list-style: none;min-width:165px;'>";
+
+                trackingArray.forEach(function(trackingNumber) {
+                  if (!trackingNumber.trim()) return;
+
+                  let statusBadgeClass = "badge-danger p-1";
+                  let statusText = "X";
+
+                  if (order.api_status === "Gevonden bij Transmission") {
+                    statusBadgeClass = "badge-success p-1";
+                    statusText = "✓";
+                  }
+
+                  reasonDisplay += "<li>" + trackingNumber.trim() +
+                    " | <span class='" + statusBadgeClass + "'>" + statusText + "</span></li>";
+                });
+
+                reasonDisplay += "</ul>";
+              } else {
+                reasonDisplay = order.tracking_numbers;
+              }
+            } else {
+              // Fallback to reason-based display when no tracking numbers
+              let reasonClass = 'badge-secondary';
+              if (order.reason === 'Geen tracking nummer beschikbaar') {
+                reasonClass = 'badge-danger';
+              } else if (order.reason === 'Niet gevonden bij Transmission') {
+                reasonClass = 'badge-secondary';
+              }
+              reasonDisplay = '<span class="badge ' + reasonClass + '">' + (order.reason || 'Onbekend') + '</span>';
+            }
+
+            modalContent += '<td>' + reasonDisplay + '</td>';
+            modalContent += '</tr>';
+          });
+
+
+          modalContent += '</tbody></table>';
+          modalContent += '</div>';
+
+          // Store all non-updated orders data for pagination
+          modalContent += '<script>';
+          modalContent += 'window.allNotUpdatedOrders = ' + JSON.stringify(notUpdatedOrders) + ';';
+          modalContent += '</script>';
+
+          modalContent += '</div>';
+        }
+
+// Add pagination script for non-updated orders
+        modalContent += '<script>' +
+          '$(document).on("click", "#not-updated-orders-pagination .page-item a", function(e) {' +
+          '  e.preventDefault();' +
+          '  const page = parseInt($(this).data("page"));' +
+          '  const ordersPerPage = 20;' +
+          '  const start = (page - 1) * ordersPerPage;' +
+          '  const end = start + ordersPerPage;' +
+          '  const pageOrders = window.allNotUpdatedOrders.slice(start, end);' +
+          '  let tableHtml = "";' +
+          '  pageOrders.forEach(function(order) {' +
+          '    tableHtml += "<tr>";' +
+          '    tableHtml += "<td>" + order.reference + "</td>";' +
+          '    tableHtml += "<td>" + order.customer_name + "</td>";' +
+          '    tableHtml += "<td>" + (order.tracking_numbers || "Geen") + "</td>";' +
+          '    tableHtml += "<td>" + order.current_state + "</td>";' +
+          '    let reasonClass = "badge-secondary";' +
+          '    if (order.reason === "Geen tracking nummer") {' +
+          '      reasonClass = "badge-danger";' +
+          '    } else if (order.reason === "Niet gevonden bij Transmission") {' +
+          '      reasonClass = "badge-secondary";' +
+          '    }' +
+          '    tableHtml += "<td><span class=\\"badge " + reasonClass + "\\">" + (order.reason || "Onbekend") + "</span></td>";' +
+          '    tableHtml += "</tr>";' +
+          '  });' +
+          '  $("#not-updated-orders-table-body").html(tableHtml);' +
+          '  $("#not-updated-orders-pagination .page-item").removeClass("active");' +
+          '  $(this).parent(".page-item").addClass("active");' +
+          '});' +
+          '</script>';
+
+
+        // Add processed by API section
+        if (data.stats && data.stats.processed_by_api && data.stats.processed_by_api.length > 0) {
+          modalContent += '<div class="api-processed-section mb-4">';
+          modalContent += '<h3>Verwerkt door API</h3>';
+          modalContent += '<div class="table-responsive">';
+          modalContent += '<table class="table table-striped table-bordered">';
+          modalContent += '<thead class="thead-dark"><tr><th>Transport Nummer</th><th>Referentie</th><th>Status Code</th><th>Status Beschrijving</th><th>Verwerkt</th></tr></thead>';
+          modalContent += '<tbody>';
+
+          data.stats.processed_by_api.forEach(function(item) {
+            modalContent += '<tr>';
+            modalContent += '<td>' + item.transport_number + '</td>';
+            modalContent += '<td>' + (item.reference || '') + '</td>';
+            modalContent += '<td>' + item.status_code + '</td>';
+            modalContent += '<td>' + item.status_description + '</td>';
+            modalContent += '<td>' + (item.processed ? 'Ja' : 'Nee') + '</td>';
+            modalContent += '</tr>';
+          });
+
+          modalContent += '</tbody></table>';
+          modalContent += '</div>';
+          modalContent += '</div>';
+        }
+
+        // Add order statuses section
+        if (data.stats && data.stats.order_statuses) {
+          let hasTrackingStatuses = false;
+
+          // Check if there are any tracking statuses to display
+          Object.values(data.stats.order_statuses).forEach(function(statuses) {
+            if (statuses.length > 0) {
+              hasTrackingStatuses = true;
+            }
+          });
+
+          if (hasTrackingStatuses) {
+            modalContent += '<div class="order-statuses-section mb-4">';
+            modalContent += '<h3>Order Tracking Statussen</h3>';
+            modalContent += '<div class="table-responsive">';
+            modalContent += '<table class="table table-striped table-bordered">';
+            modalContent += '<thead class="thead-dark"><tr><th>Tracking Nummer</th><th>Status Code</th><th>Status Beschrijving</th><th>Verwerkt</th></tr></thead>';
+            modalContent += '<tbody>';
+
+            Object.entries(data.stats.order_statuses).forEach(function([orderId, statuses]) {
+              if (statuses.length > 0) {
+                statuses.forEach(function(status) {
+                  modalContent += '<tr>';
+                  modalContent += '<td>' + status.tracking_number + '</td>';
+                  modalContent += '<td>' + status.status_code + '</td>';
+                  modalContent += '<td>' + status.status_description + '</td>';
+                  modalContent += '<td>' + (status.processed ? 'Ja' : 'Nee') + '</td>';
+                  modalContent += '</tr>';
+                });
+              }
+            });
+
+            modalContent += '</tbody></table>';
+            modalContent += '</div>';
+            modalContent += '</div>';
+          }
+        }
+
+        modalContent += '</div>';
+
+        // Add some CSS for the modal
+        modalContent = '<style type="text/css">' +
+          '.dag-afsluiting-results { padding: 20px; }' +
+          '.dag-afsluiting-results h2 { color: #333; margin-bottom: 20px; }' +
+          '.dag-afsluiting-results h3 { color: #555; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }' +
+          '.dag-afsluiting-results .badge { font-size: 14px; padding: 8px 12px; }' +
+          '.dag-afsluiting-results .badge-pill { border-radius: 10px; }' +
+          '.dag-afsluiting-results .table { margin-bottom: 0; }' +
+          '.dag-afsluiting-results .card { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }' +
+          '.dag-afsluiting-results .card-body { padding: 15px; }' +
+          '</style>' + modalContent;
+
+        modalContent += '<script type="text/javascript">' +
+          '$(document).on("click", "#orders-pagination .page-item a", function(e) {' +
+          '  e.preventDefault();' +
+          '  const page = parseInt($(this).data("page"));' +
+          '  const ordersPerPage = 20;' +
+          '  const start = (page - 1) * ordersPerPage;' +
+          '  const end = start + ordersPerPage;' +
+          '  const pageOrders = window.allUpdatedOrders.slice(start, end);' +
+          '  let tableHtml = "";' +
+          '  pageOrders.forEach(function(order) {' +
+          '    tableHtml += "<tr>";' +
+          '    tableHtml += "<td>" + order.reference + "</td>";' +
+          '    tableHtml += "<td>" + order.customer_name + "</td>";' +
+          '    tableHtml += "<td>" + order.carrier_name + " (" + order.carrier_id + ")</td>";' +
+          '    ' +
+          '    let trackingDisplay = "";' +
+          '    ' +
+          '    if (order.tracking_numbers) {' +
+          '      const trackingArray = order.tracking_numbers.split(",");' +
+          '      if (trackingArray.length > 0) {' +
+          '        trackingDisplay = "<ul class=\'mb-0 pl-3\' style=\'list-style: none;min-width:165px;\'>";' +
+          '        ' +
+          '        trackingArray.forEach(function(trackingNumber) {' +
+          '          if (!trackingNumber.trim()) return;' +
+          '          ' +
+          '          let statusBadgeClass = "badge-danger p-1";' +
+          '          let statusText = "X";' +
+          '          ' +
+          '          if (order.api_status === "Gevonden bij Transmission") {' +
+          '            statusBadgeClass = "badge-success p-1";' +
+          '            statusText = "✓";' +
+          '          }' +
+          '          ' +
+          '          trackingDisplay += "<li>" + trackingNumber.trim() +' +
+          '            "| <span class=\'" + statusBadgeClass + "\'>" + statusText + "</span></li>";' +
+          '        });' +
+          '        ' +
+          '        trackingDisplay += "</ul>";' +
+          '      } else {' +
+          '        trackingDisplay = order.tracking_numbers;' +
+          '      }' +
+          '    }' +
+          '    ' +
+          '    tableHtml += "<td>" + trackingDisplay + "</td>";' +
+          '    tableHtml += "<td>Van " + order.current_state + " naar " + order.new_state + "</td>";' +
+          '    ' +
+          '    let apiStatusClass = "badge-secondary";' +
+          '    if (order.api_status === "Gevonden bij Transmission") {' +
+          '      apiStatusClass = "badge-success";' +
+          '    } else if (order.api_status === "Niet gevonden bij Transmission") {' +
+          '      apiStatusClass = "badge-danger";' +
+          '    } else if (order.api_status === "Geen tracking nummer beschikbaar") {' +
+          '      apiStatusClass = "badge-secondary";' +
+          '    }' +
+          '    ' +
+          '    tableHtml += "<td><span class=\\"badge " + apiStatusClass + "\\">" + order.api_status + "</span></td>";' +
+          '    tableHtml += "</tr>";' +
+          '  });' +
+          '  ' +
+          '  $("#updated-orders-table-body").html(tableHtml);' +
+          '  $("#orders-pagination .page-item").removeClass("active");' +
+          '  $(this).parent(".page-item").addClass("active");' +
+          '});' +
+          '</script>';
+
+
+// Update modal content with the response
+        $('#dagAfsluitingContent').html(
+          '<div class="result-container">' +
+          '<div class="content-area">' +
+          modalContent +
+          '</div>' +
+          '</div>'
+        );
+
+        // Add custom styling for the content
+        const customStyles = `
+        <style>
+          #dagAfsluitingContent .result-container {
+            max-width: 100%;
+            margin: 0 auto;
+          }
+          #dagAfsluitingContent .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+          }
+          #dagAfsluitingContent .alert-success {
+            color: #3c763d;
+            background-color: #dff0d8;
+            border-color: #d6e9c6;
+          }
+          #dagAfsluitingContent .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+          }
+          #dagAfsluitingContent .alert-danger {
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+          }
+          #dagAfsluitingContent table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+          }
+          #dagAfsluitingContent .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+        </style>
+      `;
+        $('#dagAfsluitingContent').append(customStyles);
+
+        // Update modal title to indicate success
+        $('#dagAfsluitingModalLabel').text('Dag Afsluiting Resultaten');
+      },
+      error: function(xhr, status, error) {
+        // Show error message in modal
+        $('#dagAfsluitingContent').html(`
+        <div class="alert alert-danger">
+          <h5 class="alert-heading">Fout bij uitvoeren van dag afsluiting</h5>
+          <p>Er is een fout opgetreden bij het ophalen van de resultaten. Probeer het later opnieuw.</p>
+          <hr>
+          <p class="mb-0">Technische details: ${status} - ${error}</p>
+        </div>
+      `);
+
+        // Update modal title to indicate error
+        $('#dagAfsluitingModalLabel').text('Fout bij Dag Afsluiting');
+      }
     });
   });
+
+
+
+
 
   /**
    * Calculate the volume size by weight in centimeters and size for on label: length * width * height * 250
@@ -999,6 +1501,7 @@ $(function () {
           });
           $("#cancelConfirm").click(function (e) {
             $.fancybox.close(e);
+            setProcessingTimeOutButton(button, orderId, 0);
           });
         }
       }

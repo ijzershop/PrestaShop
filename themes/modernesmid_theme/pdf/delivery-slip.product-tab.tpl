@@ -52,13 +52,13 @@
                     </tr>
                     <tr>
 
-                      <td>
-                      {if file_exists(str_replace('\\', '/', $customization_infos.technical_image))}
-                          <img src="{str_replace('\\', '/', $customization_infos.technical_image)}" width="250" style="border:1px solid #000000;margin-top:10px;" alt=""/>
-                        {else}
-                          <p>Image not available</p>
-                        {/if}
-                      </td>
+{*                      <td>*}
+{*                      {if file_exists(str_replace('\\', '/', $customization_infos.technical_image))}*}
+{*                          <img src="{str_replace('\\', '/', $customization_infos.technical_image)}" width="250" style="border:1px solid #000000;margin-top:10px;" alt=""/>*}
+{*                        {else}*}
+{*                          <p>Image not available</p>*}
+{*                        {/if}*}
+{*                      </td>*}
 
                       <td>
                         <img src="{$customization_infos.technical_image}" width="250" style="border:1px solid #000000;margin-top:10px;"  alt=""/>
@@ -78,7 +78,7 @@
           {/foreach}
           {/foreach}
         </td>
-        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}X</td>
+        <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;font-weight:bold;text-align:center;" class="left"><br><br>{$order_detail.product_quantity}</td>
         <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
         <td style="{if count($order_details) >= $idx+1}border-bottom:1px solid #d6d4d4;{/if}font-size:11pt;text-align:right;" class="left"><br><br>{round(($order_detail.weight*$order_detail.product_quantity), 2)} {Configuration::get('PS_WEIGHT_UNIT')}</td>
       </tr>

@@ -44,9 +44,8 @@
                    style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
               <tr>
                 <td align="left" bgcolor="#4472c4" class="es-text-9909"
-                    style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px"><h1 class="es-text-mobile-size-20"
-                                                                                        style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#ffffff;text-align:center">
-                    <b>Dit is uw bestelling&nbsp;</b></h1></td>
+                    style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px"><h1 class="es-text-mobile-size-20" style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#ffffff;text-align:center">
+                    <b>Dit is uw bestelling&nbsp;met referentie {order_name}</b></h1></td>
               </tr>
               <tr>
                 <td align="center" bgcolor="#4472c4"
@@ -83,16 +82,26 @@
                     <b>{delivery_block_html}</b></p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-                    <b>+316 222 50 100</b></p>
-                  <p
-                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
                     <b><br></b></p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
                     U heeft gekozen voor betaling via</p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-                    <b>{payment}</b></p>
+                    <b>
+
+                      {% if '{payment}' == 'PIN Betaling' or '{payment}' == 'ideal' or '{payment}' == 'cash' %}
+                        {payment}
+                      {% elseif '{payment}' == 'cheque' %}
+                        {payment} - Uw bestelling wordt verwerkt na ontvangst van de cheque
+                      {% elseif '{payment}' == 'banktransfer' %}
+                        {payment} - Uw bestelling wordt verwerkt na ontvangst van de betaling
+                      {% elseif '{payment}' == 'oncredit' %}
+                        {payment} - Een medewerker neemt contact met u op over de betalingsvoorwaarden
+                      {% else %}
+                        {payment}
+                      {% endif %}
+                    </b></p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
                     <b><br></b></p>
@@ -101,7 +110,14 @@
                     U heeft gekozen voor het volgende transport</p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-                    <b>{carrier}</b></p>
+                    <b>
+                      {% if '{carrier}' == 'Afhalen'%}
+                        {carrier} Extra afhaal info
+                      {% elseif '{carrier}' == 'toevoegen' %}
+                        {carrier} - extra toevoeg info
+                      {% else %}
+                        {carrier} - extra bezorg info, mogelijk tracking link
+                      {% endif %}</b></p>
                   <p
                     style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
                     <b><br></b></p>

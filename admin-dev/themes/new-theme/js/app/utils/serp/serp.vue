@@ -36,11 +36,18 @@
       <div class="serp-description">
         {{ displayedDescription }}
       </div>
+      <div v-if="isPreviewEnabled" class="serp-view-link">
+        <a :href="url" target="_blank" class="btn btn-outline-primary btn-sm">
+          <i class="material-icons">visibility</i>
+          {{ viewLinkText }}
+        </a>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
   import {defineComponent} from 'vue';
 
   export default defineComponent({
@@ -57,6 +64,14 @@
       title: {
         type: String,
         default: '',
+      },
+      isPreviewEnabled: {
+        type: Boolean,
+        default: false,
+      },
+      viewLinkText: {
+        type: String,
+        default: 'View page',
       },
     },
     computed: {
@@ -155,6 +170,22 @@
       text-align: left;
       word-wrap: break-word;
       visibility: visible;
+      margin-bottom: 0.75rem;
+    }
+
+    .serp-view-link {
+      margin-top: 0.75rem;
+      text-align: left;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+
+        i {
+          margin-right: 0.25rem;
+          font-size: 1rem;
+        }
+      }
     }
   }
 </style>

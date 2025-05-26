@@ -680,23 +680,13 @@
           </p>
         </div>
       </div>
-
-
-
-
-
     </div>
   </div>
 </div>
 
-
 <script type="text/javascript">
-
-
-  $(document).ready(function() {
-
-
-
+  $(function() {
+    // Set up Dutch datepicker localization
     $.datepicker.regional['nl'] = {
       closeText: "Sluiten",
       prevText: "Vorig",
@@ -712,93 +702,81 @@
       weekHeader: "Wk",
       isRTL: false,
       showMonthAfterYear: true,
-      yearSuffix: "" };
+      yearSuffix: ""
+    };
 
     $.datepicker.setDefaults($.datepicker.regional['nl']);
 
-    let pickedDatesDataString = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
-    let pickedDatesArray = '';
+    // Get current date and year
     let today = new Date();
     let year = today.getFullYear();
 
+    // Default dates
+    let defaultDates = ['30/04/'+year, '01/01/'+year];
+
+    // Initialize with default dates first to avoid parsing errors
     try {
-      let fixedString = pickedDatesDataString.replace("/(\s+|\+|\")/", "");
-      pickedDatesArray = fixedString.split(', ');
-    } catch (e) {
-      pickedDatesArray = ['12/25/'+year, '01/01/'+year];
-    }
-    console.log(pickedDatesArray);
-    $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker({
-      addDates: pickedDatesArray,
-      numberOfMonths: [3,4],
-      stepMonths: 12,
-      defaultDate: '01/01/'+year,
-      dateFormat: 'dd/mm/yy',
-      showWeek: true,
-      beforeShowDay: $.datepicker.noWeekends,
-      useCurrent: true,
-      minDate: 1,
-      onSelect: function () {
-        // Get the selected date
-        let selectedDate = $(this).val();
+      $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker({
+        numberOfMonths: [3,4],
+        stepMonths: 12,
+        defaultDate: '01/01/'+year,
+        showWeek: true,
+        beforeShowDay: $.datepicker.noWeekends,
+        useCurrent: false,
+        dateFormat: 'dd/mm/yy',
+        minDate: 1,
+        onSelect: function(dateText) {
+          // Get current value from hidden input
+          let currentValue = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val() || '';
 
-        // Get the current value from the input field
-        let currentValue = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
+          // Split by comma and clean up
+          let dates = currentValue ? currentValue.split(',').map(d => d.trim()).filter(d => d) : [];
 
-        // Initialize dates array
-        let datesArray = [];
+          // Check if date is already in array
+          let index = dates.indexOf(dateText);
 
-        // Parse existing dates if there are any
-        if (currentValue && currentValue.trim() !== '') {
-          try {
-            // Handle both comma-separated list and JSON format
-            if (currentValue.indexOf('[') === 0) {
-              // It's already JSON
-              datesArray = JSON.parse(currentValue);
-            } else {
-              // It's a comma-separated list
-              datesArray = currentValue.split(', ').filter(function(date) {
-                return date.trim() !== '';
-              });
-            }
-          } catch (e) {
-            // If parsing fails, start with empty array
-            console.error('Error parsing dates:', e);
-            datesArray = [];
+          if (index === -1) {
+            // Add date if not in array
+            dates.push(dateText);
+          } else {
+            // Remove date if already in array
+            dates.splice(index, 1);
           }
+
+          // Update hidden input with comma-separated list
+          $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(dates.join(','));
         }
+      });
 
-        // Check if the selected date is already in the array
-        let dateIndex = datesArray.indexOf(selectedDate);
-
-        if (dateIndex === -1) {
-          // Date not in array, add it
-          datesArray.push(selectedDate);
-        } else {
-          // Date already in array, remove it (toggle behavior)
-          datesArray.splice(dateIndex, 1);
+      // Now try to add the saved dates after initialization
+      let savedDates = $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val();
+      if (savedDates) {
+        let dateArray = savedDates.split(',').map(d => d.trim()).filter(d => d);
+        if (dateArray.length > 0) {
+          $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker('addDates', dateArray);
         }
-
-        // Sort the dates for better readability
-        datesArray.sort();
-
-        // Convert back to comma-separated string (for backward compatibility)
-        let newValue = datesArray.join(', ');
-
-        // Update the input field
-        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(newValue);
-        //
-        // // Optional: Update the datepicker to reflect the current selection
-        // // This depends on the specific multiDatesPicker API
-        // $(this).multiDatesPicker('resetDates', 'picked');
-        // $(this).multiDatesPicker('addDates', datesArray);
       }
+    } catch (e) {
+      console.error('Error initializing datepicker:', e);
+      // Fall back to default dates
+      try {
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker('addDates', defaultDates);
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val(defaultDates.join(','));
+      } catch (e2) {
+        console.error('Error adding default dates:', e2);
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').html('<p class="text-danger">Error loading calendar. Please refresh the page and try again.</p>');
+      }
+    }
 
-    });
-
+    // Reset calendar button handler
     $('#resetCalendar').on('click', function(e){
-      $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker('resetDates', 'picked');
+      try {
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES_DIV').multiDatesPicker('resetDates', 'picked');
+        $('#MSTHEMECONFIG_SELL_CARRIER_PICKUP_TIME_SKIPPING_DATES').val('');
+      } catch (e) {
+        console.error('Error resetting calendar:', e);
+      }
     });
-
   });
 </script>
+

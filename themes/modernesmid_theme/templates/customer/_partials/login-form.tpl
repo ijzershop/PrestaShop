@@ -46,6 +46,8 @@
       </div>
     </section>
     <br>
+
+
     {block name='login_form_footer'}
       <footer class="form-footer form-group pt-2 pb-3 row">
         <div class="col-12">
@@ -58,6 +60,5 @@
         </div>
       </footer>
     {/block}
-
   </form>
 {/block}

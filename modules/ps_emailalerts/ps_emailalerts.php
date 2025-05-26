@@ -446,16 +446,30 @@ class Ps_EmailAlerts extends Module
             }
 
             $url = $context->link->getProductLink($product['product_id']);
+//            $items_table .=
+//                '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
+//					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
+//					<td style="padding:0.6em 0.4em;">
+//						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
+//                            . (isset($product['attributes_small']) ? ' ' . $product['attributes_small'] : '')
+//                            . (!empty($customization_text) ? '<br />' . $customization_text : '')
+//                        . '</strong>
+//					</td>
+//					<td style="padding:0.6em 0.4em; text-align:right;">' . $contextLocale->formatPrice($unit_price, $currency->iso_code) . '</td>
+//					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
+//					<td style="padding:0.6em 0.4em; text-align:right;">'
+//                        . $contextLocale->formatPrice($unit_price * $product['product_quantity'], $currency->iso_code)
+//                    . '</td>
+//				</tr>';
+//
             $items_table .=
                 '<tr style="background-color:' . ($key % 2 ? '#DDE2E6' : '#EBECEE') . ';">
-					<td style="padding:0.6em 0.4em;">' . $product['product_reference'] . '</td>
 					<td style="padding:0.6em 0.4em;">
 						<strong><a href="' . $url . '">' . $product['product_name'] . '</a>'
                             . (isset($product['attributes_small']) ? ' ' . $product['attributes_small'] : '')
                             . (!empty($customization_text) ? '<br />' . $customization_text : '')
                         . '</strong>
 					</td>
-					<td style="padding:0.6em 0.4em; text-align:right;">' . $contextLocale->formatPrice($unit_price, $currency->iso_code) . '</td>
 					<td style="padding:0.6em 0.4em; text-align:center;">' . (int) $product['product_quantity'] . '</td>
 					<td style="padding:0.6em 0.4em; text-align:right;">'
                         . $contextLocale->formatPrice($unit_price * $product['product_quantity'], $currency->iso_code)
@@ -588,10 +602,12 @@ class Ps_EmailAlerts extends Module
                     $mail_id_lang,
                     'new_order',
                     $this->trans(
-                        'New order : #%d - %s',
+                        '%s | %s | %s | %s',
                         [
-                            $order->id,
                             $order->reference,
+                            Context::getContext()->currentLocale->formatPrice($order->total_paid, $currency->iso_code),
+                            strtoupper(Tools::substr($order->payment, 0, 32)),
+                            (($carrier->name == '0') ? $configuration['PS_SHOP_NAME'] : $carrier->name)
                         ],
                         'Emails.Subject',
                         $locale),

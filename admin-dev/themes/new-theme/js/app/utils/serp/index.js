@@ -35,7 +35,7 @@ const {$} = window;
  * Set the proper class to link a input to a part of the panel.
  */
 class SerpApp {
-  constructor(selectors, url) {
+  constructor(selectors, url, options = {}) {
     // If the selector cannot be found, we do not load the Vue app
     if ($(selectors.container).length === 0) {
       return;
@@ -44,6 +44,11 @@ class SerpApp {
     this.originalUrl = url;
     this.selectors = selectors;
     this.useMultiLang = selectors.multiLanguageInput !== undefined || selectors.multiLanguageField !== undefined;
+    this.options = {
+      isPreviewEnabled: false,
+      viewLinkText: 'View page',
+      ...options,
+    };
 
     if (this.useMultiLang) {
       const possibleSelectors = [];
@@ -62,6 +67,8 @@ class SerpApp {
       url,
       title: '',
       description: '',
+      isPreviewEnabled: this.options.isPreviewEnabled,
+      viewLinkText: this.options.viewLinkText,
     };
 
     this.initializeSelectors(selectors);
@@ -74,7 +81,7 @@ class SerpApp {
     }
 
     this.vm = createApp({
-      template: '<serp ref="serp" :url="url" :title="title" :description="description" />',
+      template: '<serp ref="serp" :url="url" :title="title" :description="description" :is-preview-enabled="isPreviewEnabled" :view-link-text="viewLinkText" />',
       components: {serp},
       data: () => this.data,
     });

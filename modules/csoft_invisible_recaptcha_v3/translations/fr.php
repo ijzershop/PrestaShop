@@ -1,0 +1,37 @@
+<?php
+
+global $_MODULE;
+$_MODULE = array();
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_45b52cce33aaca5ccb3fa2cffd6ab6f1'] = 'Ajoutez un reCaptcha invisible au formulaire de contact, à la newsletter et à la page d\'inscription de votre site web.';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_f9aa7b152f0c28662e1f92cf30f9cadd'] = 'Besoin d\'être configuré avec une clef recaptcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_15cecc39d0a1bd801d2a60bdca3cbd59'] = 'La balise HTML input type=\"submit\" name=\"submitMessage\" est introuvable dans \"contactform.tpl\"';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_bd16046f9e4bfea5a03cdff213c7f8ec'] = 'Le template \"contactform.tpl\" n\'a pas été trouvé dans votre thème !';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_de7e39ae12eb7d5e08c84ff8739ee5fc'] = 'Veuillez remplir la clé publique captcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_30c1139b1b654780ec1ef5c35323806d'] = 'Veuillez remplir la clé privée captcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_c888438d14855d7d96a2724ee9c306bd'] = 'Paramètres mis à jour';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_77f682c46c4c98d39cfb703d3606f505'] = 'Pour obtenir vos propres clés publiques et privées, veuillez cliquer sur le lien suivant';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_059cff59cc5ead2a76d5d033c29a4754'] = 'Clé publique reCaptcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_c25f66f2154ee54e4a57ad5c9897a264'] = 'Clé privée reCaptcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_2aa54b500a188f2c2b83f47dfc00078c'] = 'Afficher le badge reCaptcha';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_00d23a76e43b46dae9ec7aa9dcbebb32'] = 'Activée';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_b9f5c797ebbf55adccdd8539a65a0241'] = 'Désactivé';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_6f64082be33f101e70ec446f394f23b2'] = 'Sélectionnez le niveau de sécurité';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_a6655cf6722e5d70ea6ad0559d7e507e'] = 'Score de sécurité compris entre 0 et 10. Si vous avez des faux positifs, augmentez la valeur. Au contraire si vous êtes détecté comme un robot, diminuez la valeur.';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_c9cc8cce247e49bae79f15173ce97354'] = 'Sauvegarder';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_71947ebc9016daa6c266c27f0c846cce'] = 'Vous avez été détecté comme un robot, votre formulaire ne peut pas être envoyé.';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>csoft_invisible_recaptcha_v3_19bbef2c796e7806d5307cb3e4519a68'] = 'Une erreur est survenu, durant l\'appel de l\'API';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>infos_f6e0d8857f4f10afbdb0398b8ff40ffd'] = 'Noter le module !';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>infos_a981a0cb361275bf800395d4cc6575ee'] = 'Modules Prestashop';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>infos_7b6aff28cdbbdad773a19e2698db75d4'] = 'Boutiques Prestashop';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>infos_439ad78cb98042c47d02c5f75f15bb5e'] = 'Référencement & SEO';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>infos_751bd58b50eba8a01cb480c5ee98991a'] = 'Une question ? Contact';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_101d699ab80f40c7110be34095759b08'] = 'Désolé, votre commentaire ne peut pas être envoyé.';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_dcb66ff6e4a2517ade22183779939c9d'] = 'Note';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_221e705c06e231636fdbccfdd14f4d5c'] = 'Votre nom';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_457dd55184faedb7885afd4009d70163'] = 'Commentaire';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_70397c4b252a5168c5ec003931cea215'] = 'Champs requis';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_ea4788705e6873b424c65e91c2846b19'] = 'Annuler';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_94966d90747b97d1f0f206c98a8b1ac3'] = 'Envoyer';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_b20968d9aecd2d075519992e9e2f1ffe'] = 'Votre commentaire a bien été envoyé. Il sera visible après modération.';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_b0e34b92ce3d4073d645119d68c5d551'] = 'Commentaire envoyé';
+$_MODULE['<{csoft_invisible_recaptcha_v3}prestashop>post-review-modal_ffe435d2d09dddbaa6927987bc8466a7'] = 'Impossible d\'envoyer votre commentaire';

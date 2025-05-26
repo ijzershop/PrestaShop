@@ -72,6 +72,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         $order = $this->getOrder($command->getOrderId());
 
         $trackingNumber = $command->getShippingTrackingNumber();
+
         $carrierId = $command->getNewCarrierId();
         $oldTrackingNumber = $order->getShippingNumber();
 

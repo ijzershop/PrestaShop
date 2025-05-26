@@ -1,131 +1,256 @@
 <style>
-  .shippingStatus table td, .shippingStatus table td b {
+  .shipping-status {
+    font-family: 'Roboto', sans-serif;
+    color: #363a41;
+  }
+  .shipping-status .card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+  }
+  .shipping-status .card-header {
+    background-color: #25b9d7;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 15px 20px;
+  }
+  .shipping-status .card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .shipping-status .card-body {
+    padding: 20px;
+  }
+  .shipping-status table {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .shipping-status table td,
+  .shipping-status table td b {
     font-size: 1rem;
+    padding: 8px;
+    vertical-align: middle;
+  }
+  .shipping-status .customer-info {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .shipping-status .customer-info h3 {
+    color: #363a41;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+  .shipping-status .collie-item {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #25b9d7;
+  }
+  .shipping-status .collie-item h3 {
+    color: #363a41;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+  .shipping-status .products-list {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  .shipping-status .section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 20px 0 10px 0;
+    color: #363a41;
+    border-bottom: 2px solid #25b9d7;
+    padding-bottom: 5px;
+    display: inline-block;
+  }
+  .shipping-status .btn-action {
+    border-radius: 4px;
+    font-weight: 600;
+    padding: 10px 15px;
+    transition: all 0.3s;
+  }
+  .shipping-status .btn-cancel {
+    background-color: #f44336;
+    border-color: #f44336;
+    color: white;
+  }
+  .shipping-status .btn-cancel:hover {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+  }
+  .shipping-status .btn-print {
+    background-color: #ff9800;
+    border-color: #ff9800;
+    color: white;
+  }
+  .shipping-status .btn-print:hover {
+    background-color: #f57c00;
+    border-color: #f57c00;
+  }
+  .shipping-status .remove-collie {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0;
+    text-align: center;
+    font-weight: bold;
+  }
+  .shipping-status .remove-collie:hover {
+    background-color: #d32f2f;
+  }
+  .shipping-status .product-row {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .shipping-status .product-row:last-child {
+    border-bottom: none;
+  }
+  .shipping-status .weight-value {
+    font-weight: 600;
+  }
+  .shipping-status .dimension-value {
+    color: #555;
+  }
+  .fancybox-inner {
+    overflow: auto !important;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .shipping-status .card-header h3 {
+      font-size: 1rem;
+    }
+    .shipping-status table td,
+    .shipping-status table td b {
+      font-size: 0.9rem;
+    }
   }
 </style>
-<div class="w-100 shippingStatus">
+
+<div class="w-100 shipping-status">
   <div class="card">
     <div class="card-header">
-      <h3 id="showShippingStatusLabel">Labels voor bestelling {% if nrorder != '' %}{{ nrorder }}{% endif %} met
-        Verzending ID #{% if nrzend != '' %}{{ nrzend }}{% endif %}</h3>
+      <h3 id="showShippingStatusLabel">
+        Labels voor bestelling {% if nrorder != '' %}{{ nrorder }}{% endif %} met
+        Verzending ID #{% if nrzend != '' %}{{ nrzend }}{% endif %}
+      </h3>
     </div>
     <div class="card-body">
-      <table class="table w-100">
-        <tr>
-          <td class="text-nowrap  font-weight-bold">Klant</td>
-        </tr>
-        <tr>
-          {% if naam != '' %}
-            <table class="w-100 mb-4">
-              <tr>
-                <td><h3>{{ naam }}</h3></td>
-                <td><h3>{{ naam2 }}</h3></td>
-              </tr>
-              <tr>
-                <td colspan="2">{{ straat }} {{ huisnr }}</td>
-              </tr>
-              <tr>
-                <td colspan="2">{{ postcode }}, {{ plaats }}</td>
-              </tr>
-              <tr>
-                <td colspan="2"> {{ land }}</td>
-              </tr>
-              <tr>
-                <td colspan="2"> {{ telefoon }}</td>
-              </tr>
-              <tr>
-                <td colspan="2"> {{ email }}</td>
-              </tr>
-            </table>
-          {% else %}
-            <table class="w-100 mb-4">
-              <tr>
-                <td>Nog geen labels aangemaakt, er staat een fout tracking nummer in de database. Of er zit een storing
-                  in de connectie naar transmission.
-                </td>
-              </tr>
-            </table>
-          {% endif %}
-        </tr>
-        {% if collies is not empty %}
-          <tr>
-            <td class="h2">Collies</td>
-          </tr>
-          <tr>
-            <td>
-              {# Collies Loop #}
-              {% for collie in collies %}
-                <div class="w-100 card p-2">
-                  <h3>Collie {{ loop.index }}</h3>
-                  <table class="table w-100">
-                    {% if collie.weight is not empty %}
-                      <tr>
-                        <td rowspan="2">{{ collie.weight }}</td>
-                        <td class="text-nowrap" style="width:50%">Gewicht</td>
-                        <td>{{ collie.weight | raw }}<sub>Kg</sub></td>
-                        <td rowspan="2">
-                          <button type="button" data-nrzend="{{ nrzend }}" data-collo="{{ collie.nr }}"
-                                  class="btn btn-xs btn-outline-danger remove-collie h-100 v-100"
-                                  aria-label="delete-collie" title="Verwijder uit portal">X
-                          </button>
-                        </td>
-                      </tr>
-                    {% endif %}
-                    {% if collie.length is not empty %}
-                      <tr>
-                        <td class="text-nowrap" style="width:50%">Formaat</td>
-                        <td>{{ collie.length | raw }}<small>cm</small> X {{ collie.height | raw }}<small>cm</small>
-                          X {{ collie.breedte | raw }}<small>cm</small></td>
-                      </tr>
-                    {% endif %}
-                  </table>
-                </div>
-              {% endfor %}
-            </td>
-          </tr>
-        {% endif %}
-        <tr>
-          <td class="h2">Producten Lijst</td>
-        </tr>
-        <tr>
-          <td>
-            {# Collies Loop #}
-            <div class="w-100 card p-2">
-              <table class="table w-100">
-                {% for product in products %}
-                  <tr>
-                    <td>{{ product.product_quantity }} X</td>
-                    <td>{{ product.product_name }}</td>
-                    <td>{{ product.product_reference }}</td>
-                    {% if product.product_weight is not empty %}
-                      <td>{{ product.product_weight | raw }}<sub>Kg</sub></td>
-                    {% endif %}
-                  </tr>
-                {% endfor %}
-              </table>
+      <!-- Customer Information -->
+      <div class="section-title">Klant</div>
+      {% if naam != '' %}
+        <div class="customer-info">
+          <div class="row">
+            <div class="col-md-6">
+              <h3>{{ naam }}</h3>
             </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <table class="w-100">
-              <tr>
-                <td class="col-6">
-                  <button id="cancelConfirm" data-value="0" data-fancybox-close class="btn btn-danger w-100 fancybox-close-btn" style="background-image: none;">Nee, foutje!</button>
-                </td>
-                <td class="col-6">
-                  <button id="okConfirm" class="btn btn-warning w-100 fancybox-close-btn bg-none" style="background-image: none;" data-value="1" data-fancybox-close>OK, print</button>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+            <div class="col-md-6">
+              <h3>{{ naam2 }}</h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <p>{{ straat }} {{ huisnr }}</p>
+              <p>{{ postcode }}, {{ plaats }}</p>
+              <p>{{ land }}</p>
+              <p>{{ telefoon }}</p>
+              <p>{{ email }}</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning">
+          Nog geen labels aangemaakt, er staat een fout tracking nummer in de database. Of er zit een storing
+          in de connectie naar transmission.
+        </div>
+      {% endif %}
+
+      <!-- Collies Information -->
+      {% if collies is not empty %}
+        <div class="section-title">Collies</div>
+        <div class="row">
+          {% for collie in collies %}
+            <div class="col-md-6 mb-3">
+              <div class="collie-item">
+                <h3>Collie {{ loop.index }}</h3>
+                <table class="table table-sm">
+                  <tbody>
+                  {% if collie.weight is not empty %}
+                    <tr>
+                      <td class="text-nowrap" style="width:40%">Gewicht</td>
+                      <td class="weight-value">{{ collie.weight | raw }} <sub>Kg</sub></td>
+                      <td rowspan="2" class="text-right" style="width:10%">
+                        <button type="button" data-nrzend="{{ nrzend }}" data-collo="{{ collie.nr }}"
+                                class="btn btn-sm remove-collie"
+                                aria-label="delete-collie" title="Verwijder uit portal">
+                          <i class="material-icons">delete</i>
+                        </button>
+                      </td>
+                    </tr>
+                  {% endif %}
+                  {% if collie.length is not empty %}
+                    <tr>
+                      <td class="text-nowrap">Formaat</td>
+                      <td class="dimension-value">
+                        {{ collie.length | raw }}<small>cm</small> ×
+                        {{ collie.height | raw }}<small>cm</small> ×
+                        {{ collie.breedte | raw }}<small>cm</small>
+                      </td>
+                    </tr>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Products List -->
+      <div class="section-title">Producten Lijst</div>
+      <div class="products-list">
+        <table class="table table-sm">
+          <tbody>
+          {% for product in products %}
+            <tr class="product-row">
+              <td style="width:10%"><strong>{{ product.product_quantity }} ×</strong></td>
+              <td>{{ product.product_name }}</td>
+              <td class="text-muted">{{ product.product_reference }}</td>
+              {% if product.product_weight is not empty %}
+                <td class="text-right weight-value">{{ product.product_weight | raw }}<sub>Kg</sub></td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="row mt-4">
+        <div class="col-6">
+          <button id="cancelConfirm" data-value="0" data-fancybox-close
+                  class="btn btn-action btn-cancel w-100 fancybox-close-btn">
+            Nee, foutje!
+          </button>
+        </div>
+        <div class="col-6">
+          <button id="okConfirm" data-value="1" data-fancybox-close
+                  class="btn btn-action btn-print w-100 fancybox-close-btn">
+            OK, print
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<br>
-
-
-
-

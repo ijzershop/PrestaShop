@@ -680,10 +680,10 @@ class DynamicProduct extends Module
         $is_hot_mode = DynamicTools::isHotMode(_DP_FRONT_DEV_PORT_);
 
         if (!$is_hot_mode) {
-            $scripts = array_merge($scripts, [
-                $entries_helper->getEntry('../../vite/legacy-polyfills-legacy'),
-                $entries_helper->getEntry('front/cart-summary-legacy.ts'),
-            ]);
+//            $scripts = array_merge($scripts, [
+//                $entries_helper->getEntry('../../vite/legacy-polyfills-legacy'),
+//                $entries_helper->getEntry('front/cart-summary-legacy.ts'),
+//            ]);
         } else {
             $this->smarty->assign('script', DynamicTools::addScriptBase('front/cart-summary.ts'));
             $output .= $this->display(__FILE__, 'views/templates/hook/vite-script.tpl');

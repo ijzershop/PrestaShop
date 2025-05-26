@@ -160,6 +160,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="paymentModalLabel">Payment/Refund Details - {{ orderForViewing.customer.email }}</h5>
+        <input type="hidden" id="orderId" value="{{ orderForViewing.id }}">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

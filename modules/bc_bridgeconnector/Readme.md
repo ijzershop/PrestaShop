@@ -1,0 +1,1 @@
+# eMagicOne Store Manager Bridge Connector

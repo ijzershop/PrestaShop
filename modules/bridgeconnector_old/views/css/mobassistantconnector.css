@@ -1,0 +1,283 @@
+.mobassistantconnector_invisible {
+    display: none !important;
+}
+
+.mobassistantconnector_center {
+    text-align: center;
+}
+
+table#mobassistantconnector_users_table {
+    width: 100%;
+}
+
+table#mobassistantconnector_users_table tr th, table.mobassistantconnector_users_table_pushes tr th {
+    padding: 5px;
+    text-align: center;
+    background-color: #f0f0f0;
+    vertical-align: middle;
+}
+
+div.mobassistantconnector_pushes_delete, div.mobassistantconnector_users_delete {
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.mobassistantconnector_users_delete {
+    text-align: center;
+}
+
+.mobassistantconnector_status div, .mobassistantconnector_td_users_status div, .mobassistantconnector_users_icon_qr_code, .mobassistantconnector_users_td_actions:hover {
+    cursor: pointer;
+}
+
+td.mobassistantconnector_status {
+    height: 31px;
+}
+
+/*#mobassistantconnector_bulk_btn:hover, #mobassistantconnector_users_bulk_btn:hover, .mobassistantconnector_users_actions_select_all:hover, .mobassistantconnector_users_actions_unselect_all:hover, #mobassistantconnector_add_user:hover*//* {
+    background-color: #00aff0 !important;
+    color: #fff !important;
+    border-color: #008abd !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}*/
+
+#mobassistantconnector_users_bulk_list {
+    position: absolute;
+    border: 1px solid #999999;
+    display: none;
+    z-index: 100;
+    background-color: white;
+    padding: 5px;
+    margin-top: -8px;
+    box-shadow: 0 0 5px #888888;
+}
+
+#mobassistantconnector_users_bulk_list table tbody tr:not(.mobassistantconnector_delimiter):hover td {
+    cursor: pointer;
+    background-color: #00aff0;
+    color: white;
+}
+
+#mobassistantconnector_users_bulk_list table tbody tr.mobassistantconnector_delimiter td hr {
+    margin: 0;
+}
+
+#mobassistantconnector_users_bulk_list table tr td {
+    padding: 4px;
+}
+
+#mobassistantconnector_users_bulk_list table tr td img {
+    display: block;
+}
+
+#mobassistantconnector_users_bulk_btn_img {
+    margin-right: -5px;
+}
+
+.mobassistantconnector_inactive {
+    opacity: 0.3;
+}
+
+div.mobassistantconnector_loader {
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+div.mobassistantconnector_loader img {
+    margin: auto;
+}
+
+.mobassistantconnector_users_td_actions {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    height: 100%;
+}
+
+.mobassistantconnector_users_td_actions_text {
+    float: left;
+    width: 100%;
+    margin: auto !important;
+}
+
+.mobassistantconnector_users_div_edit_actions {
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: right;
+}
+
+.mobassistantconnector_no_data {
+    width: 100%;
+    text-align: center;
+}
+
+.mobassistantconnector_actions_text_loader {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    right: 20px;
+    display: none;
+}
+
+#mobassistantconnector_loader_actions {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.mobassistantconnector_users_save_td {
+    text-align: center;
+}
+
+.mobassistantconnector_tr_loader_user {
+    text-align: center;
+    display: none;
+}
+
+#mobassistantconnector_users_loader_container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.mobassistantconnector_td_users_qr_code {
+    text-align: center;
+    position: relative;
+}
+
+.mobassistantconnector_users_qr_code_container {
+    margin-top: 5px;
+    padding: 5px;
+    display: none;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.mobassistantconnector_users_qr_code_link_loader {
+    position: relative;
+}
+
+.mobassistantconnector_users_qr_code_loader_inner_div {
+    height: 100%;
+    text-align: center;
+    width: 100%;
+}
+
+.mobassistantconnector_users_login_password_table {
+    width: 100%;
+    text-align: center;
+}
+
+.mobassistantconnector_users_login_password_table tbody tr td {
+    border: none !important;
+}
+
+.mobassistantconnector_users_emploees_action_table {
+    width: 100%;
+    text-align: center;
+}
+
+.mobassistantconnector_users_emploees_action_table tbody tr td {
+    border: none !important;
+}
+
+.mobassistantconnector_tr_users_save_login_password {
+    display: none;
+    text-align: center;
+}
+
+#mobassistantconnector_users_container {
+    position: relative;
+}
+
+
+.mobassistantconnector_users_actions_text {
+    white-space: normal;
+    text-align: left;
+}
+
+table.mobassistantconnector_users_table_actions tbody tr td {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.mobassistantconnector_users_table_pushes {
+    width: 100%;
+}
+
+.mobassistantconnector_users_row_pushes, .mobassistantconnector_pushes_loader {
+    display: none;
+}
+
+#mobassistantconnector_add_user {
+    margin-right: 17px;
+}
+
+.mobassistantconnector_users_td_pushes {
+    padding: 0 20px 0 20px !important;
+}
+
+.mobassistantconnector_div_user_actions_text_view {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#mobassistantconnector_users_permissions_dialog, #mobassistantconnector_users_qr_code_dialog {
+    display: none;
+}
+
+.mobassistantconnector_user_permissions_group {
+    background-color: #f0f0f0;
+    margin: 10px 0 0 0;
+    padding: 5px;
+    font-weight: bold;
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+
+.mobassistantconnector_user_permission {
+    margin: 5px 0 0 10px;
+}
+
+.mobassistantconnector_user_permissions_toggle_all {
+    width: 100%;
+    text-align: center;
+    padding-top: 5px;
+}
+
+#mobassistantconnector_user_permissions_toggle_all {
+    text-align: center;
+}
+
+#mobassistantconnector_qr_code_loader_user {
+    display: none;
+}
+
+#mobassistantconnector_qr_code_scan_user {
+    width: 100%;
+    margin: 15px 0 25px;
+}
+
+#mobassistantconnector_qr_code_scan_user img {
+    margin: auto;
+}
+
+.mobassistantconnector_user_permission_label {
+    text-align: left;
+}
+
+#mobassistantconnector_user_actions_container {
+    padding: 0 10px 0 0;
+}
+
+#mobassistantconnector_users_permissions {
+    width: auto;
+}
+
+.ui-dialog {
+    z-index: 10000 !important;
+}

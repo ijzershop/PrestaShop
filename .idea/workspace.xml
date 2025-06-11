@@ -631,7 +631,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;22.11.0&quot;,
     &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;22.14.1&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop8.local/modules/msthemeconfig/views/PrestaShop/Admin/Sell/Order/Order/Blocks/View&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/ijzershop8.local/override/controllers/front&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -666,18 +666,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\override\controllers\front" />
+      <recent name="C:\wampserver\www\ijzershop8.local\mails\themes\modernesmid\core" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msthemeconfig\views\PrestaShop\Admin\Sell\Order\Order\Blocks\View" />
       <recent name="C:\wampserver\www\ijzershop8.local" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules" />
-      <recent name="C:\wampserver\www\ijzershop8.local\src\PrestaShopBundle\Resources\views\Admin\Common\Grid\Actions\Row" />
-      <recent name="C:\wampserver\www\ijzershop8.local\mails\nl" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\ijzershop8.local\modules\mollie" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\pricemodifier\src\Service" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\ps_eventbus" />
       <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\controllers\front" />
-      <recent name="C:\wampserver\www\ijzershop8.local\modules\msmollie\views\PrestaShop\Admin\Sell\Order\Order" />
     </key>
   </component>
   <component name="RunManager" selected="Batch.ijzershop_ngrok">
@@ -800,7 +800,7 @@
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="StructureViewState">
-    <option name="selectedTab" value="Smarty" />
+    <option name="selectedTab" value="Twig" />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -1841,7 +1841,23 @@
       <workItem from="1747894024798" duration="36000" />
       <workItem from="1747894081647" duration="9992000" />
       <workItem from="1747983151331" duration="11640000" />
-      <workItem from="1748241905281" duration="7840000" />
+      <workItem from="1748241905281" duration="8191000" />
+      <workItem from="1748343575815" duration="9187000" />
+      <workItem from="1748414997517" duration="220000" />
+      <workItem from="1748439037064" duration="2683000" />
+      <workItem from="1748459469574" duration="8000" />
+      <workItem from="1748588270130" duration="1730000" />
+      <workItem from="1748846568001" duration="258000" />
+      <workItem from="1748846848121" duration="88000" />
+      <workItem from="1748849745133" duration="9118000" />
+      <workItem from="1748930674074" duration="4108000" />
+      <workItem from="1748944058288" duration="5412000" />
+      <workItem from="1749020049332" duration="1287000" />
+      <workItem from="1749023109764" duration="1264000" />
+      <workItem from="1749024620247" duration="861000" />
+      <workItem from="1749025525725" duration="17427000" />
+      <workItem from="1749107679459" duration="13250000" />
+      <workItem from="1749624192042" duration="14513000" />
     </task>
     <servers />
   </component>

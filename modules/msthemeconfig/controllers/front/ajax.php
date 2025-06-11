@@ -482,8 +482,8 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             //is paid add product to cart
             $product = new Product();
             $product->ean13 = '';
-            $product->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label];
-            $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT') => uniqid()];
+            $product->name = [(int)Configuration::get('PS_LANG_DEFAULT', null, Shop::getContext(), Shop::getContextShopID()) => $label];
+            $product->link_rewrite = [(int)Configuration::get('PS_LANG_DEFAULT', null, Shop::getContext(), Shop::getContextShopID()) => uniqid()];
             $product->description_short = [1 => $description];
             $product->reference = $reference;
             $product->id_category_default = $category;
@@ -531,7 +531,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
                 // Create a cart rule for the discount
                 $cartRule = new CartRule();
-                $cartRule->name = [(int)Configuration::get('PS_LANG_DEFAULT') => 'Korting op product ' . $label];
+                $cartRule->name = [(int)Configuration::get('PS_LANG_DEFAULT', null, Shop::getContext(), Shop::getContextShopID()) => 'Korting op product ' . $label];
                 $cartRule->description = 'Berekende korting voor product op maat: ' . $label;
                 $cartRule->code = 'DISC-' . uniqid();
                 $cartRule->quantity = 1;
@@ -541,7 +541,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
                 $cartRule->date_to = date('Y-m-d H:i:s', strtotime('+1 day'));
                 $cartRule->reduction_amount = $totalDiscountAmount;
                 $cartRule->reduction_tax = $withTax ? 1 : 0; // Apply discount on tax included price
-                $cartRule->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+                $cartRule->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT', null, Shop::getContext(), Shop::getContextShopID());
                 $cartRule->active = 1;
                 $cartRule->add();
 
@@ -566,7 +566,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
 
             //is credit add voucher to cart
             $credit = new CartRule();
-            $credit->name = [(int)Configuration::get('PS_LANG_DEFAULT') => $label . ' (' . $uniqueVoucherIdentifier . ')'];
+            $credit->name = [(int)Configuration::get('PS_LANG_DEFAULT', null, Shop::getContext(), Shop::getContextShopID()) => $label . ' (' . $uniqueVoucherIdentifier . ')'];
             $credit->description = strip_tags($description) . ' - Created at ' . date('Y-m-d H:i:s');
             $credit->id_customer = $cart->id_customer > 0 ? $cart->id_customer : 0;
             $credit->date_from = date('Y-m-d H:i:s');
@@ -599,7 +599,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             $credit->reduction_percent = 0;
             $credit->reduction_amount = number_format($creditPrice, 6, '.', '');
             $credit->reduction_tax = $withTax ? 1 : 0; // Align with withTax variable
-            $credit->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+            $credit->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT', null, Shop::getContext(), Shop::getContextShopID());
             $credit->reduction_product = 0;
             $credit->reduction_exlude_special = 0;
             $credit->gift_product = 0;
@@ -656,7 +656,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
     function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
     {
         $tmpfile = tempnam(_PS_TMP_IMG_DIR_, 'ps_import');
-        $watermark_types = explode(',', Configuration::get('WATERMARK_TYPES'));
+        $watermark_types = explode(',', Configuration::get('WATERMARK_TYPES', null, Shop::getContext(), Shop::getContextShopID()));
 
         switch ($entity) {
             default:
@@ -876,7 +876,7 @@ class msthemeconfigAjaxModuleFrontController extends ModuleFrontController
             die(json_encode(['success' => false, 'msg' => 'U heeft nog geen bestelling geslecteerd']));
         }
 
-        $configStatus = unserialize(Configuration::get("MsThemeConfig"));
+        $configStatus = unserialize(Configuration::get("MsThemeConfig", null, Shop::getContext(), Shop::getContextShopID()));
         if (isset($configStatus['retour_accepted_statusses']) && !empty($configStatus['retour_accepted_statusses'])) {
             $states = explode(',', $configStatus['retour_accepted_statusses']);
 

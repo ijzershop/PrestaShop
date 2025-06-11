@@ -498,8 +498,19 @@ class Mail extends MailCore
             /**
              * Start adding template vars
              */
-            $templateVars['{custom_footer_html}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
-            $templateVars['{custom_footer_txt}'] = Tools::safeOutput(Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id));
+            // Fix the custom footer encoding issues
+            $templateVars['{custom_footer_html}'] = html_entity_decode(
+                Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                ENT_QUOTES | ENT_HTML5,
+                'UTF-8'
+            );
+
+            $templateVars['{custom_footer_txt}'] = html_entity_decode(
+                Configuration::get('MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT', Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
+                ENT_QUOTES | ENT_HTML5,
+                'UTF-8'
+            );
+
             $templateVars['{faq_page}'] = Tools::safeOutput(Context::getContext()->link->getCMSLink(
                 Configuration::get('MSTHEMECONFIG_CONTACTPAGE_FAQ',  Context::getContext()->language->id, Context::getContext()->shop->id_shop_group, Context::getContext()->shop->id),
                 null,
@@ -557,7 +568,13 @@ class Mail extends MailCore
             $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null));
             $templateBlocksData = $templateBlocks->{$template};
 
-            $templateVars['{footer_visibles}'] = json_encode((array)$templateBlocksData);
+            // Fix the JSON encoding for footer_visibles
+            $templateBlocks = json_decode(Configuration::get('MODERNESMIDMAILTHEME_EMAIL_TEMPLATE_BLOCKS', Context::getContext()->language->id, null, Context::getContext()->shop->id, null), true);
+            if (isset($templateBlocks[$template])) {
+                $templateVars['{footer_visibles}'] = json_encode((array)$templateBlocks[$template], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            } else {
+                $templateVars['{footer_visibles}'] = '{}';
+            }
 
             if(array_key_exists('{id_order}', $templateVars) && !is_null($templateVars['{id_order}'])){
                     $order = new Order($templateVars['{id_order}']);
@@ -571,26 +588,47 @@ class Mail extends MailCore
                         $newAddressBlock .= $address->phone_mobile .'<br/>';
                     }
 
-                $templateVars['{delivery_block_html}'] = $newAddressBlock;
+                $templateVars['{delivery_block_html}'] = html_entity_decode(
+                    $newAddressBlock,
+                    ENT_QUOTES | ENT_HTML5,
+                    'UTF-8'
+                );
 
             }
 
 
-            // Get extra template_vars
-            $extraTemplateVars = [];
-            Hook::exec(
+            $extraTemplateVars = Hook::exec(
                 'actionGetExtraMailTemplateVars',
                 [
                     'template' => $template,
                     'template_vars' => $templateVars,
                     'extra_template_vars' => &$extraTemplateVars,
-                    'id_lang' => (int) $idLang,
+                    'id_lang' => $idLang,
                 ],
                 null,
                 true
             );
 
-            $templateVars = array_merge($templateVars, $extraTemplateVars);
+
+            if (is_array($extraTemplateVars) && !empty($extraTemplateVars)) {
+                foreach ($extraTemplateVars as $key => $value) {
+                    // Validate the key is a string and not empty
+                    if (is_string($key) && !empty($key)) {
+                        // Handle HTML content safely
+                        if (is_string($value)) {
+                            // Clean up any problematic characters that might break array_merge
+                            $templateVars[$key] = $value;
+                        } elseif (is_array($value) || is_object($value)) {
+                            // Convert objects/arrays to JSON string for email templates
+                            $templateVars[$key] = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                        } else {
+                            // Handle other data types
+                            $templateVars[$key] = (string) $value;
+                        }
+                    }
+                }
+            }
+
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML

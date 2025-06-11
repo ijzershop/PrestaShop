@@ -97,7 +97,7 @@ class DmsTokenizedUrlsListener
          * every uri which contains 'token' should use the old validation system
          */
         if ($request->query->has('token')) {
-            if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token')) || $request->query->get('token') ===  Configuration::get('MsThemeConfig_TOKEN')) {
+            if (0 == strcasecmp(Tools::getAdminToken($this->employeeId), $request->query->get('token')) || $request->query->get('token') ===  Configuration::get('MsThemeConfig_TOKEN', null, Shop::getContext(), Shop::getContextShopID())) {
                 return;
             }
         }

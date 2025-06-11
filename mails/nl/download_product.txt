@@ -1,3 +1,5 @@
+{order_name}
+
 [{shop_url}]
 
 Te downloaden product(en)
@@ -6,9 +8,9 @@ U heeft {nbProducts} product(en) beschikbaar om te downloaden via deze link(s):
 
 {virtualProducts}
 
-Follow your order and download your invoice on our shop, go to the [> order history and details]({history_url}) section of your customer account.
+Bekijk uw bestelling en download uw factuur in onze webshop, ga naar [> bestel geschiedenis en details]({history_url}) in uw klant omgeving.
 
-If you have a guest account, you can follow your order via the [> guest tracking]({guest_tracking_url}) section on our shop.
+Indien u als gast heeft afgerekend, kan u uw bestelling volgen middels [> gast bestelling status opvragen]({guest_tracking_url}) in onze webshop.
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

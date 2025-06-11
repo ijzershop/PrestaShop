@@ -30,6 +30,7 @@ use MsThemeConfig\Grid\Column\ButtonColumn;
 use MsThemeConfig\Grid\Column\LabelButtonColumn;
 use Order;
 use PDFCore;
+use PrestaShop\PrestaShop\Adapter\MailTemplate\MailPreviewVariablesBuilder;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
@@ -3242,6 +3243,8 @@ class ModernHook
      */
     public function hookActionBuildMailLayoutVariables(array $hookParams)
     {
+
+
         if (!isset($hookParams['mailLayout'])) {
             return;
         }
@@ -3303,7 +3306,12 @@ class ModernHook
             $this->context->shop->id
         );
         $hookParams['mailLayoutVariables']['color'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', $this->idLang, $this->idShopGroup, $this->idShop));
-        return $hookParams;
+
+        if (in_array($mailLayout->getName(), ['shipped', 'ready_for_shipping', 'order_conf', 'credit_slip', 'download_product', 'new_order', 'order_canceled', 'pickup2'])) {
+            $hookParams['mailLayoutVariables']['order_name'] = true;
+        } else {
+            $hookParams['mailLayoutVariables']['order_name'] = false;
+        }
     }
 
     /**

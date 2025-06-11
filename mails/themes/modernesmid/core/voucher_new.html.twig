@@ -3,41 +3,96 @@
 {% block title %}{{ 'Voucher new'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
+  {#       Start White Block         #}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-right:30px;padding-left:30px;padding-bottom:10px;background-color:#ffffff">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="left" style="padding:0;Margin:0;width:560px">
+            <table cellspacing="0" width="100%" role="presentation" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
 
+
+             <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                    <tr>
+                      <td align="center" valign="top" style="padding:0;Margin:0;width:540px">
+                        <table cellspacing="0" width="100%" cellpadding="0" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                          <tr>
+                            <td align="center" class="es-text-7787" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left"><b>Beste Tako,</b></p><p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">Wij hebben voor u een waardebon voor onze webshop!</p></td>
+                          </tr>
+                          <tr>
+                            <td align="left" bgcolor="#4472c4" class="es-text-1814" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px"><h1 class="es-text-mobile-size-20" style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#ffffff;text-align:center"><b> Bekijk uw waardebon </b></h1></td>
+                          </tr>
+                          <tr>
+                            <td align="center" bgcolor="#4472c4" style="padding:0;Margin:0;padding-right:20px;padding-left:20px;padding-bottom:20px"><p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px"><b></b>U heeft een waardebon ontvangen ter waarde voor een eenmalige korting tot maximaal <b>{voucher_amount}</b>.<br></b>Uw persoonlijke kortingscode is: <b>{voucher_num}</b></p></td>
+                          </tr>
+                        </table></td>
+                    </tr>
+
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+  {#       End white Block         #}
 
 {#       Start Blue Block NO-HEADER         #}
 <tr>
-  <td align="left" bgcolor="#ffffff" style="Margin:0;padding-bottom:10px;padding-top:10px;padding-right:30px;padding-left:30px;background-color:#ffffff" data-custom-paddings="true">
+  <td align="left" bgcolor="#ffffff" style="Margin:0;padding-top:10px;padding-right:20px;padding-left:20px;background-color:#ffffff" data-custom-paddings="true">
     <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
       <tr>
         <td align="center" valign="top" style="padding:0;Margin:0;width:540px">
           <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-            <tr>
-              <td align="center" bgcolor="#4472c4" style="padding:0;Margin:0;padding-top:20px;padding-right:20px;padding-left:20px;padding-bottom:20px">
-                <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
 
-                  {{ 'Here is your new voucher code:'|trans({}, 'Emails.Body', locale)|raw }} <span class="label">{voucher_num}</span>
-                  <br>
-                  <br>
-                  {{ 'In order to use it, just copy/paste this code during check out.'|trans({}, 'Emails.Body', locale)|raw }}
-
-                </p>
-              </td>
+                </table></td>
             </tr>
+            <tr>
+              <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;background-color:#ffffff" data-custom-paddings="true">
+                <table width="100%" cellpadding="0" cellspacing="0" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                  <tr>
+                    <td align="left" style="padding:0;Margin:0;width:500px">
+                      <table width="100%" role="presentation" cellpadding="0" cellspacing="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                        <tr>
+                          <td align="left" class="es-text-2600" style="padding:0;Margin:0"><h2 style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:24px;font-style:normal;font-weight:bold;line-height:28.8px;color:#212121"><b class="es-text-mobile-size-16" style="font-size:16px"><b>Waar vul ik mijn kortingscode in</b>?</b></h2></td>
+                        </tr>
+                        <tr>
+                          <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">Wanneer u uw winkelwagen bekijkt dan vindt u een veld “kortingscode” wat u gebruikt om de kortingscode toe te passen.</p></td>
+                        </tr>
+                      </table></td>
+                  </tr>
+                </table></td>
+            </tr>
+            <tr>
+              <td bgcolor="#ffffff" align="left" style="padding:0;Margin:0;padding-top:20px;background-color:#ffffff" data-custom-paddings="true">
+                <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                  <tr>
+                    <td align="left" style="padding:0;Margin:0;width:500px">
+                      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                        <tr>
+                          <td align="left" class="es-text-8646" style="padding:0;Margin:0"><h2 style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:24px;font-style:normal;font-weight:bold;line-height:28.8px;color:#212121"><b class="es-text-mobile-size-16" style="font-size:16px"><b>Hoe vaak mag ik de kortingscode gebruiken</b>?</b></h2></td>
+                        </tr>
+                        <tr>
+                          <td align="left" style="padding:0;Margin:0"><p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">Uw kortingscode werkt één keer. Ook als het bedrag van de winkelwagen minder is dan de waardebon. De resterende waarde van de waardebon komt dan te vervallen.</p></td>
+                        </tr>
+                      </table></td>
+                  </tr>
+                </table></td>
+            </tr>
+
           </table></td>
       </tr>
     </table></td>
 </tr>
 {#       Start Blue Block         #}
 
+
+
 {% endblock %}
 
 {% block footer_blocks %}
-  <tr>
-    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;background-color:#ffffff">
+
       {{ footer_blocks|raw }}
-    </td>
-  </tr>
+
 {% endblock %}
 {% block styles %}
 {{ parent() }}

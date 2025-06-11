@@ -16,9 +16,11 @@ Klantbericht:
 
 {message}
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

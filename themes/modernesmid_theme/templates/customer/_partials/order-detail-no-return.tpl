@@ -24,6 +24,59 @@
  *}
 {block name='order_products_table'}
   <div class="box row pt-2">
+    {* Modern card format with clickable tracking buttons *}
+    {if isset($trackingData) && $trackingData|count > 0}
+      <div class="tracking-information w-100 mt-4">
+        <h4 class="tracking-title col-12">
+          {l s='Traceer uw pakket bij onze expediteur' d='Shop.Theme.Customeraccount'}
+        </h4>
+
+        <div class="row">
+          {foreach from=$trackingData item=tracking name=trackingLoop key=number}
+            <div class="col-md-6 mb-4">
+              <div class="card tracking-card h-100">
+                <div class="card-body d-flex flex-column">
+                  <div class="tracking-header mb-3">
+                    <h5 class="card-title">
+                      <span class="material-icons text-primary">Pakket {$number+1}</span>
+                    </h5>
+                  </div>
+
+                  <div class="tracking-details flex-grow-1">
+                    <div class="tracking-number-section mb-3">
+                      <label class="tracking-label">{l s='Zendingnummer:' d='Shop.Theme.Customeraccount'}</label>
+                      <div class="tracking-number">
+                        <h6 class="tracking-code">{$tracking.tracking_number}</h6>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="tracking-actions mt-auto">
+                    {if $tracking.tracking_url}
+                      <a href="{$tracking.tracking_url}"
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         class="btn btn-success btn-block tracking-btn">
+                        {l s='Bekijk uw zending' d='Shop.Theme.Customeraccount'}
+                      </a>
+                    {else}
+                      <button class="btn btn-secondary btn-block" disabled>
+                        <i class="material-icons">block</i>
+                        {l s='Zendingnummer niet beschikbaar' d='Shop.Theme.Customeraccount'}
+                      </button>
+                    {/if}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {/foreach}
+        </div>
+      </div>
+    {/if}
+  </div>
+
+
+    <div class="box row pt-2">
   <div class="table-responsive w-100">
     <table id="order-products" class="table table-striped">
       <thead class="thead-default">
@@ -136,13 +189,15 @@
               <td colspan="2" class="border-0">{$order.totals.total.label}</td>
                     <td class="text-right h4 text-dark">
                         {if $orderObject->total_discounts_tax_excl > 0 && Context::getContext()->is_counter_customer}
-                            {Context::getContext()->currentLocale->formatPrice(0-$orderObject->total_refunded_tax_incl, 'EUR')}</td>
+                            {Context::getContext()->currentLocale->formatPrice(0-$orderObject->total_refunded_tax_incl, 'EUR')}
                             {else}
-                            {Context::getContext()->currentLocale->formatPrice($order.totals.total.amount, 'EUR')}</td>
+                            {Context::getContext()->currentLocale->formatPrice($order.totals.total.amount, 'EUR')}
                         {/if}
+              </td>
             </tr>
       </tfoot>
     </table>
     </div>
   </div>
+
 {/block}

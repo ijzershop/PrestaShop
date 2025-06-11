@@ -1,22 +1,56 @@
+{order_name}
+
 [{shop_url}]
 
-Uw order met factuurnummer {order_name} is klaar gemaakt door {shop_name}. U kunt uw order ophalen op het volgende adres:
+Beste Tako,
 
-Ijzershop
+Wij hebben uw bestelling voor uw klaargezet om af te halen!
+
+Haal uw bestelling op
+
+Uw bestelling ligt klaar op
+
+Ceresweg 1 te Leeuwarden
+
+U kan direct uw bestelling afhalen in Leeuwarden. Op vertoon van deze e-mail zal de bestelling aan u worden meegegeven.
+
+- Referentie {order_name}
+- Besteld door {firstname} {lastname}
+
+Waar haal ik de bestelling op?
+
+U haalt uw bestelling op bij het magazijn van de IJzershop. U parkeert bij ons direct voor de deur.
+
+U vindt het magazijn van de IJzershop op het volgende adres.
+
+De Moderne Smid BV
+
 Ceresweg 1
-8938 BG Leeuwarden
 
-Onze openingstijden zijn:
-Maandag t/m vrijdag van 8.00 tot 17.00 uur
-Wij hebben pauze om 9:00-9:30 en 12:30-13:00 uur
+8938BG Leeuwarden
 
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://content/51-FAQ)
+Wanneer haal ik de bestelling op?
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+U kan uw pakket ophalen tijdens onze openingstijden.
+
+Maandag t/m vrijdag van 8 uur tot 5 uur
+
+Tijdens onze pauzes is afhalen niet mogelijk.
+
+Koffiepauze tussen 9 uur en half 10
+Lunchpauze tussen half 1 en 1 uur
+
+Heeft u hulp nodig?
+
+Lukt iets niet of heeft u een vraag over uw bestelling? Veel vragen zijn al beantwoord op onze pagina “veel gestelde vragen”.
+
+[> Bezoek de pagina veelgestelde vragen](https://content/51-FAQ)
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.

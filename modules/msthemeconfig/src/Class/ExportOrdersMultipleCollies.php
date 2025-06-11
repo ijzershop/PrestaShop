@@ -118,11 +118,10 @@ class ExportOrdersMultipleCollies
 //        $this->apiAddressEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_ADDRESS_ENDPOINT');
 //        $this->apiShippingListEndpoint = $this->getConfig('KOOPMANORDEREXPORT_API_SHIPPING_LIST_ENDPOINT');
 //
-//        $this->apiUserName = $this->getConfig('KOOPMANORDEREXPORT_API_USERNAME');
-//        $this->apiPass = $this->getConfig('KOOPMANORDEREXPORT_API_PASSWORD');
-//        $this->apiDepot = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
-//        $this->apiVerlader = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
-
+        $this->apiUserName = $this->getConfig('KOOPMANORDEREXPORT_API_USERNAME');
+        $this->apiPass = $this->getConfig('KOOPMANORDEREXPORT_API_PASSWORD');
+        $this->apiDepot = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_DEPOT');
+        $this->apiVerlader = $this->getConfig('KOOPMANORDEREXPORT_KOOPMAN_VERLADER');
 
         $this->apiBaseUrl = 'https://staging.trans-mission.nl/api';
         $this->apiAuthEndpoint = '/login/';
@@ -131,7 +130,6 @@ class ExportOrdersMultipleCollies
         $this->apiShippingListEndpoint = '/shipments';
         $this->apiShippingStatusListEndpoint = '/shipments/statuses';
         $this->apiDefaultStatusListEndpoint = '/definitions/type_status';
-
 
         $this->apiUserName = 'test@ijzershop.nl';
         $this->apiPass = 'Test#130268';
@@ -148,7 +146,6 @@ class ExportOrdersMultipleCollies
         $this->afzenderLand = 'NL';
         $this->prepareLabelsFolder();
 
-
         // Initialize JWT token
         $this->apiToken = '';
         $this->tokenExpiry = 0;
@@ -157,9 +154,9 @@ class ExportOrdersMultipleCollies
 
     }
 
+
     /**
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
+     * @return false|string|void
      */
     public function getShipmentStatus()
     {
@@ -175,13 +172,10 @@ class ExportOrdersMultipleCollies
                 $records = explode(',', $result[0]['tracking_number']);
                 $transportResult = [];
 
-//                $records[]  = 'T98130268127837';
-
                 foreach($records as $transportNumber){
                     if(!empty($transportNumber)) {
                         $date = date('Y-n-j');
                         $transportData = $this->makeApiRequest($this->apiShippingStatusListEndpoint . '/' . $transportNumber . '/' . $date, [], 'GET');
-
                         $transportResult[$transportNumber] = $transportData;
                     }
                 }
@@ -192,16 +186,16 @@ class ExportOrdersMultipleCollies
         } catch (Exception $e){
             die(sprintf('Error met %s en melding: error - %s<br/>', $e->getCode(), $e->getMessage()));
         }
-
     }
 
-
     /**
+     *
      * Handle API error response
      *
      * @param string $errorCode The error code from the API
      * @param array $errorDetails Additional error details
      * @return string Human-readable error message
+     *
      */
     private function handleApiError(string $errorCode, array $errorDetails = []): string
     {

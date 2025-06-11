@@ -24,30 +24,20 @@
  *}
 {foreach $list as $product}
   <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
-         style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+         style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;margin-top:5px;">
     <tr>
-      <td align="right" bgcolor="#4472c4" class="es-text-9909" style="text-align:right;padding:5px;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-           {$product['quantity']}X
+      <td align="right" bgcolor="#4472c4" class="es-text-9909" style="width:35px;vertical-align:middle;text-align:right;padding:5px;Margin:0;padding-top:5px;padding-bottom:5px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+           {$product['quantity']}x
       </td>
-      <td align="left" bgcolor="#4472c4" class="es-text-9909" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-        {AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}
+      <td align="left" bgcolor="#4472c4" class="es-text-9909" style="padding:0;Margin:0;padding-top:5px;padding-bottom:5px;padding-left:5px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+        <strong><b>{ucwords(AttributeGroup::stripSawCutModuleAttributeGroupName($product['name']))}</b></strong>
+        {if $product['customization']}
+            <br/>
+            {foreach $product['customization'] as $customization}
+              {$customization['customization_text'] nofilter}
+            {/foreach}
+        {/if}
       </td>
-    </tr>
-    {if $product['customization']}
-    <tr>
-      <td align="left" bgcolor="#4472c4" class="es-text-9909"
-          style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
-      </td>
-      <td <td align="left" bgcolor="#4472c4" class="es-text-9909"
-              style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px">
-        {foreach $product['customization'] as $customization}
-          {$customization['customization_text'] nofilter}
-        {/foreach}
-      </td>
-    </tr>
-    {/if}
-    <tr>
-      <td style="border-bottom: 1px solid rgba(255,255,255,0.50)" colspan="2"></td>
     </tr>
   </table>
 {/foreach}

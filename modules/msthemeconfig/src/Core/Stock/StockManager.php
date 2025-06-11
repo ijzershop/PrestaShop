@@ -225,7 +225,7 @@ class StockManager
      */
     protected function checkIfMustSendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
-        if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
+        if (!Configuration::get('PS_STOCK_MANAGEMENT', null, Shop::getContext(), Shop::getContextShopID())) {
             return false;
         }
 

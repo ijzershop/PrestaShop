@@ -1,18 +1,75 @@
+{order_name}
+
 [{shop_url}]
 
-Een creditnota is aangemaakt op uw naam voor uw bestelling met referentie {order_name}.
+Beste Tako,
 
-Review this credit slip and download your invoice on our shop, go to the [> credit slips]({history_url}) section of your customer account.
+Wij hebben een credit nota aangemaakt vanwege de annulering, retour of foutieve levering van een of meer producten.
 
-Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
+Controleer de credit nota van uw retour
 
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://content/51-FAQ)
+In uw credit nota staat vermeld welke producten u dient te retourneren. Ook staat het bedrag vermeld dat wij terugbetalen via de methode waarmee u heeft betaald. Als de inhoud van de creditnota klopt dan hoeft u niets te doen.
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+Hoe retourneer ik producten?
+
+U kunt retourneren met onze retourservice of door uw product zelf te verzenden. Bij het aanmelden van uw retour is deze keuze aan u voorgelegd. Als u heeft gekozen voor de retourservice dan komt een ophaaldienst binnenkort langs volgens de gemaakte afspraken.
+
+Als u zelf retourneert dient u het product te versturen naar:
+
+De Moderne Smid BV
+
+t.a.v. retouren
+
+Ceresweg 1
+
+8938BG Leeuwarden
+
+https://g.co/kgs/5HMcAAY
+
+Als u hebt gekozen voor onze retourservice dan brengen wij 10 euro aan kosten in rekening; dit is verwerkt in uw credit nota. Als u kiest voor eigen transport dan zijn deze kosten voor uw eigen rekening.
+
+Als een fout van ons de reden van de retour is, dan wordt er automatisch gekozen voor de retourservice en worden er voor de retourservice geen kosten gerekend. Dit geldt ook wanneer u uw gehele order retourneert.
+
+Wat gebeurt hierna?
+
+Alle producten van uw bestelling worden bij ons in de fabriek bekeken. Na goedkeuring ontvangt u een e-mail met een credit nota die laat zien welk bedrag wij terugstorten op uw rekening.
+
+[> Bezoek uw klantenaccount voor uw creditnota]({history_url})
+
+Wanneer krijg ik mijn betaling terug?
+
+Als u al betaald heeft dan ontvangt u het betaalde bedrag terug via de betaalmethode waarmee u heeft betaald. Het geld zal binnen 5 werkdagen op uw rekening staan.
+
+Welk bedrag krijg ik terug?
+
+U krijgt het bedrag van de geannuleerde producten terug. Bij het annuleren van alle producten van uw order, krijgt u ook de verzendkosten terug. Het bedrag wat u ontvangt staat ook in de uw creditnota genoemd.
+
+Zijn de verkeerde producten geannuleerd?
+
+Neem contact met ons op. Dit kan op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:help@ijzershop.nl?subject=YS-)
+
+[> Bel ons op 09002502500](tel:09002502500)
+
+Kan ik mijn bestelling wijzigen?
+
+U mag nog producten toevoegen aan uw bestelling zolang de bestelling niet is klaargemaakt voor verzending. Plaats hiervoor een nieuwe bestelling en kies voor “toevoegen” als verzendoptie tijdens afrekenen. Op dit moment wordt voor u gecontroleerd of uw bestelling is klaargemaakt en of een toevoeging nog mogelijk is. De nieuwe bestelling wordt samengevoegd met deze bestelling; u betaalt geen extra verzendkosten.
+
+[> Bestel meer op IJzershop](https://www.ijzershop.nl)
+
+Heeft u hulp nodig?
+
+Lukt iets niet of heeft u een vraag over uw bestelling? Veel vragen zijn al beantwoord op onze pagina “veel gestelde vragen”.
+
+[> Bezoek de pagina veelgestelde vragen](https://content/51-FAQ)
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.

@@ -1,29 +1,31 @@
 [{shop_url}]
 
-Goedendag, bedankt voor uw interesse in onze dienst.
-Uiteraard hebben wij voor uw een offerte speciaal voor u gemaakt.
+Beste {firstname} {lastname},
+Wij hebben voor u een aanbieding op maat!
 
-Bekijk de door u aangevraagde offerte via de onderstaande knop:
+Bekijk uw offerte en bestel direct
 
-[Open uw offerte!]({url})
+Klik op onderstaande knop om de offerte te bekijken. Uw aanbod is geldig tot en met 24 oktober 2024. U kunt tot dan uw aanbod bestellen.
 
-Werkt de knop niet? Kopiëer en plak dan de onderstaande link in uw browser:
+[Klik hier om uw offerte te bekijken]({url})
 
-{url}
+Lukt het niet om via de knop uw offerte te bekijken?
 
-- offerte pagina word geopend op de website van de {shop_name}
-- word de offerte niet automatisch ontgrendeld, vul dan hier uw email: {customer_email} en de code: {offer_access_code} in
-- als beide correct zijn ingevuld klikt u op "Toon mijn offerte"
-- vul het gewenste aantal in
-- plaats in uw winkelwagen
-- voeg eventueel extra producten toe
-- bestel & betaal
+Plak onderstaande link in uw browser. Deze link verwijst naar de betaalomgeving van uw bestelling.
 
-Let op! Deze aanbieding verloopt op {date_exp_exact}, daarna wordt de aanbieding verwijderd uit ons systeem.
+Link: {url}
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+Log in met uw e-mail & uw code : {offer_acces_code}
+
+Wat gebeurt hierna?
+
+Als u tevreden bent met de offerte kan u de offerte toevoegen aan de winkelwagen in de IJzershop. Daarna betaald u de bestelling; wordt de order door onze medewerkers verwerkt.
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.

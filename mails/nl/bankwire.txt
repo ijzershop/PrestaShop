@@ -1,30 +1,60 @@
 [{shop_url}]
 
-You have decided to pay order: {order_name} by bank wire.
+Beste {firstname} {lastname},
 
-Bedrag:  {total_paid}
+Wij wachten nog op betaling van uw bestelling. Heeft u hulp nodig?
 
-Rekeninggegevens: {bankwire_details}
+Controleer of uw bestelling klopt
 
-Ten name van:  {bankwire_owner}
+U heeft de volgende artikelen besteld bij de {shop_name}.
 
-Description: {order_name}
+{products_txt} {discounts_txt}
 
-Iets vergeten te bestellen?Plaats een nieuwe bestelling en kies voor "Toevoegen" tijdens het afrekenen. Dan worden er niet opnieuw verzendkosten berekend. Zodra uw open staande bestelling is ingepakt kunt u niet meer toevoegen.
+De artikelen worden geleverd op het volgende adres.
 
-Wat is de status van uw bestelling?
+{delivery_block_html}
 
-Volg de status en details in uw eigen [> klantaccount](https://ngrok.ijzershop-test.nl/mijn-account)
+U heeft gekozen voor betaling via
 
-Geen account? Volg dan uw bestelling via [> bestelling volgen](https://ngrok.ijzershop-test.nl/bestelling-volgen-als-gast)
+{payment}
 
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://content/51-FAQ)
+U heeft gekozen voor het volgende transport
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+{carrier}
+
+De volledige details van uw bestelling staat in de orderbevestiging bijlage van deze mail. Deze pdf is ook de factuur van deze bestelling.
+
+Waar vind ik mijn factuur?
+
+Uw factuur zit in de bijlage van deze mail. U vindt de factuur ook in uw klantenaccount.
+
+[> Bekijk uw factuur in uw klantenaccount]({shop_url}/aanmelden)
+
+Kan ik mijn bestelling wijzigen?
+
+U mag nog producten toevoegen aan uw bestelling zolang de bestelling niet is klaargemaakt voor verzending. Plaats hiervoor een nieuwe bestelling en kies voor “toevoegen” als verzendoptie tijdens afrekenen. Op dit moment wordt voor u gecontroleerd of uw bestelling is klaargemaakt en of een toevoeging nog mogelijk is. De nieuwe bestelling wordt samengevoegd met deze bestelling; u betaalt geen extra verzendkosten.
+
+[> Bestel meer op IJzershop](https://www.ijzershop.nl)
+
+Wanneer krijg ik mijn bestelling?
+
+Na verwerking van de betaling wordt de bestelling verpakt en klaargezet voor verzending. De bestellingen worden dagelijks om 2 uur bij ons opgehaald en de bezorger levert doorgaans de volgende dag bij u thuis. De dag van levering kunt u zien via onderstaande Track & Trace link. U ontvangt op de dag van levering tussen 8 en 10 uur een Track & Trace van de bezorger met een tijdvak van levering.
+
+[> Bezoek uw klantenaccount voor de bestelstatus](https://ngrok.ijzershop-test.nl/mijn-account)
+
+[> Volg uw bestelling via](https://ngrok.ijzershop-test.nl/bestelling-volgen-als-gast) Track & Trace
+
+Heeft u hulp nodig?
+
+Lukt iets niet of heeft u een vraag over uw bestelling? Veel vragen zijn al beantwoord op onze pagina “veel gestelde vragen”.
+
+[> Bezoek de pagina veelgestelde vragen](https://content/51-FAQ)
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

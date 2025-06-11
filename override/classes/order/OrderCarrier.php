@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-class OrderCarrierCore extends ObjectModel
+class OrderCarrier extends OrderCarrierCore
 {
 
     /** @var string */

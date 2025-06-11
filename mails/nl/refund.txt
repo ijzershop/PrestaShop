@@ -1,10 +1,27 @@
 [{shop_url}]
 
-Wij hebben uw terugbetaling verwerkt voor bestelling met referentie {order_name} bij {shop_name}.
+Beste Tako,
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+Wij hebben de terugbetaling voltooid!
+
+Controleer uw terugbetaling
+
+Uw terugbetaling voor order {order_name} is door ons verwerkt. U ontvangt de betaling via de methode waarmee u uw bestelling heeft betaald. Heeft u via iDeal betaald? Dan ontvangt het op de bankrekening waarmee u heeft betaald. U ziet u terugbetaling doorgaans op uw rekening op de dag dat u dit bericht ontvangt.
+
+Is uw betaling niet binnen 2 werkdagen binnen?
+
+Neem contact met ons op. Dit kan op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:help@ijzershop.nl?subject=YS-)
+
+[> Bel ons op 09002502500](tel:09002502500)
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Het familiebedrijf De Moderne Smid BV levert als IJzershop staal, rvs & aluminium door geheel Nederland en bestaat al sinds 1954!
 

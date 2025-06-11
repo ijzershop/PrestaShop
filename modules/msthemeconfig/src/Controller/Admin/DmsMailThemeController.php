@@ -131,6 +131,7 @@ class DmsMailThemeController extends FrameworkBundleAdminController
 
         $mailLayout = $this->getMailLayout($theme, $layout, $module);
         $mailVariables = $variablesBuilder->buildTemplateVariables($mailLayout);
+
         $mailVariables['{footer_blocks}'] = static::filterFooterBlocks($mailLayout);
 
 

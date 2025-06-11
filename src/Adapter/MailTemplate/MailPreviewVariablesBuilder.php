@@ -208,7 +208,53 @@ final class MailPreviewVariablesBuilder
                 '{items}' => $this->getReturnSlipItems($order),
             ];
         } else {
-            return [];
+            if(!in_array($mailLayout->getName(), ['shipped','ready_for_shipping','credit_slip'])){
+                return [];
+            } else {
+                $trackingUrl = '';
+                $shipping = $order->getShipping();
+                // Process tracking data with better string cleaning
+                $trackingData = [];
+                foreach ($shipping as $shipment) {
+                    if(empty($shipment['tracking_number']) || empty($shipment['tracking_url'])) {
+                        continue;
+                    }
+                    // Clean and split the tracking numbers and URLs
+                    $trackingNumbersString = ltrim($shipment['tracking_number'], '^, '); // Remove leading ^, and spaces
+                    $trackingUrlsString = ltrim($shipment['tracking_url'], '^, '); // Remove leading ^, and spaces
+
+                    $trackingNumbers = array_filter(array_map('trim', explode(',', $trackingNumbersString)));
+                    $trackingUrls = array_filter(array_map('trim', explode(',', $trackingUrlsString)));
+
+                    // Combine tracking numbers with their corresponding URLs
+                    for ($i = 0; $i < count($trackingNumbers); $i++) {
+                        $trackingUrl = $trackingUrls[$i] ?? '';
+
+                    }
+                }
+
+                $productTemplateList = $this->getProductList($order);
+                $productListTxt = $this->mailPartialTemplateRenderer->render('order_conf_product_list.txt', $this->context->language, $productTemplateList);
+                $productListHtml = $this->mailPartialTemplateRenderer->render('order_conf_product_list.tpl', $this->context->language, $productTemplateList);
+
+                $cartRulesList[] = [
+                    'voucher_name' => 'Promo code',
+                    'voucher_reduction' => '-' . $this->locale->formatPrice(5, $this->context->currency->iso_code),
+                ];
+                $cartRulesListTxt = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.txt', $this->context->language, $cartRulesList);
+                $cartRulesListHtml = $this->mailPartialTemplateRenderer->render('order_conf_cart_rules.tpl', $this->context->language, $cartRulesList);
+
+                $productVariables = [
+                    '{tracking_url}' => $trackingUrl,
+                    '{products}' => $productListHtml,
+                    '{products_txt}' => $productListTxt,
+                    '{discounts}' => $cartRulesListHtml,
+                    '{discounts_txt}' => $cartRulesListTxt,
+                ];
+
+
+
+            }
         }
 
         $carrier = new Carrier($order->id_carrier);

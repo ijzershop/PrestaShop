@@ -1,14 +1,44 @@
+{order_name}
+
 [{shop_url}]
 
-Uw bestelling met referentie {order_name} is verzonden.
+Beste Tako,
 
-Heeft u een vraag?
-Veel vragen zijn vaak al beantwoord op onze pagina "veel gestelde vragen". Anders kunt u ons elke werkdag tussen 8.00 en 17.00 uur bereiken via onderstaande kanalen.
-[> veel gestelde vragen](https://content/51-FAQ)
+Uw bestelling is verzonden!
 
-- [whatsapp: 0636 5858 00](https://api.whatsapp.com/send?phone=31636585800)
-- [telefoon: 058-2123138](tel://0900-2502500)
-- [email: info@v15.nl](mailto:info@v15.nl)
+Volg uw bestelling via Track & Trace
+
+Uw pakket is klaargemaakt in onze fabriek en wordt snel opgehaald door de bezorger. Klik op onderstaande knop om te zien waar uw bestelling nu is.
+
+[Volg uw pakket]({tracking_url})
+
+Wanneer krijg ik mijn bestelling?
+
+De bestellingen worden dagelijks om 2 uur bij ons opgehaald en de bezorger levert doorgaans de volgende dag bij u thuis. De dag van levering kunt u zien via de Track & Trace link.
+
+[> Bezoek uw klantenaccount voor de bestelstatus]({my_account_url})
+
+[> Volg uw bestelling via]({tracking_url}) Track & Trace
+
+Hoe laat krijg ik mijn bestelling?
+
+Dit weten we pas op de ochtend dat het pakket wordt geleverd. Dit is dan te zien in de track en trace. U ontvangt op de dag van levering tussen 8 en 10 uur een Track & Trace van de bezorger met een tijdvak van levering.
+
+[> Bezoek uw klantenaccount voor de bestelstatus]({my_account_url})
+
+[> Volg uw bestelling via Track & Trace]({tracking_url})
+
+Heeft u hulp nodig?
+
+Lukt iets niet of heeft u een vraag over uw bestelling? Veel vragen zijn al beantwoord op onze pagina “veel gestelde vragen”.
+
+[> Bezoek de pagina veelgestelde vragen](https://content/51-FAQ)
+
+Wij zijn ook direct bereikbaar voor vragen op maandag tot en met vrijdag van 08:00 tot 17:00. Via onderstaande kanalen zijn wij bereikbaar.
+
+> [Whatsapp ons op 0636585800](https://api.whatsapp.com/send?phone=31636585800)
+[> Mail ons op help@ijzershop.nl](mailto:info@v15.nl)
+[> Bel ons op 09002502500](tel://09002502500)
 
 Hoeveel sterren krijgen wij van u?,
 Bekijk de reacties van andere klanten en beoordeel ons bedrijf.

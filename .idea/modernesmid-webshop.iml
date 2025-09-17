@@ -12,7 +12,9 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
       <excludeFolder url="file://$MODULE_DIR$/bin/win" />
       <excludeFolder url="file://$MODULE_DIR$/config/themes/classic" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid" />
       <excludeFolder url="file://$MODULE_DIR$/mails/nl" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/New folder" />
       <excludeFolder url="file://$MODULE_DIR$/modules/blockreassurance" />
       <excludeFolder url="file://$MODULE_DIR$/modules/blockwishlist" />
       <excludeFolder url="file://$MODULE_DIR$/modules/contactform" />
@@ -62,6 +64,7 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_viewedproduct" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_wirepayment" />
       <excludeFolder url="file://$MODULE_DIR$/modules/psgdpr" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/sawandcutmodule" />
       <excludeFolder url="file://$MODULE_DIR$/modules/statsbestcategories" />
       <excludeFolder url="file://$MODULE_DIR$/modules/statsbestcustomers" />
       <excludeFolder url="file://$MODULE_DIR$/modules/statsbestmanufacturers" />
@@ -80,8 +83,11 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/statssales" />
       <excludeFolder url="file://$MODULE_DIR$/modules/statssearch" />
       <excludeFolder url="file://$MODULE_DIR$/modules/statsstock" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/New folder" />
       <excludeFolder url="file://$MODULE_DIR$/themes/classic" />
       <excludeFolder url="file://$MODULE_DIR$/themes/hummingbird" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid_theme" />
       <excludeFolder url="file://$MODULE_DIR$/translations/en-US" />
       <excludeFolder url="file://$MODULE_DIR$/translations/nl-NL" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/api-platform" />

@@ -1,3 +1,6 @@
 [submodule "modules/sawandcutmodule"]
 	path = modules/sawandcutmodule
 	url = git@github.com:ijzershop/sawandcutmodule.git
+[submodule "themes/modernesmid"]
+	path = themes/modernesmid
+	url = git@github.com:ijzershop/modernesmid-theme.git

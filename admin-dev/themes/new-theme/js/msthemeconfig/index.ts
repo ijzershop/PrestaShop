@@ -1,4 +1,6 @@
-{**
+import initPrestashopComponents from "@app/utils/init-components";
+
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,32 +23,18 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
-{if isset($js_def) && is_array($js_def) && $js_def|@count}
-<script type="text/javascript">
-{foreach from=$js_def key=k item=def}
-var {$k} = {$def|json_encode nofilter};
-{/foreach}
-</script>
-{/if}
+ */
 
-{* Safety alias in case only one of jQuery/$ is exposed by a module/page *}
-<script type="text/javascript">
-  (function(w){
-    if (w.$ && !w.jQuery) { w.jQuery = w.$; }
-    if (w.jQuery && !w.$) { w.$ = w.jQuery; }
-  })(window);
-</script>
+const {$} = window;
+$(() => {
+  initPrestashopComponents();
 
-{if isset($js_files) && $js_files|@count}
-{foreach from=$js_files key=k item=js_uri}
-<script type="text/javascript" src="{$js_uri}"></script>
-{/foreach}
-{/if}
-{if isset($js_inline) && $js_inline|@count}
-<script type="text/javascript">
-{foreach from=$js_inline key=k item=inline}
-{$inline}
-{/foreach}
-</script>
-{/if}
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+      'TinyMCEEditor',
+    ],
+  );
+  const translatorInput = window.prestashop.instance.translatableInput;
+});

@@ -1,0 +1,27 @@
+{
+  "name": "modernesmid-webshop",
+  "version": "1.0.0",
+  "description": "About PrestaShop\r --------",
+  "homepage": "https://github.com/ijzershop/PrestaShop#readme",
+  "bugs": {
+    "url": "https://github.com/ijzershop/PrestaShop/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ijzershop/PrestaShop.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "sass": "^1.93.2"
+  }
+}

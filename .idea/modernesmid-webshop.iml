@@ -10,6 +10,8 @@
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/translationtest/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/xlftranslatedmodule/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/admin-dev/themes/new-theme/public/helper-card" />
+      <excludeFolder url="file://$MODULE_DIR$/admin-dev/themes/new-theme/public/pages" />
       <excludeFolder url="file://$MODULE_DIR$/bin/win" />
       <excludeFolder url="file://$MODULE_DIR$/config/themes/classic" />
       <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid" />
@@ -25,6 +27,8 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/graphnvd3" />
       <excludeFolder url="file://$MODULE_DIR$/modules/gridhtml" />
       <excludeFolder url="file://$MODULE_DIR$/modules/gsitemap" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/modernesmid_configurator" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig" />
       <excludeFolder url="file://$MODULE_DIR$/modules/pagesnotfound" />
       <excludeFolder url="file://$MODULE_DIR$/modules/productcomments" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_apiresources" />
@@ -90,6 +94,7 @@
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid_theme" />
       <excludeFolder url="file://$MODULE_DIR$/translations/en-US" />
       <excludeFolder url="file://$MODULE_DIR$/translations/nl-NL" />
+      <excludeFolder url="file://$MODULE_DIR$/var/cache/dev" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/api-platform" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/beberlei" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/behat" />
@@ -156,6 +161,14 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/vincentlanglet" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/willdurand" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/modernesmiddynamicproduct" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msinjector" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie" />
+      <excludeFolder url="file://$MODULE_DIR$/override/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/override/controllers" />
+      <excludeFolder url="file://$MODULE_DIR$/override/modules" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/hummingbird" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

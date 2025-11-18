@@ -173,7 +173,7 @@
     "symfony/string": "~6.4.0",
     "symfony/templating": "~6.4.0",
     "symfony/translation": "~6.4.0",
-    "symfony/twig-bundle": "~6.4.0",
+    "symfony/twig-bundle": "^6.4",
     "symfony/ux-icons": "^2.17",
     "symfony/ux-twig-component": "^2.9",
     "symfony/validator": "~6.4.0",
@@ -220,7 +220,8 @@
   "autoload": {
     "psr-4": {
       "PrestaShopBundle\\": "src/PrestaShopBundle/",
-      "PrestaShop\\PrestaShop\\": "src/"
+      "PrestaShop\\PrestaShop\\": "src/",
+      "MsThemeConfig\\": "modules/msthemeconfig/src/"
     },
     "classmap": [
       "app/AppKernel.php",

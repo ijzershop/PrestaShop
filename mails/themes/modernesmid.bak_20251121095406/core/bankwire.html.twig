@@ -1,0 +1,197 @@
+{% extends '@MailThemes/modernesmid/components/layout.html.twig' %}
+
+{% block title %}{{ 'Wachtend op betaling'|trans({}, 'Emails.Body', locale) }}{% endblock %}
+
+{% block content %}
+  <tr>
+    <td align="left" bgcolor="#ffffff"
+        style="padding:0;Margin:0;padding-top:20px;padding-right:50px;padding-left:50px;background-color:#ffffff"
+        data-custom-paddings="true">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none"
+             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="left" style="padding:0;Margin:0;width:500px">
+            <table cellspacing="0" width="100%" role="presentation" cellpadding="0"
+                   style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="left" class="es-text-5593" style="padding:0;Margin:0"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">
+                    <b>Beste {firstname} {lastname},</b></p>
+                  <h2
+                    style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:24px;font-style:normal;font-weight:bold;line-height:28.8px;color:#212121"></h2>
+                </td>
+              </tr>
+              <tr>
+                <td align="left" style="padding:0;Margin:0"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">
+                    Wij wachten nog op betaling van uw bestelling. Heeft u hulp nodig?</p></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" bgcolor="#ffffff"
+        style="Margin:0;padding-bottom:10px;padding-top:10px;padding-right:30px;padding-left:30px;background-color:#ffffff"
+        data-custom-paddings="true">
+      <table cellspacing="0" width="100%" cellpadding="0" role="none"
+             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="center" valign="top" style="padding:0;Margin:0;width:540px">
+            <table width="100%" cellpadding="0" cellspacing="0" role="presentation"
+                   style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="left" bgcolor="#4472c4" class="es-text-9909"
+                    style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px"><h1 class="es-text-mobile-size-20" style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:20px;font-style:normal;font-weight:bold;line-height:24px;color:#ffffff;text-align:center">
+                    <b>Controleer of uw bestelling klopt</b></h1></td>
+              </tr>
+              <tr>
+                <td align="center" bgcolor="#4472c4"
+                    style="padding:0;Margin:0;padding-right:20px;padding-left:20px;padding-bottom:0px"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    U heeft de volgende artikelen besteld bij de {shop_name}.</p>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" bgcolor="#4472c4"
+                    style="padding:0;Margin:0;padding-right:20px;padding-left:20px;padding-bottom:00px">
+                  {% if templateType == 'html' %}
+                    {products}
+                  {% endif %}
+                  {% if templateType == 'txt' %}
+                    {products_txt}
+                  {% endif %}
+                  {% if templateType == 'html' %}
+                    {discounts}
+                  {% endif %}
+                  {% if templateType == 'txt' %}
+                    {discounts_txt}
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td align="center" bgcolor="#4472c4"
+                    style="padding:0;Margin:0;padding-right:20px;padding-left:20px;padding-bottom:20px"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b><br></b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    De artikelen worden geleverd op het volgende adres.</p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b>{delivery_block_html}</b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b><br></b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    U heeft gekozen voor betaling via</p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b>
+
+                      {% if '{payment}' == 'PIN Betaling' or '{payment}' == 'ideal' or '{payment}' == 'cash' %}
+                        {payment}
+                      {% elseif '{payment}' == 'cheque' %}
+                        {payment} - Uw bestelling wordt verwerkt na ontvangst van de cheque
+                      {% elseif '{payment}' == 'banktransfer' %}
+                        {payment} van {total_paid} met als omschrijving {order_name}<br/> naar NL24 RABO 0157 6529 47 t.n.v. De Moderne Smid BV
+                      {% elseif '{payment}' == 'oncredit' %}
+                        {payment} - De factuur wordt verstuurd naar het bij ons geregistreerde adres. <br/> Voor mogelijke vragen kunt u contact opnemen met de klantenservice.
+                      {% else %}
+                        {payment}
+                      {% endif %}
+                    </b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b><br></b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    U heeft gekozen voor het volgende transport</p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b>
+                      {% if '{carrier}' == 'Afhalen'%}
+                        {carrier}
+                      {% elseif '{carrier}' == 'toevoegen' %}
+                        {carrier}
+                      {% else %}
+                        {carrier}
+                      {% endif %}</b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b><br></b></p>
+                  {% if comment is defined %}
+                    <p
+                      style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                      U heeft de volgende opmerking geplaatst</p>
+                    <p
+                      style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                      <b>{comment}</b></p>
+                  {% endif %}
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b><br></b></p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    De volledige details van uw bestelling staat in de orderbevestiging bijlage van deze mail. Deze pdf
+                    is ook de factuur van deze bestelling.</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" bgcolor="#ffffff"
+        style="padding:0;Margin:0;padding-top:20px;padding-right:50px;padding-left:50px;background-color:#ffffff"
+        data-custom-paddings="true">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none"
+             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="left" style="padding:0;Margin:0;width:500px">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+                   style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="left" class="es-text-6958" style="padding:0;Margin:0"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">
+                    <strong><b>Waar vind ik mijn factuur?</b></strong></p>
+                  <h2
+                    style="Margin:0;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;mso-line-height-rule:exactly;letter-spacing:0;font-size:24px;font-style:normal;font-weight:bold;line-height:28.8px;color:#212121"></h2>
+                </td>
+              </tr>
+              <tr>
+                <td align="left" style="padding:0;Margin:0"><p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px">
+                    Uw factuur zit in de bijlage van deze mail. U vindt de factuur ook in uw klantenaccount.</p>
+                  <p
+                    style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#4472c4;font-size:16px">
+                    <strong><b><a target="_blank" href="{shop_url}/aanmelden"
+                                  style="mso-line-height-rule:exactly;text-decoration:none;color:#4472c4;font-size:16px">&gt;
+                          Bekijk uw factuur in uw klantenaccount</a></b></strong></p></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+{% endblock %}
+
+{% block footer_blocks %}
+
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:0px;padding-bottom:10px;background-color:#ffffff">
+      {{ footer_blocks|raw }}
+    </td>
+  </tr>
+
+
+{% endblock %}

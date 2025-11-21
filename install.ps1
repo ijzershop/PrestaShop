@@ -16,6 +16,10 @@ foreach ($f in $FileMap) {
   Add-ToGitignore -Path $f.Target -GitignorePath $GitignorePath
 }
 
+  # Re-enable Addons API for subsequent operations if needed
+  Remove-Item Env:\PS_ADDONS_API_ENABLED -ErrorAction SilentlyContinue
+  Remove-Item Env:\_PS_MODE_DEV_ -ErrorAction SilentlyContinue
+
 function Add-ToGitignore($Path, $GitignorePath) {
   # Normalize path to forward slashes for .gitignore
   $normalized = $Path -replace '\\', '/'

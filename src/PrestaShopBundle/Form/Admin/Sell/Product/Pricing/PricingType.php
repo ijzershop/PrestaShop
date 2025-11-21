@@ -111,7 +111,7 @@ class PricingType extends TranslatorAwareType
                     'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                 ],
             ])
-            ->add('catalog_price_rules', CatalogPriceRulesType::class)
+            ->add('catalog_price_rules', CatalogPriceRulesType::class, ['label' => false])
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',

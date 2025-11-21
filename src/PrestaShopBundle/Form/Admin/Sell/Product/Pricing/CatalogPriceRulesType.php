@@ -72,14 +72,16 @@ class CatalogPriceRulesType extends TranslatorAwareType
          * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds unneeded stuff to % while creating url
          * That's why catalog_price_rule_id is used and then string replaced.
          */
+
         $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink(
             'AdminSpecificPriceRule',
             true,
-            ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']
+            ['updatespecific_price_rule' => '', 'id_specific_price_rule' => '0']
         );
+
         $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
         /** Adding % to make link more unique */
-        $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
+        $catalogPriceRuleEditLink = str_replace('catalog-price-rules/0/edit', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
 
         $resolver->setDefaults([
             'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/catalog_price_rules.html.twig',

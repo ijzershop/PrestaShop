@@ -1,38 +1,13 @@
+/* eslint-disable max-len */
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * Custom TinyMCE configuration (PS 9.x) with Bootstrap plugin integration and legacy behaviors.
+ * This file is deployed into admin-dev/themes/new-theme/js/components/tinymce-editor.js by install scripts.
  */
 import ComponentsMap from '@components/components-map';
 import {EventEmitter} from './event-emitter';
 
 const {$} = window;
 
-/**
- * This class init TinyMCE instances in the back-office. It is wildly inspired by
- * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
- * folder along with its modules. One improvement could be to install TinyMCE via
- * npm and fully integrate in the back-office theme.
- */
 class TinyMCEEditor {
   constructor(options) {
     const opts = options || {};
@@ -45,10 +20,8 @@ class TinyMCEEditor {
         pathParts.every((pathPart) => {
           if (pathPart !== '') {
             opts.baseAdminUrl = `/${pathPart}/`;
-
             return false;
           }
-
           return true;
         });
       }
@@ -56,14 +29,12 @@ class TinyMCEEditor {
     if (typeof opts.langIsRtl === 'undefined') {
       opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
+    if (typeof opts.baseUrlWebsite === 'undefined') {
+      opts.baseUrlWebsite = `${window.location.protocol}//${window.location.host}/`;
+    }
     this.setupTinyMCE(opts);
   }
 
-  /**
-   * Initial setup which checks if the tinyMCE library is already loaded.
-   *
-   * @param config
-   */
   setupTinyMCE(config) {
     if (typeof tinyMCE === 'undefined') {
       this.loadAndInitTinyMCE(config);
@@ -72,36 +43,28 @@ class TinyMCEEditor {
     }
   }
 
-  /**
-   * Prepare the config and init all TinyMCE editors
-   *
-   * @param config
-   */
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins:
-        /* eslint-disable-next-line max-len */
-        'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
+      // eslint-disable-next-line max-len
+      plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr bootstrap fullscreen',
       browser_spellcheck: true,
-      toolbar1:
-        /* eslint-disable-next-line max-len */
-        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
+      // eslint-disable-next-line max-len
+      toolbar1: 'undo,redo,code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,styleselect,hr,fullscreen,bootstrap',
       toolbar2: '',
       language: window.iso_user,
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
+        bootstrap: `${config.baseUrlWebsite}js/tiny_mce/plugins/bootstrap/plugin.min.js`,
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       skin: 'prestashop',
       mobile: {
         theme: 'mobile',
         plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code', 'hr'],
-        toolbar:
-          /* eslint-disable-next-line max-len */
-          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect hr',
+        toolbar: 'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect hr',
       },
       menubar: false,
       statusbar: false,
@@ -112,29 +75,101 @@ class TinyMCEEditor {
       valid_children: '+*[*]',
       valid_elements: '*[*]',
       rel_list: [{title: 'nofollow', value: 'nofollow'}],
+      contextmenu: 'bootstrap',
+      paste_data_images: true,
+      paste_preprocess(plugin, args) {
+        const content = args.content || '';
+        const regex = /^<img.*?src="(.*?)"/;
+
+        if (regex.test(content)) {
+          args.content = content.replace('<img', '<img width="100%" style="max-width:100%;height:auto!important;"');
+        } else {
+          args.content = content.replace(/(<([^>]+)>)/gi, '');
+        }
+      },
+      paste_postprocess(editor, args) {
+        const child = args && args.node ? args.node.firstChild : null;
+
+        if (child && child.tagName === 'IMG') {
+          let srcString = child.src || '';
+
+          if (srcString.indexOf(config.baseUrlWebsite) === -1 && srcString.indexOf('blob:') === -1) {
+            srcString = config.baseUrlWebsite + srcString;
+          } else if (srcString.indexOf(config.baseUrlWebsite) === -1 && srcString.indexOf('blob:') !== -1) {
+            srcString = srcString.replace('blob:', `blob:${config.baseUrlWebsite}`);
+          }
+          child.src = srcString;
+        }
+      },
+      automatic_uploads: true,
+      images_upload_url: `${config.baseUrlWebsite}custom_uploader/upload.php`,
+      images_upload_handler(blobInfo, success, failure, progress) {
+        try {
+          const url = '/index.php?fc=module&module=msthemeconfig&controller=ajax&id_lang=1';
+          const xhr = new XMLHttpRequest();
+          xhr.withCredentials = false;
+          xhr.open('POST', url);
+          const formData = new FormData();
+          formData.append('action', 'upload_files');
+          formData.append('path', '/editor_uploads');
+          formData.append('file', blobInfo.blob(), blobInfo.filename());
+          if (xhr.upload) {
+            xhr.upload.onprogress = function onprogress(e) {
+              if (e.lengthComputable) {
+                progress(Math.round((e.loaded / e.total) * 100));
+              }
+            };
+          }
+          xhr.onload = function onload() {
+            if (xhr.status !== 200) {
+              failure(`HTTP Error: ${xhr.status}`);
+              return;
+            }
+            let json;
+            try { json = JSON.parse(xhr.responseText); } catch (e) { /* empty */ }
+            if (!json || typeof json.location !== 'string') {
+              failure(`Invalid JSON: ${xhr.responseText}`);
+              return;
+            }
+            success(json.location);
+          };
+          xhr.onerror = function onerror() { failure('Image upload failed'); };
+          xhr.send(formData);
+        } catch (e) {
+          failure('Unexpected error');
+        }
+      },
+      bootstrapConfig: {
+        language: window.iso_user,
+        url: `${config.baseUrlWebsite}js/tiny_mce/plugins/bootstrap/`,
+        iconFont: 'fontawesome5',
+        imagesPath: `${config.baseUrlWebsite}upload`,
+        key: this.fetchKey ? this.fetchKey(window.location.hostname) : undefined,
+        enableTemplateEdition: true,
+      },
+      editorStyleFormats: {
+        textStyles: true,
+        blockStyles: true,
+        containerStyles: true,
+        responsive: ['xs', 'sm'],
+        spacing: ['all', 'x', 'y', 'top', 'right', 'bottom', 'left'],
+      },
+      style_formats_autohide: true,
       editor_selector: ComponentsMap.tineMceEditor.selectorClass,
-      init_instance_callback: () => {
-        this.changeToMaterial();
-      },
-      setup: (editor) => {
-        this.setupEditor(editor);
-      },
+      init_instance_callback: () => { this.changeToMaterial(); },
+      setup: (editor) => { this.setupEditor(editor); },
       ...config,
     };
 
     if (typeof window.defaultTinyMceConfig !== 'undefined') {
       Object.assign(cfg, window.defaultTinyMceConfig);
     }
-
     if (typeof cfg.editor_selector !== 'undefined') {
       cfg.selector = `.${cfg.editor_selector}`;
     }
 
-    EventEmitter.emit('initTinyMCE', {
-      config: cfg,
-    });
+    EventEmitter.emit('initTinyMCE', {config: cfg});
 
-    // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
       this.changeToMaterial();
     });
@@ -143,11 +178,32 @@ class TinyMCEEditor {
     this.watchTabChanges(cfg);
   }
 
-  /**
-   * Setup TinyMCE editor once it has been initialized
-   *
-   * @param editor
-   */
+  fetchKey(hostname) {
+    const keys = {
+      'bouwstaalmat.nl': '',
+      'bouwstaalmat.viho.nl': '',
+      'constructiebalk.nl': '3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y=',
+      'constructieklus.nl': '',
+      'constructieklus.viho.nl': '',
+      'demodernesmid.nl': '',
+      'demodernesmid.viho.nl': 'cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A==',
+      'gerofitness.nl': '',
+      'gerofitness.viho.nl': '',
+      'ijzershop.frl': 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=',
+      'ijzershop.nl': 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=',
+      'ijzershop.eu': 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=',
+      'ijzershop176.local': 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=',
+      'paneelhek.nl': '',
+      'paneelhek.viho.nl': '',
+      'viho.nl': 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=',
+    };
+
+    if (Object.prototype.hasOwnProperty.call(keys, hostname)) {
+      return keys[hostname];
+    }
+    return 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=';
+  }
+
   setupEditor(editor) {
     editor.on('loadContent', (event) => {
       this.handleCounterTiny(event.target.id);
@@ -156,21 +212,10 @@ class TinyMCEEditor {
       window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('blur', () => {
-      window.tinyMCE.triggerSave();
-    });
-    EventEmitter.emit('tinymceEditorSetup', {
-      editor,
-    });
+    editor.on('blur', () => { window.tinyMCE.triggerSave(); });
+    EventEmitter.emit('tinymceEditorSetup', {editor});
   }
 
-  /**
-   * When the editor is inside a tab it can cause a bug on tab switching.
-   * So we check if the editor is contained in a navigation and refresh the editor when its
-   * parent tab is shown.
-   *
-   * @param config
-   */
   watchTabChanges(config) {
     $(config.selector).each((index, textarea) => {
       const translatedField = $(textarea).closest('.translation-field');
@@ -179,41 +224,23 @@ class TinyMCEEditor {
       if (translatedField.length && tabContainer.length) {
         const textareaLocale = translatedField.data('locale');
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
-
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
 
-          if (editor) {
-            // Reset content to force refresh of editor
-            editor.setContent(editor.getContent());
-          }
-
-          EventEmitter.emit('languageSelected', {
-            selectedLocale: textareaLocale,
-            form,
-          });
+          if (editor) { editor.setContent(editor.getContent()); }
+          EventEmitter.emit('languageSelected', {selectedLocale: textareaLocale, form});
         });
       }
     });
-
     EventEmitter.on('languageSelected', (data) => {
       const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
-
       $(textareaLinkSelector).click();
     });
   }
 
-  /**
-   * Loads the TinyMCE javascript library and then init the editors
-   *
-   * @param config
-   */
   loadAndInitTinyMCE(config) {
-    if (this.tinyMCELoaded) {
-      return;
-    }
-
+    if (this.tinyMCELoaded) { return; }
     this.tinyMCELoaded = true;
     const pathArray = config.baseAdminUrl.split('/');
     pathArray.splice(pathArray.length - 2, 2);
@@ -226,9 +253,6 @@ class TinyMCEEditor {
     });
   }
 
-  /**
-   * Replace initial TinyMCE icons with material icons
-   */
   changeToMaterial() {
     const materialIconAssoc = {
       'mce-i-code': '<i class="material-icons">code</i>',
@@ -251,40 +275,20 @@ class TinyMCEEditor {
       'mce-i-browse': '<i class="material-icons">attachment</i>',
       'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
     };
-
-    $.each(materialIconAssoc, (index, value) => {
-      $(`.${index}`).replaceWith(value);
-    });
+    $.each(materialIconAssoc, (index, value) => { $(`.${index}`).replaceWith(value); });
   }
 
-  /**
-   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
-   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
-   * way.
-   *
-   * @param id
-   */
   handleCounterTiny(id) {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
     const editor = window.tinyMCE.get(id);
     const max = editor.getBody() ? editor.getBody().textContent.length : 0;
-
-    textarea
-      .parent()
-      .find('span.currentLength')
-      .text(max);
+    textarea.parent().find('span.currentLength').text(max);
     if (counterType !== 'recommended' && max > counter) {
-      textarea
-        .parent()
-        .find('span.maxLength')
-        .addClass('text-danger');
+      textarea.parent().find('span.maxLength').addClass('text-danger');
     } else {
-      textarea
-        .parent()
-        .find('span.maxLength')
-        .removeClass('text-danger');
+      textarea.parent().find('span.maxLength').removeClass('text-danger');
     }
   }
 }

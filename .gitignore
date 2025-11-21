@@ -234,3 +234,4 @@ docker-compose.override.yml
 # config vscode
 .hintrc
 mails/themes/modernesmid/
+*.back_*

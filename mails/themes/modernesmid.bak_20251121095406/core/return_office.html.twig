@@ -1,0 +1,235 @@
+{% extends '@MailThemes/modernesmid/components/layout.html.twig' %}
+
+{% block title %}{{ 'Er is een retour aanvraag gedaan'|trans({}, 'Emails.Body', locale) }}{% endblock %}
+
+{% block content %}
+  {#       Start Blue Block NO-HEADER         #}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="Margin:0;padding-bottom:10px;padding-top:10px;padding-right:30px;padding-left:30px;background-color:#ffffff" data-custom-paddings="true">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="center" valign="top" style="padding:0;Margin:0;width:540px">
+            <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="left" bgcolor="#4472c4" style="padding:0;Margin:0;padding-top:20px;padding-right:20px;padding-left:20px;padding-bottom:20px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    Er is een retour aanvraag vanuit <a style="color:#ffffff" href="{shop_url}">{shop_name}</a> op {date} gedaan door {firstname} {lastname}
+                  <table style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <tr>
+                      <td style="padding-top: 10px;">Telefoon: </td><td style="padding-top: 10px;">{phonenumber}</td>
+                    </tr>
+                    <tr>
+                      <td style="padding-top: 10px;">Email: </td><td style="padding-top: 10px;">{email}</td>
+                    </tr>
+                  </table>
+                    <br/>
+                  </p>
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    Bekijk deze retour aanvraag op <a style="color:#ffffff" href="{office_return_request_link}">Link Retour Aanvraag</a>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td align="left" bgcolor="#4472c4" style="padding:0;Margin:0;padding-top:20px;padding-right:20px;padding-left:20px;padding-bottom:20px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#ffffff;font-size:16px">
+                    <b>Klant bericht</b><br/>
+                    {customer_msg}
+                  </p>
+                </td>
+              </tr>
+
+
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+  {#       Start Blue Block         #}
+
+  {#       Start White Block         #}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-right:30px;padding-left:30px;padding-bottom:10px;background-color:#ffffff">
+      <table cellpadding="0" cellspacing="0" width="100%" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+        <tr>
+          <td align="left" style="padding:0;Margin:0;width:560px">
+            <table cellspacing="0" width="100%" role="presentation" cellpadding="0" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+              <tr>
+                <td align="center" class="es-text-7117" style="padding:0;Margin:0;padding-bottom:10px;padding-top:10px">
+                  <p style="Margin:0;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;letter-spacing:0;color:#131313;font-size:16px;text-align:left">
+
+
+
+                  <table cellpadding="0" cellspacing="0" width="100%" border="0"
+                         style="cellspacing:0;color:#000000;font-family:Open-sans, sans-serif;font-size: 16px;line-height:22px;table-layout:auto;width:100%;">
+                    <colgroup>
+                      <col span="1" style="width: 10%;">
+                      <col span="1" style="width: 45%;">
+                      <col span="1" style="width: 15%;">
+                    </colgroup>
+                    <tr>
+                      <th>{{ 'Reference'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                      <th>{{ 'Product'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                      <th>{{ 'Quantity'|trans({}, 'Emails.Body', locale)|raw }}</th>
+                    </tr>
+                    {% if templateType == 'html' %}
+                      {products_html}
+                    {% endif %}
+                    {% if templateType == 'txt' %}
+                      {products_txt}
+                    {% endif %}
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="left"
+                    style="font-size:0px;padding-top:0px;padding:20px 45px 0px 45px;word-break:break-word;">
+                  <img src="{shop_url}{uploaded_file}" alt="geuploade afbeelding" width="100%" style="width: 100%;height: auto;">
+                </td>
+              </tr>
+            </table>
+
+
+
+
+                  </p>
+                </td>
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
+  </tr>
+  {#       End white Block         #}
+
+
+
+
+
+{% endblock %}
+
+{% block footer_blocks %}
+  <tr>
+    <td align="left" bgcolor="#ffffff" style="padding:0;Margin:0;padding-top:20px;padding-bottom:10px;background-color:#ffffff">
+      {{ footer_blocks|raw }}
+    </td>
+  </tr>
+{% endblock %}
+
+{% block styles %}
+  {{ parent() }}
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
+
+    .ReadMsgBody {
+      width: 100%;
+    }
+
+    .ExternalClass {
+      width: 100%;
+    }
+
+    .ExternalClass * {
+      line-height: 25px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 25px;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <style type="text/css">
+    @media only screen and (max-width: 480px) {
+      @-ms-viewport {
+        width: 320px;
+      }
+
+      @viewport {
+        width: 320px;
+      }
+    }
+  </style>
+  <style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700);
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i);
+  </style>
+  <style type="text/css">
+    @media only screen and (min-width: 480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+
+      .mj-column-px-25 {
+        width: 25px !important;
+        max-width: 25px;
+      }
+    }
+  </style>
+  <style type="text/css">
+  </style>
+  <style type="text/css">
+    .shadow {
+      box-shadow: 0 20px 30px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .label {
+      font-weight: 700;
+    }
+
+    .warning {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    a {
+      color: #3b56ad;
+      text-decoration: underline;
+      font-weight: 600;
+    }
+
+    a.light {
+      font-weight: 400;
+    }
+
+    span.strong {
+      font-weight: 600;
+    }
+
+    @media only screen and (max-width: 480px) {
+
+      body,
+      .no-bg {
+        background-color: #fff !important;
+      }
+
+      .left p {
+        text-align: left;
+        display: inline-block
+      }
+    }
+  </style>
+
+{% endblock %}

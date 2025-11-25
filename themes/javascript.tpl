@@ -29,6 +29,15 @@ var {$k} = {$def|json_encode nofilter};
 {/foreach}
 </script>
 {/if}
+
+{* Safety alias in case only one of jQuery/$ is exposed by a module/page *}
+<script type="text/javascript">
+  (function(w){
+    if (w.$ && !w.jQuery) { w.jQuery = w.$; }
+    if (w.jQuery && !w.$) { w.$ = w.jQuery; }
+  })(window);
+</script>
+
 {if isset($js_files) && $js_files|@count}
 {foreach from=$js_files key=k item=js_uri}
 <script type="text/javascript" src="{$js_uri}"></script>

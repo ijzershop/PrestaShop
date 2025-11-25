@@ -1,0 +1,275 @@
+<?php
+/**
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.txt
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to a newer
+ * versions in the future. If you wish to customize this module for your
+ * needs please refer to CustomizationPolicy.txt file inside our module for more information.
+ *
+ * @author Webkul IN
+ * @copyright Since 2010 Webkul
+ * @license https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+class FrontController extends FrontControllerCore
+{
+
+    protected function assignGeneralPurposeVariables()
+    {
+        if (Validate::isLoadedObject($this->context->cart)) {
+            $cart = $this->context->cart;
+        } else {
+            $cart = new Cart();
+        }
+
+        /**
+         * @var array<string, mixed> $templateVars
+         */
+        $templateVars = [];
+
+        Hook::exec(
+            'actionFrontControllerSetVariablesBefore',
+            [
+                'templateVars' => &$templateVars,
+                'cart' => $cart,
+            ]
+        );
+
+        $templateVars['cart'] = $templateVars['cart'] ?? $this->cart_presenter->present($cart);
+        $templateVars['currency'] = $templateVars['currency'] ?? $this->getTemplateVarCurrency();
+        $templateVars['customer'] = $templateVars['customer'] ?? $this->getTemplateVarCustomer();
+        $templateVars['country'] = $templateVars['country'] ?? $this->objectPresenter->present($this->context->country);
+        $templateVars['language'] = $templateVars['language'] ?? $this->objectPresenter->present($this->context->language);
+        $templateVars['page'] = $templateVars['page'] ?? $this->getTemplateVarPage();
+        $templateVars['shop'] = $templateVars['shop'] ?? $this->getTemplateVarShop();
+        $templateVars['core_js_public_path'] = $templateVars['core_js_public_path'] ?? $this->getCoreJsPublicPath();
+        $templateVars['urls'] = $templateVars['urls'] ?? $this->getTemplateVarUrls();
+        $templateVars['configuration'] = $templateVars['configuration'] ?? $this->getTemplateVarConfiguration();
+        $templateVars['field_required'] = $templateVars['field_required'] ?? $this->context->customer->validateFieldsRequiredDatabase();
+        $templateVars['breadcrumb'] = $templateVars['breadcrumb'] ?? $this->getBreadcrumb();
+        $templateVars['link'] = $templateVars['link'] ?? $this->context->link;
+        $templateVars['time'] = $templateVars['time'] ?? time();
+        $templateVars['static_token'] = $templateVars['static_token'] ?? Tools::getToken(false);
+        $templateVars['token'] = $templateVars['token'] ?? Tools::getToken();
+        $templateVars['debug'] = $templateVars['debug'] ?? _PS_MODE_DEV_;
+
+        // An array [module_name => module_output] will be returned
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
+
+        if (is_array($modulesVariables)) {
+            foreach ($modulesVariables as $moduleName => $variables) {
+                $templateVars['modules'][$moduleName] = $variables;
+            }
+        }
+
+        $this->setClasses();
+        $this->setPlugins();
+        $this->context->smarty->assign($templateVars);
+
+        Media::addJsDef([
+            'prestashop' => $this->buildFrontEndObject($templateVars),
+        ]);
+    }
+
+
+    public function getTemplateVarShop()
+    {
+        $shop = parent::getTemplateVarShop();
+        if (Module::isEnabled('wkwebp')
+            && Configuration::get('WK_WEBP_ENABLE_MODULE')
+            && Configuration::get('WK_WEBP_SHOW_SHOP_LOGO')) {
+            $filename = Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id);
+            $lastDotPosition = strrpos(Configuration::get('PS_LOGO', (int)Context::getContext()->language->id, (int)Context::getContext()->shop->id_shop_group, (int)Context::getContext()->shop->id), '.');
+            if ($lastDotPosition !== false) {
+                $filename = substr($filename, 0, $lastDotPosition);
+            }
+            $shop['logo'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
+                'modules/wkwebp/views/img/store/'.$filename.'.webp';
+            if (isset($shop['logo_details'])) {
+                $shop['logo_details']['src'] = Tools::getShopDomainSsl(true, true) . __PS_BASE_URI__ .
+                    'modules/wkwebp/views/img/store/'.$filename.'.webp';
+            }
+        }
+
+
+        if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default)) {
+            $this->context->country = $new_default;
+        } elseif (!in_array(Tools::getRemoteAddr(), ['localhost', '127.0.0.1', '::1'])) {
+
+        $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+        $record = $reader->city(Tools::getRemoteAddr());
+
+
+            $countryText = $this->trans('Krijgt u dit bericht te zien dan krijgen wij u locatie niet correct door.', [], 'Shop.Theme.Global');
+            if (isset($record->country->isoCode) && $record->country->isoCode) {
+                $countryName = '';
+                $countryId = Country::getByIso($record->country->isoCode);
+                if(!empty($countryId)){
+                    $countryName = Country::getNameById($countryId, $this->context->language->id);
+                }
+                $countryText = $this->trans('Wij leveren niet in', [], 'Shop.Theme.Global').' '.$countryName.'. ';
+            }
+
+            $this->context->smarty->assign('geoip_msg','<div class="text-center">Ter extra beveiliging maken wij gebruik van geolocatie.<br/>
+                Hierdoor is de bestelmogelijkheid alleen beschikbaar voor klanten uit Nederland & Belgie<br/><br/>
+                <h5>'.$countryText.'</h5>Maakt u gebruik van een VPN-verbinding of iets dergelijks, schakel deze dan uit om te kunnen bestellen.<br/>
+                Liever niet uw VPN-verbinding uitschakelen? vraag een offerte aan! <br/>Neem dan contact met ons op via het
+                <a href="'.Configuration::get('MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_PAGE',
+                    $this->context->language->id,
+                    $this->context->shop->id_shop_group,
+                    $this->context->shop->id, '').'">
+                <i class="fasl fa-chevron-right"></i> Offerte formulier</a></div>');
+                        }
+
+
+
+        return $shop;
+    }
+
+
+
+
+    public function setClasses(){
+        $this->context->smarty->registerClass('Context', 'Context');
+        $this->context->smarty->registerClass('Configuration', 'Configuration');
+        $this->context->smarty->registerClass('Tools', 'Tools');
+        $this->context->smarty->registerClass('Cart', 'Cart');
+        $this->context->smarty->registerClass('Product', 'Product');
+        $this->context->smarty->registerClass('Order', 'Order');
+        $this->context->smarty->registerClass('Category', 'Category');
+        $this->context->smarty->registerClass('AttributeGroup', 'AttributeGroup');
+        $this->context->smarty->registerClass('Address', 'Address');
+        $this->context->smarty->registerClass('Module', 'Module');
+        $this->context->smarty->registerClass('ShopGroup', 'ShopGroup');
+        $this->context->smarty->registerClass('Shop', 'Shop');
+        $this->context->smarty->registerClass('SpecificPrice', 'SpecificPrice');
+    }
+
+
+
+    public function setPlugins(){
+        // Move the function definition to class scope
+        $numberFormatFunction = function($number, $decimals = 0, $dec_point = '.', $thousands_sep = ',') {
+            return number_format($number, $decimals, $dec_point, $thousands_sep);
+        };
+
+        $unserializeFunction = function ($data, $allowed_classes = false) {
+            return unserialize($data, ['allowed_classes' => $allowed_classes]);
+        };
+//
+//        $inArrayFunction = function ($needle, $haystack) {
+//            return in_array($needle, $haystack);
+//        };
+
+        $arrayKeysFunction = function ($array) {
+            return array_keys($array);
+        };
+
+        $getSpecificPriceIdsFunction = function ($idProduct) {
+            return SpecificPrice::getIdsByProductId($idProduct);
+        };
+
+        $getDefaultCarrierPriceFunction = function ($country = 13) {
+            $defaultShippingPrice = 0;
+            try {
+                $transmissionCarrier = Carrier::getCarrierByReference(2,Context::getContext()->cookie->id_lang);
+                $defaultShippingPrice = $transmissionCarrier->getMaxDeliveryPriceByPrice($country);
+            } catch(Exception $e){
+                return $defaultShippingPrice;
+            }
+            return $defaultShippingPrice;
+        };
+
+        // Register the plugin with the callable function
+        $this->context->smarty->registerPlugin('modifier', 'number_format', $numberFormatFunction);
+        $this->context->smarty->registerPlugin('modifier', 'unserialize', $unserializeFunction);
+        $this->context->smarty->registerPlugin('modifier', 'array_keys', $arrayKeysFunction);
+        $this->context->smarty->registerPlugin('modifier', 'getSpecificPriceIds', $getSpecificPriceIdsFunction);
+        $this->context->smarty->registerPlugin('modifier', 'defaultShippingPrice', $getDefaultCarrierPriceFunction);
+
+
+        $this->context->smarty->loadPlugin('serialize', true);
+        $this->context->smarty->loadPlugin('basename', true);
+        $this->context->smarty->loadPlugin('is_object', true);
+    }
+
+
+    /**
+     * Geolocation management.
+     *
+     * @param Country $defaultCountry
+     *
+     * @return Country|false
+     */
+    public function geolocationManagement($defaultCountry)
+    {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1']) && !Tools::isPHPCLI()) {
+            /* Check if Maxmind Database exists */
+            if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
+                if (!in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))) {
+                    $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+
+                    try {
+                        $record = $reader->city(Tools::getRemoteAddr());
+                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                        $record = null;
+                    }
+
+                    if (is_object($record) && Validate::isLanguageIsoCode($record->country->isoCode) && (int) Country::getByIso(strtoupper($record->country->isoCode)) != 0) {
+                        if (!in_array(strtoupper($record->country->isoCode), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))) && !FrontController::isInWhitelistForGeolocation()) {
+                            if (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_) {
+                                $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
+                            } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
+                                $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
+                            }
+                        } else {
+                            $hasBeenSet = !isset($this->context->cookie->iso_code_country);
+                            $this->context->cookie->iso_code_country = strtoupper($record->country->isoCode);
+                        }
+                    }
+                }
+
+                if (isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $this->context->cookie->iso_code_country = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+                }
+
+                if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {
+                    /* Update defaultCountry */
+                    if ($defaultCountry->iso_code != $this->context->cookie->iso_code_country) {
+                        $defaultCountry = new Country($idCountry);
+                    }
+                    if (isset($hasBeenSet) && $hasBeenSet) {
+                        $this->context->cookie->id_currency = (int) ($defaultCountry->id_currency ? (int) $defaultCountry->id_currency : Currency::getDefaultCurrencyId());
+                    }
+
+                    return $defaultCountry;
+                } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
+                } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
+                    $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
+                }
+            }
+        }
+
+        $this->context->cookie->is_restricted_country = $this->restrictedCountry;
+
+        return false;
+    }
+
+}

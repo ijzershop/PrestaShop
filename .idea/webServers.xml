@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="894bf7ec-0ac2-4982-8e39-35e34ae107aa" name="https://modernesmid-webshop.local" url="http://modernesmid-webshop.local">
+        <fileTransfer mountedRoot="C:\wampserver\www\modernesmid-webshop" accessType="MOUNT" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>

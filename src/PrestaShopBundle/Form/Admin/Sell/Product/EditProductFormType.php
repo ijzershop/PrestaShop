@@ -166,12 +166,13 @@ class EditProductFormType extends TranslatorAwareType
                 'toolbar_options' => [
                     'use_inline_labels' => false,
                 ],
+                ''
             ])
             ->setRequired([
                 'product_id',
                 'shop_id',
                 'product_type',
-                'tax_rules_group_id',
+                'tax_rules_group_id'
             ])
             ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('shop_id', 'int')

@@ -115,6 +115,8 @@ module.exports = {
     monitoring: './js/pages/monitoring',
     multistore_dropdown: './js/components/multistore-dropdown',
     multistore_header: './js/components/multistore-header',
+    msthemeconfig_admin: './js/msthemeconfig',
+    msthemeconfig_offergrid: './js/msthemeconfig_grid',
     order: './js/pages/order',
     order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',

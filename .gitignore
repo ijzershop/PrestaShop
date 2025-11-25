@@ -236,3 +236,4 @@ docker-compose.override.yml
 mails/themes/modernesmid/
 *.back_*
 *.bak_*
+external/*

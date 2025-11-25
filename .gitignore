@@ -236,3 +236,5 @@ docker-compose.override.yml
 mails/themes/modernesmid/
 *.back_*
 *.bak_*
+admin-dev/themes/new-theme/js/msthemeconfig_grid/
+app/Resources/cronscripts/

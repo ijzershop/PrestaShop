@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /**
  * Custom TinyMCE configuration (PS 9.x) with Bootstrap plugin integration and legacy behaviors.
  * This file is deployed into admin-dev/themes/new-theme/js/components/tinymce-editor.js by install scripts.
@@ -46,10 +45,8 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      // eslint-disable-next-line max-len
       plugins: 'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr bootstrap fullscreen',
       browser_spellcheck: true,
-      // eslint-disable-next-line max-len
       toolbar1: 'undo,redo,code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,styleselect,hr,fullscreen,bootstrap',
       toolbar2: '',
       language: window.iso_user,
@@ -79,8 +76,7 @@ class TinyMCEEditor {
       paste_data_images: true,
       paste_preprocess(plugin, args) {
         const content = args.content || '';
-        const regex = /^<img.*?src="(.*?)"/;
-
+        const regex = new RegExp('^<img.*?src="(.*?)"');
         if (regex.test(content)) {
           args.content = content.replace('<img', '<img width="100%" style="max-width:100%;height:auto!important;"');
         } else {
@@ -89,14 +85,12 @@ class TinyMCEEditor {
       },
       paste_postprocess(editor, args) {
         const child = args && args.node ? args.node.firstChild : null;
-
         if (child && child.tagName === 'IMG') {
           let srcString = child.src || '';
-
           if (srcString.indexOf(config.baseUrlWebsite) === -1 && srcString.indexOf('blob:') === -1) {
             srcString = config.baseUrlWebsite + srcString;
           } else if (srcString.indexOf(config.baseUrlWebsite) === -1 && srcString.indexOf('blob:') !== -1) {
-            srcString = srcString.replace('blob:', `blob:${config.baseUrlWebsite}`);
+            srcString = srcString.replace('blob:', 'blob:' + config.baseUrlWebsite);
           }
           child.src = srcString;
         }
@@ -126,7 +120,7 @@ class TinyMCEEditor {
               return;
             }
             let json;
-            try { json = JSON.parse(xhr.responseText); } catch (e) { /* empty */ }
+            try { json = JSON.parse(xhr.responseText); } catch (e) {}
             if (!json || typeof json.location !== 'string') {
               failure(`Invalid JSON: ${xhr.responseText}`);
               return;
@@ -168,7 +162,7 @@ class TinyMCEEditor {
       cfg.selector = `.${cfg.editor_selector}`;
     }
 
-    EventEmitter.emit('initTinyMCE', {config: cfg});
+    EventEmitter.emit('initTinyMCE', { config: cfg });
 
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
       this.changeToMaterial();
@@ -197,7 +191,6 @@ class TinyMCEEditor {
       'paneelhek.viho.nl': '',
       'viho.nl': 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=',
     };
-
     if (Object.prototype.hasOwnProperty.call(keys, hostname)) {
       return keys[hostname];
     }
@@ -213,23 +206,21 @@ class TinyMCEEditor {
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => { window.tinyMCE.triggerSave(); });
-    EventEmitter.emit('tinymceEditorSetup', {editor});
+    EventEmitter.emit('tinymceEditorSetup', { editor });
   }
 
   watchTabChanges(config) {
     $(config.selector).each((index, textarea) => {
       const translatedField = $(textarea).closest('.translation-field');
       const tabContainer = $(textarea).closest('.translations.tabbable');
-
       if (translatedField.length && tabContainer.length) {
         const textareaLocale = translatedField.data('locale');
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
-
           if (editor) { editor.setContent(editor.getContent()); }
-          EventEmitter.emit('languageSelected', {selectedLocale: textareaLocale, form});
+          EventEmitter.emit('languageSelected', { selectedLocale: textareaLocale, form });
         });
       }
     });

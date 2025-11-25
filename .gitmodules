@@ -1,3 +1,3 @@
-[submodule "themes/modernesmid"]
-	path = themes/modernesmid
-	url = git@github.com:ijzershop/modernesmid-theme.git
+[submodule "modernesmid_webshop"]
+	path = external/modernesmid_webshop
+	url = git@github.com:ijzershop/modernesmid_webshop.git

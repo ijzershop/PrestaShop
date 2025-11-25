@@ -235,3 +235,4 @@ docker-compose.override.yml
 .hintrc
 mails/themes/modernesmid/
 *.back_*
+*.bak_*

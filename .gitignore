@@ -123,7 +123,7 @@ tests-legacy/.phpunit.result.cache
 /admin-dev/themes/default/public/*
 /admin-dev/themes/new-theme/css/module/drop_rtl.css
 /admin-dev/themes/new-theme/css/right-sidebar_rtl.css
-/admin-dev/themes/new-theme/public/*
+!/admin-dev/themes/new-theme/public/*
 !/admin-dev/themes/new-theme/public/theme.rtlfix
 !/admin-dev/themes/default/public/theme.rtlfix
 
@@ -236,4 +236,3 @@ docker-compose.override.yml
 mails/themes/modernesmid/
 *.back_*
 *.bak_*
-external/*

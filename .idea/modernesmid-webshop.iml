@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/tests/Unit" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tools/build/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/cronjobs/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/demo/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/tests/Resources/modules/ps_banner/vendor/composer" />
@@ -299,35 +300,43 @@
       <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251125140039" />
       <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125102003" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20251125140038" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251125104621" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251125105406" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251125121406" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251125133849" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251125140038" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

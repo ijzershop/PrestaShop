@@ -238,3 +238,5 @@ mails/themes/modernesmid/
 *.bak_*
 admin-dev/themes/new-theme/js/msthemeconfig_grid/
 app/Resources/cronscripts/
+js/tiny_mce/plugins/
+js/filemanager/

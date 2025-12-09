@@ -23,5 +23,8 @@
   },
   "devDependencies": {
     "sass": "^1.93.2"
+  },
+  "dependencies": {
+    "flmngr": "^2.0.19"
   }
 }

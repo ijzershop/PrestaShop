@@ -363,6 +363,31 @@
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251201120629" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251201094652" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251201120629" />
+      <excludeFolder url="file://$MODULE_DIR$/img/cms/.cache" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/n1ed" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251208121813" />
+      <excludeFolder url="file://$MODULE_DIR$/js/tiny_mce/plugins/bootstrap" />
+      <excludeFolder url="file://$MODULE_DIR$/js/tiny_mce/plugins/file-manager" />
+      <excludeFolder url="file://$MODULE_DIR$/js/tiny_mce/plugins/n1ed" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20251209095907" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20251209095907" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251209095908" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

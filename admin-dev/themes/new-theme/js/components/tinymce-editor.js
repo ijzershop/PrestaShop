@@ -1,13 +1,38 @@
 /**
- * Custom TinyMCE configuration (PS 9.x) with Bootstrap plugin integration and legacy behaviors.
- * This file is deployed into admin-dev/themes/new-theme/js/components/tinymce-editor.js by install scripts.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ComponentsMap from '@components/components-map';
 import {EventEmitter} from './event-emitter';
-import Flmngr from '@flmngr/flmngr-tinymce-6';
 
 const {$} = window;
 
+/**
+ * This class init TinyMCE instances in the back-office. It is wildly inspired by
+ * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
+ * folder along with its modules. One improvement could be to install TinyMCE via
+ * npm and fully integrate in the back-office theme.
+ */
 class TinyMCEEditor {
   constructor(options) {
     const opts = options || {};
@@ -20,8 +45,10 @@ class TinyMCEEditor {
         pathParts.every((pathPart) => {
           if (pathPart !== '') {
             opts.baseAdminUrl = `/${pathPart}/`;
+
             return false;
           }
+
           return true;
         });
       }
@@ -29,16 +56,14 @@ class TinyMCEEditor {
     if (typeof opts.langIsRtl === 'undefined') {
       opts.langIsRtl = typeof window.lang_is_rtl !== 'undefined' ? window.lang_is_rtl === '1' : false;
     }
-    if (typeof opts.baseUrlWebsite === 'undefined') {
-      const origin = `${window.location.protocol}//${window.location.host}`;
-      const shopBase = (window.prestashop && window.prestashop.urls && window.prestashop.urls.base_url)
-        ? window.prestashop.urls.base_url
-        : (window.baseDir || '/');
-      opts.baseUrlWebsite = origin + (shopBase && !shopBase.startsWith('/') ? `/${shopBase}` : shopBase || '/');
-    }
     this.setupTinyMCE(opts);
   }
 
+  /**
+   * Initial setup which checks if the tinyMCE library is already loaded.
+   *
+   * @param config
+   */
   setupTinyMCE(config) {
     if (typeof tinyMCE === 'undefined') {
       this.loadAndInitTinyMCE(config);
@@ -47,34 +72,36 @@ class TinyMCEEditor {
     }
   }
 
+  /**
+   * Prepare the config and init all TinyMCE editors
+   *
+   * @param config
+   */
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: 'colorpicker image table lists advlist code autoresize hr bootstrap fullscreen',
+      plugins:
+      /* eslint-disable-next-line max-len */
+        'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
       browser_spellcheck: true,
-      // TinyMCE 5 expects a single space-separated toolbar string
-      toolbar: 'undo redo code colorpicker bold italic underline strikethrough blockquote '
-        + 'alignleft aligncenter alignright alignjustify bullist numlist image flmngr table '
-        + 'formatselect styleselect hr fullscreen bootstrap',
+      toolbar1:
+      /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
+      toolbar2: '',
       language: window.iso_user,
-      // Flmngr configuration
-      apiKey: 'FLMNFLMN',
-      urlFileManager: 'https://fm.flmngr.com/fileManager',
-      urlFiles: `${config.baseUrlWebsite}upload/`,
+      external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
+      filemanager_title: 'File manager',
       external_plugins: {
-        bootstrap: `${config.baseUrlWebsite}js/tiny_mce/plugins/bootstrap/plugin.min.js`,
+        filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-      // Ensure editor iframe uses the same CSS bundle as the frontend theme (load both emitted files)
-      content_css: `${config.baseUrlWebsite}themes/modernesmid/assets/css/theme.css,${config.baseUrlWebsite}themes/modernesmid/assets/css/theme-core-bundled.css`,
-      // TinyMCE 5 default skin
-      skin: 'oxide',
+      skin: 'prestashop',
       mobile: {
         theme: 'mobile',
-        plugins: ['lists', 'table', 'advlist', 'code', 'hr', 'image'],
-        toolbar: 'undo code colorpicker bold italic underline strikethrough blockquote'
-          + ' alignleft aligncenter alignright alignjustify bullist numlist image table '
-          + 'formatselect styleselect hr flmngr',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code', 'hr'],
+        toolbar:
+        /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect hr',
       },
       menubar: false,
       statusbar: false,
@@ -85,147 +112,43 @@ class TinyMCEEditor {
       valid_children: '+*[*]',
       valid_elements: '*[*]',
       rel_list: [{title: 'nofollow', value: 'nofollow'}],
-      contextmenu: 'bootstrap',
-      paste_data_images: true,
-      paste_preprocess(plugin, args) {
-        const content = args.content || '';
-        const regex = new RegExp('^<img.*?src="(.*?)"');
-
-        if (regex.test(content)) {
-          args.content = content.replace('<img', '<img width="100%" style="max-width:100%;height:auto!important;"');
-        } else {
-          args.content = content.replace(/(<([^>]+)>)/gi, '');
-        }
-      },
-      paste_postprocess(editor, args) {
-        const child = args && args.node ? args.node.firstChild : null;
-
-        if (child && child.tagName === 'IMG') {
-          const src = child.src || '';
-          // Leave blob/data URLs as-is for TinyMCE upload handler
-          if (/^(blob:|data:)/i.test(src)) {
-            return;
-          }
-          // Prefix only site-relative or bare relative URLs
-          if (/^\//.test(src) || !/^https?:\/\//i.test(src)) {
-            child.src = `${config.baseUrlWebsite.replace(/\/$/, '')}${src.startsWith('/') ? '' : '/'}${src}`;
-          }
-        }
-      },
-      automatic_uploads: true,
-      images_upload_url: `${config.baseUrlWebsite}upload/`,
-      images_upload_handler: (blobInfo, progress) => new Promise((resolve, reject) => {
-        // Use Flmngr's upload handler for automatic paste/drop uploads
-        const formData = new FormData();
-        formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-        fetch(`${config.baseUrlWebsite}upload/`, {
-          method: 'POST',
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            if (result && result.location) {
-              resolve(result.location);
-            } else {
-              reject('Upload failed');
-            }
-          })
-          .catch(() => reject('Upload failed'));
-      }),
-      // Keep TinyMCE's native upload flow for paste functionality
-      bootstrapConfig: {
-        language: window.iso_user,
-        url: `${config.baseUrlWebsite}js/tiny_mce/plugins/bootstrap/`,
-        iconFont: 'fontawesome5',
-        imagesPath: `${config.baseUrlWebsite}upload`,
-        key: this.fetchKey ? this.fetchKey(window.location.hostname) : undefined,
-        enableTemplateEdition: true,
-        elements: { // only the following elements will be added to the toolbar
-          btn: true,
-          icon: true,
-          template: false,
-          alert: true,
-          card: false,
-          elements: false,
-        },
-      },
-      editorStyleFormats: {
-        textStyles: true,
-        blockStyles: true,
-        containerStyles: true,
-        responsive: ['xs', 'sm'],
-        spacing: ['all', 'x', 'y', 'top', 'right', 'bottom', 'left'],
-      },
-      style_formats_autohide: true,
       editor_selector: ComponentsMap.tineMceEditor.selectorClass,
-      init_instance_callback: () => { this.changeToMaterial(); },
-      setup: (editor) => { this.setupEditor(editor); },
+      init_instance_callback: () => {
+        this.changeToMaterial();
+      },
+      setup: (editor) => {
+        this.setupEditor(editor);
+      },
       ...config,
     };
 
     if (typeof window.defaultTinyMceConfig !== 'undefined') {
       Object.assign(cfg, window.defaultTinyMceConfig);
     }
+
     if (typeof cfg.editor_selector !== 'undefined') {
       cfg.selector = `.${cfg.editor_selector}`;
     }
 
-    // Defensive mapping for legacy toolbar configs (TinyMCE 4 -> 5)
-    if (!cfg.toolbar) {
-      const legacyToolbar = [cfg.toolbar1, cfg.toolbar2, cfg.toolbar3].filter(Boolean).join(' ');
-      if (legacyToolbar) {
-        cfg.toolbar = legacyToolbar.replace(/,/g, ' ');
-      }
-    }
-    delete cfg.toolbar1;
-    delete cfg.toolbar2;
-    delete cfg.toolbar3;
+    EventEmitter.emit('initTinyMCE', {
+      config: cfg,
+    });
 
-    EventEmitter.emit('initTinyMCE', {config: cfg});
-
+    // Change icons in popups
     $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
       this.changeToMaterial();
     });
 
-    // Ensure legacy alias exists when running TinyMCE 5+
-    if (typeof window.tinyMCE === 'undefined' && typeof window.tinymce !== 'undefined') {
-      window.tinyMCE = window.tinymce;
-    }
     window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
   }
 
-  fetchKey(hostname) {
-    const keys = {
-      'bouwstaalmat.nl': '',
-      'bouwstaalmat.viho.nl': '',
-      'constructiebalk.nl': '3wORV+ZdWifIWnUWSxdAUtCPcNfJnjU/DMxjcGDxcZnBQVJgpRjWdVZMdqAhsj5pbZd3c/h/s41crmf9zwJuv3VrO/4pkSLOmAdBZJT3W6Y=',
-      'constructieklus.nl': '',
-      'constructieklus.viho.nl': '',
-      'demodernesmid.nl': '',
-      'demodernesmid.viho.nl': 'cO4FCAY9a7EYM+WNt80HO+zP8NYYqmVXAXbxgL6gbmPashb4b9GpWNnBUAErfRNXXYLw30+WTmQ6IQvaGJ1N8A==',
-      'gerofitness.nl': '',
-      'gerofitness.viho.nl': '',
-      'ijzershop.frl': 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=',
-      'ijzershop.nl': 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=',
-      'ijzershop.eu': 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=',
-      'modernesmid-webshop.local': 'cC0luxUtaZy9sMivhCZz+PbOGbkvLEdccW5/Y484dpmftIOvjnss+mhviBjMWYpzfTD8gujkxPFveiunw80iXmfbHphHun6k0qBPJyPtFC8=',
-      'paneelhek.nl': '',
-      'paneelhek.viho.nl': '',
-      'viho.nl': 'paLRcpM5PcDm1duliaErNH68VcRsntx2MacT2bqMPdq9je0ISiUiWoBLH1+eLBLTCEyySTXdHIxel6w2Aceuki8+MEabGVzHjNngtZBzun4=',
-    };
-
-    if (Object.prototype.hasOwnProperty.call(keys, hostname)) {
-      return keys[hostname];
-    }
-    return 'n8ampBLr4qZSJqSCe4Sf0bxgNwjjsIStecJ7VbWmWRUHekl8RRhtoDbQJy9WmCKfWF0EU/4Aqc/i/65mnZtQ01nw0GXPr/2zKFNaNuwdDRY=';
-  }
-
+  /**
+   * Setup TinyMCE editor once it has been initialized
+   *
+   * @param editor
+   */
   setupEditor(editor) {
-    // Flmngr automatically registers its own button and file picker
-    // No need to manually register a file manager button
-
     editor.on('loadContent', (event) => {
       this.handleCounterTiny(event.target.id);
     });
@@ -233,10 +156,21 @@ class TinyMCEEditor {
       window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
-    editor.on('blur', () => { window.tinyMCE.triggerSave(); });
-    EventEmitter.emit('tinymceEditorSetup', {editor});
+    editor.on('blur', () => {
+      window.tinyMCE.triggerSave();
+    });
+    EventEmitter.emit('tinymceEditorSetup', {
+      editor,
+    });
   }
 
+  /**
+   * When the editor is inside a tab it can cause a bug on tab switching.
+   * So we check if the editor is contained in a navigation and refresh the editor when its
+   * parent tab is shown.
+   *
+   * @param config
+   */
   watchTabChanges(config) {
     $(config.selector).each((index, textarea) => {
       const translatedField = $(textarea).closest('.translation-field');
@@ -245,79 +179,56 @@ class TinyMCEEditor {
       if (translatedField.length && tabContainer.length) {
         const textareaLocale = translatedField.data('locale');
         const textareaLinkSelector = `.nav-item a[data-locale="${textareaLocale}"]`;
+
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
           const editor = window.tinyMCE.get(textarea.id);
 
-          if (editor) { editor.setContent(editor.getContent()); }
-          EventEmitter.emit('languageSelected', {selectedLocale: textareaLocale, form});
+          if (editor) {
+            // Reset content to force refresh of editor
+            editor.setContent(editor.getContent());
+          }
+
+          EventEmitter.emit('languageSelected', {
+            selectedLocale: textareaLocale,
+            form,
+          });
         });
       }
     });
+
     EventEmitter.on('languageSelected', (data) => {
       const textareaLinkSelector = `.nav-item a[data-locale="${data.selectedLocale}"]`;
+
       $(textareaLinkSelector).click();
     });
   }
 
+  /**
+   * Loads the TinyMCE javascript library and then init the editors
+   *
+   * @param config
+   */
   loadAndInitTinyMCE(config) {
-    if (this.tinyMCELoaded) { return; }
+    if (this.tinyMCELoaded) {
+      return;
+    }
+
     this.tinyMCELoaded = true;
-    // Load TinyMCE v5 from CDN. Use a configurable Tiny Cloud API key when available
-    // to remove the watermark and comply with Tiny Cloud usage. Fallback to `no-api-key`.
-    const apiKey = this.resolveTinyCloudApiKey();
-    const tinymceCdn = `https://cdn.tiny.cloud/1/${apiKey || 'thywktdun16es73fx5ko6wc3uuw0nqqn50t9w5i3cygksqba'}/tinymce/5/tinymce.min.js`;
-    $.getScript(tinymceCdn, () => {
-      // Create legacy alias for code paths using window.tinyMCE
-      if (typeof window.tinyMCE === 'undefined' && typeof window.tinymce !== 'undefined') {
-        window.tinyMCE = window.tinymce;
-      }
-      // Initialize Flmngr with TinyMCE
-      if (typeof Flmngr !== 'undefined' && typeof Flmngr.load === 'function') {
-        Flmngr.load({
-          apiKey: 'oLYgeawoG7PR53HJ58cjWLzX',
-          urlFileManager: 'https://fm.flmngr.com/fileManager',
-          urlFiles: `${config.baseUrlWebsite}upload/`,
-        });
-      }
+    const pathArray = config.baseAdminUrl.split('/');
+    pathArray.splice(pathArray.length - 2, 2);
+    const finalPath = pathArray.join('/');
+    window.tinyMCEPreInit = {};
+    window.tinyMCEPreInit.base = `${finalPath}/js/tiny_mce`;
+    window.tinyMCEPreInit.suffix = '.min';
+    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {
       this.setupTinyMCE(config);
     });
   }
 
-  // Try to resolve Tiny Cloud API key from multiple sources so projects can configure it
-  // without code changes. Priority:
-  // 1) window.ms.tinyApiKey
-  // 2) window.prestashop.ms.tinyApiKey
-  // 3) window.TINYMCE_API_KEY
-  // 4) <meta name="tinymce-api-key" content="..."> or body[data-tiny-api-key]
-  // Returns undefined if no key is provided, which falls back to `no-api-key`.
-  resolveTinyCloudApiKey() {
-    try {
-      const w = window || {};
-      const fromMs = w.ms && typeof w.ms.tinyApiKey === 'string' ? w.ms.tinyApiKey.trim() : '';
-      if (fromMs) { return fromMs; }
-
-      const fromPs = w.prestashop && w.prestashop.ms && typeof w.prestashop.ms.tinyApiKey === 'string'
-        ? w.prestashop.ms.tinyApiKey.trim() : '';
-      if (fromPs) { return fromPs; }
-
-      const fromGlobal = typeof w.TINYMCE_API_KEY === 'string' ? w.TINYMCE_API_KEY.trim() : '';
-      if (fromGlobal) { return fromGlobal; }
-
-      const meta = document && document.querySelector
-        ? document.querySelector('meta[name="tinymce-api-key"]') : null;
-      const fromMeta = meta && meta.getAttribute('content') ? meta.getAttribute('content').trim() : '';
-      if (fromMeta) { return fromMeta; }
-
-      const bodyKey = document && document.body && document.body.dataset
-        ? (document.body.dataset.tinyApiKey || '').trim() : '';
-      if (bodyKey) { return bodyKey; }
-    } catch (e) {
-      // ignore resolution errors and fall back
-    }
-    return 'thywktdun16es73fx5ko6wc3uuw0nqqn50t9w5i3cygksqba';
-  }
-
+  /**
+   * Replace initial TinyMCE icons with material icons
+   */
   changeToMaterial() {
     const materialIconAssoc = {
       'mce-i-code': '<i class="material-icons">code</i>',
@@ -340,20 +251,40 @@ class TinyMCEEditor {
       'mce-i-browse': '<i class="material-icons">attachment</i>',
       'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
     };
-    $.each(materialIconAssoc, (index, value) => { $(`.${index}`).replaceWith(value); });
+
+    $.each(materialIconAssoc, (index, value) => {
+      $(`.${index}`).replaceWith(value);
+    });
   }
 
+  /**
+   * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
+   * problems you should be in sync with the TinyMceMaxLengthValidator PHP class. Both codes must behave the same
+   * way.
+   *
+   * @param id
+   */
   handleCounterTiny(id) {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
     const editor = window.tinyMCE.get(id);
     const max = editor.getBody() ? editor.getBody().textContent.length : 0;
-    textarea.parent().find('span.currentLength').text(max);
+
+    textarea
+      .parent()
+      .find('span.currentLength')
+      .text(max);
     if (counterType !== 'recommended' && max > counter) {
-      textarea.parent().find('span.maxLength').addClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .addClass('text-danger');
     } else {
-      textarea.parent().find('span.maxLength').removeClass('text-danger');
+      textarea
+        .parent()
+        .find('span.maxLength')
+        .removeClass('text-danger');
     }
   }
 }

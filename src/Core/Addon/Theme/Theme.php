@@ -93,43 +93,20 @@ class Theme implements AddonInterface
     public function getModulesToEnable()
     {
         $modulesToEnable = $this->get('global_settings.modules.to_enable', []);
-        if (!is_array($modulesToEnable)) {
-            $modulesToEnable = [];
-        }
-
         $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', []);
 
         foreach ($modulesToHook as $modules) {
-            if (!is_array($modules)) {
-                continue;
-            }
-            foreach (array_values($modules) as $module) {
-                $moduleName = null;
-                if (is_string($module)) {
-                    $moduleName = $module;
-                } elseif (is_array($module)) {
-                    // Support two syntaxes:
-                    // 1) {module: "ps_x", hook: "..."}
-                    if (isset($module['module']) && is_string($module['module'])) {
-                        $moduleName = $module['module'];
-                    } else {
-                        // 2) {ps_x: { ...options }} (single-key map)
-                        $firstKey = key($module);
-                        if (is_string($firstKey)) {
-                            $moduleName = $firstKey;
-                        }
+            if (is_array($modules)) {
+                foreach (array_values($modules) as $module) {
+                    if (is_array($module)) {
+                        $module = key($module);
                     }
-                }
-
-                if (null !== $moduleName && $moduleName !== '' && !in_array($moduleName, $modulesToEnable, true)) {
-                    $modulesToEnable[] = $moduleName;
+                    if (null !== $module && !in_array($module, $modulesToEnable)) {
+                        $modulesToEnable[] = $module;
+                    }
                 }
             }
         }
-
-        // Ensure we always return a flat array of strings
-        $modulesToEnable = array_values(array_filter($modulesToEnable, 'is_string'));
-        $modulesToEnable = array_values(array_unique($modulesToEnable));
 
         return $modulesToEnable;
     }

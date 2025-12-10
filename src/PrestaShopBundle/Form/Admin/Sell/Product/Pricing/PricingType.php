@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use MsThemeConfig\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesTypeOverride;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormHelper;
@@ -111,7 +112,7 @@ class PricingType extends TranslatorAwareType
                     'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                 ],
             ])
-            ->add('catalog_price_rules', CatalogPriceRulesType::class, ['label' => false])
+            ->add('catalog_price_rules', CatalogPriceRulesTypeOverride::class, ['label' => false])
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',

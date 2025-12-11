@@ -389,6 +389,7 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20251209095908" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20251209095908" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20251209095908" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/.cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

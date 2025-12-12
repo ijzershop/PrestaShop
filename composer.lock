@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "d6c5910c34e7ab145d8ffbefaf7bb95f",
-=======
     "content-hash": "e0acec59d7e0834f788059a7d2e12216",
->>>>>>> Prestashop_Master/9.0.2-build
     "packages": [
         {
             "name": "api-platform/core",
@@ -4721,18 +4717,6 @@
         },
         {
             "name": "prestashop/classic",
-<<<<<<< HEAD
-            "version": "3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "6d0c1fa3073e6b21e9bb54641e8655b13d331eb7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/6d0c1fa3073e6b21e9bb54641e8655b13d331eb7",
-                "reference": "6d0c1fa3073e6b21e9bb54641e8655b13d331eb7",
-=======
             "version": "3.0.4",
             "source": {
                 "type": "git",
@@ -4743,7 +4727,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/b84c8548e15fea8052364aa88c0b5944c0333e01",
                 "reference": "b84c8548e15fea8052364aa88c0b5944c0333e01",
->>>>>>> Prestashop_Master/9.0.2-build
                 "shasum": ""
             },
             "require-dev": {
@@ -4767,15 +4750,9 @@
             ],
             "description": "Classic theme for develop PrestaShop version",
             "support": {
-<<<<<<< HEAD
-                "source": "https://github.com/PrestaShop/classic-theme/tree/3.0.3"
-            },
-            "time": "2025-06-17T05:24:07+00:00"
-=======
                 "source": "https://github.com/PrestaShop/classic-theme/tree/3.0.4"
             },
             "time": "2025-10-31T11:00:29+00:00"
->>>>>>> Prestashop_Master/9.0.2-build
         },
         {
             "name": "prestashop/contactform",
@@ -5288,21 +5265,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_apiresources.git",
-<<<<<<< HEAD
-                "reference": "20fb2231e1d92a0736aaf8d68fd28136810fa251"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/20fb2231e1d92a0736aaf8d68fd28136810fa251",
-                "reference": "20fb2231e1d92a0736aaf8d68fd28136810fa251",
-=======
                 "reference": "7c99f0bfccf0226ac13ffc424092e8fe2d7330c0"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/PrestaShop/ps_apiresources/zipball/7c99f0bfccf0226ac13ffc424092e8fe2d7330c0",
                 "reference": "7c99f0bfccf0226ac13ffc424092e8fe2d7330c0",
->>>>>>> Prestashop_Master/9.0.2-build
                 "shasum": ""
             },
             "require": {
@@ -5368,11 +5336,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/ps_apiresources/tree/v0.2.0"
             },
-<<<<<<< HEAD
-            "time": "2025-09-23T06:12:03+00:00"
-=======
             "time": "2025-11-28T16:38:53+00:00"
->>>>>>> Prestashop_Master/9.0.2-build
         },
         {
             "name": "prestashop/ps_banner",

@@ -1,4 +1,5 @@
-<?php
+import initPrestashopComponents from "@app/utils/init-components";
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,11 +25,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Note this value must be hard-coded and can't import PrestaShop\PrestaShop\Core\Version::VERSION because it's loaded/used
-// in very basic scripts that don't use autoload and can't recognize the class
-define('_PS_INSTALL_VERSION_', '9.0.2');
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 80100);
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80499);
+const {$} = window;
+$(() => {
+  initPrestashopComponents();
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '8.1');
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.4');
+  window.prestashop.component.initComponents(
+    [
+      'TranslatableInput',
+      'TranslatableField',
+      'TinyMCEEditor',
+    ],
+  );
+  const translatorInput = window.prestashop.instance.translatableInput;
+});

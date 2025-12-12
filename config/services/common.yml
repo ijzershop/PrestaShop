@@ -25,6 +25,9 @@ services:
     annotation_reader:
         class: Doctrine\Common\Annotations\AnnotationReader
 
+    # Ensure Doctrine ORM's default annotation metadata driver can find the reader service
+    doctrine.orm.metadata.annotation_reader: '@annotation_reader'
+
     PrestaShopBundle\DependencyInjection\RuntimeConstEnvVarProcessor:
         public: false
         tags: ['container.env_var_processor']

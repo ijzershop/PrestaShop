@@ -116,7 +116,7 @@ class TinyMCEEditor {
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
       // We bundle skin/content css via webpack, so disable TinyMCE auto-loading
-      skin: false,
+      skin: 'prestashop',
       content_css: false,
       menubar: false,
       statusbar: false,

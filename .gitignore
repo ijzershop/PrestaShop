@@ -240,3 +240,4 @@ admin-dev/themes/new-theme/js/msthemeconfig_grid/
 app/Resources/cronscripts/
 js/tiny_mce/plugins/
 js/filemanager/
+!/themes/modernesmid/assets/

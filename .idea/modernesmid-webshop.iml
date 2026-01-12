@@ -921,6 +921,26 @@
       <excludeFolder url="file://$MODULE_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/node_modules/yallist" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/themes/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20260109092929" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20260109093104" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20260109092929" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260109092928" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260109093103" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

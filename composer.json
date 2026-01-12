@@ -239,6 +239,7 @@
         }
     },
     "config": {
+        "platform-check": false,
         "allow-plugins": {
             "behat/behat": true,
             "composer/installers": true,

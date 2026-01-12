@@ -59,7 +59,7 @@ function tinySetup(config) {
     },
     language: iso_user,
     content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
-    skin: 'prestashop',
+    skin: 'oxide',
     mobile: {
       theme: 'mobile',
       plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],

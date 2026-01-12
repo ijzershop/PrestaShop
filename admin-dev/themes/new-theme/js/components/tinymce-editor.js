@@ -22,26 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-// TinyMCE 5 imports (native)
-// Core
-import tinymce from 'tinymce/tinymce';
-// Theme & icons
-import 'tinymce/themes/silver';
-import 'tinymce/icons/default';
-// Skins (bundled via webpack). We disable automatic loading and include CSS ourselves
-import 'tinymce/skins/ui/oxide/skin.min.css';
-import 'tinymce/skins/content/default/content.min.css';
-// Common plugins used in PrestaShop toolbars
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/table';
-import 'tinymce/plugins/media';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/advlist';
-import 'tinymce/plugins/code';
-import 'tinymce/plugins/autoresize';
-import 'tinymce/plugins/hr';
-import 'tinymce/plugins/directionality';
 import ComponentsMap from '@components/components-map';
 import {EventEmitter} from './event-emitter';
 
@@ -49,8 +29,9 @@ const {$} = window;
 
 /**
  * This class init TinyMCE instances in the back-office. It is wildly inspired by
- * the scripts from js/admin. This version uses TinyMCE v5 installed via npm and
- * fully integrated in the back-office theme.
+ * the scripts from js/admin And it actually loads TinyMCE from the js/tiny_mce
+ * folder along with its modules. One improvement could be to install TinyMCE via
+ * npm and fully integrate in the back-office theme.
  */
 class TinyMCEEditor {
   constructor(options) {
@@ -84,11 +65,11 @@ class TinyMCEEditor {
    * @param config
    */
   setupTinyMCE(config) {
-    // Ensure global is set for modules (like N1ED) that expect window.tinymce
-    if (!window.tinymce) {
-      window.tinymce = tinymce;
+    if (typeof tinyMCE === 'undefined') {
+      this.loadAndInitTinyMCE(config);
+    } else {
+      this.initTinyMCE(config);
     }
-    this.initTinyMCE(config);
   }
 
   /**
@@ -99,25 +80,29 @@ class TinyMCEEditor {
   initTinyMCE(config) {
     const cfg = {
       selector: '.rte',
-      plugins: [
-        'link', 'image', 'table', 'media', 'lists', 'advlist', 'code', 'autoresize', 'hr', 'directionality',
-      ],
+      plugins:
+      /* eslint-disable-next-line max-len */
+        'align colorpicker link image filemanager table media placeholder lists advlist code table autoresize hr',
       browser_spellcheck: true,
-      toolbar:
-        'undo redo | blocks | bold italic underline strikethrough blockquote | '
-        + 'alignleft aligncenter alignright alignjustify | bullist numlist | '
-        + 'link image media table | forecolor backcolor | ltr rtl | code | hr',
+      toolbar1:
+      /* eslint-disable-next-line max-len */
+        'code,colorpicker,bold,italic,underline,strikethrough,blockquote,link,align,bullist,numlist,table,image,media,formatselect,hr',
+      toolbar2: '',
       language: window.iso_user,
-      // External file manager (if present) can still be provided via external_plugins
       external_filemanager_path: `${config.baseAdminUrl}filemanager/`,
       filemanager_title: 'File manager',
       external_plugins: {
         filemanager: `${config.baseAdminUrl}filemanager/plugin.min.js`,
       },
       content_style: config.langIsRtl ? 'body {direction:rtl;}' : '',
-      // We bundle skin/content css via webpack, so disable TinyMCE auto-loading
       skin: 'prestashop',
-      content_css: false,
+      mobile: {
+        theme: 'mobile',
+        plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code', 'hr'],
+        toolbar:
+        /* eslint-disable-next-line max-len */
+          'undo code colorpicker bold italic underline strikethrough blockquote link align bullist numlist table formatselect styleselect hr',
+      },
       menubar: false,
       statusbar: false,
       relative_urls: false,
@@ -129,7 +114,7 @@ class TinyMCEEditor {
       rel_list: [{title: 'nofollow', value: 'nofollow'}],
       editor_selector: ComponentsMap.tineMceEditor.selectorClass,
       init_instance_callback: () => {
-        // No-op for TinyMCE v5
+        this.changeToMaterial();
       },
       setup: (editor) => {
         this.setupEditor(editor);
@@ -149,8 +134,12 @@ class TinyMCEEditor {
       config: cfg,
     });
 
-    // Initialize TinyMCE v5
-    window.tinymce.init(cfg);
+    // Change icons in popups
+    $('body').on('click', '.mce-btn, .mce-open, .mce-menu-item', () => {
+      this.changeToMaterial();
+    });
+
+    window.tinyMCE.init(cfg);
     this.watchTabChanges(cfg);
   }
 
@@ -164,11 +153,11 @@ class TinyMCEEditor {
       this.handleCounterTiny(event.target.id);
     });
     editor.on('change', (event) => {
-      window.tinymce.triggerSave();
+      window.tinyMCE.triggerSave();
       this.handleCounterTiny(event.target.id);
     });
     editor.on('blur', () => {
-      window.tinymce.triggerSave();
+      window.tinyMCE.triggerSave();
     });
     EventEmitter.emit('tinymceEditorSetup', {
       editor,
@@ -193,7 +182,7 @@ class TinyMCEEditor {
 
         $(textareaLinkSelector, tabContainer).on('shown.bs.tab', () => {
           const form = $(textarea).closest('form');
-          const editor = window.tinymce.get(textarea.id);
+          const editor = window.tinyMCE.get(textarea.id);
 
           if (editor) {
             // Reset content to force refresh of editor
@@ -220,14 +209,53 @@ class TinyMCEEditor {
    *
    * @param config
    */
-  // Legacy dynamic loader removed — TinyMCE is bundled via webpack
-  // loadAndInitTinyMCE() no longer needed
+  loadAndInitTinyMCE(config) {
+    if (this.tinyMCELoaded) {
+      return;
+    }
+
+    this.tinyMCELoaded = true;
+    const pathArray = config.baseAdminUrl.split('/');
+    pathArray.splice(pathArray.length - 2, 2);
+    const finalPath = pathArray.join('/');
+    window.tinyMCEPreInit = {};
+    window.tinyMCEPreInit.base = `${finalPath}/js/tiny_mce`;
+    window.tinyMCEPreInit.suffix = '.min';
+    $.getScript(`${finalPath}/js/tiny_mce/tinymce.min.js`, () => {
+      this.setupTinyMCE(config);
+    });
+  }
 
   /**
    * Replace initial TinyMCE icons with material icons
    */
-  // changeToMaterial() is not applicable to TinyMCE v5 toolbars
-  changeToMaterial() {}
+  changeToMaterial() {
+    const materialIconAssoc = {
+      'mce-i-code': '<i class="material-icons">code</i>',
+      'mce-i-none': '<i class="material-icons">format_color_text</i>',
+      'mce-i-bold': '<i class="material-icons">format_bold</i>',
+      'mce-i-italic': '<i class="material-icons">format_italic</i>',
+      'mce-i-underline': '<i class="material-icons">format_underlined</i>',
+      'mce-i-strikethrough': '<i class="material-icons">format_strikethrough</i>',
+      'mce-i-blockquote': '<i class="material-icons">format_quote</i>',
+      'mce-i-link': '<i class="material-icons">link</i>',
+      'mce-i-alignleft': '<i class="material-icons">format_align_left</i>',
+      'mce-i-aligncenter': '<i class="material-icons">format_align_center</i>',
+      'mce-i-alignright': '<i class="material-icons">format_align_right</i>',
+      'mce-i-alignjustify': '<i class="material-icons">format_align_justify</i>',
+      'mce-i-bullist': '<i class="material-icons">format_list_bulleted</i>',
+      'mce-i-numlist': '<i class="material-icons">format_list_numbered</i>',
+      'mce-i-image': '<i class="material-icons">image</i>',
+      'mce-i-table': '<i class="material-icons">grid_on</i>',
+      'mce-i-media': '<i class="material-icons">video_library</i>',
+      'mce-i-browse': '<i class="material-icons">attachment</i>',
+      'mce-i-checkbox': '<i class="mce-ico mce-i-checkbox"></i>',
+    };
+
+    $.each(materialIconAssoc, (index, value) => {
+      $(`.${index}`).replaceWith(value);
+    });
+  }
 
   /**
    * Updates the characters counter. This counter is used for front but if you don't want to encounter Validation
@@ -240,7 +268,7 @@ class TinyMCEEditor {
     const textarea = $(`#${id}`);
     const counter = textarea.attr('counter');
     const counterType = textarea.attr('counter_type');
-    const editor = window.tinymce.get(id);
+    const editor = window.tinyMCE.get(id);
     const max = editor.getBody() ? editor.getBody().textContent.length : 0;
 
     textarea

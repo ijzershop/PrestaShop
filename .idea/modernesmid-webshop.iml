@@ -941,6 +941,20 @@
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20260109093103" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260109092928" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260109093103" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260113102326" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/n1ed.bak_20260113102330" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/n1ed.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20260113102330" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260114104916" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -90,6 +90,10 @@
        * Check if checkboxes must be checked
        */
       refreshPermissionsCheckboxes(permissions: Record<string, any>): void {
+        if (!permissions) {
+          return;
+        }
+
         Object.keys(this.types).forEach((t: string) => {
           if (t === TYPE_ALL) {
             return;

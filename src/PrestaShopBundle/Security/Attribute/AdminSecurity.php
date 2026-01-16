@@ -71,7 +71,7 @@ class AdminSecurity
      * @deprecated once the back office is migrated, rely only on route.
      * The url for the redirection
      */
-    protected string $url = 'admin_domain';
+    protected string $url = 'admin_homepage';
 
     /**
      * The message of the exception - has a nice default if not set.

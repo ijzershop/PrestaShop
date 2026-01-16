@@ -66,7 +66,7 @@
         :permission-id="pId.toString()"
         :permission-key="permissionKey"
         :level-depth="levelDepth + 1"
-        :profile-permissions.sync="profilePermissions"
+        :profile-permissions="profilePermissions"
         :employee-permissions="employeePermissions"
         :types="types"
         @childUpdated="onChildUpdate"
@@ -97,28 +97,33 @@
       },
       profilePermissions: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       employeePermissions: {
-        type: Object,
+        type: [Object, Array],
         required: false,
         default: () => ({}),
       },
       permission: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       permissionId: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       permissionKey: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       levelDepth: {
         type: Number,
-        required: true,
+        required: false,
+        default: 1,
       },
       canEdit: {
         type: Boolean,
@@ -127,7 +132,8 @@
       },
       types: {
         type: Array as PropType<Array<string>>,
-        required: true,
+        required: false,
+        default: () => ([]),
       },
     },
     data(): {permissionValues: Array<string>, TYPE_ALL: string} {
@@ -162,12 +168,12 @@
     methods: {
       canEditCheckbox(type: string): boolean {
         // We don't check for employee permissions
-        if (Object.keys(this.employeePermissions).length === 0) {
+        if (!this.employeePermissions || (Array.isArray(this.employeePermissions) && this.employeePermissions.length === 0) || Object.keys(this.employeePermissions).length === 0) {
           return true;
         }
 
         // Permission id not found
-        if (!this.employeePermissions[this.permissionId]) {
+        if (!(this.permissionId in this.employeePermissions)) {
           return false;
         }
 
@@ -209,7 +215,11 @@
       hasPermission(type: string): boolean {
         const permission = this.getPermission();
 
-        return permission !== undefined && parseInt(permission[type], 10) === 1;
+        if (permission === undefined) {
+          return false;
+        }
+
+        return parseInt(permission[type], 10) === 1;
       },
       /**
        * Refresh permissions and checkboxes
@@ -283,9 +293,11 @@
         }
 
         // Update profile permission to prevent wrong bulk refresh
-        this.types.forEach((t) => {
-          this.profilePermissions[this.permissionId][<string>t] = this.permissionValues.includes(<string>t) ? '1' : '0';
-        });
+        if (this.profilePermissions[this.permissionId]) {
+          this.types.forEach((t) => {
+            this.profilePermissions[this.permissionId][<string>t] = this.permissionValues.includes(<string>t) ? '1' : '0';
+          });
+        }
 
         if (this.permissionValues.includes(type)) {
           this.$emit('childUpdated', type);

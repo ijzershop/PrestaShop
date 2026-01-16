@@ -367,7 +367,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         return null !== $shopConstraint->getShopId()
             ? $shopConstraint->getShopId()->getValue()
             : null
-        ;
+            ;
     }
 
     /**
@@ -427,10 +427,17 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     private function buildShopConstraintFromContext(): ShopConstraint
     {
         if (Shop::getContext() === Shop::CONTEXT_SHOP) {
-            return ShopConstraint::shop(Shop::getContextShopID());
+            $idShop = (int) Shop::getContextShopID();
+            if ($idShop > 0) {
+                return ShopConstraint::shop($idShop);
+            }
         } elseif (Shop::getContext() === Shop::CONTEXT_GROUP) {
-            return ShopConstraint::shopGroup(Shop::getContextShopGroupID());
+            $idShopGroup = (int) Shop::getContextShopGroupID();
+            if ($idShopGroup > 0) {
+                return ShopConstraint::shopGroup($idShopGroup);
+            }
         }
+
         return ShopConstraint::allShops();
     }
 

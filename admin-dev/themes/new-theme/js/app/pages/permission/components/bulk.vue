@@ -62,11 +62,13 @@
     props: {
       types: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       profilePermissions: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
     },
     data(): {status: Array<string>} {
@@ -90,7 +92,7 @@
        * Check if checkboxes must be checked
        */
       refreshPermissionsCheckboxes(permissions: Record<string, any>): void {
-        if (!permissions) {
+        if (!permissions || !this.types || Object.keys(permissions).length === 0) {
           return;
         }
 
@@ -103,7 +105,7 @@
 
           // eslint-disable-next-line no-restricted-syntax
           for (const perm of Object.values(permissions)) {
-            if (perm[t] === '0') {
+            if (perm && perm[t] === '0') {
               isChecked = false;
 
               break;

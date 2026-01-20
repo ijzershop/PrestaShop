@@ -979,6 +979,9 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/wkwebp.bak_20260116104616" />
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20260116104616" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260116104616" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260114104916" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260115134232" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260116104616" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

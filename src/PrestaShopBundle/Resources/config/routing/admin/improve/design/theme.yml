@@ -8,7 +8,7 @@ admin_themes_index:
 
 admin_themes_upload_logos:
   path: /upload-logos
-  methods: [ POST ]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::uploadLogosAction
     _legacy_controller: AdminThemes
@@ -32,7 +32,7 @@ admin_themes_import:
 
 admin_themes_enable:
   path: /{themeName}/enable
-  methods: [ POST ]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::enableAction
     _legacy_controller: AdminThemes
@@ -44,7 +44,7 @@ admin_themes_enable:
 
 admin_themes_delete:
   path: /{themeName}/delete
-  methods: [ POST ]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::deleteAction
     _legacy_controller: AdminThemes
@@ -56,7 +56,7 @@ admin_themes_delete:
 
 admin_themes_adapt_to_rtl_languages:
   path: /adapt-to-rtl-languages
-  methods: [ POST ]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::adaptToRTLLanguagesAction
     _legacy_controller: AdminThemes
@@ -74,7 +74,7 @@ admin_theme_customize_layouts:
 
 admin_themes_reset_layouts:
   path: /{themeName}/reset-layouts
-  methods: [ POST ]
+  methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::resetLayoutsAction
     _legacy_controller: AdminThemes

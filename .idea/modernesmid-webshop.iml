@@ -982,6 +982,35 @@
       <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260114104916" />
       <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260115134232" />
       <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260116104616" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/steasycheckout" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/Content afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/buiskoppelingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/constructiebalken" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/duurzaam" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/instructiepaginas" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/offerte afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload/uploaded_files_thumbs/zaaghoeken" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/facturen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/facturen_bc" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/facturendownloads" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/koopman" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/pakbonnen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/steasycheckout" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/testlabels" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/Content afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/buiskoppelingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/constructiebalken" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/duurzaam" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/instructiepaginas" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/offerte afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files/zaaghoeken" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/Content afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/buiskoppelingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/constructiebalken" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/duurzaam" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/instructiepaginas" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/offerte afbeeldingen" />
+      <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/zaaghoeken" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

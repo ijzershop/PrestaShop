@@ -1,241 +1,249 @@
 
-> development_part_modernesmid@1.0.0 build
-> cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode production
-(node:22688) [DEP_WEBPACK_MAIN_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: MainTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
-(Use `node --trace-deprecation ...` to show where the warning was created)
-(node:22688) [DEP_WEBPACK_CHUNK_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: ChunkTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
-(node:22688) [DEP_WEBPACK_MAIN_TEMPLATE_HASH_FOR_CHUNK] DeprecationWarning: MainTemplate.hooks.hashForChunk is deprecated (use JavascriptModulesPlugin.getCompilationHooks().chunkHash instead)
-(node:22688) [DEP_WEBPACK_COMPILATION_NORMAL_MODULE_LOADER_HOOK] DeprecationWarning: Compilation.hooks.normalModuleLoader was moved to NormalModule.getCompilationHooks(compilation).loader
-Deprecation Warning [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-More info: https://sass-lang.com/d/legacy-js-api
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-2 │ @import 'swiper/css/bundle';
-  │         ^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 2:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-3 │ @import "./modernesmid-bootstrap-variables";
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 3:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-4 │ @import "bootstrap/scss/bootstrap";
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 4:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-5 │ @import "./bs4-shims";
-  │         ^^^^^^^^^^^^^
-  ╵
-    stdin 5:9  root stylesheet
-(node:22688) [DEP_WEBPACK_COMPILATION_ASSETS] DeprecationWarning: Compilation.assets will be frozen in future, all modifications are deprecated.
-BREAKING CHANGE: No more changes should happen to Compilation.assets after sealing the Compilation.
-        Do changes to assets earlier, e. g. in Compilation.hooks.processAssets.
-        Make sure to select an appropriate stage from Compilation.PROCESS_ASSETS_STAGE_*.
-(node:22688) [DEP_WEBPACK_MODULE_ID] DeprecationWarning: Module.id: Use new ChunkGraph API
-(node:22688) [DEP_WEBPACK_MODULE_UPDATE_HASH] DeprecationWarning: Module.updateHash: Use new ChunkGraph API
-(node:22688) [DEP_WEBPACK_CHUNK_MODULES_ITERABLE] DeprecationWarning: Chunk.modulesIterable: Use new ChunkGraph API
-(node:22688) [DEP_WEBPACK_CHUNK_GROUP_GET_MODULE_INDEX_2] DeprecationWarning: ChunkGroup.getModuleIndex2 was renamed to getModulePostOrderIndex
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use string.quote instead.
-More info and automated migrator: https://sass-lang.com/d/import
-   ╷
-13 │ $breadcrumb-divider: quote(">");
-   │                      ^^^^^^^^^^
-   ╵
-    css\modernesmid-bootstrap-variables.scss 13:22  @import
-    stdin 3:9                                       root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use string.quote instead.
-More info and automated migrator: https://sass-lang.com/d/import
-   ╷
-87 │ $breadcrumb-divider: quote(">");
-   │                      ^^^^^^^^^^
-   ╵
-    css\modernesmid-bootstrap-variables.scss 87:22  @import
-    stdin 3:9                                       root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-1 │ @import "mixins/banner";
-  │         ^^^^^^^^^^^^^^^
-  ╵
-    node_modules\bootstrap\scss\bootstrap.scss 1:9  @import
-    stdin 4:9                                       root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-207 │   @return mix(white, $color, $weight);
-    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 207:11  tint-color()
-    node_modules\bootstrap\scss\_variables.scss 79:12   @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-212 │   @return mix(black, $color, $weight);
-    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 212:11  shade-color()
-    node_modules\bootstrap\scss\_variables.scss 84:12   @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-342 │ $light-bg-subtle:         mix($gray-100, $white) !default;
-    │                           ^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_variables.scss 342:27  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
-color.channel($color, "red", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-185 │     "r": red($color),
-    │          ^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 185:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
-color.channel($color, "green", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-186 │     "g": green($color),
-    │          ^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 186:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: blue() is deprecated. Suggestion:
-color.channel($color, "blue", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-187 │     "b": blue($color)
-    │          ^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 187:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
-color.channel($color, "red", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-   ╷
-37 │   @return red($value), green($value), blue($value);
-   │           ^^^^^^^^^^^
-   ╵
-    node_modules\bootstrap\scss\_functions.scss 37:11   to-rgb()
-    node_modules\bootstrap\scss\_variables.scss 846:31  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
-color.channel($color, "green", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-   ╷
-37 │   @return red($value), green($value), blue($value);
-   │                        ^^^^^^^^^^^^^
-   ╵
-    node_modules\bootstrap\scss\_functions.scss 37:24   to-rgb()
-    node_modules\bootstrap\scss\_variables.scss 846:31  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Warning: 230 repetitive deprecation warnings omitted.
-You did not set any plugins, parser, or stringifier. Right now, PostCSS does nothing. Pick plugins for your case on https://www.postcss.parts/ and use them in postcss.config.js.
-assets by path ../webfonts/*.woff2 39.7 KiB
-  asset ../webfonts/fa-sharp-thin-100.woff2 9.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-thin-100.woff2] [copied]
-  asset ../webfonts/fa-sharp-light-300.woff2 9.18 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-light-300.woff2] [copied]
-  asset ../webfonts/fa-sharp-regular-400.woff2 8.83 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-regular-400.woff2] [copied]
-  asset ../webfonts/fa-sharp-solid-900.woff2 6.96 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-solid-900.woff2] [copied]
-  asset ../webfonts/fa-brands-400.woff2 2.13 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-brands-400.woff2] [copied]
-  asset ../webfonts/custom-icons.woff2 1.84 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/custom-icons.woff2] [copied]
-  asset ../webfonts/fa-duotone-900.woff2 1.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-duotone-900.woff2] [copied]
-assets by chunk 512 KiB (name: main)
-  asset theme.js 490 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-  asset theme.css 22.3 KiB [compared for emit] (name: main)
-Entrypoint main [big] 512 KiB = theme.css 22.3 KiB theme.js 490 KiB
-orphan modules 606 KiB [orphan] 51 modules
-runtime modules 937 bytes 5 modules
-built modules 940 KiB (javascript) 22.3 KiB (unknown) [built]
-  cacheable modules 269 KiB
-    modules by path ./node_modules/ 263 KiB
-      ./node_modules/bootbox/dist/bootbox.js 40.9 KiB [built] [code generated]
-      ./node_modules/bootstrap/dist/js/bootstrap.bundle.js 203 KiB [built] [code generated]
-      ./node_modules/lazysizes/lazysizes.js 19.5 KiB [built] [code generated]
-      ./node_modules/swiper/swiper-bundle.css 39 bytes [built] [code generated]
-    modules by path ./js/*.js 5.1 KiB
-      ./js/ai-assistant.js 2.14 KiB [built] [code generated]
-      ./js/cookie-modal.js 2.97 KiB [built] [code generated]
-  ./js/theme-core.js + 51 modules 672 KiB [not cacheable] [built] [code generated]
-  external "jQuery" 42 bytes [built] [code generated]
-  css ./node_modules/css-loader/dist/cjs.js!./node_modules/swiper/swiper-bundle.css 22.3 KiB [built] [code generated]
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-This can impact web performance.
-Assets:
-  theme.js (490 KiB)
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
-Entrypoints:
-  main (512 KiB)
-      theme.css
-      theme.js
-WARNING in webpack performance recommendations:
-You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
-webpack 5.103.0 compiled with 3 warnings in 7567 ms
-assets by path ../webfonts/*.woff2 39.7 KiB
-  asset ../webfonts/fa-sharp-thin-100.woff2 9.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-thin-100.woff2] [copied]
-  asset ../webfonts/fa-sharp-light-300.woff2 9.18 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-light-300.woff2] [copied]
-  asset ../webfonts/fa-sharp-regular-400.woff2 8.83 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-regular-400.woff2] [copied]
-  asset ../webfonts/fa-sharp-solid-900.woff2 6.96 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-solid-900.woff2] [copied]
-  asset ../webfonts/fa-brands-400.woff2 2.13 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-brands-400.woff2] [copied]
-  asset ../webfonts/custom-icons.woff2 1.84 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/custom-icons.woff2] [copied]
-  asset ../webfonts/fa-duotone-900.woff2 1.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-duotone-900.woff2] [copied]
-assets by path *.css 304 KiB
-  asset theme.css 295 KiB [compared for emit] [big] (name: main)
-  asset theme-core-bundled.css 8.83 KiB [compared for emit] (name: main)
-Entrypoint main [big] 304 KiB = theme.css 295 KiB theme-core-bundled.css 8.83 KiB
-runtime modules 35 bytes 2 modules
-modules by path ./css/ 759 bytes (javascript) 295 KiB (unknown)
-  cacheable modules 759 bytes
-    ./css/theme-core.scss 720 bytes [built] [code generated]
-    ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/src/index.js??ruleSet[1].rules[3].use[3]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[4]!./css/theme-core.scss 39 bytes [built] [code generated]
-  css modules 295 KiB
-    css ./node_modules/css-loader/dist/cjs.js!./css/custom.css 55.1 KiB [built] [code generated]
-    css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/src/index.js??ruleSet[1].rules[3].use[3]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[4]!./css/theme-core.scss 240 KiB [built] [code generated]
-./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js 6.67 KiB [built] [code generated]
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-This can impact web performance.
-Assets:
-  theme.css (295 KiB)
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
-Entrypoints:
-  main (304 KiB)
-      theme.css
-      theme-core-bundled.css
-WARNING in webpack performance recommendations:
-You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
-webpack 5.103.0 compiled with 3 warnings in 7549 ms
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         22-1-2026     14:11                classes
+d-----        25-11-2025     10:25                controllers
+d-----        25-11-2025     10:25                modules
+-a----         14-1-2026     10:46            180 .htaccess
+-a----         14-1-2026     10:48          25670 DynamicInput.php
+-a----        25-11-2025     10:25           1404 index.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:48                checkout
+d-----         14-1-2026     10:46                controller
+d-----         14-1-2026     10:46                form
+d-----        25-11-2025     10:25                order
+d-----         14-1-2026     10:48                pdf
+d-----         14-1-2026     10:46                stock
+-a----         14-1-2026     10:46          17520 Address.php
+-a----         14-1-2026     10:46            754 AddressFormat.php
+-a----        25-11-2025     10:25           3316 AttributeGroup.php
+-a----        25-11-2025     10:25           3675 Carrier.php
+-a----        25-11-2025     10:25          46803 Cart.php
+-a----         16-1-2026     10:18           8244 CartRule.php
+-a----         22-1-2026     14:11          10982 Category.php
+-a----        25-11-2025     10:25            445 Context.php
+-a----         14-1-2026     10:46          13016 Customer.php
+-a----        25-11-2025     10:25           1404 index.php
+-a----         14-1-2026     10:48          12677 Link.php
+-a----         14-1-2026     10:46          27695 Mail.php
+-a----        25-11-2025     10:25           4631 Pack.php
+-a----         14-1-2026     10:46          55887 PaymentModule.php
+-a----        18-12-2025     09:33          30047 Product.php
+-a----         21-1-2026     14:36          21055 Tools.php
+-a----         8-12-2025     11:10            524 Validate.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\checkout
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25          12921 CheckoutAddressesStep.php
+-a----         14-1-2026     10:48           8469 CheckoutDeliveryStep.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\controller
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46           3145 AdminController.php
+-a----        25-11-2025     10:25          13807 FrontController.php
+-a----        25-11-2025     10:25           4400 ProductListingFrontController
+                                                  .php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\form
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46          13152 CustomerForm.php
+-a----         9-12-2025     12:23           9497 CustomerFormatter.php
+-a----         14-1-2026     10:46           5561 CustomerLoginForm.php
+-a----         14-1-2026     10:46          10220 CustomerPersister.php
+-a----        25-11-2025     10:25           1404 index.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\order
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25          19682 Order.php
+-a----        25-11-2025     10:25           2241 OrderCarrier.php
+-a----        25-11-2025     10:25           1868 OrderInvoice.php
+-a----        25-11-2025     10:25           1965 OrderState.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\pdf
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           4346 HTMLTemplate.php
+-a----        25-11-2025     10:25          14148 HTMLTemplateDeliverySlip.php
+-a----        25-11-2025     10:25          26691 HTMLTemplateInvoice.php
+-a----        25-11-2025     10:25           6227 HTMLTemplateOrderReturn.php
+-a----        25-11-2025     10:25          15664 HTMLTemplateOrderSlip.php
+-a----        25-11-2025     10:25           8003 PDF.php
+-a----         14-1-2026     10:48           3781 PDFGenerator.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\classes\stock
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46           6660 StockAvailable.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:46                admin
+d-----         16-1-2026     10:19                front
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                templates
+-a----         14-1-2026     10:46           2321 AdminCartsController.php
+-a----         14-1-2026     10:46           2447 AdminLoginController.php
+-a----         14-1-2026     10:46         108121 AdminOrdersController.php
+-a----         14-1-2026     10:46           8181 AdminProductsController.php
+-a----        25-11-2025     10:25          20233 AdminStatusesController.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                login
+d-----         14-1-2026     10:46                orders
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates\login
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           9524 content.tpl
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates\orders
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                helpers
+-a----         14-1-2026     10:46          15938 _product_line.tpl
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates\orders\helpers
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:46                list
+d-----         14-1-2026     10:46                view
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates\orders\helpers\list
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46           2720 list_header.tpl
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\admin\templates\orders\helpers\view
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46            826 backup geo check
+-a----         14-1-2026     10:46          85302 view.tpl
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\controllers\front
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46          11083 CartController.php
+-a----         14-1-2026     10:48           3834 CmsController.php
+-a----        25-11-2025     10:25           8965 GuestTrackingController.php
+-a----         16-1-2026     10:19           5963 OrderConfirmationController.p
+                                                  hp
+-a----         14-1-2026     10:46           6308 OrderDetailController.php
+-a----        25-11-2025     10:25           1611 OrderOpcController.php
+-a----        25-11-2025     10:25           1100 ProductController.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                channable
+d-----        25-11-2025     10:25                csoft_invisible_recaptcha_v2
+d-----        25-11-2025     10:25                mollie
+d-----        25-11-2025     10:25                psgdpr
+d-----         14-1-2026     10:46                ps_emailalerts
+d-----         14-1-2026     10:46                ps_imageslider
+d-----        25-11-2025     10:25                ps_shoppingcart
+-a----        25-11-2025     10:25           1404 index.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\channable
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                controllers
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\channable\controllers
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:46                front
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\channable\controllers\front
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46          74966 feed.php
+-a----        25-11-2025     10:25        5019746 test.json
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\csoft_invisible_recaptcha_v2
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                js
+-a----        25-11-2025     10:25          12326 csoft_invisible_recaptcha_v2.
+                                                  php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\csoft_invisible_recaptcha_v2\js
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           1541 settings.js
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                src
+d-----        25-11-2025     10:25                views
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie\src
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:46                Provider
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie\src\Provider
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46           3248 PaymentFeeProvider.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie\views
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                templates
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie\views\templates
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                hook
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\mollie\views\templates\hook
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           1929 ideal_dropdown.tpl
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\psgdpr
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           8911 psgdpr.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\ps_emailalerts
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46          12401 ps_emailalerts.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\ps_imageslider
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----        25-11-2025     10:25           1404 index.php
+-a----         14-1-2026     10:46           2516 ps_imageslider.php
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\ps_shoppingcart
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        25-11-2025     10:25                controllers
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\ps_shoppingcart\controllers
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         14-1-2026     10:46                front
+    Directory: C:\wampserver\www\modernesmid-webshop\external\modernesmid_websh
+    op\override\modules\ps_shoppingcart\controllers\front
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         14-1-2026     10:46           8699 ajax.php

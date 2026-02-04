@@ -1011,6 +1011,18 @@
       <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/instructiepaginas" />
       <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/offerte afbeeldingen" />
       <excludeFolder url="file://$MODULE_DIR$/upload_old/uploaded_files_thumbs/zaaghoeken" />
+      <excludeFolder url="file://$MODULE_DIR$/external/modernesmid_webshop/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/img/cms/thumbs" />
+      <excludeFolder url="file://$MODULE_DIR$/img/mail" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/1" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/2" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/3" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/4" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/5" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/6" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/7" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/8" />
+      <excludeFolder url="file://$MODULE_DIR$/img/p/9" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -241,3 +241,14 @@ app/Resources/cronscripts/
 js/tiny_mce/plugins/
 js/filemanager/
 !/themes/modernesmid/assets/
+all_tables.txt
+DataMigrationScript.sql
+InsertProductShopQuery.sql
+.idea/data_source_mapping.xml
+.idea/sqlDataSources.xml
+.idea/sqldialects.xml
+docs/cms/bewerkingen-en-technieken/chemische-patinas-op-staal.html
+docs/cms/bewerkingen-en-technieken/fysieke-texturen-en-bewerkingen.html
+docs/cms/bewerkingen-en-technieken/las-look-zonder-lassen.html
+docs/cms/bewerkingen-en-technieken/polijsten-en-beschermen.html
+scripts/create_cms_bewerkingen_technieken.php

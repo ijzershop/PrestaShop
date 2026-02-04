@@ -225,11 +225,13 @@
         const data: Record<string, any> = {attributes: {}};
 
         Object.keys(this.selectedAttributeGroups).forEach((attributeGroupId) => {
-          data.attributes[attributeGroupId] = [];
-          this.selectedAttributeGroups[attributeGroupId].attributes.forEach(
-            (attribute: Attribute) => {
-              data.attributes[attributeGroupId].push(attribute.id);
-            },
+          const {attributes} = this.selectedAttributeGroups[attributeGroupId];
+          if (!attributes.length) {
+            return;
+          }
+
+          data.attributes[attributeGroupId] = attributes.map(
+            (attribute: Attribute) => attribute.id,
           );
         });
 
@@ -345,6 +347,10 @@
         group.attributes = group.attributes.filter(
           (attribute: Record<string, any>) => attribute.id !== selectedAttribute.id,
         );
+        if (group.attributes.length === 0) {
+          const {[selectedAttributeGroup.id]: removed, ...remainingGroups} = this.selectedAttributeGroups;
+          this.selectedAttributeGroups = remainingGroups;
+        }
       },
       /**
        * Remove the attribute if it's selected or add it

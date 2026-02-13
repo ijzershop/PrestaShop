@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Currency;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
@@ -438,6 +439,9 @@ class ProductDuplicator extends AbstractMultiShopObjectModelRepository
             $newProductSupplier = $this->productSupplierRepository->get(new ProductSupplierId((int) $oldSupplier['id_product_supplier']));
             $newProductSupplier->id_product = $newProductId;
             $newProductSupplier->id_product_attribute = $combinationMatching[(int) $oldSupplier['id_product_attribute']] ?? 0;
+            if ((int) $newProductSupplier->id_currency <= 0) {
+                $newProductSupplier->id_currency = (int) Currency::getDefaultCurrencyId();
+            }
             $this->productSupplierRepository->add($newProductSupplier);
         }
     }

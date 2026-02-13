@@ -1023,6 +1023,7 @@
       <excludeFolder url="file://$MODULE_DIR$/img/p/7" />
       <excludeFolder url="file://$MODULE_DIR$/img/p/8" />
       <excludeFolder url="file://$MODULE_DIR$/img/p/9" />
+      <excludeFolder url="file://$MODULE_DIR$/dynamicproduct/cache" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

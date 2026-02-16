@@ -29,7 +29,8 @@ $options = getopt('', array(
 ));
 
 if (isset($options['help'])) {
-    echo "Usage: php scripts/migrate_catalog.php --source-db=NAME [--source-prefix=ps176_] [--target-db=NAME] [--target-prefix=msmid_] [--shop-group=1] [--stock-default=1000] [--include-customers] [--source-dump-file=PATH --temp-db=NAME [--recreate-temp]] [--truncate] [--dry-run]\n";
+    echo "Usage: php scripts/migrate_catalog.php [--source-db=NAME] [--source-prefix=ps176_] [--target-db=NAME] [--target-prefix=msmid_] [--shop-group=1] [--stock-default=1000] [--include-customers] [--source-dump-file=PATH --temp-db=NAME [--recreate-temp]] [--truncate] [--dry-run]\n";
+    echo "Note: Either --source-db OR (--source-dump-file AND --temp-db) must be provided.\n";
     exit(0);
 }
 
@@ -37,8 +38,11 @@ $params = require __DIR__ . '/../app/config/parameters.php';
 $dbParams = $params['parameters'];
 
 $sourceDb = $options['source-db'] ?? null;
-if ($sourceDb === null) {
-    fwrite(STDERR, "Missing required --source-db option.\n");
+$sourceDumpFile = $options['source-dump-file'] ?? null;
+$tempDb = $options['temp-db'] ?? null;
+
+if ($sourceDb === null && ($sourceDumpFile === null || $tempDb === null)) {
+    fwrite(STDERR, "Missing required source. Provide either --source-db or both --source-dump-file and --temp-db.\n");
     exit(1);
 }
 
@@ -47,15 +51,12 @@ $targetDb = $options['target-db'] ?? $dbParams['database_name'];
 $targetPrefix = $options['target-prefix'] ?? $dbParams['database_prefix'];
 $shopGroupId = isset($options['shop-group']) ? (int) $options['shop-group'] : 1;
 $stockDefault = isset($options['stock-default']) ? (int) $options['stock-default'] : 1000;
-$sourceDumpFile = $options['source-dump-file'] ?? null;
-$tempDb = $options['temp-db'] ?? null;
 $recreateTemp = array_key_exists('recreate-temp', $options);
 $includeCustomers = array_key_exists('include-customers', $options);
 $doTruncate = array_key_exists('truncate', $options);
 $dryRun = array_key_exists('dry-run', $options);
 
 $pdoTarget = buildPdo($dbParams['database_host'], $dbParams['database_port'], $targetDb, $dbParams['database_user'], $dbParams['database_password']);
-$pdoSource = buildPdo($dbParams['database_host'], $dbParams['database_port'], $sourceDb, $dbParams['database_user'], $dbParams['database_password']);
 
 if ($sourceDumpFile !== null && $tempDb !== null) {
     $sourceDb = $tempDb;
@@ -69,8 +70,12 @@ if ($sourceDumpFile !== null && $tempDb !== null) {
         $recreateTemp,
         $dryRun
     );
-    $pdoSource = buildPdo($dbParams['database_host'], $dbParams['database_port'], $sourceDb, $dbParams['database_user'], $dbParams['database_password']);
 }
+
+$pdoSource = buildPdo($dbParams['database_host'], $dbParams['database_port'], $sourceDb, $dbParams['database_user'], $dbParams['database_password']);
+
+echo "Connected to Source DB: {$sourceDb}\n";
+echo "Connected to Target DB: {$targetDb}\n";
 
 $tables = array(
     'image',
@@ -230,6 +235,16 @@ function buildPdo($host, $port, $dbName, $user, $password)
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ));
+
+    // Increase timeouts and max packet size for the session if possible
+    try {
+        $pdo->exec('SET SESSION wait_timeout = 28800');
+        $pdo->exec('SET SESSION interactive_timeout = 28800');
+        $pdo->exec('SET SESSION max_allowed_packet = 1073741824');
+    } catch (Exception $e) {
+        // Ignore if we don't have permissions to set these
+    }
+
     return $pdo;
 }
 
@@ -270,9 +285,9 @@ function runShell($command, $dryRun)
 
 function tableExists(PDO $pdo, $dbName, $tableName)
 {
-    $stmt = $pdo->prepare('SELECT COUNT(*) AS cnt FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = :db AND TABLE_NAME = :table');
-    $stmt->execute(array('db' => $dbName, 'table' => $tableName));
-    return (int) $stmt->fetchColumn() > 0;
+    $stmt = $pdo->prepare('SHOW TABLES LIKE :table');
+    $stmt->execute(array('table' => $tableName));
+    return (bool) $stmt->fetch();
 }
 
 function getTableColumns(PDO $pdo, $dbName, $tableName)
@@ -411,16 +426,51 @@ function fallbackLiteral($dataType)
     return "''";
 }
 
-function runStatement(PDO $pdo, $sql, $dryRun)
+function runStatement(PDO &$pdo, $sql, $dryRun)
 {
     echo $dryRun ? "[dry-run] {$sql}\n" : "{$sql}\n";
     if ($dryRun) {
         return;
     }
-    $pdo->exec($sql);
+
+    try {
+        $pdo->exec($sql);
+    } catch (PDOException $e) {
+        // If "MySQL server has gone away" (2006) or "Lost connection to MySQL server during query" (2013)
+        if ($e->errorInfo[1] == 2006 || $e->errorInfo[1] == 2013) {
+            echo "Connection lost. Reconnecting...\n";
+            reconnect($pdo);
+            $pdo->exec($sql);
+        } else {
+            throw $e;
+        }
+    }
 }
 
-function syncShopGroupData(PDO $pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun)
+function reconnect(PDO &$pdo)
+{
+    global $dbParams, $sourceDb, $targetDb;
+
+    // We need to know which DB this PDO belongs to.
+    // This is a bit hacky since PDO doesn't expose connection params easily.
+    // However, in this script we have exactly two connections: $pdoSource and $pdoTarget.
+
+    // We'll determine which one it is based on the currently selected database in the DSN if we stored it,
+    // but since we don't store it, we'll try to guess or just rebuild based on where it was called.
+
+    // Better approach: Update runStatement to take the specific params if it fails,
+    // or just allow the script to fail and let the user increase server-side timeouts.
+    // Actually, for this specific script, we can just rebuild $pdoTarget or $pdoSource.
+
+    // Since runStatement is only used for $pdoTarget in the main loop, we can assume it's target
+    // OR we pass the params to runStatement.
+
+    // Let's modify buildPdo to return a wrapper or just use globals for now as it's a CLI script.
+
+    $pdo = buildPdo($dbParams['database_host'], $dbParams['database_port'], $targetDb, $dbParams['database_user'], $dbParams['database_password']);
+}
+
+function syncShopGroupData(PDO &$pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun)
 {
     $shopTable = $targetPrefix . 'shop';
     if (!tableExists($pdoTarget, $targetDb, $shopTable)) {
@@ -462,7 +512,7 @@ function syncShopGroupData(PDO $pdoTarget, $targetDb, $targetPrefix, $shopGroupI
     setDefaultShop($pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun);
 }
 
-function setStockDefaults(PDO $pdoTarget, $targetDb, $targetPrefix, $stockDefault, $dryRun)
+function setStockDefaults(PDO &$pdoTarget, $targetDb, $targetPrefix, $stockDefault, $dryRun)
 {
     $stockTable = $targetPrefix . 'stock_available';
     if (tableExists($pdoTarget, $targetDb, $stockTable) && columnExists($pdoTarget, $targetDb, $stockTable, 'quantity')) {
@@ -492,7 +542,7 @@ function setStockDefaults(PDO $pdoTarget, $targetDb, $targetPrefix, $stockDefaul
     }
 }
 
-function fixProductSupplierCurrency(PDO $pdoTarget, $targetDb, $targetPrefix, $dryRun)
+function fixProductSupplierCurrency(PDO &$pdoTarget, $targetDb, $targetPrefix, $dryRun)
 {
     $table = $targetPrefix . 'product_supplier';
     if (!tableExists($pdoTarget, $targetDb, $table)) {
@@ -513,7 +563,7 @@ function columnExists(PDO $pdo, $dbName, $tableName, $column)
     return (int) $stmt->fetchColumn() > 0;
 }
 
-function cloneShopRows(PDO $pdoTarget, $targetDb, $targetTable, $targetPrefix, array $keyColumns, $shopGroupId, $dryRun, $forceShopGroupZero)
+function cloneShopRows(PDO &$pdoTarget, $targetDb, $targetTable, $targetPrefix, array $keyColumns, $shopGroupId, $dryRun, $forceShopGroupZero)
 {
     $columns = getTableColumns($pdoTarget, $targetDb, $targetTable);
     if (!isset($columns['id_shop'])) {
@@ -550,7 +600,7 @@ function cloneShopRows(PDO $pdoTarget, $targetDb, $targetTable, $targetPrefix, a
     runStatement($pdoTarget, $sql, $dryRun);
 }
 
-function cloneLangRows(PDO $pdoTarget, $targetDb, $targetTable, array $keyColumns, $shopGroupId, $targetPrefix, $dryRun)
+function cloneLangRows(PDO &$pdoTarget, $targetDb, $targetTable, array $keyColumns, $shopGroupId, $targetPrefix, $dryRun)
 {
     if (!tableExists($pdoTarget, $targetDb, $targetTable)) {
         echo "Skip lang clone: {$targetTable} missing\n";
@@ -599,7 +649,7 @@ function buildBaseRowQuery($targetTable, array $keyColumns, $shopColumn)
         'ON ' . $keyJoin . ' AND base.`' . $shopColumn . '` = pick.`' . $shopColumn . '`';
 }
 
-function setDefaultShop(PDO $pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun)
+function setDefaultShop(PDO &$pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun)
 {
     $productTable = $targetPrefix . 'product';
     if (!tableExists($pdoTarget, $targetDb, $productTable)) {

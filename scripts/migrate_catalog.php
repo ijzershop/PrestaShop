@@ -211,6 +211,7 @@ foreach ($tables as $baseTable) {
 }
 
 syncShopGroupData($pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun);
+syncCategoryGroups($pdoTarget, $targetDb, $targetPrefix, $dryRun);
 setStockDefaults($pdoTarget, $targetDb, $targetPrefix, $stockDefault, $dryRun);
 fixProductSupplierCurrency($pdoTarget, $targetDb, $targetPrefix, $dryRun);
 
@@ -510,6 +511,22 @@ function syncShopGroupData(PDO &$pdoTarget, $targetDb, $targetPrefix, $shopGroup
     cloneLangRows($pdoTarget, $targetDb, $targetPrefix . 'category_lang', array('id_category', 'id_lang'), $shopGroupId, $targetPrefix, $dryRun);
 
     setDefaultShop($pdoTarget, $targetDb, $targetPrefix, $shopGroupId, $dryRun);
+}
+
+function syncCategoryGroups(PDO &$pdoTarget, $targetDb, $targetPrefix, $dryRun)
+{
+    $categoryTable = $targetPrefix . 'category';
+    $groupTable = $targetPrefix . 'category_group';
+    if (!tableExists($pdoTarget, $targetDb, $categoryTable) || !tableExists($pdoTarget, $targetDb, $groupTable)) {
+        return;
+    }
+
+    echo "Syncing category groups (1, 2, 3) for all categories...\n";
+    for ($groupId = 1; $groupId <= 3; $groupId++) {
+        $sql = "INSERT IGNORE INTO `{$targetDb}`.`{$groupTable}` (id_category, id_group)
+                SELECT id_category, " . (int)$groupId . " FROM `{$targetDb}`.`{$categoryTable}`";
+        runStatement($pdoTarget, $sql, $dryRun);
+    }
 }
 
 function setStockDefaults(PDO &$pdoTarget, $targetDb, $targetPrefix, $stockDefault, $dryRun)

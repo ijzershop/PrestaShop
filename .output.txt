@@ -1,0 +1,221 @@
+
+> development_part_modernesmid@1.0.0 build
+> cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode production
+(node:17816) [DEP_WEBPACK_MAIN_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: MainTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:17816) [DEP_WEBPACK_CHUNK_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: ChunkTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
+(node:17816) [DEP_WEBPACK_MAIN_TEMPLATE_HASH_FOR_CHUNK] DeprecationWarning: MainTemplate.hooks.hashForChunk is deprecated (use JavascriptModulesPlugin.getCompilationHooks().chunkHash instead)
+(node:17816) [DEP_WEBPACK_COMPILATION_NORMAL_MODULE_LOADER_HOOK] DeprecationWarning: Compilation.hooks.normalModuleLoader was moved to NormalModule.getCompilationHooks(compilation).loader
+Deprecation Warning [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
+More info: https://sass-lang.com/d/legacy-js-api
+Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+More info and automated migrator: https://sass-lang.com/d/import
+  ╷
+2 │ @import 'swiper/css/bundle';
+  │         ^^^^^^^^^^^^^^^^^^^
+  ╵
+    stdin 2:9  root stylesheet
+Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+More info and automated migrator: https://sass-lang.com/d/import
+  ╷
+3 │ @import "./modernesmid-bootstrap-variables";
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    stdin 3:9  root stylesheet
+Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+More info and automated migrator: https://sass-lang.com/d/import
+  ╷
+4 │ @import "bootstrap/scss/bootstrap";
+  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  ╵
+    stdin 4:9  root stylesheet
+Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+More info and automated migrator: https://sass-lang.com/d/import
+  ╷
+5 │ @import "./_bs4-shims";
+  │         ^^^^^^^^^^^^^^
+  ╵
+    stdin 5:9  root stylesheet
+Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use string.quote instead.
+More info and automated migrator: https://sass-lang.com/d/import
+   ╷
+13 │ $breadcrumb-divider: quote(">");
+   │                      ^^^^^^^^^^
+   ╵
+    css\modernesmid-bootstrap-variables.scss 13:22  @import
+    stdin 3:9                                       root stylesheet
+Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use string.quote instead.
+More info and automated migrator: https://sass-lang.com/d/import
+   ╷
+89 │ $breadcrumb-divider: quote(">");
+   │                      ^^^^^^^^^^
+   ╵
+    css\modernesmid-bootstrap-variables.scss 89:22  @import
+    stdin 3:9                                       root stylesheet
+Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
+More info and automated migrator: https://sass-lang.com/d/import
+  ╷
+1 │ @import "mixins/banner";
+  │         ^^^^^^^^^^^^^^^
+  ╵
+    node_modules\bootstrap\scss\bootstrap.scss 1:9  @import
+    stdin 4:9                                       root stylesheet
+Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.mix instead.
+More info and automated migrator: https://sass-lang.com/d/import
+    ╷
+207 │   @return mix(white, $color, $weight);
+    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_functions.scss 207:11  tint-color()
+    node_modules\bootstrap\scss\_variables.scss 79:12   @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.mix instead.
+More info and automated migrator: https://sass-lang.com/d/import
+    ╷
+212 │   @return mix(black, $color, $weight);
+    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_functions.scss 212:11  shade-color()
+    node_modules\bootstrap\scss\_variables.scss 84:12   @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
+Use color.mix instead.
+More info and automated migrator: https://sass-lang.com/d/import
+    ╷
+342 │ $light-bg-subtle:         mix($gray-100, $white) !default;
+    │                           ^^^^^^^^^^^^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_variables.scss 342:27  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
+color.channel($color, "red", $space: rgb)
+More info: https://sass-lang.com/d/color-functions
+    ╷
+185 │     "r": red($color),
+    │          ^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_functions.scss 185:10  luminance()
+    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+    node_modules\bootstrap\scss\_variables.scss 846:42  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
+color.channel($color, "green", $space: rgb)
+More info: https://sass-lang.com/d/color-functions
+    ╷
+186 │     "g": green($color),
+    │          ^^^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_functions.scss 186:10  luminance()
+    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+    node_modules\bootstrap\scss\_variables.scss 846:42  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [color-functions]: blue() is deprecated. Suggestion:
+color.channel($color, "blue", $space: rgb)
+More info: https://sass-lang.com/d/color-functions
+    ╷
+187 │     "b": blue($color)
+    │          ^^^^^^^^^^^^
+    ╵
+    node_modules\bootstrap\scss\_functions.scss 187:10  luminance()
+    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
+    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
+    node_modules\bootstrap\scss\_variables.scss 846:42  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
+color.channel($color, "red", $space: rgb)
+More info: https://sass-lang.com/d/color-functions
+   ╷
+37 │   @return red($value), green($value), blue($value);
+   │           ^^^^^^^^^^^
+   ╵
+    node_modules\bootstrap\scss\_functions.scss 37:11   to-rgb()
+    node_modules\bootstrap\scss\_variables.scss 846:31  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
+color.channel($color, "green", $space: rgb)
+More info: https://sass-lang.com/d/color-functions
+   ╷
+37 │   @return red($value), green($value), blue($value);
+   │                        ^^^^^^^^^^^^^
+   ╵
+    node_modules\bootstrap\scss\_functions.scss 37:24   to-rgb()
+    node_modules\bootstrap\scss\_variables.scss 846:31  @import
+    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
+    stdin 4:9                                           root stylesheet
+Warning: 230 repetitive deprecation warnings omitted.
+You did not set any plugins, parser, or stringifier. Right now, PostCSS does nothing. Pick plugins for your case on https://www.postcss.parts/ and use them in postcss.config.js.
+(node:17816) [DEP_WEBPACK_COMPILATION_ASSETS] DeprecationWarning: Compilation.assets will be frozen in future, all modifications are deprecated.
+BREAKING CHANGE: No more changes should happen to Compilation.assets after sealing the Compilation.
+        Do changes to assets earlier, e. g. in Compilation.hooks.processAssets.
+        Make sure to select an appropriate stage from Compilation.PROCESS_ASSETS_STAGE_*.
+(node:17816) [DEP_WEBPACK_MODULE_ID] DeprecationWarning: Module.id: Use new ChunkGraph API
+(node:17816) [DEP_WEBPACK_MODULE_UPDATE_HASH] DeprecationWarning: Module.updateHash: Use new ChunkGraph API
+(node:17816) [DEP_WEBPACK_CHUNK_MODULES_ITERABLE] DeprecationWarning: Chunk.modulesIterable: Use new ChunkGraph API
+(node:17816) [DEP_WEBPACK_CHUNK_GROUP_GET_MODULE_INDEX_2] DeprecationWarning: ChunkGroup.getModuleIndex2 was renamed to getModulePostOrderIndex
+asset theme.js 563 KiB [emitted] [minimized] [big] (name: main) 1 related asset
+asset ../webfonts/fa-sharp-thin-100.woff2 9.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-thin-100.woff2] [copied]
+asset ../webfonts/fa-sharp-light-300.woff2 9.18 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-light-300.woff2] [copied]
+asset ../webfonts/fa-sharp-regular-400.woff2 8.83 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-regular-400.woff2] [copied]
+asset ../webfonts/fa-sharp-solid-900.woff2 6.96 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-solid-900.woff2] [copied]
+asset ../webfonts/fa-brands-400.woff2 2.13 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-brands-400.woff2] [copied]
+asset ../webfonts/custom-icons.woff2 1.84 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/custom-icons.woff2] [copied]
+asset ../webfonts/fa-duotone-900.woff2 1.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-duotone-900.woff2] [copied]
+orphan modules 606 KiB [orphan] 51 modules
+runtime modules 937 bytes 4 modules
+built modules 1.04 MiB [built]
+  modules by path ./node_modules/ 365 KiB
+    modules by path ./node_modules/jquery-ui/ui/ 76.1 KiB
+      modules by path ./node_modules/jquery-ui/ui/*.js 41.7 KiB 9 modules
+      modules by path ./node_modules/jquery-ui/ui/widgets/*.js 34.4 KiB 2 modules
+    + 5 modules
+  modules by path ./js/*.js 705 KiB
+    ./js/theme-core.js + 51 modules 700 KiB [not cacheable] [built] [code generated]
+    ./js/ai-assistant.js 2.14 KiB [built] [code generated]
+    ./js/cookie-modal.js 2.97 KiB [built] [code generated]
+  external "jQuery" 42 bytes [built] [code generated]
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets:
+  theme.js (563 KiB)
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  main (563 KiB)
+      theme.js
+WARNING in webpack performance recommendations:
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+webpack 5.103.0 compiled with 3 warnings in 7435 ms
+asset theme-core-bundled.css 311 KiB [compared for emit] [big] (name: main)
+asset theme-core-bundled.js 1.24 KiB [compared for emit] (name: main)
+Entrypoint main [big] 312 KiB = theme-core-bundled.css 311 KiB theme-core-bundled.js 1.24 KiB
+runtime modules 0 bytes 1 module
+modules by path ./css/*.scss 39 bytes (javascript) 241 KiB (unknown)
+  ./css/theme-core.scss 39 bytes [built] [code generated]
+  css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/src/index.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./css/theme-core.scss 241 KiB [built] [code generated]
+css ./node_modules/css-loader/dist/cjs.js!./css/custom.css 70.1 KiB [built] [code generated]
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets:
+  theme-core-bundled.css (311 KiB)
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  main (312 KiB)
+      theme-core-bundled.css
+      theme-core-bundled.js
+WARNING in webpack performance recommendations:
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+webpack 5.103.0 compiled with 3 warnings in 7546 ms

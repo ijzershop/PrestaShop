@@ -1,221 +1,1257 @@
-
-> development_part_modernesmid@1.0.0 build
-> cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode production
-(node:17816) [DEP_WEBPACK_MAIN_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: MainTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
-(Use `node --trace-deprecation ...` to show where the warning was created)
-(node:17816) [DEP_WEBPACK_CHUNK_TEMPLATE_RENDER_MANIFEST] DeprecationWarning: ChunkTemplate.hooks.renderManifest is deprecated (use Compilation.hooks.renderManifest instead)
-(node:17816) [DEP_WEBPACK_MAIN_TEMPLATE_HASH_FOR_CHUNK] DeprecationWarning: MainTemplate.hooks.hashForChunk is deprecated (use JavascriptModulesPlugin.getCompilationHooks().chunkHash instead)
-(node:17816) [DEP_WEBPACK_COMPILATION_NORMAL_MODULE_LOADER_HOOK] DeprecationWarning: Compilation.hooks.normalModuleLoader was moved to NormalModule.getCompilationHooks(compilation).loader
-Deprecation Warning [legacy-js-api]: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0.
-More info: https://sass-lang.com/d/legacy-js-api
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-2 │ @import 'swiper/css/bundle';
-  │         ^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 2:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-3 │ @import "./modernesmid-bootstrap-variables";
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 3:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-4 │ @import "bootstrap/scss/bootstrap";
-  │         ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  ╵
-    stdin 4:9  root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-5 │ @import "./_bs4-shims";
-  │         ^^^^^^^^^^^^^^
-  ╵
-    stdin 5:9  root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use string.quote instead.
-More info and automated migrator: https://sass-lang.com/d/import
-   ╷
-13 │ $breadcrumb-divider: quote(">");
-   │                      ^^^^^^^^^^
-   ╵
-    css\modernesmid-bootstrap-variables.scss 13:22  @import
-    stdin 3:9                                       root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use string.quote instead.
-More info and automated migrator: https://sass-lang.com/d/import
-   ╷
-89 │ $breadcrumb-divider: quote(">");
-   │                      ^^^^^^^^^^
-   ╵
-    css\modernesmid-bootstrap-variables.scss 89:22  @import
-    stdin 3:9                                       root stylesheet
-Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.
-More info and automated migrator: https://sass-lang.com/d/import
-  ╷
-1 │ @import "mixins/banner";
-  │         ^^^^^^^^^^^^^^^
-  ╵
-    node_modules\bootstrap\scss\bootstrap.scss 1:9  @import
-    stdin 4:9                                       root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-207 │   @return mix(white, $color, $weight);
-    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 207:11  tint-color()
-    node_modules\bootstrap\scss\_variables.scss 79:12   @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-212 │   @return mix(black, $color, $weight);
-    │           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 212:11  shade-color()
-    node_modules\bootstrap\scss\_variables.scss 84:12   @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [global-builtin]: Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0.
-Use color.mix instead.
-More info and automated migrator: https://sass-lang.com/d/import
-    ╷
-342 │ $light-bg-subtle:         mix($gray-100, $white) !default;
-    │                           ^^^^^^^^^^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_variables.scss 342:27  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
-color.channel($color, "red", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-185 │     "r": red($color),
-    │          ^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 185:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
-color.channel($color, "green", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-186 │     "g": green($color),
-    │          ^^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 186:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: blue() is deprecated. Suggestion:
-color.channel($color, "blue", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-    ╷
-187 │     "b": blue($color)
-    │          ^^^^^^^^^^^^
-    ╵
-    node_modules\bootstrap\scss\_functions.scss 187:10  luminance()
-    node_modules\bootstrap\scss\_functions.scss 174:8   contrast-ratio()
-    node_modules\bootstrap\scss\_functions.scss 159:22  color-contrast()
-    node_modules\bootstrap\scss\_variables.scss 846:42  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: red() is deprecated. Suggestion:
-color.channel($color, "red", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-   ╷
-37 │   @return red($value), green($value), blue($value);
-   │           ^^^^^^^^^^^
-   ╵
-    node_modules\bootstrap\scss\_functions.scss 37:11   to-rgb()
-    node_modules\bootstrap\scss\_variables.scss 846:31  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Deprecation Warning [color-functions]: green() is deprecated. Suggestion:
-color.channel($color, "green", $space: rgb)
-More info: https://sass-lang.com/d/color-functions
-   ╷
-37 │   @return red($value), green($value), blue($value);
-   │                        ^^^^^^^^^^^^^
-   ╵
-    node_modules\bootstrap\scss\_functions.scss 37:24   to-rgb()
-    node_modules\bootstrap\scss\_variables.scss 846:31  @import
-    node_modules\bootstrap\scss\bootstrap.scss 8:9      @import
-    stdin 4:9                                           root stylesheet
-Warning: 230 repetitive deprecation warnings omitted.
-You did not set any plugins, parser, or stringifier. Right now, PostCSS does nothing. Pick plugins for your case on https://www.postcss.parts/ and use them in postcss.config.js.
-(node:17816) [DEP_WEBPACK_COMPILATION_ASSETS] DeprecationWarning: Compilation.assets will be frozen in future, all modifications are deprecated.
-BREAKING CHANGE: No more changes should happen to Compilation.assets after sealing the Compilation.
-        Do changes to assets earlier, e. g. in Compilation.hooks.processAssets.
-        Make sure to select an appropriate stage from Compilation.PROCESS_ASSETS_STAGE_*.
-(node:17816) [DEP_WEBPACK_MODULE_ID] DeprecationWarning: Module.id: Use new ChunkGraph API
-(node:17816) [DEP_WEBPACK_MODULE_UPDATE_HASH] DeprecationWarning: Module.updateHash: Use new ChunkGraph API
-(node:17816) [DEP_WEBPACK_CHUNK_MODULES_ITERABLE] DeprecationWarning: Chunk.modulesIterable: Use new ChunkGraph API
-(node:17816) [DEP_WEBPACK_CHUNK_GROUP_GET_MODULE_INDEX_2] DeprecationWarning: ChunkGroup.getModuleIndex2 was renamed to getModulePostOrderIndex
-asset theme.js 563 KiB [emitted] [minimized] [big] (name: main) 1 related asset
-asset ../webfonts/fa-sharp-thin-100.woff2 9.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-thin-100.woff2] [copied]
-asset ../webfonts/fa-sharp-light-300.woff2 9.18 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-light-300.woff2] [copied]
-asset ../webfonts/fa-sharp-regular-400.woff2 8.83 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-regular-400.woff2] [copied]
-asset ../webfonts/fa-sharp-solid-900.woff2 6.96 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-sharp-solid-900.woff2] [copied]
-asset ../webfonts/fa-brands-400.woff2 2.13 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-brands-400.woff2] [copied]
-asset ../webfonts/custom-icons.woff2 1.84 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/custom-icons.woff2] [copied]
-asset ../webfonts/fa-duotone-900.woff2 1.36 KiB [compared for emit] [from: node_modules/@awesome.me/kit-3421b9d8a0/icons/webfonts/fa-duotone-900.woff2] [copied]
-orphan modules 606 KiB [orphan] 51 modules
-runtime modules 937 bytes 4 modules
-built modules 1.04 MiB [built]
-  modules by path ./node_modules/ 365 KiB
-    modules by path ./node_modules/jquery-ui/ui/ 76.1 KiB
-      modules by path ./node_modules/jquery-ui/ui/*.js 41.7 KiB 9 modules
-      modules by path ./node_modules/jquery-ui/ui/widgets/*.js 34.4 KiB 2 modules
-    + 5 modules
-  modules by path ./js/*.js 705 KiB
-    ./js/theme-core.js + 51 modules 700 KiB [not cacheable] [built] [code generated]
-    ./js/ai-assistant.js 2.14 KiB [built] [code generated]
-    ./js/cookie-modal.js 2.97 KiB [built] [code generated]
-  external "jQuery" 42 bytes [built] [code generated]
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-This can impact web performance.
-Assets:
-  theme.js (563 KiB)
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
-Entrypoints:
-  main (563 KiB)
-      theme.js
-WARNING in webpack performance recommendations:
-You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
-webpack 5.103.0 compiled with 3 warnings in 7435 ms
-asset theme-core-bundled.css 311 KiB [compared for emit] [big] (name: main)
-asset theme-core-bundled.js 1.24 KiB [compared for emit] (name: main)
-Entrypoint main [big] 312 KiB = theme-core-bundled.css 311 KiB theme-core-bundled.js 1.24 KiB
-runtime modules 0 bytes 1 module
-modules by path ./css/*.scss 39 bytes (javascript) 241 KiB (unknown)
-  ./css/theme-core.scss 39 bytes [built] [code generated]
-  css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/src/index.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./css/theme-core.scss 241 KiB [built] [code generated]
-css ./node_modules/css-loader/dist/cjs.js!./css/custom.css 70.1 KiB [built] [code generated]
-WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-This can impact web performance.
-Assets:
-  theme-core-bundled.css (311 KiB)
-WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
-Entrypoints:
-  main (312 KiB)
-      theme-core-bundled.css
-      theme-core-bundled.js
-WARNING in webpack performance recommendations:
-You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/
-webpack 5.103.0 compiled with 3 warnings in 7546 ms
+--- Shop URLs ---
+Shop ID: 1 | Domain: modernesmid-webshop.local | SSL: modernesmid-webshop.local | URI: /
+Shop ID: 2 | Domain: constructructie-webshop.local | SSL: constructructie-webshop.local | URI: /
+--- All Tables ---
+feature_flag msmid_access msmid_accessory msmid_address msmid_address_format msmid_admin_filter msmid_alias msmid_api_client msmid_attachment msmid_attachment_lang msmid_attribute msmid_attribute_group msmid_attribute_group_lang msmid_attribute_group_shop msmid_attribute_impact msmid_attribute_lang msmid_attribute_shop msmid_authorization_role msmid_blockwishlist_statistics msmid_carrier msmid_carrier_group msmid_carrier_lang msmid_carrier_shop msmid_carrier_tax_rules_group_shop msmid_carrier_zone msmid_cart msmid_cart_cart_rule msmid_cart_product msmid_cart_rule msmid_cart_rule_carrier msmid_cart_rule_combination msmid_cart_rule_country msmid_cart_rule_group msmid_cart_rule_lang msmid_cart_rule_product_rule msmid_cart_rule_product_rule_group msmid_cart_rule_product_rule_value msmid_cart_rule_shop msmid_category msmid_category_group msmid_category_lang msmid_category_product msmid_category_shop msmid_cms msmid_cms_category msmid_cms_category_lang msmid_cms_category_shop msmid_cms_lang msmid_cms_lang_bak_20260112100821 msmid_cms_role msmid_cms_role_lang msmid_cms_shop msmid_configuration msmid_configuration_kpi msmid_configuration_kpi_lang msmid_configuration_lang msmid_connections msmid_connections_page msmid_connections_source msmid_contact msmid_contact_lang msmid_contact_shop msmid_country msmid_country_lang msmid_country_shop msmid_currency msmid_currency_lang msmid_currency_shop msmid_customer msmid_customer_group msmid_customer_message msmid_customer_message_sync_imap msmid_customer_session msmid_customer_thread msmid_customization msmid_customization_field msmid_customization_field_lang msmid_customized_data msmid_date_range msmid_delivery msmid_dynamicproduct_calculation_item msmid_dynamicproduct_combination_field msmid_dynamicproduct_combination_value msmid_dynamicproduct_common_field msmid_dynamicproduct_condition msmid_dynamicproduct_condition_group_visibility msmid_dynamicproduct_condition_option_visibility msmid_dynamicproduct_condition_step_visibility msmid_dynamicproduct_condition_visibility msmid_dynamicproduct_config msmid_dynamicproduct_custom_orders msmid_dynamicproduct_customization msmid_dynamicproduct_customization_field msmid_dynamicproduct_dropdown_option msmid_dynamicproduct_dropdown_option_lang msmid_dynamicproduct_equation msmid_dynamicproduct_exec_order msmid_dynamicproduct_field msmid_dynamicproduct_field_formula msmid_dynamicproduct_field_group msmid_dynamicproduct_field_group_lang msmid_dynamicproduct_field_lang msmid_dynamicproduct_font_option msmid_dynamicproduct_font_option_lang msmid_dynamicproduct_grid msmid_dynamicproduct_grid_column msmid_dynamicproduct_grid_row msmid_dynamicproduct_grid_value msmid_dynamicproduct_input msmid_dynamicproduct_input_field msmid_dynamicproduct_interval msmid_dynamicproduct_interval_condition msmid_dynamicproduct_interval_condition_group msmid_dynamicproduct_interval_condition_range msmid_dynamicproduct_interval_condition_value msmid_dynamicproduct_interval_field msmid_dynamicproduct_interval_formula msmid_dynamicproduct_main_config msmid_dynamicproduct_preset_equation msmid_dynamicproduct_preview_option msmid_dynamicproduct_product_config msmid_dynamicproduct_product_config_category_link msmid_dynamicproduct_product_config_link msmid_dynamicproduct_product_field_group msmid_dynamicproduct_product_step msmid_dynamicproduct_proportions msmid_dynamicproduct_radio_option msmid_dynamicproduct_radio_option_lang msmid_dynamicproduct_step msmid_dynamicproduct_step_lang msmid_dynamicproduct_thumbnails_option msmid_dynamicproduct_thumbnails_option_lang msmid_dynamicproduct_unit msmid_dynamicproduct_unit_lang msmid_dynamicproduct_unit_value msmid_dynamicproduct_unit_value_lang msmid_dynamicproduct_visibility msmid_emailsubscription msmid_employee msmid_employee_session msmid_employee_shop msmid_feature msmid_feature_flag msmid_feature_lang msmid_feature_product msmid_feature_shop msmid_feature_value msmid_feature_value_lang msmid_ganalytics msmid_ganalytics_data msmid_gender msmid_gender_lang msmid_group msmid_group_lang msmid_group_reduction msmid_group_shop msmid_gsitemap_sitemap msmid_guest msmid_homeslider msmid_homeslider_slides msmid_homeslider_slides_lang msmid_hook msmid_hook_alias msmid_hook_module msmid_hook_module_exceptions msmid_image msmid_image_lang msmid_image_shop msmid_image_type msmid_import_match msmid_info msmid_info_lang msmid_info_shop msmid_kiyoh_custom msmid_lang msmid_lang_shop msmid_layered_category msmid_layered_filter msmid_layered_filter_block msmid_layered_filter_shop msmid_layered_indexable_attribute_group msmid_layered_indexable_attribute_group_lang_value msmid_layered_indexable_attribute_lang_value msmid_layered_indexable_feature msmid_layered_indexable_feature_lang_value msmid_layered_indexable_feature_value_lang_value msmid_layered_price_index msmid_layered_product_attribute msmid_link_block msmid_link_block_lang msmid_link_block_shop msmid_linksmenutop msmid_linksmenutop_lang msmid_log msmid_mail msmid_mailalert_customer_oos msmid_manufacturer msmid_manufacturer_lang msmid_manufacturer_shop msmid_memcached_servers msmid_message msmid_message_readed msmid_meta msmid_meta_lang msmid_modernesmid_vat_history msmid_module msmid_module_access msmid_module_carrier msmid_module_country msmid_module_currency msmid_module_group msmid_module_history msmid_module_preference msmid_module_shop msmid_mutation msmid_offer_integration msmid_operating_system msmid_order_carrier msmid_order_cart_rule msmid_order_detail msmid_order_detail_tax msmid_order_history msmid_order_invoice msmid_order_invoice_payment msmid_order_invoice_tax msmid_order_message msmid_order_message_lang msmid_order_payment msmid_order_return msmid_order_return_detail msmid_order_return_state msmid_order_return_state_lang msmid_order_slip msmid_order_slip_detail msmid_order_state msmid_order_state_lang msmid_orders msmid_pack msmid_page msmid_page_type msmid_page_viewed msmid_pagenotfound msmid_product msmid_product_attachment msmid_product_attribute msmid_product_attribute_combination msmid_product_attribute_image msmid_product_attribute_lang msmid_product_attribute_shop msmid_product_carrier msmid_product_comment msmid_product_comment_criterion msmid_product_comment_criterion_category msmid_product_comment_criterion_lang msmid_product_comment_criterion_product msmid_product_comment_grade msmid_product_comment_report msmid_product_comment_usefulness msmid_product_country_tax msmid_product_download msmid_product_group_reduction_cache msmid_product_lang msmid_product_sale msmid_product_shop msmid_product_supplier msmid_product_tag msmid_profile msmid_profile_lang msmid_psgdpr_consent msmid_psgdpr_consent_lang msmid_psgdpr_log msmid_psreassurance msmid_psreassurance_lang msmid_quick_access msmid_quick_access_lang msmid_range_price msmid_range_weight msmid_request_sql msmid_required_field msmid_risk msmid_risk_lang msmid_search_engine msmid_search_index msmid_search_word msmid_shop msmid_shop_group msmid_shop_url msmid_smarty_cache msmid_smarty_last_flush msmid_smarty_lazy_cache msmid_specific_price msmid_specific_price_priority msmid_specific_price_rule msmid_specific_price_rule_condition msmid_specific_price_rule_condition_group msmid_state msmid_statssearch msmid_stock msmid_stock_available msmid_stock_mvt msmid_stock_mvt_reason msmid_stock_mvt_reason_lang msmid_store msmid_store_lang msmid_store_shop msmid_supplier msmid_supplier_lang msmid_supplier_shop msmid_supply_order msmid_supply_order_detail msmid_supply_order_history msmid_supply_order_receipt_history msmid_supply_order_state msmid_supply_order_state_lang msmid_tab msmid_tab_lang msmid_tab_module_preference msmid_tag msmid_tag_count msmid_tax msmid_tax_lang msmid_tax_rule msmid_tax_rules_group msmid_tax_rules_group_shop msmid_timezone msmid_translation msmid_tunisoft_customization_field msmid_warehouse msmid_warehouse_carrier msmid_warehouse_product_location msmid_warehouse_shop msmid_web_browser msmid_webservice_account msmid_webservice_account_shop msmid_webservice_permission msmid_wishlist msmid_wishlist_product msmid_wishlist_product_cart msmid_zone msmid_zone_shop
+--- Employee Information ---
+ID: 1 | Name: Jelmer Stoker | Email: jelmer@ijzershop.nl | Profile ID: 1
+ID: 2 | Name: Tajko thrthr | Email: test@teffffst.nl | Profile ID: 1
+--- Profile Information ---
+ID: 1 | Name: SuperAdmin
+ID: 2 | Name: Winkel medewerker
+--- Authorization Roles (AdminCategories) ---
+ID: 717 | Slug: ROLE_MOD_MODULE_STATSBESTCATEGORIES_CREATE
+ID: 720 | Slug: ROLE_MOD_MODULE_STATSBESTCATEGORIES_DELETE
+ID: 718 | Slug: ROLE_MOD_MODULE_STATSBESTCATEGORIES_READ
+ID: 719 | Slug: ROLE_MOD_MODULE_STATSBESTCATEGORIES_UPDATE
+ID: 45 | Slug: ROLE_MOD_TAB_ADMINCATEGORIES_CREATE
+ID: 48 | Slug: ROLE_MOD_TAB_ADMINCATEGORIES_DELETE
+ID: 46 | Slug: ROLE_MOD_TAB_ADMINCATEGORIES_READ
+ID: 47 | Slug: ROLE_MOD_TAB_ADMINCATEGORIES_UPDATE
+--- Searching for ijzer in configuration of ijzershop_muli ---
+Array
+(
+    [0] => Array
+        (
+            [id_configuration] => 229
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_SHOP_DOMAIN
+            [value] => ijzershop.nl
+            [date_add] => 0000-00-00 00:00:00
+            [date_upd] => 2020-02-18 15:52:54
+        )
+    [1] => Array
+        (
+            [id_configuration] => 230
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_SHOP_DOMAIN_SSL
+            [value] => ijzershop.nl
+            [date_add] => 0000-00-00 00:00:00
+            [date_upd] => 2020-02-18 15:52:54
+        )
+    [2] => Array
+        (
+            [id_configuration] => 231
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_SHOP_NAME
+            [value] => Ijzershop
+            [date_add] => 0000-00-00 00:00:00
+            [date_upd] => 2020-02-18 15:52:54
+        )
+    [3] => Array
+        (
+            [id_configuration] => 241
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_MAIL_SERVER
+            [value] => ijzershop.nl
+            [date_add] => 0000-00-00 00:00:00
+            [date_upd] => 2022-12-07 09:35:41
+        )
+    [4] => Array
+        (
+            [id_configuration] => 242
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_MAIL_USER
+            [value] => jelmer@ijzershop.nl
+            [date_add] => 0000-00-00 00:00:00
+            [date_upd] => 2022-12-07 09:35:41
+        )
+    [5] => Array
+        (
+            [id_configuration] => 382
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_FOOTERTOP_ABOUTUS_TEXT
+            [value] => <p>IJzershop.nl levert stalen, aluminium en roestvaste platen en profielen. Wij leveren in heel Nederland aan vakmensen en particulieren. De metalen profielen worden in lengtes van 2 meter geleverd maar kunnen ook op maat worden gezaagd of geknipt.<br />Samen met de partner webshops van de IJzershop kunnen wij profiteren van een ijzersterk netwerk van leveranciers en expediteurs. De supportdesk van IJzershop.nl is elke werkdag bereikbaar van 7.30 tot 17.00 uur.  <span style="text-decoration: underline;"> <a title="lees meer" target="_blank" href="https://ijzershop.nl/content/18-bedrijfsinformatie" rel="noopener">lees meer &gt;&gt;</a></span><a title="informatie over het familiebedrijf achter de IJzershop" href="https://ijzershop.nl/content/18-bedrijfsinformatie" rel="nofollow"><em><span style="text-decoration: underline;"></span></em></a></p>
+<p>duurzaam ondernemen: <a class="btn btn-outline-success btn-sm" href="https://ijzershop.nl/content/64-metaalbewerkers-met-geitenwollen-sokken-">Metaalbewerkers op geitenwollen sokken</a></p>
+            [date_add] => 2020-02-25 10:00:32
+            [date_upd] => 2023-05-11 11:47:20
+        )
+    [6] => Array
+        (
+            [id_configuration] => 385
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_FOOTERTOP_PARTNERS
+            [value] => <ul class="footer_block_content bullet custom_links_list list-unstyled d-sm-none d-none d-md-block mb-1">
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.bouwstaalmat.nl" href="https://www.bouwstaalmat.nl" rel="nofollow">www.ijzershop.nl</a></li>
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.constructiebalk.nl" href="https://www.constructiebalk.nl" rel="nofollow">www.constructiebalk.nl</a></li>
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.paneelhek.nl" href="https://www.paneelhek.nl" rel="nofollow">www.modernesmid.nl</a></li>
+</ul>
+            [date_add] => 2020-02-25 10:00:32
+            [date_upd] => 2023-03-06 14:38:07
+        )
+    [7] => Array
+        (
+            [id_configuration] => 422
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_HOMEPAGE_TEXT
+            [value] => <div class="row">
+<div class="col-sm-6"><span style="font-size: 18px; font-weight: bold;">IJzershop, de online metaalwinkel</span><br />Uw bestelling komt direct uit de voorraad van onze werkplaats. Dit geldt voor alle profielen en platen. Doordat wij bewerkingen in de eigen fabriek uitvoeren kunnen we vaak zelfs op maat gemaakte producten de volgende dag nog leveren. Een levertijd van 1 of 2 werkdagen voor zowel materiaal als bewerking! <br /><br /><span style="font-size: 14px; font-weight: bold;">Zonder afspraak contact met een metaalbewerker</span><br />Onze webshop levert vanuit onze werkplaats. Bij vragen spreekt u met mensen uit dezelfde werkplaats. En u kunt direct met ze spreken, zonder afspraak. Via Whatsapp, telefoon of aan de balie. Deze aanpak zorgt ervoor dat 98% van onze klanten ons aanraadt! <br /><br /><span style="font-size: 14px; font-weight: bold;">De volgende dag geleverd vanuit de werkplaats</span><br />Online en offline kunt u bij de IJzershop metaal en metaalbewerkingen kopen voor uw project. Aluminium, roestvast staal en staal binnen een dag geleverd. Wij zagen, knippen, zetten en lassen metaal. Dit doen wij al vele jaren voor consumenten en vakmensen. ZZP, MKB, Multionational, stichting, scholen en meer.</div>
+<br />
+<div class="col-sm-6 float-right"><img class="img-fluid" alt="Bij onze werkplaats" src="https://ijzershop.nl/upload/Werkplaats-sfeer-6.jpg" /></div>
+</div>
+            [date_add] => 2020-02-28 12:01:49
+            [date_upd] => 2023-06-29 09:53:57
+        )
+    [8] => Array
+        (
+            [id_configuration] => 461
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_MAIL_DOMAIN
+            [value] => ijzershop.nl
+            [date_add] => 2020-03-19 08:19:30
+            [date_upd] => 2022-12-07 09:35:41
+        )
+    [9] => Array
+        (
+            [id_configuration] => 614
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => koopmanOrderExport
+            [value] => a:38:{s:13:"select_status";s:1:"3";s:14:"select_carrier";s:2:"10";s:11:"update_bool";s:1:"1";s:13:"update_status";s:2:"27";s:8:"soap_url";s:58:"https://portal.trans-mission.nl/webservices/TMSOnline.wsdl";s:12:"api_username";s:18:"info@venusweg15.nl";s:12:"api_password";s:6:"viho15";s:16:"koopman_afzender";s:15:"VIHO Leeuwarden";s:13:"koopman_depot";s:4:"9800";s:16:"koopman_verlader";s:6:"130268";s:13:"labels_folder";s:7:"koopman";s:11:"show_retour";s:1:"1";s:18:"status_transferred";s:1:"5";s:12:"status_depot";s:1:"1";s:15:"status_on_route";s:1:"1";s:16:"status_delivered";s:1:"5";s:22:"status_on_route_second";s:1:"1";s:22:"status_delivery_failed";s:1:"6";s:28:"select_packagelane_1_profile";s:1:"6";s:28:"select_packagelane_2_profile";s:1:"7";s:28:"select_packagelane_3_profile";s:1:"8";s:21:"select_pickup_carrier";s:1:"7";s:20:"select_pickup_status";s:2:"25";s:25:"select_addedorder_carrier";s:1:"8";s:24:"select_addedorder_status";s:2:"26";s:25:"retour_accepted_statusses";s:9:"5,24,21,2";s:22:"select_pickedup_status";s:1:"5";s:22:"select_workshop_status";s:2:"30";s:27:"select_waiting_stock_status";s:1:"9";s:24:"retour_created_statusses";s:5:"20,14";s:26:"shipped_accepted_statusses";s:4:"26,4";s:20:"koopman_afzendernaam";s:9:"Ijzershop";s:21:"koopman_afzendernaam2";s:31:"De modernes mid van 't internet";s:22:"koopman_afzenderstraat";s:8:"Ceresweg";s:22:"koopman_afzenderhuisnr";s:1:"1";s:24:"koopman_afzenderpostcode";s:7:"8938 BG";s:22:"koopman_afzenderplaats";s:10:"Leeuwarden";s:20:"koopman_afzenderland";s:9:"Nederland";}
+            [date_add] => 2020-06-02 11:48:32
+            [date_upd] => 2022-03-02 10:06:01
+        )
+    [10] => Array
+        (
+            [id_configuration] => 633
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_EMAIL_FOOTER_TEXT
+            [value] => ijzershop.nl  |  Ceresweg 1  |  8938BG Leeuwarden  |  0900-2502500   De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+            [date_add] => 2020-07-03 16:18:42
+            [date_upd] => 2023-06-28 13:59:51
+        )
+    [11] => Array
+        (
+            [id_configuration] => 634
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT
+            [value] => ijzershop.nl  |  Ceresweg 1  |  8938BG Leeuwarden  |  0900-2502500   De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+            [date_add] => 2020-07-03 16:18:42
+            [date_upd] => 2021-12-15 14:24:19
+        )
+    [12] => Array
+        (
+            [id_configuration] => 660
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_CATEGORY_BOTTOM_TEXT
+            [value] => <div class="row mt-4">
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto" alt="Order verzamelen" src="/upload/orderpicking.png" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">De Ijzershop bezorgt de volgende werkdag.</div>
+<p>Ruim 90% van de bestellingen die voor 15.00 uur worden geplaatst zullen de volgende werkdag door onze expediteur worden bezorgd.Ãƒâ€š Bent u zelf niet aanwezig? Geen probleem, tijdens het afrekenen kunt u een bericht voor de expediteur invullen, bijvoorbeeld: "pakket mag ook bij buren worden afgegeven" of "leg maar op de oprit". Indien u niets invult zal de chauffeur een kaartje in uw brievenbus stoppen zodat u een nieuwe afspraak kunt maken.</p>
+<p>Nog iets vergeten te bestellen? U kunt dan een nieuwe bestelling plaatsen en bij verzendmethode kiezen voor "Toevoegen aan lopende bestelling" er worden dan geen dubbele transportkosten in rekening gebracht.</p>
+<p>Afhalen van uwÃƒâ€š bestelling op de Venusweg 15 in Leeuwarden is ook mogelijk. Wij zijn open van maandag tot en met vrijdag tussen 8.00 en 17.00 uur.</p>
+<p><span style="color: #2445a2;"> <a href="/content/16-bezorgen"> <span style="color: #2445a2;">&gt;Ãƒâ€š Bekijk deÃƒâ€š informatie over verzenden</span> </a> </span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto" alt="Order verzamelen" src="/upload/orderpicking.png" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto" alt="Betaalgemak" src="/upload/Betaalgemak-B2.jpg" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Betaling via ideal, Paypal of bankoverschrijving.</div>
+<p>Online of offline betalen:<strong>Ãƒâ€š </strong><span>U kunt u bestelling eenvoudig en veilig bij de Ijzershop betalen middels iDeal, Paypal of bankoverschrijving. Daarnaast bent u altijd welkom om bij ons in de winkel langs te komen, waar u contant en met PIN kan betalen.</span></p>
+<p>Factuur:<strong>Ãƒâ€š </strong><span>Nadat u uw bestelling heeft betaald ontvangt u hiervan een bevestiging per email, de factuur is hier als bijlage aan toegevoegd.</span></p>
+<p>BTW:<strong>Ãƒâ€š </strong><span>U betaald het totaalbedrag inclusief 21% BTW.</span><br />Belgische klanten<strong>:Ãƒâ€š </strong><span>Aangezien wij uitsluitend aan particuliere klanten in BelgiÃƒÆ’« leveren wordt het BTW-bedrag ook in BelgiÃƒÆ’« door berekend.Ãƒâ€š </span><span>Het is niet mogelijk om een factuur met 0% BTW te ontvangen</span><span>.</span></p>
+<p><span style="color: #2445a2;"><a href="/content/15-betalen"><span style="color: #2445a2;">&gt;Ãƒâ€š Bekijk de informatie over betalen</span></a></span></p>
+</div>
+</div>
+<div class="row mt-4">
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto" alt="Vraag het onze vakmensen" src="/upload/supportdesk.png" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Onduidelijk? Vraag het onze vakmensen!</div>
+<p><span style="font-size: 12px;">Vragen via mail, telefoon of Whatsapp worden altijd beantwoord door iemand met verstand van metaal. Ook aan de balie kunt u er altijd op rekenen dat wij met u willen mee denken.</span></p>
+<p><span style="font-size: 12px;">Wij zijn van maandag tot en met vrijdag te bereiken tussen 08.00 en 17.00 uur. Offerteaanvragen en informatieaanvragen via de mail proberen wij altijd dezelfde dag te beantwoorden.</span></p>
+<p><span style="font-size: 12px;">&gt;Telefoonnummer:Ãƒâ€š <span style="color: #2445a2;"><a href="tel://0900-2502500/"><span style="color: #2445a2;">0900-2502500</span></a></span></span><br /><span style="font-size: 12px;">&gt;Whatsapp:Ãƒâ€š <span style="color: #2445a2;"><a href="https://api.whatsapp.com/send?phone=31636585800"><span style="color: #2445a2;">0636.58.58.00</span></a></span></span><br /><span style="font-size: 12px;">&gt;Mail:Ãƒâ€š <span style="color: #2445a2;"><a href="/content/33-informatieaanvraag"><span style="color: #2445a2;">contactformulier</span></a></span></span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto" alt="Vraag het onze vakmensen" src="/upload/supportdesk.png" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target" alt="Volumekorting" src="/upload/vb-volumekorting-64.png" width="64" height="64" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Volumekorting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Bij verschillende producten ontvangt u korting wanneer u meer besteld</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target" alt="Max. verzendafmeting" src="/upload/vb-transport2-64-2.png" width="64" height="64" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Max. verzendafmeting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Profielen: 2 meter<br />Platen: 1000x500mm<br /></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target" alt="Geen nabehandeling" src="/upload/vb-oppervlakte-64-2.png" width="64" height="64" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Geen nabehandeling</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Er kunnenÃƒâ€š beschadigingen ofÃƒâ€š lichte roestvorming op het oppervlak zitten</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target" alt="Maatvoering" src="/upload/vb-maatvoering-64.png" width="64" height="64" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatvoering</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Wij rekenen in millimeters en hanteren een tolerantie van 1,5% op de lengte</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target" alt="Maatwerk" src="/upload/vb-handen-64-2.png" width="64" height="64" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatwerk</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Maatwerk nodig?Ãƒâ€š Wij boren, zagen en lassen, vraag een offerte aan.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            [date_add] => 2020-09-10 09:07:10
+            [date_upd] => 2023-07-06 11:08:05
+        )
+    [13] => Array
+        (
+            [id_configuration] => 1421
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => CREDITPAYMENT_INFORMER_FOOTER_TEXT
+            [value] => Besteld op rekening bij Ijzershop.nl
+            [date_add] => 2021-07-02 16:48:26
+            [date_upd] => 2024-03-27 16:47:47
+        )
+    [14] => Array
+        (
+            [id_configuration] => 1430
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_CONTACTPAGE_CONTACTINFORMATION_TEXT
+            [value] => <ul class="row list-unstyled">
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="tel:09002502500"><i class="fas fa-phone"></i> Bel ons: 0900-2502500</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://api.whatsapp.com/send?phone=31636585800"><i class="fab fa-whatsapp"></i> Whatsapp: 0636585800</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://www.google.com/maps/place/Venusweg+15,+8938+BC+Leeuwarden,+Nederland/@53.1900453,5.8343069,14.84z/data=!4m5!3m4!1s0x47c8ff1ce41c9249:0x1c9b6585ccebc071!8m2!3d53.1917373!4d5.8470482?hl=nl-NL"><i class="fas fa-map-marker"></i> Bezoekadres: Venusweg 15, 8938 BC Leeuwarden</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark"><i class="fas fa-clock"></i> Maandag t/m vrijdag van 8.00 tot 17.00 uur</a></li>
+</ul>
+<div class="row">
+<div class="col-12"><a target="_blank" href="https://www.google.com/maps/dir//Ijzershop/" rel="noopener"> <img alt="" src="/themes/modernesmid_theme/assets/img/kaart.png" width="100%" height="auto" /> </a></div>
+</div>
+            [date_add] => 2021-09-24 12:35:22
+            [date_upd] => 2022-12-07 14:35:14
+        )
+    [15] => Array
+        (
+            [id_configuration] => 1431
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_CONTACTPAGE_CONTACTOFFER_TEXT
+            [value] => <h5>Vraag uw offerte op tijd aan!</h5>
+<p>Het bewerken van materialen moet worden ingepland in onze werkplaats waardoor de levertijd soms kan oplopen naar 5-7 werkdagen.</p>
+<h5>Welke informatie hebben wij nodig?</h5>
+<ul class="list-unstyled">
+<li>&gt; Maak een duidelijke overzichtelijke lijst</li>
+<li>&gt; Specificeer om welke materialen het gaat</li>
+<li>&gt; Vermeld alle maten in millimeters</li>
+<li>&gt; Gebruik geen overzichtstekening maar gebruik detailtekeningen</li>
+<li>&gt; Vraag geen advies omtrent keuze van materiaal</li>
+</ul>
+<h5>Bekijk onze mogelijkheden</h5>
+<p>Wij adviseren u om eerst onze pagina Constructiewerk te bekijken, hier staan alle mogelijkheden van de ijzershop.nl voor het bewerken van metaal omschreven. U kunt bij de ijzershop.nl terecht voor zagen, lassen, boren zetten en knippen van metalen. Niet alle materialen kunnen door ons worden bewerkt. <br /><a class="text-decoration-none" href="{$link-&gt;getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_CONSTRUCTION'))}"> &gt; Bekijk onze pagina constructiewerk</a></p>
+<h5>Bekijk ook de vragen van andere klanten</h5>
+<p>Op onze pagina 'Veel gestelde vragen' kunt u de antwoorden terug vinden op vragen die eerder door andere klanten zijn gesteld, wellicht kunt u hier ook al het antwoord op uw vragen vinden. <br /><a class="text-decoration-none" href="{$link-&gt;getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_FAQ'))}"> &gt; Bekijk onze pagina met veel gestelde vragen</a></p>
+<h5>Uw privacy</h5>
+<p>Wij maken u erop attent dat wij de persoonsgegevens die u ons heeft verstrekt en eventueel nog zult verstrekken, zullen verwerken op de manier zoals wij die in onze privacyverklaring hebben omschreven. Wij verwijzen u graag naar privacy voorwaarden voor meer informatie over de verwerking van uw persoonsgegevens en de rechten die u heeft. <br /><a class="text-decoration-none" href="{$link-&gt;getCMSLink(Configuration::get('MODERNESMIDTHEMECONFIGURATOR_CONTACTPAGE_PRIVACY'))}"> &gt; Bekijk onze pagina privacyvoorwaarden</a></p>
+            [date_add] => 2021-09-24 12:35:22
+            [date_upd] => 2023-07-06 11:08:05
+        )
+    [16] => Array
+        (
+            [id_configuration] => 1667
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSTHEMECONFIG_TEST_WEBSITES
+            [value] => https://ijzershop8.local
+            [date_add] => 2021-11-15 09:59:56
+            [date_upd] => 2023-06-14 12:03:37
+        )
+    [17] => Array
+        (
+            [id_configuration] => 1674
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => PS_LOGS_EMAIL_RECEIVERS
+            [value] => jelmer@ijzershop.nl
+            [date_add] => 2022-03-15 12:00:38
+            [date_upd] => 2022-03-15 12:00:38
+        )
+    [18] => Array
+        (
+            [id_configuration] => 1830
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => KOOPMANORDEREXPORT_KOOPMAN_AFZENDERNAAM
+            [value] => IJzershop
+            [date_add] => 2022-12-21 14:22:59
+            [date_upd] => 2022-12-21 14:22:59
+        )
+    [19] => Array
+        (
+            [id_configuration] => 2325
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MA_MERCHANT_MAILS
+            [value] => orders@ijzershop.nl
+            [date_add] => 2023-07-12 08:15:39
+            [date_upd] => 2023-07-12 08:15:39
+        )
+    [20] => Array
+        (
+            [id_configuration] => 2329
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MA_MERCHANT_ORDER_EMAILS
+            [value] => jelmer@ijzershop.nl
+            [date_add] => 2023-07-12 08:15:39
+            [date_upd] => 2025-04-30 11:59:19
+        )
+    [21] => Array
+        (
+            [id_configuration] => 2330
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MA_MERCHANT_OOS_EMAILS
+            [value] => orders@ijzershop.nl,info@ijzershop.nl
+            [date_add] => 2023-07-12 08:15:39
+            [date_upd] => 2024-01-18 11:57:30
+        )
+    [22] => Array
+        (
+            [id_configuration] => 2331
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MA_RETURN_SLIP_EMAILS
+            [value] => jjelmer@ijzershop.nl
+            [date_add] => 2023-07-12 08:15:39
+            [date_upd] => 2025-04-30 11:59:19
+        )
+    [23] => Array
+        (
+            [id_configuration] => 3437
+            [id_shop_group] =>
+            [id_shop] =>
+            [name] => MSMOLLIE_EMAIL
+            [value] => jelmer@ijzershop.nl
+            [date_add] => 2025-06-18 14:03:39
+            [date_upd] => 2025-06-18 14:23:32
+        )
+)
+--- Searching for ijzer in configuration_lang of ijzershop_muli ---
+Array
+(
+    [0] => Array
+        (
+            [id_configuration] => 277
+            [id_lang] => 1
+            [value] => <h2 style="text-align: center;">We zijn hier aan het testen met nieuwe mogelijkheden voor de IJzershop</h2>
+<h2 style="text-align: center;"></h2>
+<h2 style="text-align: center;">Tot straks!</h2>
+<p></p>
+<p></p>
+<h2 style="text-align: center;"><a href="http://www.ijzershop.nl"></a></h2>
+            [date_upd] => 2024-07-11 15:27:39
+        )
+    [1] => Array
+        (
+            [id_configuration] => 346
+            [id_lang] => 1
+            [value] => ik accepteer de <a target="_blank" href="https://ijzershop.nl/content/10-leveringsvoorwaarden">algemene voorwaarden</a> en <a target="_blank" href="https://ijzershop.nl/content/11-privacyverklaring">privacyvoorwaarden<a/> van de IJzershop
+            [date_upd] => 2023-08-02 15:33:09
+        )
+    [2] => Array
+        (
+            [id_configuration] => 348
+            [id_lang] => 1
+            [value] => ik accepteer de <a target="_blank" href="https://ijzershop.nl/content/10-leveringsvoorwaarden">algemene voorwaarden</a> en <a target="_blank" href="https://ijzershop.nl/content/11-privacyverklaring">privacyvoorwaarden<a/> van de IJzershop
+            [date_upd] => 2023-08-02 15:33:09
+        )
+    [3] => Array
+        (
+            [id_configuration] => 382
+            [id_lang] => 1
+            [value] => <p>IJzershop.nl levert stalen, aluminium en roestvaste platen en profielen. Wij leveren in heel Nederland aan vakmensen en particulieren. De metalen profielen worden in lengtes van 2 meter geleverd maar kunnen ook op maat worden gezaagd of geknipt.<br />Samen met de partner webshops van de IJzershop kunnen wij profiteren van een ijzersterk netwerk van leveranciers en expediteurs. De supportdesk van IJzershop.nl is elke werkdag bereikbaar van 7.30 tot 17.00 uur.  <span style="text-decoration: underline;"> <a title="lees meer" target="_blank" href="https://ijzershop.nl/content/18-bedrijfsinformatie" rel="noopener">lees meer &gt;&gt;</a></span><a title="informatie over het familiebedrijf achter de IJzershop" href="https://ijzershop.nl/content/18-bedrijfsinformatie" rel="nofollow"><em><span style="text-decoration: underline;"></span></em></a></p>
+<p>duurzaam ondernemen: <a class="btn btn-outline-success btn-sm" href="https://ijzershop.nl/content/64-metaalbewerkers-met-geitenwollen-sokken-">Metaalbewerkers op geitenwollen sokken</a></p>
+            [date_upd] => 2024-01-05 13:21:56
+        )
+    [4] => Array
+        (
+            [id_configuration] => 385
+            [id_lang] => 1
+            [value] => <ul class="footer_block_content bullet custom_links_list list-unstyled d-sm-none d-none d-md-block mb-1">
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.ijzershop.nl" href="https://www.ijzershop.nl" rel="nofollow">www.ijzershop.nl</a></li>
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.constructiebalk.nl" href="https://www.constructiebalk.nl" rel="nofollow">www.constructiebalk.nl</a></li>
+<li><a class="dropdown_list_item text-decoration-none text-dark" title="www.modernesmid.nl" target="_blank" href="https://www.modernesmid.nl" rel="noopener">www.modernesmid.nl</a></li>
+</ul>
+            [date_upd] => 2023-10-02 15:58:03
+        )
+    [5] => Array
+        (
+            [id_configuration] => 405
+            [id_lang] => 1
+            [value] => 659541190037d-betaalwijzen_ijzershop.jpg
+            [date_upd] => 2024-01-03 12:12:25
+        )
+    [6] => Array
+        (
+            [id_configuration] => 422
+            [id_lang] => 1
+            [value] => <div class="row">
+<div class="col-sm-6"><span style="font-size: 18px; font-weight: bold;">IJzershop, de online metaalwinkel</span><br />Uw bestelling komt direct uit de voorraad van onze werkplaats. Dit geldt voor alle profielen en platen. Doordat wij bewerkingen in de eigen fabriek uitvoeren kunnen we vaak zelfs op maat gemaakte producten de volgende dag nog leveren. Een levertijd van 1 of 2 werkdagen voor zowel materiaal als bewerking! <br /><br /><span style="font-size: 14px; font-weight: bold;">Zonder afspraak contact met een metaalbewerker</span><br />Onze webshop levert vanuit onze werkplaats. Bij vragen spreekt u met mensen uit dezelfde werkplaats. En u kunt direct met ze spreken, zonder afspraak. Via Whatsapp, telefoon of aan de balie. Deze aanpak zorgt ervoor dat 98% van onze klanten ons aanraadt! <br /><br /><span style="font-size: 14px; font-weight: bold;">De volgende dag geleverd vanuit de werkplaats</span><br />Online en offline kunt u bij de IJzershop metaal en metaalbewerkingen kopen voor uw project. Aluminium, roestvast staal en staal binnen een dag geleverd. Wij zagen, knippen, zetten en lassen metaal. Dit doen wij al vele jaren voor consumenten en vakmensen. ZZP, MKB, Multionational, stichting, scholen en meer</div>
+<br />
+<div class="col-sm-6 float-right"><img class="img-fluid lazyload" alt="Bij onze werkplaats" data-src="https://ijzershop.nl/upload/Werkplaats-sfeer-6.webp" /></div>
+</div>
+            [date_upd] => 2024-06-12 15:21:53
+        )
+    [7] => Array
+        (
+            [id_configuration] => 631
+            [id_lang] => 1
+            [value] => IJZERSHOP | Ceresweg 1 | 8938bg Leeuwarden | Nederland | Tel: 0900-2502500 |  IBAN: NL24 RABO 0157 6529 47  t.n.v. De Moderne Smid | BIC: RABONL2U | KvK Fryslan: 75220555 | VATnr: NL860193421B01
+            [date_upd] => 2023-12-20 10:21:43
+        )
+    [8] => Array
+        (
+            [id_configuration] => 633
+            [id_lang] => 1
+            [value] => ijzershop.nl  |  Ceresweg 1  |  8938BG Leeuwarden  |  0900-2502500   De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+            [date_upd] => 2023-10-26 11:49:12
+        )
+    [9] => Array
+        (
+            [id_configuration] => 634
+            [id_lang] => 1
+            [value] => ijzershop.nl  |  Ceresweg 1  |  8938BG Leeuwarden  |  0900-2502500   De Moderne Smid BV | KvK nummer: 075220555 | BTW nr.: NL860193421B01
+            [date_upd] => 2023-07-12 08:25:44
+        )
+    [10] => Array
+        (
+            [id_configuration] => 660
+            [id_lang] => 1
+            [value] => <div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Verzendkosten van de IJzershop.</div>
+<p>- Verzending in Nederland: <strong>10 euro</strong> incl. BTW.<br />- Verzending in Belgie: <strong>20 euro</strong> incl. BTW. <br />Wij berekenen geen toeslagen of extra kosten en hanteren geen minimale orderkosten.</p>
+<p></p>
+<p></p>
+<div class="h5 w-100 text-dark">Hoe snel heb ik mijn bestelling in huis?</div>
+<p>In Nederland wordt 90% van de bestellingen, die voor 15.00 uur worden geplaatst, de volgende werkdag door onze expediteur bezorgd. In Belgie is de levertijd 3-5 werkdagen.</p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="verpakking-jpg" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Moet er iemand thuis zijn voor levering?</div>
+<p>Bent u zelf niet aanwezig? Geen probleem, tijdens het afrekenen kunt u een bericht voor de expediteur invullen, bijvoorbeeld: "pakket mag ook bij buren worden afgegeven" of "leg maar op de oprit".</p>
+<div class="h5 w-100 text-dark">Kan ik mijn bestelling ook afhalen?</div>
+<p>Afhalen van uw bestelling op de Ceresweg 1 in Leeuwarden is ook mogelijk. Wij zijn open van maandag tot en met vrijdag tussen 08.00 en 17.00 uur.</p>
+<p><span style="color: #2445a2;"> <a href="/content/16-ijzershop-bezorgt-in-heel-nederland" rel="nofollow"> <span style="color: #2445a2;">&gt; Bekijk de informatie over verzenden</span> </a> </span></p>
+</div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Betaling via iDeal, Paypal, Creditcard of bankoverschrijving.</div>
+<p>Online of offline betalen:<strong> </strong><span>U kunt u bestelling eenvoudig en veilig bij de IJzershop betalen middels iDeal, Paypal of bankoverschrijving. Daarnaast bent u altijd welkom om bij ons in de winkel langs te komen, waar u contant en met PIN kan betalen.</span></p>
+<p>Factuur:<strong> </strong><span>Nadat u uw bestelling heeft betaald ontvangt u hiervan een bevestiging per email, de factuur is hier als bijlage aan toegevoegd.</span></p>
+<p>BTW:<strong> </strong><span>U betaald het totaalbedrag inclusief 21% BTW. Ook Belgische klanten betalen 21% BTW, wij hanteren geen 0% tarief.</span><br /><span></span></p>
+<p><span style="color: #2445a2;"><a href="content/15-veilig-betalen-bij-de-ijzershop" rel="nofollow"><span style="color: #2445a2;">&gt; Bekijk de informatie over betalen</span></a></span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="/upload/supportdesk.webp" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Onduidelijk? Vraag het onze vakmensen!</div>
+<p>Vragen via mail, telefoon of Whatsapp worden altijd beantwoord door iemand met verstand van metaal. Ook aan de balie kunt u er altijd op rekenen dat wij met u willen mee denken.</p>
+<p>Wij zijn van maandag tot en met vrijdag te bereiken tussen 08.00 en 17.00 uur. Offerteaanvragen en informatieaanvragen via de mail proberen wij altijd dezelfde dag te beantwoorden.</p>
+<p>&gt;Telefoonnummer: <span style="color: #2445a2;"><a href="tel://0900-2502500/"><span style="color: #2445a2;">0900-2502500</span></a></span><br />&gt;Whatsapp: <span style="color: #2445a2;"><a style="color: #2445a2;">0636.58.58.00</a></span><br />&gt;Mail: <span style="color: #2445a2;"><a href="/informatie-aanvragen" rel="nofollow"><span style="color: #2445a2;">contactformulier</span></a></span></p>
+</div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="https://ijzershop.nl/upload/supportdesk.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Volumekorting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-volumekorting-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Staffelkorting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Bij verschillende producten ontvangt u korting wanneer u meer besteld</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Max. verzendafmeting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-transport2-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Max. verzendafmeting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Profielen: 2 meter<br />Platen: 1000x500mm<br /></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Geen nabehandeling" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-oppervlakte-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Geen nabehandeling</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Er kunnen beschadigingen of lichte roestvorming op het oppervlak zitten</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatvoering" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-maatvoering-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatvoering</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Wij rekenen in millimeters en hanteren een tolerantie van 1,5% op de lengte</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatwerk" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-handen-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatwerk</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Maatwerk nodig? Wij boren, zagen en lassen, vraag een offerte aan.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            [date_upd] => 2024-06-17 08:33:50
+        )
+    [11] => Array
+        (
+            [id_configuration] => 1430
+            [id_lang] => 1
+            [value] => <ul class="row list-unstyled">
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="tel:09002502500"><i class="fas fa-phone"></i> Bel ons: 0900-2502500</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://api.whatsapp.com/send?phone=31636585800"><i class="fab fa-whatsapp"></i> Whatsapp: 0636585800</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://www.google.com/maps/place/Venusweg+15,+8938+BC+Leeuwarden,+Nederland/@53.1900453,5.8343069,14.84z/data=!4m5!3m4!1s0x47c8ff1ce41c9249:0x1c9b6585ccebc071!8m2!3d53.1917373!4d5.8470482?hl=nl-NL"><i class="fas fa-map-marker"></i> Bezoekadres: Venusweg 15, 8938 BC Leeuwarden</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark"><i class="fas fa-clock"></i> Maandag t/m vrijdag van 8.00 tot 17.00 uur</a></li>
+</ul>
+<div class="row">
+<div class="col-12"><a target="_blank" href="https://www.google.com/maps/dir//Ijzershop/" rel="noopener"> <img alt="" src="/themes/modernesmid_theme/assets/img/kaart.png" width="100%" height="auto" /> </a></div>
+</div>
+            [date_upd] => 2023-07-11 06:36:54
+        )
+    [12] => Array
+        (
+            [id_configuration] => 1431
+            [id_lang] => 1
+            [value] => <h5>Vraag uw offerte op tijd aan!</h5>
+<p>Het bewerken van materialen moet worden ingepland in onze werkplaats waardoor de levertijd soms kan oplopen naar 5-7 werkdagen.</p>
+<h5>Welke informatie hebben wij nodig?</h5>
+<ul class="list-unstyled">
+<li>&gt; Maak een duidelijke overzichtelijke lijst</li>
+<li>&gt; Specificeer om welke materialen het gaat</li>
+<li>&gt; Vermeld alle maten in millimeters</li>
+<li>&gt; Gebruik geen overzichtstekening maar gebruik detailtekeningen</li>
+<li>&gt; Vraag geen advies omtrent keuze van materiaal</li>
+</ul>
+<h5>Bekijk onze mogelijkheden</h5>
+<p>Wij adviseren u om eerst onze pagina Constructiewerk te bekijken, hier staan alle mogelijkheden van de ijzershop.nl voor het bewerken van metaal omschreven. U kunt bij de ijzershop.nl terecht voor zagen, lassen, boren zetten en knippen van metalen. Niet alle materialen kunnen door ons worden bewerkt. <br /><a class="text-decoration-none" href="content/17-constructiewerk-en-metaalbewerking" rel="nofollow"> &gt; Bekijk onze pagina constructiewerk</a></p>
+<h5>Bekijk ook de vragen van andere klanten</h5>
+<p>Op onze pagina 'Veel gestelde vragen' kunt u de antwoorden terug vinden op vragen die eerder door andere klanten zijn gesteld, wellicht kunt u hier ook al het antwoord op uw vragen vinden. <br /><a class="text-decoration-none" href="content/51-FAQ" rel="nofollow"> &gt; Bekijk onze pagina met veel gestelde vragen</a></p>
+<h5>Uw privacy</h5>
+<p>Wij maken u erop attent dat wij de persoonsgegevens die u ons heeft verstrekt en eventueel nog zult verstrekken, zullen verwerken op de manier zoals wij die in onze privacyverklaring hebben omschreven. Wij verwijzen u graag naar privacy voorwaarden voor meer informatie over de verwerking van uw persoonsgegevens en de rechten die u heeft. <br /><a class="text-decoration-none" href="content/11-privacyverklaring" rel="nofollow"> &gt; Bekijk onze pagina privacyvoorwaarden</a></p>
+            [date_upd] => 2024-03-27 19:36:30
+        )
+    [13] => Array
+        (
+            [id_configuration] => 1830
+            [id_lang] => 1
+            [value] => IJzershop
+            [date_upd] => 2023-07-12 08:28:33
+        )
+    [14] => Array
+        (
+            [id_configuration] => 2852
+            [id_lang] => 1
+            [value] => <h2 style="text-align: center;">We zijn druk bezig met gepland onderhoud van de website van de IJzershop.</h2>
+<h2 style="text-align: center;"></h2>
+<h2 style="text-align: center;">Tot straks!</h2>
+<p></p>
+<p></p>
+<h2 style="text-align: center;"><a href="http://www.ijzershop.nl"></a></h2>
+            [date_upd] => 2024-07-03 14:02:44
+        )
+    [15] => Array
+        (
+            [id_configuration] => 2856
+            [id_lang] => 1
+            [value] => <h2 style="text-align: center;">We zijn druk bezig met gepland onderhoud van de website van de IJzershop.</h2>
+<h2 style="text-align: center;"></h2>
+<h2 style="text-align: center;">Tot straks!</h2>
+<p></p>
+<p></p>
+<h2 style="text-align: center;"><a href="http://www.ijzershop.nl"></a></h2>
+            [date_upd] => 2024-07-03 14:03:15
+        )
+    [16] => Array
+        (
+            [id_configuration] => 2860
+            [id_lang] => 1
+            [value] => <h2 style="text-align: center;">We zijn druk bezig met gepland onderhoud van de website van de IJzershop.</h2>
+<h2 style="text-align: center;"></h2>
+<h2 style="text-align: center;">Tot straks!</h2>
+<p></p>
+<p></p>
+<h2 style="text-align: center;"><a href="http://www.ijzershop.nl"></a></h2>
+            [date_upd] => 2024-07-03 14:03:27
+        )
+    [17] => Array
+        (
+            [id_configuration] => 2931
+            [id_lang] => 1
+            [value] => <div class="row">
+<div class="col-sm-6"><span style="font-size: 18px; font-weight: bold;">constructie.local, </span>The construction site was abuzz with activity as the crew worked tirelessly to complete the steel framework of the new skyscraper. The air was thick with the smell of hot metal and the sound of welding machines filled the air as workers expertly joined together beams and columns to form the skeleton of the building. As they worked, the crane operator skillfully maneuvered the massive steel sections into place, carefully aligning them to ensure a sturdy foundation for the structure.</div>
+<br />
+<div class="col-sm-6 float-right"><img class="img-fluid lazyload" alt="Bij onze werkplaats" data-src="https://ijzershop.nl/upload/Werkplaats-sfeer-6.webp" /></div>
+</div>
+            [date_upd] => 2024-07-04 08:02:10
+        )
+    [18] => Array
+        (
+            [id_configuration] => 2933
+            [id_lang] => 1
+            [value] => <div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Verzendkosten van de IJzershop.</div>
+<p>- Verzending in Nederland: <strong>10 euro</strong> incl. BTW.<br />- Verzending in Belgie: <strong>20 euro</strong> incl. BTW. <br />Wij berekenen geen toeslagen of extra kosten en hanteren geen minimale orderkosten.</p>
+<p></p>
+<p></p>
+<div class="h5 w-100 text-dark">Hoe snel heb ik mijn bestelling in huis?</div>
+<p>In Nederland wordt 90% van de bestellingen, die voor 15.00 uur worden geplaatst, de volgende werkdag door onze expediteur bezorgd. In Belgie is de levertijd 3-5 werkdagen.</p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="verpakking-jpg" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Moet er iemand thuis zijn voor levering?</div>
+<p>Bent u zelf niet aanwezig? Geen probleem, tijdens het afrekenen kunt u een bericht voor de expediteur invullen, bijvoorbeeld: "pakket mag ook bij buren worden afgegeven" of "leg maar op de oprit".</p>
+<div class="h5 w-100 text-dark">Kan ik mijn bestelling ook afhalen?</div>
+<p>Afhalen van uw bestelling op de Ceresweg 1 in Leeuwarden is ook mogelijk. Wij zijn open van maandag tot en met vrijdag tussen 08.00 en 17.00 uur.</p>
+<p><span style="color: #2445a2;"> <a href="/content/16-ijzershop-bezorgt-in-heel-nederland" rel="nofollow"> <span style="color: #2445a2;">&gt; Bekijk de informatie over verzenden</span> </a> </span></p>
+</div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Betaling via iDeal, Paypal, Creditcard of bankoverschrijving.</div>
+<p>Online of offline betalen:<strong> </strong><span>U kunt u bestelling eenvoudig en veilig bij de IJzershop betalen middels iDeal, Paypal of bankoverschrijving. Daarnaast bent u altijd welkom om bij ons in de winkel langs te komen, waar u contant en met PIN kan betalen.</span></p>
+<p>Factuur:<strong> </strong><span>Nadat u uw bestelling heeft betaald ontvangt u hiervan een bevestiging per email, de factuur is hier als bijlage aan toegevoegd.</span></p>
+<p>BTW:<strong> </strong><span>U betaald het totaalbedrag inclusief 21% BTW. Ook Belgische klanten betalen 21% BTW, wij hanteren geen 0% tarief.</span><br /><span></span></p>
+<p><span style="color: #2445a2;"><a href="content/15-veilig-betalen-bij-de-ijzershop" rel="nofollow"><span style="color: #2445a2;">&gt; Bekijk de informatie over betalen</span></a></span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="/upload/supportdesk.webp" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Onduidelijk? Vraag het onze vakmensen!</div>
+<p>Vragen via mail, telefoon of Whatsapp worden altijd beantwoord door iemand met verstand van metaal. Ook aan de balie kunt u er altijd op rekenen dat wij met u willen mee denken.</p>
+<p>Wij zijn van maandag tot en met vrijdag te bereiken tussen 08.00 en 17.00 uur. Offerteaanvragen en informatieaanvragen via de mail proberen wij altijd dezelfde dag te beantwoorden.</p>
+<p>&gt;Telefoonnummer: <span style="color: #2445a2;"><a href="tel://0900-2502500/"><span style="color: #2445a2;">0900-2502500</span></a></span><br />&gt;Whatsapp: <span style="color: #2445a2;"><a style="color: #2445a2;">0636.58.58.00</a></span><br />&gt;Mail: <span style="color: #2445a2;"><a href="/informatie-aanvragen" rel="nofollow"><span style="color: #2445a2;">contactformulier</span></a></span></p>
+</div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="https://ijzershop.nl/upload/supportdesk.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Volumekorting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-volumekorting-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Staffelkorting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Bij verschillende producten ontvangt u korting wanneer u meer besteld</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Max. verzendafmeting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-transport2-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Max. verzendafmeting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Profielen: 2 meter<br />Platen: 1000x500mm<br /></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Geen nabehandeling" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-oppervlakte-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Geen nabehandeling</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Er kunnen beschadigingen of lichte roestvorming op het oppervlak zitten</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatvoering" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-maatvoering-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatvoering</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Wij rekenen in millimeters en hanteren een tolerantie van 1,5% op de lengte</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatwerk" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-handen-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatwerk</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Maatwerk nodig? Wij boren, zagen en lassen, vraag een offerte aan.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            [date_upd] => 2024-07-03 14:19:36
+        )
+    [19] => Array
+        (
+            [id_configuration] => 2948
+            [id_lang] => 1
+            [value] => <h5>Vraag uw offerte op tijd aan!</h5>
+<p>Het bewerken van materialen moet worden ingepland in onze werkplaats waardoor de levertijd soms kan oplopen naar 5-7 werkdagen.</p>
+<h5>Welke informatie hebben wij nodig?</h5>
+<ul class="list-unstyled">
+<li>&gt; Maak een duidelijke overzichtelijke lijst</li>
+<li>&gt; Specificeer om welke materialen het gaat</li>
+<li>&gt; Vermeld alle maten in millimeters</li>
+<li>&gt; Gebruik geen overzichtstekening maar gebruik detailtekeningen</li>
+<li>&gt; Vraag geen advies omtrent keuze van materiaal</li>
+</ul>
+<h5>Bekijk onze mogelijkheden</h5>
+<p>Wij adviseren u om eerst onze pagina Constructiewerk te bekijken, hier staan alle mogelijkheden van de ijzershop.nl voor het bewerken van metaal omschreven. U kunt bij de ijzershop.nl terecht voor zagen, lassen, boren zetten en knippen van metalen. Niet alle materialen kunnen door ons worden bewerkt. <br /><a class="text-decoration-none" href="content/17-constructiewerk-en-metaalbewerking" rel="nofollow"> &gt; Bekijk onze pagina constructiewerk</a></p>
+<h5>Bekijk ook de vragen van andere klanten</h5>
+<p>Op onze pagina 'Veel gestelde vragen' kunt u de antwoorden terug vinden op vragen die eerder door andere klanten zijn gesteld, wellicht kunt u hier ook al het antwoord op uw vragen vinden. <br /><a class="text-decoration-none" href="content/51-FAQ" rel="nofollow"> &gt; Bekijk onze pagina met veel gestelde vragen</a></p>
+<h5>Uw privacy</h5>
+<p>Wij maken u erop attent dat wij de persoonsgegevens die u ons heeft verstrekt en eventueel nog zult verstrekken, zullen verwerken op de manier zoals wij die in onze privacyverklaring hebben omschreven. Wij verwijzen u graag naar privacy voorwaarden voor meer informatie over de verwerking van uw persoonsgegevens en de rechten die u heeft. <br /><a class="text-decoration-none" href="content/11-privacyverklaring" rel="nofollow"> &gt; Bekijk onze pagina privacyvoorwaarden</a></p>
+            [date_upd] => 2024-07-03 14:19:36
+        )
+    [20] => Array
+        (
+            [id_configuration] => 2949
+            [id_lang] => 1
+            [value] => <ul class="row list-unstyled">
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="tel:09002502500"><i class="fas fa-phone"></i> Bel ons: 0900-2502500</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://api.whatsapp.com/send?phone=31636585800"><i class="fab fa-whatsapp"></i> Whatsapp: 0636585800</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://www.google.com/maps/place/Venusweg+15,+8938+BC+Leeuwarden,+Nederland/@53.1900453,5.8343069,14.84z/data=!4m5!3m4!1s0x47c8ff1ce41c9249:0x1c9b6585ccebc071!8m2!3d53.1917373!4d5.8470482?hl=nl-NL"><i class="fas fa-map-marker"></i> Bezoekadres: Venusweg 15, 8938 BC Leeuwarden</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark"><i class="fas fa-clock"></i> Maandag t/m vrijdag van 8.00 tot 17.00 uur</a></li>
+</ul>
+<div class="row">
+<div class="col-12"><a target="_blank" href="https://www.google.com/maps/dir//Ijzershop/" rel="noopener"> <img alt="" src="/themes/modernesmid_theme/assets/img/kaart.png" width="100%" height="auto" /> </a></div>
+</div>
+            [date_upd] => 2024-07-03 14:19:36
+        )
+    [21] => Array
+        (
+            [id_configuration] => 2963
+            [id_lang] => 1
+            [value] => <div class="row">
+<div class="col-sm-6"><span style="font-size: 18px; font-weight: bold;">ngrok.ijzershop-test.nl, de online metaalwinkel</span><br />Uw bestelling komt direct uit de voorraad van onze werkplaats. Dit geldt voor alle profielen en platen. Doordat wij bewerkingen in de eigen fabriek uitvoeren kunnen we vaak zelfs op maat gemaakte producten de volgende dag nog leveren. Een levertijd van 1 of 2 werkdagen voor zowel materiaal als bewerking! <br /><br /><span style="font-size: 14px; font-weight: bold;">Zonder afspraak contact met een metaalbewerker</span><br />Onze webshop levert vanuit onze werkplaats. Bij vragen spreekt u met mensen uit dezelfde werkplaats. En u kunt direct met ze spreken, zonder afspraak. Via Whatsapp, telefoon of aan de balie. Deze aanpak zorgt ervoor dat 98% van onze klanten ons aanraadt! <br /><br /><span style="font-size: 14px; font-weight: bold;">De volgende dag geleverd vanuit de werkplaats</span><br />Online en offline kunt u bij de IJzershop metaal en metaalbewerkingen kopen voor uw project. Aluminium, roestvast staal en staal binnen een dag geleverd. Wij zagen, knippen, zetten en lassen metaal. Dit doen wij al vele jaren voor consumenten en vakmensen. ZZP, MKB, Multionational, stichting, scholen en meer</div>
+<br />
+<div class="col-sm-6 float-right"><img class="img-fluid lazyload" alt="Bij onze werkplaats" data-src="https://ijzershop.nl/upload/Werkplaats-sfeer-6.webp" /></div>
+</div>
+            [date_upd] => 2024-07-03 14:21:04
+        )
+    [22] => Array
+        (
+            [id_configuration] => 2965
+            [id_lang] => 1
+            [value] => <div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Verzendkosten van de IJzershop.</div>
+<p>- Verzending in Nederland: <strong>10 euro</strong> incl. BTW.<br />- Verzending in Belgie: <strong>20 euro</strong> incl. BTW. <br />Wij berekenen geen toeslagen of extra kosten en hanteren geen minimale orderkosten.</p>
+<p></p>
+<p></p>
+<div class="h5 w-100 text-dark">Hoe snel heb ik mijn bestelling in huis?</div>
+<p>In Nederland wordt 90% van de bestellingen, die voor 15.00 uur worden geplaatst, de volgende werkdag door onze expediteur bezorgd. In Belgie is de levertijd 3-5 werkdagen.</p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="verpakking-jpg" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Moet er iemand thuis zijn voor levering?</div>
+<p>Bent u zelf niet aanwezig? Geen probleem, tijdens het afrekenen kunt u een bericht voor de expediteur invullen, bijvoorbeeld: "pakket mag ook bij buren worden afgegeven" of "leg maar op de oprit".</p>
+<div class="h5 w-100 text-dark">Kan ik mijn bestelling ook afhalen?</div>
+<p>Afhalen van uw bestelling op de Ceresweg 1 in Leeuwarden is ook mogelijk. Wij zijn open van maandag tot en met vrijdag tussen 08.00 en 17.00 uur.</p>
+<p><span style="color: #2445a2;"> <a href="/content/16-ijzershop-bezorgt-in-heel-nederland" rel="nofollow"> <span style="color: #2445a2;">&gt; Bekijk de informatie over verzenden</span> </a> </span></p>
+</div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Betaling via iDeal, Paypal, Creditcard of bankoverschrijving.</div>
+<p>Online of offline betalen:<strong> </strong><span>U kunt u bestelling eenvoudig en veilig bij de IJzershop betalen middels iDeal, Paypal of bankoverschrijving. Daarnaast bent u altijd welkom om bij ons in de winkel langs te komen, waar u contant en met PIN kan betalen.</span></p>
+<p>Factuur:<strong> </strong><span>Nadat u uw bestelling heeft betaald ontvangt u hiervan een bevestiging per email, de factuur is hier als bijlage aan toegevoegd.</span></p>
+<p>BTW:<strong> </strong><span>U betaald het totaalbedrag inclusief 21% BTW. Ook Belgische klanten betalen 21% BTW, wij hanteren geen 0% tarief.</span><br /><span></span></p>
+<p><span style="color: #2445a2;"><a href="content/15-veilig-betalen-bij-de-ijzershop" rel="nofollow"><span style="color: #2445a2;">&gt; Bekijk de informatie over betalen</span></a></span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="/upload/supportdesk.webp" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Onduidelijk? Vraag het onze vakmensen!</div>
+<p>Vragen via mail, telefoon of Whatsapp worden altijd beantwoord door iemand met verstand van metaal. Ook aan de balie kunt u er altijd op rekenen dat wij met u willen mee denken.</p>
+<p>Wij zijn van maandag tot en met vrijdag te bereiken tussen 08.00 en 17.00 uur. Offerteaanvragen en informatieaanvragen via de mail proberen wij altijd dezelfde dag te beantwoorden.</p>
+<p>&gt;Telefoonnummer: <span style="color: #2445a2;"><a href="tel://0900-2502500/"><span style="color: #2445a2;">0900-2502500</span></a></span><br />&gt;Whatsapp: <span style="color: #2445a2;"><a style="color: #2445a2;">0636.58.58.00</a></span><br />&gt;Mail: <span style="color: #2445a2;"><a href="/informatie-aanvragen" rel="nofollow"><span style="color: #2445a2;">contactformulier</span></a></span></p>
+</div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="https://ijzershop.nl/upload/supportdesk.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Volumekorting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-volumekorting-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Staffelkorting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Bij verschillende producten ontvangt u korting wanneer u meer besteld</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Max. verzendafmeting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-transport2-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Max. verzendafmeting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Profielen: 2 meter<br />Platen: 1000x500mm<br /></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Geen nabehandeling" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-oppervlakte-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Geen nabehandeling</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Er kunnen beschadigingen of lichte roestvorming op het oppervlak zitten</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatvoering" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-maatvoering-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatvoering</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Wij rekenen in millimeters en hanteren een tolerantie van 1,5% op de lengte</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatwerk" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-handen-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatwerk</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Maatwerk nodig? Wij boren, zagen en lassen, vraag een offerte aan.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            [date_upd] => 2024-07-03 14:21:04
+        )
+    [23] => Array
+        (
+            [id_configuration] => 2980
+            [id_lang] => 1
+            [value] => <h5>Vraag uw offerte op tijd aan!</h5>
+<p>Het bewerken van materialen moet worden ingepland in onze werkplaats waardoor de levertijd soms kan oplopen naar 5-7 werkdagen.</p>
+<h5>Welke informatie hebben wij nodig?</h5>
+<ul class="list-unstyled">
+<li>&gt; Maak een duidelijke overzichtelijke lijst</li>
+<li>&gt; Specificeer om welke materialen het gaat</li>
+<li>&gt; Vermeld alle maten in millimeters</li>
+<li>&gt; Gebruik geen overzichtstekening maar gebruik detailtekeningen</li>
+<li>&gt; Vraag geen advies omtrent keuze van materiaal</li>
+</ul>
+<h5>Bekijk onze mogelijkheden</h5>
+<p>Wij adviseren u om eerst onze pagina Constructiewerk te bekijken, hier staan alle mogelijkheden van de ijzershop.nl voor het bewerken van metaal omschreven. U kunt bij de ijzershop.nl terecht voor zagen, lassen, boren zetten en knippen van metalen. Niet alle materialen kunnen door ons worden bewerkt. <br /><a class="text-decoration-none" href="content/17-constructiewerk-en-metaalbewerking" rel="nofollow"> &gt; Bekijk onze pagina constructiewerk</a></p>
+<h5>Bekijk ook de vragen van andere klanten</h5>
+<p>Op onze pagina 'Veel gestelde vragen' kunt u de antwoorden terug vinden op vragen die eerder door andere klanten zijn gesteld, wellicht kunt u hier ook al het antwoord op uw vragen vinden. <br /><a class="text-decoration-none" href="content/51-FAQ" rel="nofollow"> &gt; Bekijk onze pagina met veel gestelde vragen</a></p>
+<h5>Uw privacy</h5>
+<p>Wij maken u erop attent dat wij de persoonsgegevens die u ons heeft verstrekt en eventueel nog zult verstrekken, zullen verwerken op de manier zoals wij die in onze privacyverklaring hebben omschreven. Wij verwijzen u graag naar privacy voorwaarden voor meer informatie over de verwerking van uw persoonsgegevens en de rechten die u heeft. <br /><a class="text-decoration-none" href="content/11-privacyverklaring" rel="nofollow"> &gt; Bekijk onze pagina privacyvoorwaarden</a></p>
+            [date_upd] => 2024-07-03 14:21:04
+        )
+    [24] => Array
+        (
+            [id_configuration] => 2981
+            [id_lang] => 1
+            [value] => <ul class="row list-unstyled">
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="tel:09002502500"><i class="fas fa-phone"></i> Bel ons: 0900-2502500</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://api.whatsapp.com/send?phone=31636585800"><i class="fab fa-whatsapp"></i> Whatsapp: 0636585800</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://www.google.com/maps/place/Venusweg+15,+8938+BC+Leeuwarden,+Nederland/@53.1900453,5.8343069,14.84z/data=!4m5!3m4!1s0x47c8ff1ce41c9249:0x1c9b6585ccebc071!8m2!3d53.1917373!4d5.8470482?hl=nl-NL"><i class="fas fa-map-marker"></i> Bezoekadres: Venusweg 15, 8938 BC Leeuwarden</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark"><i class="fas fa-clock"></i> Maandag t/m vrijdag van 8.00 tot 17.00 uur</a></li>
+</ul>
+<div class="row">
+<div class="col-12"><a target="_blank" href="https://www.google.com/maps/dir//Ijzershop/" rel="noopener"> <img alt="" src="/themes/modernesmid_theme/assets/img/kaart.png" width="100%" height="auto" /> </a></div>
+</div>
+            [date_upd] => 2024-07-03 14:21:04
+        )
+    [25] => Array
+        (
+            [id_configuration] => 3025
+            [id_lang] => 1
+            [value] => <div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Verzendkosten van de IJzershop.</div>
+<p>- Verzending in Nederland: <strong>10 euro</strong> incl. BTW.<br />- Verzending in Belgie: <strong>20 euro</strong> incl. BTW. <br />Wij berekenen geen toeslagen of extra kosten en hanteren geen minimale orderkosten.</p>
+<p></p>
+<p></p>
+<div class="h5 w-100 text-dark">Hoe snel heb ik mijn bestelling in huis?</div>
+<p>In Nederland wordt 90% van de bestellingen, die voor 15.00 uur worden geplaatst, de volgende werkdag door onze expediteur bezorgd. In Belgie is de levertijd 3-5 werkdagen.</p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/orderpicking.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="verpakking-jpg" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Moet er iemand thuis zijn voor levering?</div>
+<p>Bent u zelf niet aanwezig? Geen probleem, tijdens het afrekenen kunt u een bericht voor de expediteur invullen, bijvoorbeeld: "pakket mag ook bij buren worden afgegeven" of "leg maar op de oprit".</p>
+<div class="h5 w-100 text-dark">Kan ik mijn bestelling ook afhalen?</div>
+<p>Afhalen van uw bestelling op de Ceresweg 1 in Leeuwarden is ook mogelijk. Wij zijn open van maandag tot en met vrijdag tussen 08.00 en 17.00 uur.</p>
+<p><span style="color: #2445a2;"> <a href="/content/16-ijzershop-bezorgt-in-heel-nederland" rel="nofollow"> <span style="color: #2445a2;">&gt; Bekijk de informatie over verzenden</span> </a> </span></p>
+</div>
+<div class="d-block d-sm-none col-12"><img class="w-100 mx-auto lazyload" alt="Order verzamelen" data-src="https://ijzershop.nl/upload/uploaded_files/verpakking-jpg.jpg" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Betaling via iDeal, Paypal, Creditcard of bankoverschrijving.</div>
+<p>Online of offline betalen:<strong> </strong><span>U kunt u bestelling eenvoudig en veilig bij de IJzershop betalen middels iDeal, Paypal of bankoverschrijving. Daarnaast bent u altijd welkom om bij ons in de winkel langs te komen, waar u contant en met PIN kan betalen.</span></p>
+<p>Factuur:<strong> </strong><span>Nadat u uw bestelling heeft betaald ontvangt u hiervan een bevestiging per email, de factuur is hier als bijlage aan toegevoegd.</span></p>
+<p>BTW:<strong> </strong><span>U betaald het totaalbedrag inclusief 21% BTW. Ook Belgische klanten betalen 21% BTW, wij hanteren geen 0% tarief.</span><br /><span></span></p>
+<p><span style="color: #2445a2;"><a href="content/15-veilig-betalen-bij-de-ijzershop" rel="nofollow"><span style="color: #2445a2;">&gt; Bekijk de informatie over betalen</span></a></span></p>
+</div>
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Betaalgemak" data-src="https://ijzershop.nl/upload/Betaalgemak-B2.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="d-none d-sm-block col-sm-6 col-md-6 col-lg-6"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="/upload/supportdesk.webp" /></div>
+<div class="col-12 col-sm-6 col-md-6 col-lg-6">
+<div class="h5 w-100 text-dark">Onduidelijk? Vraag het onze vakmensen!</div>
+<p>Vragen via mail, telefoon of Whatsapp worden altijd beantwoord door iemand met verstand van metaal. Ook aan de balie kunt u er altijd op rekenen dat wij met u willen mee denken.</p>
+<p>Wij zijn van maandag tot en met vrijdag te bereiken tussen 08.00 en 17.00 uur. Offerteaanvragen en informatieaanvragen via de mail proberen wij altijd dezelfde dag te beantwoorden.</p>
+<p>&gt;Telefoonnummer: <span style="color: #2445a2;"><a href="tel://0900-2502500/"><span style="color: #2445a2;">0900-2502500</span></a></span><br />&gt;Whatsapp: <span style="color: #2445a2;"><a style="color: #2445a2;">0636.58.58.00</a></span><br />&gt;Mail: <span style="color: #2445a2;"><a href="/informatie-aanvragen" rel="nofollow"><span style="color: #2445a2;">contactformulier</span></a></span></p>
+</div>
+<div class="col-12 d-block d-sm-none"><img class="w-100 mx-auto lazyload" alt="Vraag het onze vakmensen" data-src="https://ijzershop.nl/upload/supportdesk.webp" /></div>
+</div>
+<div class="row mt-4">
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Volumekorting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-volumekorting-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Staffelkorting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Bij verschillende producten ontvangt u korting wanneer u meer besteld</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Max. verzendafmeting" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-transport2-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Max. verzendafmeting</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Profielen: 2 meter<br />Platen: 1000x500mm<br /></span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Geen nabehandeling" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-oppervlakte-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Geen nabehandeling</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Er kunnen beschadigingen of lichte roestvorming op het oppervlak zitten</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-6 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatvoering" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-maatvoering-64.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatvoering</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Wij rekenen in millimeters en hanteren een tolerantie van 1,5% op de lengte</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-12 col-sm">
+<div class="row">
+<div class="col-lg-12">
+<div class="text-dark clearfix row">
+<div class="col-12 text-center"><img class="hover_effect_target lazyload" alt="Maatwerk" width="64" height="64" data-src="https://ijzershop.nl/upload/vb-handen-64-2.webp" /></div>
+<div class="col-12">
+<p class="text-center"><span class=""><strong><span class="text-dark">Maatwerk</span></strong></span></p>
+<p class="text-center"><span class="text-dark">Maatwerk nodig? Wij boren, zagen en lassen, vraag een offerte aan.</span></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            [date_upd] => 2024-07-04 07:57:46
+        )
+    [26] => Array
+        (
+            [id_configuration] => 3040
+            [id_lang] => 1
+            [value] => <h5>Vraag uw offerte op tijd aan!</h5>
+<p>Het bewerken van materialen moet worden ingepland in onze werkplaats waardoor de levertijd soms kan oplopen naar 5-7 werkdagen.</p>
+<h5>Welke informatie hebben wij nodig?</h5>
+<ul class="list-unstyled">
+<li>&gt; Maak een duidelijke overzichtelijke lijst</li>
+<li>&gt; Specificeer om welke materialen het gaat</li>
+<li>&gt; Vermeld alle maten in millimeters</li>
+<li>&gt; Gebruik geen overzichtstekening maar gebruik detailtekeningen</li>
+<li>&gt; Vraag geen advies omtrent keuze van materiaal</li>
+</ul>
+<h5>Bekijk onze mogelijkheden</h5>
+<p>Wij adviseren u om eerst onze pagina Constructiewerk te bekijken, hier staan alle mogelijkheden van de ijzershop.nl voor het bewerken van metaal omschreven. U kunt bij de ijzershop.nl terecht voor zagen, lassen, boren zetten en knippen van metalen. Niet alle materialen kunnen door ons worden bewerkt. <br /><a class="text-decoration-none" href="content/17-constructiewerk-en-metaalbewerking" rel="nofollow"> &gt; Bekijk onze pagina constructiewerk</a></p>
+<h5>Bekijk ook de vragen van andere klanten</h5>
+<p>Op onze pagina 'Veel gestelde vragen' kunt u de antwoorden terug vinden op vragen die eerder door andere klanten zijn gesteld, wellicht kunt u hier ook al het antwoord op uw vragen vinden. <br /><a class="text-decoration-none" href="content/51-FAQ" rel="nofollow"> &gt; Bekijk onze pagina met veel gestelde vragen</a></p>
+<h5>Uw privacy</h5>
+<p>Wij maken u erop attent dat wij de persoonsgegevens die u ons heeft verstrekt en eventueel nog zult verstrekken, zullen verwerken op de manier zoals wij die in onze privacyverklaring hebben omschreven. Wij verwijzen u graag naar privacy voorwaarden voor meer informatie over de verwerking van uw persoonsgegevens en de rechten die u heeft. <br /><a class="text-decoration-none" href="content/11-privacyverklaring" rel="nofollow"> &gt; Bekijk onze pagina privacyvoorwaarden</a></p>
+            [date_upd] => 2024-07-04 07:57:46
+        )
+    [27] => Array
+        (
+            [id_configuration] => 3041
+            [id_lang] => 1
+            [value] => <ul class="row list-unstyled">
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="tel:09002502500"><i class="fas fa-phone"></i> Bel ons: 0900-2502500</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://api.whatsapp.com/send?phone=31636585800"><i class="fab fa-whatsapp"></i> Whatsapp: 0636585800</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark" href="https://www.google.com/maps/place/Venusweg+15,+8938+BC+Leeuwarden,+Nederland/@53.1900453,5.8343069,14.84z/data=!4m5!3m4!1s0x47c8ff1ce41c9249:0x1c9b6585ccebc071!8m2!3d53.1917373!4d5.8470482?hl=nl-NL"><i class="fas fa-map-marker"></i> Bezoekadres: Venusweg 15, 8938 BC Leeuwarden</a></li>
+<li class="col-12 h6 mt-3"><a class="text-decoration-none text-dark"><i class="fas fa-clock"></i> Maandag t/m vrijdag van 8.00 tot 17.00 uur</a></li>
+</ul>
+<div class="row">
+<div class="col-12"><a target="_blank" href="https://www.google.com/maps/dir//Ijzershop/" rel="noopener"> <img alt="" src="/themes/modernesmid_theme/assets/img/kaart.png" width="100%" height="auto" /> </a></div>
+</div>
+            [date_upd] => 2024-07-04 07:57:46
+        )
+    [28] => Array
+        (
+            [id_configuration] => 3170
+            [id_lang] => 1
+            [value] => jelmer@ijzershop.nl
+            [date_upd] => 2025-07-16 15:49:20
+        )
+    [29] => Array
+        (
+            [id_configuration] => 3173
+            [id_lang] => 1
+            [value] => IJzershop
+            [date_upd] => 2024-09-23 11:37:59
+        )
+)
+--- Checking Category Shop associations for id_shop 3 or 4 in ijzershop_muli ---
+Array
+(
+    [0] => Array
+        (
+            [id_shop] => 1
+            [total] => 350
+        )
+    [1] => Array
+        (
+            [id_shop] => 2
+            [total] => 34
+        )
+    [2] => Array
+        (
+            [id_shop] => 3
+            [total] => 23
+        )
+    [3] => Array
+        (
+            [id_shop] => 4
+            [total] => 350
+        )
+)
+--- Searching for ijzershop in Shop table ---
+Array
+(
+    [0] => Array
+        (
+            [id_shop] => 1
+            [id_shop_group] => 1
+            [name] => ModerneSmid
+            [color] =>
+            [id_category] => 2
+            [theme_name] => modernesmid
+            [active] => 1
+            [deleted] => 0
+        )
+    [1] => Array
+        (
+            [id_shop] => 2
+            [id_shop_group] => 1
+            [name] => constructiebalk.nl
+            [color] => #d8e2ff
+            [id_category] => 2
+            [theme_name] => modernesmid
+            [active] => 1
+            [deleted] => 0
+        )
+)
+--- Searching for ijzershop in Shop URL table ---
+Array
+(
+    [0] => Array
+        (
+            [id_shop_url] => 1
+            [id_shop] => 1
+            [domain] => modernesmid-webshop.local
+            [domain_ssl] => modernesmid-webshop.local
+            [physical_uri] => /
+            [virtual_uri] =>
+            [main] => 1
+            [active] => 1
+        )
+    [1] => Array
+        (
+            [id_shop_url] => 2
+            [id_shop] => 2
+            [domain] => constructructie-webshop.local
+            [domain_ssl] => constructructie-webshop.local
+            [physical_uri] => /
+            [virtual_uri] =>
+            [main] => 1
+            [active] => 1
+        )
+)
+--- Category Shop Associations Count ---
+Shop ID: 1 | Total Categories: 372
+Shop ID: 2 | Total Categories: 372
+--- Database Prefix ---
+msmid_

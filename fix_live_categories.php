@@ -402,7 +402,7 @@ function run_fix() {
     }
 
     echo "--- Diagnostic Information ---\n";
-    $target_emp = $db->getRow("SELECT id_employee, email, id_profile FROM {$prefix}employee WHERE id_profile = 1" . $employeeFilter . " LIMIT 1");
+    $target_emp = $db->getRow("SELECT id_employee, email, id_profile FROM {$prefix}employee WHERE id_profile = 1" . str_replace('e.', '', $employeeFilter) . " LIMIT 1");
     if ($target_emp) {
         echo "Target Employee: {$target_emp['email']} (ID: {$target_emp['id_employee']}, Profile: {$target_emp['id_profile']})\n";
         $shops = $db->executeS("SELECT id_shop FROM {$prefix}employee_shop WHERE id_employee = " . (int)$target_emp['id_employee']);

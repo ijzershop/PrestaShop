@@ -137,32 +137,55 @@ function run_fix() {
 
     // 7. Fix Permissions (Symfony roles)
     echo "--- Fixing Permissions for AdminCategories, AdminProducts, AdminCmsContent (Symfony roles) ---\n";
-    $roles = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug LIKE 'ROLE_MOD_TAB_ADMINCATEGORIES_%' OR slug LIKE 'ROLE_MOD_TAB_ADMINPRODUCTS_%' OR slug LIKE 'ROLE_MOD_TAB_ADMINCMSCONTENT_%'");
-    if ($roles) {
-        foreach ($roles as $role) {
-            $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$role['id_authorization_role']);
-            if (!$exists) {
-                $db->insert('access', [
-                    'id_profile' => 1,
-                    'id_authorization_role' => (int)$role['id_authorization_role']
-                ]);
-                echo "Granted role {$role['slug']} to SuperAdmin\n";
+    $role_patterns = [
+        'ROLE_MOD_TAB_ADMINCATEGORIES_%',
+        'ROLE_MOD_TAB_ADMINPRODUCTS_%',
+        'ROLE_MOD_TAB_ADMINCMSCONTENT_%',
+        'ROLE_MOD_TAB_ADMINPARENTDESIGN_%',
+        'ROLE_MOD_TAB_ADMINCATALOG_%',
+        'ROLE_MOD_TAB_ADMINPARENTLEVEL1_%',
+        'ROLE_MOD_TAB_ADMINPARENTLEVEL2_%',
+        'ROLE_MOD_TAB_ADMINSELL_%',
+        'ROLE_MOD_TAB_ADMINCONFIGURE_%',
+        'ROLE_MOD_TAB_ADMINADVANCEDPARAMETERS_%'
+    ];
+
+    foreach ($role_patterns as $pattern) {
+        $roles = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug LIKE '" . pSQL($pattern) . "'");
+        if ($roles) {
+            foreach ($roles as $role) {
+                $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$role['id_authorization_role']);
+                if (!$exists) {
+                    $db->insert('access', [
+                        'id_profile' => 1,
+                        'id_authorization_role' => (int)$role['id_authorization_role']
+                    ]);
+                    echo "Granted role {$role['slug']} to SuperAdmin\n";
+                }
             }
         }
     }
 
-    // 9. Fix Legacy roles (some versions use this)
+    // 9. Fix Legacy roles
     echo "--- Fixing ROLE_ADMIN_TAB_ (Legacy roles) ---\n";
-    $roles2 = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug LIKE 'ROLE_ADMIN_TAB_ADMINCATEGORIES_%' OR slug LIKE 'ROLE_ADMIN_TAB_ADMINPRODUCTS_%' OR slug LIKE 'ROLE_ADMIN_TAB_ADMINCMSCONTENT_%'");
-    if ($roles2) {
-        foreach ($roles2 as $role) {
-            $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$role['id_authorization_role']);
-            if (!$exists) {
-                $db->insert('access', [
-                    'id_profile' => 1,
-                    'id_authorization_role' => (int)$role['id_authorization_role']
-                ]);
-                echo "Granted role {$role['slug']} to SuperAdmin\n";
+    $legacy_patterns = [
+        'ROLE_ADMIN_TAB_ADMINCATEGORIES_%',
+        'ROLE_ADMIN_TAB_ADMINPRODUCTS_%',
+        'ROLE_ADMIN_TAB_ADMINCMSCONTENT_%',
+        'ROLE_ADMIN_TAB_ADMINCATALOG_%'
+    ];
+    foreach ($legacy_patterns as $pattern) {
+        $roles2 = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug LIKE '" . pSQL($pattern) . "'");
+        if ($roles2) {
+            foreach ($roles2 as $role) {
+                $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$role['id_authorization_role']);
+                if (!$exists) {
+                    $db->insert('access', [
+                        'id_profile' => 1,
+                        'id_authorization_role' => (int)$role['id_authorization_role']
+                    ]);
+                    echo "Granted role {$role['slug']} to SuperAdmin\n";
+                }
             }
         }
     }
@@ -171,9 +194,9 @@ function run_fix() {
     $hasIdTab = $db->getValue("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . _DB_NAME_ . "' AND TABLE_NAME = '{$prefix}access' AND COLUMN_NAME = 'id_tab'");
 
     // 9b. Fix legacy Tab-based access in `access` table
-    echo "--- Fixing Legacy Tab-based access for Catalog/Design ---\n";
+    echo "--- Fixing Legacy Tab-based access for Catalog/Design/Customers ---\n";
     if ($hasIdTab) {
-        $tabs = $db->executeS("SELECT id_tab, class_name FROM {$prefix}tab WHERE class_name IN ('AdminCategories', 'AdminProducts', 'AdminCmsContent', 'AdminParentCustomer', 'AdminParentModulesSf', 'AdminParentDesign', 'AdminCatalog', 'AdminParentDesign')");
+        $tabs = $db->executeS("SELECT id_tab, class_name FROM {$prefix}tab WHERE class_name IN ('AdminCategories', 'AdminProducts', 'AdminCmsContent', 'AdminParentCustomer', 'AdminParentModulesSf', 'AdminParentDesign', 'AdminCatalog', 'AdminParentDesign', 'AdminParentLevel1', 'AdminParentLevel2', 'AdminSell', 'AdminConfigure', 'AdminAdvancedParameters')");
         if ($tabs) {
             foreach ($tabs as $tab) {
                 $exists = $db->getRow("SELECT * FROM {$prefix}access WHERE id_profile = 1 AND id_tab = " . (int)$tab['id_tab']);
@@ -203,7 +226,7 @@ function run_fix() {
     } else {
         echo "Column 'id_tab' not found in '{$prefix}access'. Using authorization roles only (PrestaShop 8/9 style).\n";
         // Ensure parent roles are also granted
-        $parentRoles = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug IN ('ROLE_MOD_TAB_ADMINCATALOG_READ', 'ROLE_MOD_TAB_ADMINDESIGN_READ', 'ROLE_MOD_TAB_ADMINPARENTDESIGN_READ')");
+        $parentRoles = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug IN ('ROLE_MOD_TAB_ADMINCATALOG_READ', 'ROLE_MOD_TAB_ADMINDESIGN_READ', 'ROLE_MOD_TAB_ADMINPARENTDESIGN_READ', 'ROLE_MOD_TAB_ADMINSELL_READ', 'ROLE_MOD_TAB_ADMINCONFIGURE_READ')");
         if ($parentRoles) {
             foreach ($parentRoles as $prole) {
                 $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$prole['id_authorization_role']);
@@ -376,6 +399,18 @@ function run_fix() {
     }
     if (method_exists('Media', 'clearCache')) {
         Media::clearCache();
+    }
+
+    echo "--- Diagnostic Information ---\n";
+    $target_emp = $db->getRow("SELECT id_employee, email, id_profile FROM {$prefix}employee WHERE id_profile = 1" . $employeeFilter . " LIMIT 1");
+    if ($target_emp) {
+        echo "Target Employee: {$target_emp['email']} (ID: {$target_emp['id_employee']}, Profile: {$target_emp['id_profile']})\n";
+        $shops = $db->executeS("SELECT id_shop FROM {$prefix}employee_shop WHERE id_employee = " . (int)$target_emp['id_employee']);
+        $shop_ids = array_column($shops, 'id_shop');
+        echo "Employee has access to Shop IDs: " . implode(', ', $shop_ids) . "\n";
+        if (!in_array($shop_id, $shop_ids)) {
+            echo "WARNING: Target Shop ID {$shop_id} NOT in employee access list!\n";
+        }
     }
 
     echo "--- DONE ---\n";

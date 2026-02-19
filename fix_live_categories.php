@@ -167,6 +167,36 @@ function run_fix() {
         }
     }
 
+    // 9b. Fix legacy Tab-based access in `access` table
+    echo "--- Fixing Legacy Tab-based access for Catalog/Design ---\n";
+    $tabs = $db->executeS("SELECT id_tab, class_name FROM {$prefix}tab WHERE class_name IN ('AdminCategories', 'AdminProducts', 'AdminCmsContent', 'AdminParentCustomer', 'AdminParentModulesSf', 'AdminParentDesign')");
+    if ($tabs) {
+        foreach ($tabs as $tab) {
+            $exists = $db->getRow("SELECT * FROM {$prefix}access WHERE id_profile = 1 AND id_tab = " . (int)$tab['id_tab']);
+            if (!$exists) {
+                $db->insert('access', [
+                    'id_profile' => 1,
+                    'id_tab' => (int)$tab['id_tab'],
+                    'view' => 1,
+                    'add' => 1,
+                    'edit' => 1,
+                    'delete' => 1,
+                    'all' => 1
+                ]);
+                echo "Created legacy access entry for tab {$tab['class_name']}\n";
+            } else {
+                $db->update('access', [
+                    'view' => 1,
+                    'add' => 1,
+                    'edit' => 1,
+                    'delete' => 1,
+                    'all' => 1
+                ], 'id_profile = 1 AND id_tab = ' . (int)$tab['id_tab']);
+                echo "Updated legacy access entry for tab {$tab['class_name']}\n";
+            }
+        }
+    }
+
     // 10. Associate Products with this shop
     echo "--- Associating Products with Shop {$shop_id} ---\n";
     $missing_products = $db->executeS("
@@ -316,6 +346,15 @@ function run_fix() {
                 'id_group' => (int)$mg['id_group']
             ]);
         }
+    }
+
+    // 16. Clear Cache (Optional)
+    if (method_exists('Tools', 'clearSmartyCache')) {
+        Tools::clearSmartyCache();
+        Tools::clearXMLCache();
+    }
+    if (method_exists('Media', 'clearCache')) {
+        Media::clearCache();
     }
 
     echo "--- DONE ---\n";

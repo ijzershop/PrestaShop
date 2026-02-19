@@ -167,32 +167,53 @@ function run_fix() {
         }
     }
 
+    // Helper: Check if column exists in table
+    $hasIdTab = $db->getValue("SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '" . _DB_NAME_ . "' AND TABLE_NAME = '{$prefix}access' AND COLUMN_NAME = 'id_tab'");
+
     // 9b. Fix legacy Tab-based access in `access` table
     echo "--- Fixing Legacy Tab-based access for Catalog/Design ---\n";
-    $tabs = $db->executeS("SELECT id_tab, class_name FROM {$prefix}tab WHERE class_name IN ('AdminCategories', 'AdminProducts', 'AdminCmsContent', 'AdminParentCustomer', 'AdminParentModulesSf', 'AdminParentDesign')");
-    if ($tabs) {
-        foreach ($tabs as $tab) {
-            $exists = $db->getRow("SELECT * FROM {$prefix}access WHERE id_profile = 1 AND id_tab = " . (int)$tab['id_tab']);
-            if (!$exists) {
-                $db->insert('access', [
-                    'id_profile' => 1,
-                    'id_tab' => (int)$tab['id_tab'],
-                    'view' => 1,
-                    'add' => 1,
-                    'edit' => 1,
-                    'delete' => 1,
-                    'all' => 1
-                ]);
-                echo "Created legacy access entry for tab {$tab['class_name']}\n";
-            } else {
-                $db->update('access', [
-                    'view' => 1,
-                    'add' => 1,
-                    'edit' => 1,
-                    'delete' => 1,
-                    'all' => 1
-                ], 'id_profile = 1 AND id_tab = ' . (int)$tab['id_tab']);
-                echo "Updated legacy access entry for tab {$tab['class_name']}\n";
+    if ($hasIdTab) {
+        $tabs = $db->executeS("SELECT id_tab, class_name FROM {$prefix}tab WHERE class_name IN ('AdminCategories', 'AdminProducts', 'AdminCmsContent', 'AdminParentCustomer', 'AdminParentModulesSf', 'AdminParentDesign', 'AdminCatalog', 'AdminParentDesign')");
+        if ($tabs) {
+            foreach ($tabs as $tab) {
+                $exists = $db->getRow("SELECT * FROM {$prefix}access WHERE id_profile = 1 AND id_tab = " . (int)$tab['id_tab']);
+                if (!$exists) {
+                    $db->insert('access', [
+                        'id_profile' => 1,
+                        'id_tab' => (int)$tab['id_tab'],
+                        'view' => 1,
+                        'add' => 1,
+                        'edit' => 1,
+                        'delete' => 1,
+                        'all' => 1
+                    ]);
+                    echo "Created legacy access entry for tab {$tab['class_name']}\n";
+                } else {
+                    $db->update('access', [
+                        'view' => 1,
+                        'add' => 1,
+                        'edit' => 1,
+                        'delete' => 1,
+                        'all' => 1
+                    ], 'id_profile = 1 AND id_tab = ' . (int)$tab['id_tab']);
+                    echo "Updated legacy access entry for tab {$tab['class_name']}\n";
+                }
+            }
+        }
+    } else {
+        echo "Column 'id_tab' not found in '{$prefix}access'. Using authorization roles only (PrestaShop 8/9 style).\n";
+        // Ensure parent roles are also granted
+        $parentRoles = $db->executeS("SELECT id_authorization_role, slug FROM {$prefix}authorization_role WHERE slug IN ('ROLE_MOD_TAB_ADMINCATALOG_READ', 'ROLE_MOD_TAB_ADMINDESIGN_READ', 'ROLE_MOD_TAB_ADMINPARENTDESIGN_READ')");
+        if ($parentRoles) {
+            foreach ($parentRoles as $prole) {
+                $exists = $db->getValue("SELECT COUNT(*) FROM {$prefix}access WHERE id_profile = 1 AND id_authorization_role = " . (int)$prole['id_authorization_role']);
+                if (!$exists) {
+                    $db->insert('access', [
+                        'id_profile' => 1,
+                        'id_authorization_role' => (int)$prole['id_authorization_role']
+                    ]);
+                    echo "Granted parent role {$prole['slug']} to SuperAdmin\n";
+                }
             }
         }
     }

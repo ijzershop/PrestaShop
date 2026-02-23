@@ -5,6 +5,58 @@
 # to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
 DirectoryIndex index.php
 
+# Backoffice access restriction by IP
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Initialize allowed as 0
+    RewriteRule ^ - [E=ALLOWED_IP:0]
+
+    # Check if direct IP is allowed
+    RewriteCond %{REMOTE_ADDR} ^213\.93\.89\.201$ [OR]
+    RewriteCond %{REMOTE_ADDR} ^77\.166\.84\.207$ [OR]
+    RewriteCond %{REMOTE_ADDR} ^62\.131\.112\.137$ [OR]
+
+    # Check Proxy / Cloudflare headers
+    RewriteCond %{HTTP:X-Forwarded-For} 213\.93\.89\.201 [OR]
+    RewriteCond %{HTTP:X-Forwarded-For} 77\.166\.84\.207 [OR]
+    RewriteCond %{HTTP:X-Forwarded-For} 62\.131\.112\.137 [OR]
+    RewriteCond %{HTTP:CF-Connecting-IP} ^213\.93\.89\.201$ [OR]
+    RewriteCond %{HTTP:CF-Connecting-IP} ^77\.166\.84\.207$ [OR]
+    RewriteCond %{HTTP:CF-Connecting-IP} ^62\.131\.112\.137$ [OR]
+
+    # Allow localhost for safety
+    RewriteCond %{REMOTE_ADDR} ^127\.0\.0\.1$ [OR]
+    RewriteCond %{REMOTE_ADDR} ^::1$
+
+    # Set ALLOWED_IP to 1 if any condition matched
+    RewriteRule ^ - [E=ALLOWED_IP:1]
+
+    # Block access if ALLOWED_IP is still 0
+    RewriteCond %{ENV:ALLOWED_IP} ^0$
+    RewriteRule ^ - [F]
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <RequireAny>
+        # Direct IP match
+        Require ip 213.93.89.201 77.166.84.207 62.131.112.137 127.0.0.1 ::1
+
+        # Proxy / Cloudflare support
+        Require expr %{HTTP:X-Forwarded-For} =~ /213\.93\.89\.201/
+        Require expr %{HTTP:X-Forwarded-For} =~ /77\.166\.84\.207/
+        Require expr %{HTTP:X-Forwarded-For} =~ /62\.131\.112\.137/
+        Require expr %{HTTP:CF-Connecting-IP} =~ /213\.93\.89\.201/
+        Require expr %{HTTP:CF-Connecting-IP} =~ /77\.166\.84\.207/
+        Require expr %{HTTP:CF-Connecting-IP} =~ /62\.131\.112\.137/
+    </RequireAny>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+    Allow from 213.93.89.201 77.166.84.207 62.131.112.137 127.0.0.1 ::1
+</IfModule>
+
 # By default, Apache does not evaluate symbolic links if you did not enable this
 # feature in your server configuration. Uncomment the following line if you
 # install assets as symlinks or if you experience problems related to symlinks

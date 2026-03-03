@@ -291,10 +291,14 @@ class ImageSettingsController extends PrestaShopAdminController
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_image_settings_index')]
     public function regenerateThumbnailsAction(Request $request): RedirectResponse
     {
-        try {
-            $regenThumbnailsForm = $this->createForm(RegenerateThumbnailsType::class);
-            $regenThumbnailsForm->handleRequest($request);
+        $regenThumbnailsForm = $this->createForm(RegenerateThumbnailsType::class);
+        $regenThumbnailsForm->handleRequest($request);
 
+        if (!$regenThumbnailsForm->isSubmitted()) {
+            return $this->redirectToRoute('admin_image_settings_index');
+        }
+
+        try {
             $this->dispatchCommand(new RegenerateThumbnailsCommand(
                 $regenThumbnailsForm->get('image')->getData(),
                 $regenThumbnailsForm->get('image-type')->getData(),

@@ -373,19 +373,39 @@ class ShopContextSubscriber implements EventSubscriberInterface
         try {
             $routeInfo = $this->router->match($request->getPathInfo());
             $controller = $routeInfo['_controller'];
-            [$className, $methodName] = explode('::', $controller);
+            if ($controller instanceof \Closure) {
+                return null;
+            }
 
-            $reflectionClass = new ReflectionClass($className);
-            $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);
-            $methodAttributes = $reflectionClass->getMethod($methodName)->getAttributes(AllShopContext::class);
-
-            $attributes = array_merge($classAttributes, $methodAttributes);
-            if (!empty($attributes)) {
-                return ShopConstraint::allShops();
+            if (str_contains($controller, '::')) {
+                [$className, $methodName] = explode('::', $controller);
+            } elseif (str_contains($controller, ':')) {
+                [$className, $methodName] = explode(':', $controller);
             } else {
                 return null;
             }
-        } catch (NoConfigurationException|ReflectionException) {
+
+            if (!$className || !$methodName) {
+                return null;
+            }
+
+            try {
+                $reflectionClass = new ReflectionClass($className);
+                $classAttributes = $reflectionClass->getAttributes(AllShopContext::class);
+                $methodAttributes = $reflectionClass->getMethod($methodName)->getAttributes(AllShopContext::class);
+
+                $attributes = array_merge($classAttributes, $methodAttributes);
+                if (!empty($attributes)) {
+                    return ShopConstraint::allShops();
+                } else {
+                    return null;
+                }
+            } catch (ReflectionException) {
+                // If it's a service ID, we might not be able to get reflection for it directly
+                // PrestaShop 9 service controllers don't use AllShopContext attribute easily via ReflectionClass if it's a service ID
+                return null;
+            }
+        } catch (NoConfigurationException) {
             return null;
         }
     }

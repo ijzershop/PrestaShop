@@ -264,6 +264,7 @@ abstract class AppKernel extends Kernel
             parent::getKernelParameters(),
             [
                 'kernel.app_id' => $this->getAppId(),
+                'kernel.build_dir' => $this->getCacheDir(),
                 'prestashop.legacy_cache_dir' => _PS_CACHE_DIR_,
             ],
         );

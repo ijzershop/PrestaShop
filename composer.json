@@ -34,7 +34,6 @@
         "cssjanus/cssjanus": "^2.0",
         "curl/curl": "^2.3.2",
         "defuse/php-encryption": "^2.3.1",
-        "doctrine/annotations": "^1.0",
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.15",
@@ -166,7 +165,6 @@
         "symfony/proxy-manager-bridge": "~6.4.0",
         "symfony/psr-http-message-bridge": "~6.4.0",
         "symfony/routing": "~6.4.0",
-        "symfony/runtime": "^7.4",
         "symfony/security-bundle": "~6.4.0",
         "symfony/security-core": "~6.4.0",
         "symfony/security-csrf": "~6.4.0",
@@ -240,7 +238,6 @@
         }
     },
     "config": {
-        "platform-check": false,
         "allow-plugins": {
             "behat/behat": true,
             "composer/installers": true,
@@ -248,8 +245,7 @@
             "ergebnis/composer-normalize": true,
             "phpstan/extension-installer": true,
             "phpunit/phpunit": true,
-            "symfony/phpunit-bridge": true,
-            "symfony/runtime": true
+            "symfony/phpunit-bridge": true
         },
         "platform": {
             "php": "8.1.0"

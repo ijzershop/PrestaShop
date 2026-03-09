@@ -367,7 +367,7 @@ class MetaCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             if (Validate::isLoadedObject($category)) {
                 $row = Meta::getPresentedObject($category);
-                if (empty($row['meta_description'])) {
+                if (!empty($row['meta_description'])) {
                     $row['meta_description'] = strip_tags($row['description']);
                 }
 

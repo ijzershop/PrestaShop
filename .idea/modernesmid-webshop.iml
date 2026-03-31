@@ -1025,8 +1025,19 @@
       <excludeFolder url="file://$MODULE_DIR$/img/p/9" />
       <excludeFolder url="file://$MODULE_DIR$/dynamicproduct/cache" />
       <excludeFolder url="file://$MODULE_DIR$/img/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20260331153654" />
       <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector.bak_20260331153654" />
       <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector_old" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/n1ed.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20260331153654" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260331153654" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

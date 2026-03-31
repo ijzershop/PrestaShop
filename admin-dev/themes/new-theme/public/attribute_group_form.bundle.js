@@ -1,10 +1,1 @@
-/**
- * For the full copyright and license information, please view the
- * docs/licenses/LICENSE.txt file that was distributed with this source code.
- */
-
-$(function() {
-	$('#langList').on('change', function() {
-		$('#mainForm').submit();
-	});
-});
+(()=>{"use strict";const o="#attribute_group_shop_association",{$:t}=window;t((()=>{window.prestashop.component.initComponents(["TranslatableInput","TranslatableField"]),new window.prestashop.component.ChoiceTree(o).enableAutoCheckChildren()})),window.attribute_group_form={}})();

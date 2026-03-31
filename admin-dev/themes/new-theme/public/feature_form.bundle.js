@@ -1,14 +1,1 @@
-<?php
-/**
- * For the full copyright and license information, please view the
- * docs/licenses/LICENSE.txt file that was distributed with this source code.
- */
-
-// Note this value must be hard-coded and can't import PrestaShop\PrestaShop\Core\Version::VERSION because it's loaded/used
-// in very basic scripts that don't use autoload and can't recognize the class
-define('_PS_INSTALL_VERSION_', '9.1.0');
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 80100);
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 80599);
-
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '8.1');
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.5');
+(()=>{"use strict";var e={428(e){e.exports=window.jQuery}},o={};var r=function r(t){var n=o[t];if(void 0!==n)return n.exports;var s=o[t]={exports:{}};return e[t](s,s.exports,r),s.exports}(428);r((()=>{window.prestashop.component.initComponents(["TranslatableInput"]),new window.prestashop.component.ChoiceTree("#feature_shop_association").enableAutoCheckChildren()})),window.feature_form={}})();

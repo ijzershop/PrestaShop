@@ -265,7 +265,6 @@ class OrderControllerCore extends FrontController
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             $shouldRedirectToCart = true;
         }
-
         // Check that products are still orderable, at any point in checkout
         if ($this->context->cart->isAllProductsInStock() !== true
             || $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true

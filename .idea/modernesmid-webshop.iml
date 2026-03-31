@@ -1025,6 +1025,8 @@
       <excludeFolder url="file://$MODULE_DIR$/img/p/9" />
       <excludeFolder url="file://$MODULE_DIR$/dynamicproduct/cache" />
       <excludeFolder url="file://$MODULE_DIR$/img/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector_old" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

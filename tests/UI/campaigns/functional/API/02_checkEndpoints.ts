@@ -204,6 +204,24 @@ describe('API : Check endpoints', async () => {
         // @todo: add tests
         '/customers: POST',
         // @todo: add tests
+        '/discount-types: GET',
+        // @todo: add tests
+        '/discounts/bulk-delete: DELETE',
+        // @todo: add tests
+        '/discounts/bulk-update-status: PATCH',
+        // @todo: add tests
+        '/discounts/{discountId}/duplicate: POST',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+        '/discounts/{discountId}: DELETE',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38647
+        '/discounts/{discountId}: GET',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/39682
+        '/discounts/{discountId}: PATCH',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+        '/discounts: GET',
+        // @todo : https://github.com/PrestaShop/PrestaShop/issues/38784
+        '/discounts: POST',
+        // @todo: add tests
         '/features/bulk-delete: DELETE',
         // @todo: add tests
         '/features/values/bulk-delete: DELETE',
@@ -292,6 +310,10 @@ describe('API : Check endpoints', async () => {
         // tests/UI/campaigns/functional/API/02_endpoints/08_product/10_postProduct.ts
         '/products: POST',
         // @todo: add tests
+        '/showcase-cards/{showcaseCardName}/{employeeId}/close: PUT',
+        // @todo: add tests
+        '/showcase-cards/{showcaseCardName}/{employeeId}: GET',
+        // @todo: add tests
         // '/search-aliases/bulk-delete: DELETE',
         // @todo: add tests
         // '/search-aliases/{searchTerm}: GET',
@@ -349,6 +371,20 @@ describe('API : Check endpoints', async () => {
         '/tax-rules-groups: GET',
         // @todo: add tests
         '/tax-rules-groups: POST',
+        // @todo: add tests
+        '/taxes/bulk-delete: PUT',
+        // @todo: add tests
+        '/taxes/bulk-set-status: PUT',
+        // @todo: add tests
+        '/taxes/{taxId}: DELETE',
+        // @todo: add tests
+        '/taxes/{taxId}: GET',
+        // @todo: add tests
+        '/taxes/{taxId}: PATCH',
+        // @todo: add tests
+        '/taxes: GET',
+        // @todo: add tests
+        '/taxes: POST',
         // @todo: add tests
         '/titles/bulk-delete: DELETE',
         // @todo: add tests

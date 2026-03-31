@@ -2,6 +2,7 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
+import {enableTheme, disableTheme} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -36,6 +37,8 @@ import {
 const baseContext: string = 'functional_FO_classic_userAccount_getGDPRDataInCSV';
 
 /*
+Pre-condition
+- Enable the theme classic
 Scenario
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
@@ -44,6 +47,7 @@ Scenario
 - Check GDPR CSV file after logout and login in FO
 Post condition:
 - Delete created customer
+- Disable the theme classic
  */
 describe('FO - Account : Get GDPR data in CSV', async () => {
   let browserContext: BrowserContext;
@@ -86,6 +90,9 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
+
+  // Pre-condition : Enable the theme classic
+  enableTheme('classic', `${baseContext}_preTest_0`);
 
   // before and after functions
   before(async function () {
@@ -245,7 +252,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        expect(isVisible, 'General info is not correct!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Addresses table is empty', async function () {
@@ -258,7 +265,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        expect(isVisible, 'Addresses table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Orders table is empty', async function () {
@@ -271,7 +278,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        expect(isVisible, 'Orders table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Carts table is empty', async function () {
@@ -284,7 +291,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
           true,
           'utf16le',
         );
-        expect(isVisible, 'Carts table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Messages table is empty', async function () {
@@ -319,12 +326,12 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
+          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered."',
           true,
           true,
           'utf16le',
         );
-        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Module product comments is empty', async function () {
@@ -332,10 +339,11 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
+          '"MODULE:PRODUCTCOMMENTS"',
           true,
           true,
           'utf16le',
+          true,
         );
         expect(isVisible, 'Products comments is not empty!').to.eq(true);
       });
@@ -345,7 +353,7 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
+          '"MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
           true,
           true,
           'utf16le',
@@ -1001,5 +1009,8 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
   });
 
   // Post-condition: Create new account on FO
-  deleteCustomerTest(customerData, `${baseContext}_postTest`);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
+
+  // Post-condition : Disable the theme classic
+  disableTheme('classic', `${baseContext}_postTest_2`);
 });

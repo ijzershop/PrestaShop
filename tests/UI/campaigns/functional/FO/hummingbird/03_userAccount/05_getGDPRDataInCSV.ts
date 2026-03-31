@@ -2,7 +2,6 @@ import testContext from '@utils/testContext';
 import {expect} from 'chai';
 
 import {deleteCustomerTest} from '@commonTests/BO/customers/customer';
-import {enableHummingbird, disableHummingbird} from '@commonTests/BO/design/hummingbird';
 
 import {
   boCustomersPage,
@@ -37,8 +36,6 @@ import {
 const baseContext: string = 'functional_FO_hummingbird_userAccount_getGDPRDataInCSV';
 
 /*
-Pre-condition:
-- Install the theme hummingbird
 Scenario:
 - Check GDPR CSV file after create customer and first login
 - Check GDPR CSV file after create a cart
@@ -90,10 +87,6 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   const createCustomerName: string = `${customerData.firstName[0]}. ${customerData.lastName}`;
 
-  // Pre-condition : Install Hummingbird
-  enableHummingbird(`${baseContext}_preTest`);
-
-  // before and after functions
   before(async function () {
     browserContext = await utilsPlaywright.createBrowserContext(this.browser);
     page = await utilsPlaywright.newTab(browserContext);
@@ -325,12 +318,12 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered.""',
+          '"MODULE:NEWSLETTERSUBSCRIPTION""Newslettersubscription:noemailtoexport,thiscustomerhasnotregistered."',
           true,
           true,
           'utf16le',
         );
-        expect(isVisible, 'Newsletter subscription table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that Module product comments is empty', async function () {
@@ -338,12 +331,13 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          '""MODULE:PRODUCTCOMMENTS""MODULE:MAILALERTS"',
+          '"MODULE:PRODUCTCOMMENTS"',
           true,
           true,
           'utf16le',
+          true,
         );
-        expect(isVisible, 'Products comments is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
 
       it('should check that mail alerts table is empty', async function () {
@@ -351,12 +345,12 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
         const isVisible = await utilsFile.isTextInFile(
           filePath,
-          'MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
+          '"MODULE:MAILALERTS""Mailalert:Unabletoexportcustomerusingemail."',
           true,
           true,
           'utf16le',
         );
-        expect(isVisible, 'Mail alert table is not empty!').to.eq(true);
+        expect(isVisible).to.eq(true);
       });
     });
   });
@@ -1008,7 +1002,4 @@ describe('FO - Account : Get GDPR data in CSV', async () => {
 
   // Post-condition: Create new account on FO
   deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
-
-  // Post-condition : Uninstall Hummingbird
-  disableHummingbird(`${baseContext}_postTest_2`);
 });

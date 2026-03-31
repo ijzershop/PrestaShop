@@ -1,27 +1,7 @@
 <?php
 /**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to https://devdocs.prestashop.com/ for more information.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
 declare(strict_types=1);
@@ -38,13 +18,18 @@ use PrestaShop\PrestaShop\Core\Context\CurrencyContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\LanguageContextBuilder;
 use PrestaShop\PrestaShop\Core\Context\ShopContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\ApiClient\ValueObject\CreatedApiClient;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\Command\EditCartRuleCommand;
-use PrestaShop\PrestaShop\Core\Domain\CartRule\ValueObject\CartRuleAction;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\AddCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Command\EditCustomerGroupCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Query\GetCustomerGroupForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\QueryResult\EditableCustomerGroup;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\AddDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\Command\UpdateDiscountCommand;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRule;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleGroup;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleGroupType;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ProductRuleType;
+use PrestaShop\PrestaShop\Core\Domain\Discount\ValueObject\DiscountType;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\UploadModuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductCommand;
@@ -287,45 +272,6 @@ class CQRSApiSerializerTest extends KernelTestCase
             ),
         ];
 
-        $editCartRuleCommand = new EditCartRuleCommand(1);
-        $editCartRuleCommand->setDescription('test description');
-        $editCartRuleCommand->setCode('test code');
-        $editCartRuleCommand->setMinimumAmount('10', 1, true, true);
-        $editCartRuleCommand->setCustomerId(1);
-        $editCartRuleCommand->setLocalizedNames([self::EN_LANG_ID => 'test en', self::getFrenchId() => 'test fr']);
-        $editCartRuleCommand->setHighlightInCart(true);
-        $editCartRuleCommand->setAllowPartialUse(true);
-        $editCartRuleCommand->setPriority(1);
-        $editCartRuleCommand->setActive(true);
-        $editCartRuleCommand->setValidityDateRange(new DateTimeImmutable('2023-08-23'), new DateTimeImmutable('2023-08-25'));
-        $editCartRuleCommand->setTotalQuantity(100);
-        $editCartRuleCommand->setQuantityPerUser(1);
-        $editCartRuleCommand->setCartRuleAction(new CartRuleAction(true));
-        yield 'object with complex setter methods based on multiple properties or sub types' => [
-            [
-                'cartRuleId' => 1,
-                'description' => 'test description',
-                'code' => 'test code',
-                'minimumAmount' => ['minimumAmount' => '10', 'currencyId' => 1, 'taxIncluded' => true, 'shippingIncluded' => true],
-                'customerId' => 1,
-                'localizedNames' => [
-                    self::EN_LANG_ID => 'test en',
-                    self::getFrenchId() => 'test fr',
-                ],
-                'highlightInCart' => true,
-                'allowPartialUse' => true,
-                'priority' => 1,
-                'active' => true,
-                'validityDateRange' => ['validFrom' => '2023-08-23', 'validTo' => '2023-08-25'],
-                'totalQuantity' => 100,
-                'quantityPerUser' => 1,
-                'cartRuleAction' => ['freeShipping' => true],
-                // TODO: handle cartRuleAction with complex discount handle by business rules
-                // 'cartRuleAction' => ['freeShipping' => true, 'giftProduct' => ['productId': 1], 'discount' => ['amountDiscount' => ['amount' => 10]]]...
-            ],
-            $editCartRuleCommand,
-        ];
-
         $customerGroupQuery = new GetCustomerGroupForEditing(51);
         yield 'value object with wrong parameter name converted via mapping' => [
             [
@@ -517,6 +463,67 @@ class CQRSApiSerializerTest extends KernelTestCase
                 '[archive].pathName' => '[source]',
             ],
         ];
+
+        $updateDiscountCommand = new UpdateDiscountCommand(42);
+        $updateDiscountCommand->setMinimumAmount(
+            new DecimalNumber('42.99'),
+            1,
+            false,
+            false,
+        );
+        $updateDiscountCommand->setReductionAmount(
+            new DecimalNumber('34.89'),
+            2,
+            true,
+        );
+        yield 'update discount command minimum amount' => [
+            [
+                'discountId' => 42,
+                'minimumAmount' => [
+                    'amount' => '42.99',
+                    'currencyId' => 1,
+                    'taxIncluded' => false,
+                    'shippingIncluded' => false,
+                ],
+                'reductionAmount' => [
+                    'amount' => '34.89',
+                    'currencyId' => 2,
+                    'taxIncluded' => true,
+                ],
+            ],
+            $updateDiscountCommand,
+        ];
+
+        $addDiscountCommand = new AddDiscountCommand(DiscountType::CART_LEVEL, [1 => 'name']);
+        $addDiscountCommand->setMinimumAmount(
+            new DecimalNumber('42.99'),
+            1,
+            false,
+            false,
+        );
+        $addDiscountCommand->setReductionAmount(
+            new DecimalNumber('34.89'),
+            2,
+            true,
+        );
+        yield 'add discount command minimum amount' => [
+            [
+                'type' => DiscountType::CART_LEVEL,
+                'localizedNames' => [1 => 'name'],
+                'minimumAmount' => [
+                    'amount' => '42.99',
+                    'currencyId' => 1,
+                    'taxIncluded' => false,
+                    'shippingIncluded' => false,
+                ],
+                'reductionAmount' => [
+                    'amount' => '34.89',
+                    'currencyId' => 2,
+                    'taxIncluded' => true,
+                ],
+            ],
+            $addDiscountCommand,
+        ];
     }
 
     public function testNormalize(): void
@@ -533,6 +540,33 @@ class CQRSApiSerializerTest extends KernelTestCase
 
     public static function getNormalizationData(): iterable
     {
+        $productRuleGroups = [
+            new ProductRuleGroup(
+                5,
+                [
+                    new ProductRule(
+                        ProductRuleType::PRODUCTS,
+                        [1, 3, 5],
+                    ),
+                ],
+            ),
+        ];
+        yield 'product conditions' => [
+            $productRuleGroups,
+            [
+                [
+                    'quantity' => 5,
+                    'rules' => [
+                        [
+                            'type' => ProductRuleType::PRODUCTS->value,
+                            'itemIds' => [1, 3, 5],
+                        ],
+                    ],
+                    'type' => ProductRuleGroupType::AT_LEAST_ONE_PRODUCT_RULE->value,
+                ],
+            ],
+        ];
+
         $productResource = new Product();
         $productResource->type = ProductType::TYPE_STANDARD;
         $productResource->enabled = true;
@@ -629,15 +663,6 @@ class CQRSApiSerializerTest extends KernelTestCase
                     'fr-FR' => 'http://mylink.fr',
                     'en-US' => 'http://mylink.com',
                 ],
-            ],
-        ];
-
-        $createdApiClient = new CreatedApiClient(42, 'my_secret');
-        yield 'test' => [
-            $createdApiClient,
-            [
-                'apiClientId' => 42,
-                'secret' => 'my_secret',
             ],
         ];
 

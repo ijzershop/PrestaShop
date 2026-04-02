@@ -226,6 +226,11 @@ export default class DynamicPaginator {
     const infoLabel = this.$paginationContainer.find(
       this.selectorsMap.paginationInfoLabel,
     );
+
+    if(infoLabel.data === undefined){
+      return;
+    }
+
     const limit = this.getLimit();
     const modifiedInfoText = infoLabel
       .data('pagination-info')

@@ -1063,6 +1063,7 @@
       <excludeFolder url="file://$MODULE_DIR$/override.bak_20260401095621" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260401094627" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260401095621" />
+      <excludeFolder url="file://$MODULE_DIR$/external/modernesmid_webshop/module/dynamicproduct_old" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

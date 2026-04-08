@@ -21,3 +21,7 @@
 
 ## Coding Rules
 * **Syntax:** Favor short syntax where appropriate, but maintain the use of brackets as much as possible for clarity and consistency.
+
+## Response Rules
+* **Conciseness:** Keep responses short and concise.
+* **Light Caching:** Reuse previously shared code when possible to reduce token usage.

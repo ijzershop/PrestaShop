@@ -69,7 +69,7 @@ final class ShipmentQueryBuilder extends AbstractDoctrineQueryBuilder
             ->leftJoin('s', $this->dbPrefix . 'shipment_product', 'sp', 's.id_shipment = sp.id_shipment')
             ->leftJoin('sp', $this->dbPrefix . 'order_detail', 'od', 'sp.id_order_detail = od.id_order_detail');
 
-        $this->applyFilters($qb, $searchCriteria->getFilters());
+        $this->applyFilters($qb, $searchCriteria->getFilters() ?? []);
 
         return $qb;
     }

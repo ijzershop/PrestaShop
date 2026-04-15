@@ -725,6 +725,7 @@ class CartRuleCore extends ObjectModel
      */
     public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true, $useOrderPrices = false)
     {
+
         if (!CartRule::isFeatureActive()) {
             return false;
         }
@@ -922,7 +923,6 @@ class CartRuleCore extends ObjectModel
 
             return (!$display_error) ? false : $this->trans('You cannot use this voucher', [], 'Shop.Notifications.Error');
         }
-
         /*
          * Now, we need to check if the cart rule meets the minimum requirements to use it.
          */
@@ -936,7 +936,7 @@ class CartRuleCore extends ObjectModel
             // Let's get the full cart total first, add shipping price if the rule was configured like this.
             $cartTotal = $cart->getOrderTotal(
                 $this->minimum_amount_tax,
-                Cart::ONLY_PRODUCTS_WITHOUT_GIFTS,
+                Cart::ONLY_PRODUCTS,
                 null,
                 null,
                 false,
@@ -2031,6 +2031,7 @@ class CartRuleCore extends ObjectModel
         if ($result) {
             $cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
             if ($cart_rules) {
+
                 foreach ($cart_rules as $cart_rule) {
                     /** @var CartRule $cart_rule */
                     if ($cart_rule->checkValidity($context, false, false, true, $useOrderPrices)) {

@@ -6,10 +6,12 @@
 
 namespace PrestaShopBundle\Command;
 
+use Configuration;
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
+use Shop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -93,11 +95,19 @@ class GenerateMailTemplatesCommand extends Command
      */
     private function initContext()
     {
+        $context = $this->legacyContext->getContext();
+
+        if (!$context->shop) {
+            $defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+            $context->shop = new Shop($defaultShopId);
+            Shop::setContext(Shop::CONTEXT_SHOP, $context->shop->id);
+        }
+
         // We need to have an employee or the module hooks don't work
         // see LegacyHookSubscriber
-        if (!$this->legacyContext->getContext()->employee) {
+        if (!$context->employee) {
             // Even a non existing employee is fine
-            $this->legacyContext->getContext()->employee = new Employee(42);
+            $context->employee = new Employee(42);
         }
     }
 }

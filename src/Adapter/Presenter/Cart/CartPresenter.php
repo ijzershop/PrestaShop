@@ -186,7 +186,6 @@ class CartPresenter implements PresenterInterface
         if (Cache::isStored($cache_id)) {
             return Cache::retrieve($cache_id);
         }
-
         $cartLazyArray = new CartLazyArray($cart, $this, $shouldSeparateGifts);
 
         Hook::exec('actionPresentCart',

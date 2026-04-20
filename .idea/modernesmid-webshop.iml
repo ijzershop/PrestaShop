@@ -1064,6 +1064,7 @@
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260401094627" />
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260401095621" />
       <excludeFolder url="file://$MODULE_DIR$/external/modernesmid_webshop/module/dynamicproduct_old" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/csoft_invisible_recaptcha_v3" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

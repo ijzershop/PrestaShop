@@ -1065,6 +1065,17 @@
       <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260401095621" />
       <excludeFolder url="file://$MODULE_DIR$/external/modernesmid_webshop/module/dynamicproduct_old" />
       <excludeFolder url="file://$MODULE_DIR$/modules/csoft_invisible_recaptcha_v3" />
+      <excludeFolder url="file://$MODULE_DIR$/mails/themes/modernesmid.bak_20260421073204" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/addtoorder.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/bridgeconnector.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/dynamicproduct.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msmollie.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/msthemeconfig.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/n1ed.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_cashpayment.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/modules/ps_creditpayment.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/override.bak_20260421073203" />
+      <excludeFolder url="file://$MODULE_DIR$/themes/modernesmid.bak_20260421073203" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

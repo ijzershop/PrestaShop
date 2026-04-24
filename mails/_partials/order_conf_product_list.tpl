@@ -9,7 +9,7 @@
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
 						{$product['reference']}
 					</font>
 				</td>
@@ -22,7 +22,7 @@
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
 						<strong>{$product['name']}</strong>
 						{if count($product['customization']) >= 1}
 							<br>
@@ -43,7 +43,7 @@
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
 						{$product['unit_price']}
 					</font>
 				</td>
@@ -56,7 +56,7 @@
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
 						{$product['quantity']}
 					</font>
 				</td>
@@ -69,7 +69,7 @@
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
 						{$product['price']}
 					</font>
 				</td>
@@ -86,7 +86,7 @@
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td>
-  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+  						<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
   							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
@@ -99,7 +99,7 @@
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td align="right">
-  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+  						<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
   							{if count($product['customization']) > 1}
   								{$customization['customization_quantity']}
   							{/if}
@@ -113,5 +113,4 @@
   	</tr>
   	{/foreach}
   {/if}
-  {PrestaShopLogger::addLog('order_conf_product_list.tpl rendered for product: '|cat:$product['id_product']|cat:' Customization count: '|cat:count($product['customization']), 1, null, 'Cart', null, true)}
   {/foreach}

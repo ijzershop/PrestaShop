@@ -4,12 +4,12 @@
  *}
 {foreach $list as $product}
 <tr>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						{$product['reference']}
 					</font>
 				</td>
@@ -17,12 +17,12 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						<strong>{$product['name']}</strong>
 						{if count($product['customization']) >= 1}
 							<br>
@@ -38,12 +38,12 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						{$product['unit_price']}
 					</font>
 				</td>
@@ -51,12 +51,12 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						{$product['quantity']}
 					</font>
 				</td>
@@ -64,12 +64,12 @@
 			</tr>
 		</table>
 	</td>
-	<td style="border:1px solid #D6D4D4;">
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
 				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						{$product['price']}
 					</font>
 				</td>
@@ -81,12 +81,12 @@
   {if count($product['customization']) > 1}
   	{foreach $product['customization'] as $customization}
   		<tr>
-  		<td colspan="3" style="border:1px solid #D6D4D4;">
+  		<td colspan="3" style="border:none;">
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td>
-  						<font size="2" face="Open-sans, sans-serif" color="#555454">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
@@ -94,12 +94,12 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;">
+  		<td style="border:none;">
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
   					<td align="right">
-  						<font size="2" face="Open-sans, sans-serif" color="#555454">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{if count($product['customization']) > 1}
   								{$customization['customization_quantity']}
   							{/if}
@@ -109,7 +109,7 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;"></td>
+  		<td style="border:none;"></td>
   	</tr>
   	{/foreach}
   {/if}

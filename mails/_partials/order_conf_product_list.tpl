@@ -24,7 +24,7 @@
 				<td>
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						<strong>{$product['name']}</strong>
-						{if count($product['customization']) == 1}
+						{if count($product['customization']) >= 1}
 							<br>
 							{foreach $product['customization'] as $customization}
 								{$customization['customization_text'] nofilter}
@@ -113,4 +113,5 @@
   	</tr>
   	{/foreach}
   {/if}
-{/foreach}
+  {PrestaShopLogger::addLog('order_conf_product_list.tpl rendered for product: '|cat:$product['id_product']|cat:' Customization count: '|cat:count($product['customization']), 1, null, 'Cart', null, true)}
+  {/foreach}

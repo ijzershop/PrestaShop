@@ -23,6 +23,9 @@ $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_S
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_ . 'debug.tpl';
 
 // Register core classes used in smarty templates or else we cannot use the constant classes
+$smarty->registerClass('Order', '\Order');
+$smarty->registerClass('Cart', '\Cart');
+$smarty->registerClass('Category', '\Category');
 $smarty->registerClass('Configuration', '\Configuration');
 $smarty->registerClass('Context', '\Context');
 $smarty->registerClass('ImageManager', '\ImageManager');
@@ -152,6 +155,15 @@ function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true
     } else {
         $smarty->registerPlugin($type, $function, $params);
     }
+}
+
+function smarty_modifier_array_key_exists($array, $key)
+{
+    if (!is_array($array) && !($array instanceof ArrayAccess)) {
+        return false;
+    }
+
+    return array_key_exists($key, (array) $array);
 }
 
 function smartyHook($params, &$smarty)

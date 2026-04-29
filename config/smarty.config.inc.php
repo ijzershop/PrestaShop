@@ -23,6 +23,7 @@ $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_S
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_ . 'debug.tpl';
 
 // Register core classes used in smarty templates or else we cannot use the constant classes
+$smarty->registerClass('Address', '\Address');
 $smarty->registerClass('Order', '\Order');
 $smarty->registerClass('Cart', '\Cart');
 $smarty->registerClass('Category', '\Category');

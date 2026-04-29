@@ -13,6 +13,11 @@ if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new Smarty();
 }
 
+
+if(!defined('_CUSTOMIZE_TEXTFIELD_')) {
+    define("_CUSTOMIZE_TEXTFIELD_", 1);
+}
+
 $smarty->setConfigDir([]);
 $smarty->setCompileDir(_PS_CACHE_DIR_ . 'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_ . 'smarty/cache');
@@ -41,6 +46,7 @@ $smarty->registerClass('Tools', '\Tools');
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_) {
     return;
 }
+
 
 if (defined('_PS_ADMIN_DIR_')) {
     require_once dirname(__FILE__) . '/smartyadmin.config.inc.php';

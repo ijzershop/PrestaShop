@@ -10,20 +10,7 @@
 				<td width="5">&nbsp;</td>
 				<td>
 					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
-						{$product['reference']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:none;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td>
-					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
-						<strong>{$product['name']}</strong>
+						<strong>{$product['name']|stripSawCutModuleAttributeGroupName}</strong>
 						{if count($product['customization']) >= 1}
 							<br>
 							{foreach $product['customization'] as $customization}
@@ -32,19 +19,6 @@
 						{/if}
 
 						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:none;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
-						{$product['unit_price']}
 					</font>
 				</td>
 				<td width="5">&nbsp;</td>

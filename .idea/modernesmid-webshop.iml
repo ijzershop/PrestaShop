@@ -1080,6 +1080,9 @@
       <excludeFolder url="file://$MODULE_DIR$/modules/gauthenticator" />
       <excludeFolder url="file://$MODULE_DIR$/modules/ordersexport" />
       <excludeFolder url="file://$MODULE_DIR$/modules/referralprogram" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260401094627" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260401095621" />
+      <excludeFolder url="file://$MODULE_DIR$/config/themes/modernesmid.bak_20260421073203" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

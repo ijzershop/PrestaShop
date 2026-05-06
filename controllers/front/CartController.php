@@ -228,6 +228,8 @@ class CartControllerCore extends FrontController
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
         ) {
+
+
             if (Tools::getIsset('add') || Tools::getIsset('update')) {
                 $this->processChangeProductInCart();
             } elseif (Tools::getIsset('delete')) {
@@ -381,7 +383,7 @@ class CartControllerCore extends FrontController
         }
 
         $product = new Product($this->id_product, true, $this->context->language->id);
-        if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
+        if (!$product->id || !(int) $product->active || !$product->checkAccess($this->context->cart->id_customer)) {
             $this->{$ErrorKey}[] = $this->trans(
                 'This product (%product%) is no longer available.',
                 ['%product%' => $product->name],
@@ -420,7 +422,6 @@ class CartControllerCore extends FrontController
                 }
             }
         }
-
         // Check product quantity availability
         if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
             /*

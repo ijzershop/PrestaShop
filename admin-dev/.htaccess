@@ -43,7 +43,7 @@ DirectoryIndex index.php
 <IfModule mod_authz_core.c>
     <RequireAny>
         # Direct IP match
-        Require ip 213.93.89.201 77.166.84.207 62.131.112.137 127.0.0.1 ::1
+        Require ip 213.93.89.201 77.166.84.207 62.131.112.137 62.108.15.103 127.0.0.1 ::1
 
         # Proxy / Cloudflare support
         Require expr %{HTTP:X-Forwarded-For} =~ /213\.93\.89\.201/

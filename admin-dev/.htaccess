@@ -16,17 +16,17 @@ DirectoryIndex index.php
     RewriteCond %{REMOTE_ADDR} ^213\.93\.89\.201$ [OR]
     RewriteCond %{REMOTE_ADDR} ^77\.166\.84\.207$ [OR]
     RewriteCond %{REMOTE_ADDR} ^62\.131\.112\.137$ [OR]
-    RewriteCond %{REMOTE_ADDR} ^62\.108\.15\.103[OR]
+    RewriteCond %{REMOTE_ADDR} ^62\.108\.15\.103$ [OR]
 
     # Check Proxy / Cloudflare headers
     RewriteCond %{HTTP:X-Forwarded-For} 213\.93\.89\.201 [OR]
     RewriteCond %{HTTP:X-Forwarded-For} 77\.166\.84\.207 [OR]
     RewriteCond %{HTTP:X-Forwarded-For} 62\.131\.112\.137 [OR]
-    RewriteCond %{HTTP:X-Forwarded-For} 62\.108\.15\.103[OR]
+    RewriteCond %{HTTP:X-Forwarded-For} 62\.108\.15\.103 [OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^213\.93\.89\.201$ [OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^77\.166\.84\.207$ [OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^62\.131\.112\.137$ [OR]
-    RewriteCond %{HTTP:CF-Connecting-IP} ^62\.108\.15\.103[OR]
+    RewriteCond %{HTTP:CF-Connecting-IP} ^62\.108\.15\.103$ [OR]
 
     # Allow localhost for safety
     RewriteCond %{REMOTE_ADDR} ^127\.0\.0\.1$ [OR]
@@ -59,7 +59,7 @@ DirectoryIndex index.php
 <IfModule !mod_authz_core.c>
     Order Deny,Allow
     Deny from all
-    Allow from 213.93.89.201 77.166.84.207 62.131.112.137 127.0.0.1 ::1
+    Allow from 213.93.89.201 77.166.84.207 62.131.112.137 62.108.15.103 127.0.0.1 ::1
 </IfModule>
 
 # By default, Apache does not evaluate symbolic links if you did not enable this

@@ -16,14 +16,17 @@ DirectoryIndex index.php
     RewriteCond %{REMOTE_ADDR} ^213\.93\.89\.201$ [OR]
     RewriteCond %{REMOTE_ADDR} ^77\.166\.84\.207$ [OR]
     RewriteCond %{REMOTE_ADDR} ^62\.131\.112\.137$ [OR]
+    RewriteCond %{REMOTE_ADDR} ^62\.108\.15\.103[OR]
 
     # Check Proxy / Cloudflare headers
     RewriteCond %{HTTP:X-Forwarded-For} 213\.93\.89\.201 [OR]
     RewriteCond %{HTTP:X-Forwarded-For} 77\.166\.84\.207 [OR]
     RewriteCond %{HTTP:X-Forwarded-For} 62\.131\.112\.137 [OR]
+    RewriteCond %{HTTP:X-Forwarded-For} 62\.108\.15\.103[OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^213\.93\.89\.201$ [OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^77\.166\.84\.207$ [OR]
     RewriteCond %{HTTP:CF-Connecting-IP} ^62\.131\.112\.137$ [OR]
+    RewriteCond %{HTTP:CF-Connecting-IP} ^62\.108\.15\.103[OR]
 
     # Allow localhost for safety
     RewriteCond %{REMOTE_ADDR} ^127\.0\.0\.1$ [OR]
@@ -46,9 +49,11 @@ DirectoryIndex index.php
         Require expr %{HTTP:X-Forwarded-For} =~ /213\.93\.89\.201/
         Require expr %{HTTP:X-Forwarded-For} =~ /77\.166\.84\.207/
         Require expr %{HTTP:X-Forwarded-For} =~ /62\.131\.112\.137/
+        Require expr %{HTTP:X-Forwarded-For} =~ /62\.108\.15\.103/
         Require expr %{HTTP:CF-Connecting-IP} =~ /213\.93\.89\.201/
         Require expr %{HTTP:CF-Connecting-IP} =~ /77\.166\.84\.207/
         Require expr %{HTTP:CF-Connecting-IP} =~ /62\.131\.112\.137/
+        Require expr %{HTTP:CF-Connecting-IP} =~ /62\.108\.15\.103/
     </RequireAny>
 </IfModule>
 <IfModule !mod_authz_core.c>

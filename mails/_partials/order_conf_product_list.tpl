@@ -4,47 +4,33 @@
  *}
 {foreach $list as $product}
 <tr>
+  <td style="border:none;">
+    <table class="table">
+      <tr>
+        <td width="5">&nbsp;</td>
+        <td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:16px" align="right">
+          <font size="2" face="Open-sans, sans-serif" color="#ffffff">
+            {$product['quantity']}X
+          </font>
+        </td>
+        <td width="5">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
 	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
-				<td>
-					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
+				<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:16px">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
 						<strong>{$product['name']|stripSawCutModuleAttributeGroupName}</strong>
 						{if count($product['customization']) >= 1}
 							<br>
 							{foreach $product['customization'] as $customization}
-								{$customization['customization_text'] nofilter}
+                <span style="font-size:12px;">{$customization['customization_text'] nofilter}</span>
 							{/foreach}
 						{/if}
 
-						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:none;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
-						{$product['quantity']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:none;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
-						{$product['price']}
 					</font>
 				</td>
 				<td width="5">&nbsp;</td>
@@ -59,8 +45,8 @@
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
-  					<td>
-  						<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
+  					<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:12px">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
@@ -72,8 +58,8 @@
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
-  					<td align="right">
-  						<font size="2" face="roboto, 'helvetica neue', helvetica, arial, sans-serif" color="#ffffff">
+  					<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:12px" align="right">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{if count($product['customization']) > 1}
   								{$customization['customization_quantity']}
   							{/if}

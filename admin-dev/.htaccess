@@ -108,6 +108,16 @@ DirectoryIndex index.php
     # RewriteCond %{ENV:REDIRECT_STATUS} ^$
     # RewriteRule ^index\.php(/(.*)) %{ENV:BASE}/$2 [R=301,L]
 
+    # Redirect legacy AdminOrders URLs to Symfony equivalent
+    # e.g. ?controller=AdminOrders&orderFilter_reference=X -> /sell/orders/?order[filters][reference]=X
+    RewriteCond %{QUERY_STRING} (?:^|&)controller=AdminOrders(?:&|$)
+    RewriteCond %{QUERY_STRING} (?:^|&)orderFilter_reference=([^&]+)
+    RewriteRule ^index\.php$ %{ENV:BASE}/index.php/sell/orders/?order%5Bfilters%5D%5Breference%5D=%1 [R=302,L,QSD]
+
+    # Catch-all: any other legacy AdminOrders URL -> orders list
+    RewriteCond %{QUERY_STRING} (?:^|&)controller=AdminOrders(?:&|$)
+    RewriteRule ^index\.php$ %{ENV:BASE}/index.php/sell/orders/ [R=302,L,QSD]
+
     # If the requested filename exists, simply serve it.
     # We only want to let Apache serve files and not directories.
     RewriteCond %{REQUEST_FILENAME} -f

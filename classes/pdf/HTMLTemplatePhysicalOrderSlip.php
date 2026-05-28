@@ -466,7 +466,6 @@ class HTMLTemplatePhysicalOrderSlip extends HTMLTemplate
             'ecotax_tax' => Configuration::get('PS_USE_ECOTAX') ? $this->order_invoice->getEcoTaxTaxesBreakdown() : [],
             'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
         ];
-
         foreach ($breakdowns as $type => $bd) {
             if (empty($bd)) {
                 unset($breakdowns[$type]);

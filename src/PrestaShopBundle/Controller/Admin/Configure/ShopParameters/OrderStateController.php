@@ -326,7 +326,7 @@ class OrderStateController extends PrestaShopAdminController
             $editableOrderState = $this->dispatchQuery(new GetOrderStateForEditing((int) $orderStateId));
 
             $editOrderStateCommand = new EditOrderStateCommand((int) $orderStateId);
-            $editOrderStateCommand->setDelivery(!$editableOrderState->isDelivery());
+            $editOrderStateCommand->setDelivery(!$editableOrderState->mailisDelivery());
 
             $this->dispatchCommand($editOrderStateCommand);
 

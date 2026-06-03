@@ -1661,6 +1661,9 @@ class OrderCore extends ObjectModel
             SELECT `invoice_number`, `invoice_date`, `delivery_number`, `delivery_date`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_order` = ' . (int) $this->id);
+
+
+
         $this->invoice_date = $res['invoice_date'];
         $this->invoice_number = $res['invoice_number'];
         $this->delivery_date = $res['delivery_date'];

@@ -57,6 +57,7 @@ abstract class HTMLTemplateCore
         $shop_address = $this->getShopAddress();
 
         $id_shop = (int) $this->shop->id;
+        $legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)Context::getContext()->language->id, null, $id_shop);
 
         $this->smarty->assign([
             'available_in_your_account' => $this->available_in_your_account,
@@ -65,6 +66,7 @@ abstract class HTMLTemplateCore
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
             'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
+            'legal_free_text' => $legal_free_text,
         ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));

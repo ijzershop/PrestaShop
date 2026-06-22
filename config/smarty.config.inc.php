@@ -128,6 +128,11 @@ smartyRegisterFunction($smarty, 'modifier', 'version_compare', 'version_compare'
 smartyRegisterFunction($smarty, 'modifier', 'file_exists', 'file_exists');
 smartyRegisterFunction($smarty, 'modifier', 'strpos', 'strpos');
 
+if (class_exists('AttributeGroup')) {
+    smartyRegisterFunction($smarty, 'modifier', 'stripSawCutModuleAttributeGroupName', array('AttributeGroup', 'stripSawCutModuleAttributeGroupName'));
+    smartyRegisterFunction($smarty, 'modifier', 'stripSawCutName', array('AttributeGroup', 'stripSawCutModuleAttributeGroupName'));
+}
+
 function smarty_modifier_htmlentitiesUTF8($string)
 {
     return Tools::htmlentitiesUTF8($string);

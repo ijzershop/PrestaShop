@@ -1,5 +1,5 @@
 {foreach $list as $product}
-						{$product['name']|stripSawCutModuleAttributeGroupName}
+      {if $product['name']|method_exists:'stripSawCutModuleAttributeGroupName'}{$product['name']|stripSawCutModuleAttributeGroupName}{else}{$product['name']}{/if}
 
 						{$product['price']}
 

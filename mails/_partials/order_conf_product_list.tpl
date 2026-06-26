@@ -23,8 +23,8 @@
 				<td width="5">&nbsp;</td>
 				<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:16px">
 					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
-						<strong>{if $product['name']|method_exists:'stripSawCutModuleAttributeGroupName'}{$product['name']|stripSawCutModuleAttributeGroupName}{else}{$product['name']}{/if}</strong>
-						{if count($product['customization']) >= 1}
+						<strong>{if class_exists('AttributeGroup')}{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}{else}{$product['name']}{/if}</strong>
+						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
                 <span style="font-size:12px;">{$customization['customization_text'] nofilter}</span>

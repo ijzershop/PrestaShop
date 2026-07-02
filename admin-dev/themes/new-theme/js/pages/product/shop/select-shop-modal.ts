@@ -28,7 +28,8 @@ export default function selectShopForEdition(editButton: HTMLElement, shopIds: s
       selector.classList.add('d-none');
     } else {
       selector.addEventListener('click', () => {
-        document.location.href = `${editButton.getAttribute('href')}&setShopContext=s-${selector.dataset.shopId}`;
+        const href = editButton.getAttribute('href') ?? '';
+        document.location.href = `${href}${href.includes('?') ? '&' : '?'}setShopContext=s-${selector.dataset.shopId}`;
       });
     }
   });

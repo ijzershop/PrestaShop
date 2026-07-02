@@ -21,7 +21,7 @@ export default {
       location: string,
       urlLetter: string,
       itemId: string,
-    ): string => `${location}&setShopContext=${urlLetter}-${itemId}`,
+    ): string => `${location}${location.includes('?') ? '&' : '?'}setShopContext=${urlLetter}-${itemId}`,
   },
   shopSelector: {
     container: '.shop-selector',

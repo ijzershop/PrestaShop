@@ -9,8 +9,8 @@
 		<tr>
 			<th class="product header small" width="60%">{l s='Product / Reference' d='Shop.Pdf' pdf='true'}</th>
 			<th class="product header small" width="10%">{l s='Qty' d='Shop.Pdf' pdf='true'}</th>
-			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
-			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br />{if $tax_excluded_display}{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}{else}{l s='(Tax Incl.)' d='Shop.Pdf' pdf='true'}{/if}</th>
+			<th class="product header-right small" width="15%">{l s='Unit price' d='Shop.Pdf' pdf='true'}<br />{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}</th>
+			<th class="product header-right small" width="15%">{l s='Price' d='Shop.Pdf' pdf='true'}<br />{l s='(Tax Excl.)' d='Shop.Pdf' pdf='true'}</th>
 		</tr>
 	</thead>
 
@@ -26,23 +26,16 @@
 				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 				<tr class="product {$bgcolor_class}">
 					<td class="product left">
-						{$order_detail.product_name}
+            {$order_detail.product_name|stripSawCutModuleAttributeGroupName} <span style="color:#000;">{if isset($order_detail.product_desc_short)}{if ((int)$order_detail.id_category_default == (int)Configuration::get('MSTHEMECONFIG_CUSTOM_PRODUCT_CATEGORY', (int)$order->id_lang, (int)$order->id_shop_group, (int)$order->id_shop)) || ((int)$order_detail.id_category_default == (int)Configuration::get('MSTHEMECONFIG_OFFER_INTEGRATION_OFFER_CATEGORY_ID', (int)$order->id_lang, (int)$order->id_shop_group, (int)$order->id_shop))}{$order_detail.product_desc_short nofilter}{/if}{/if}</span>
 					</td>
 					<td class="product center">
 						{$order_detail.product_quantity}
 					</td>
 					<td class="product right">
-						{if $tax_excluded_display}
 							- {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
-						{else}
-							- {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl}
-						{/if}
 					</td>
 					<td class="product right">
-						{if $tax_excluded_display}
 							- {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
-						{else}
-							- {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl}
 						{/if}
 					</td>
 				</tr>

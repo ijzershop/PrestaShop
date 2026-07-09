@@ -36,7 +36,6 @@
 					</td>
 					<td class="product right">
 							- {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
-						{/if}
 					</td>
 				</tr>
 

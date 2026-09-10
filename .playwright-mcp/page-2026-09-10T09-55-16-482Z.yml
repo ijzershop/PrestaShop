@@ -1,0 +1,39 @@
+- generic [ref=e4]:
+  - heading [level=1] [ref=e6]:
+    - img "PrestaShop" [ref=e7]
+  - generic [ref=e8]:
+    - img "ModerneSmid" [ref=e10]
+    - generic [ref=e11]:
+      - alert [ref=e12]:
+        - text: 
+        - button "Close" [ref=e13] [cursor=pointer]:
+          - generic [ref=e15]: close
+        - paragraph [ref=e17]: SSL is geactiveerd. Echter, uw IP mag de onveilige modus gebruiken (onderhoud of locale IP)
+      - generic [ref=e19]:
+        - heading "ModerneSmid" [level=4] [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]:
+            - generic [ref=e23]: E-mailadres
+            - textbox "E-mailadres" [ref=e24]
+          - generic [ref=e25]:
+            - generic [ref=e26]: Wachtwoord
+            - textbox "Wachtwoord" [ref=e27]
+          - button "Aanmelden" [ref=e29] [cursor=pointer]
+          - generic [ref=e30]:
+            - generic [ref=e33]:
+              - checkbox "Blijf ingelogd" [ref=e34]
+              - text: Blijf ingelogd
+            - link "Ik ben mijn wachtwoord vergeten" [ref=e36] [cursor=pointer]:
+              - /url: "#forgotten_password"
+  - link "arrow_back" [ref=e37] [cursor=pointer]:
+    - /url: http://modernesmid-webshop.local/
+  - generic [ref=e39]:
+    - link "© PrestaShop™ 2007-2026 - All rights reserved" [ref=e41] [cursor=pointer]:
+      - /url: https://www.prestashop-project.org
+    - generic [ref=e42]:
+      - link "X" [ref=e43] [cursor=pointer]:
+        - /url: https://x.com/PrestaShop
+      - link "Facebook" [ref=e46] [cursor=pointer]:
+        - /url: https://www.facebook.com/prestashop
+      - link "Github" [ref=e49] [cursor=pointer]:
+        - /url: https://github.com/PrestaShop/PrestaShop

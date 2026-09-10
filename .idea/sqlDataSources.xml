@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="b41cc843-923d-4e04-b900-39290f9747c9" name="Ijzershop FRL Mapping">
+      <data-sources db="78475ae2-b2e5-4468-9ccf-2536bb37b671" ddl="a0dda417-0332-42a1-aa27-9ffc327fea8e" />
+      <scope>
+        <node negative="1">
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+          <node kind="schema" qname="deModerneSmid_webshop" />
+        </node>
+      </scope>
+    </mapping>
+    <mapping uuid="b261008c-91f4-414d-9954-74e2bcc8fd84" name="Live Ijzershop Mapping">
+      <data-sources db="b8266722-f840-4fc7-b3cc-714c666515c3" ddl="551a7358-fd35-4ab3-bf9c-d64df9dbef91" />
+      <scope>
+        <node negative="1">
+          <node kind="database" negative="1">
+            <node kind="schema" qname="@" />
+          </node>
+          <node kind="schema" qname="ijzershop81" />
+        </node>
+      </scope>
+    </mapping>
+  </component>
+</project>

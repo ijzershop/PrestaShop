@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/external/modernesmid_webshop" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/dashactivity" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/msthemeconfig" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/productcomments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/ps_apiresources" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/modules/ps_newproducts" vcs="Git" />
+  </component>
+</project>

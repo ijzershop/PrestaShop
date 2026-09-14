@@ -3,10 +3,11 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 <div class="card customer-orders-card">
+  {% set hasOrderGrid = customerOrderGrid is defined and customerOrderGrid %}
   <h3 class="card-header">
     <i class="material-icons">shopping_basket</i>
     {{ 'Orders'|trans({}, 'Admin.Global') }}
-    <span class="badge badge-primary rounded">{{ customerOrderGrid.data.records_total }}</span>
+    <span class="badge badge-primary rounded">{{ hasOrderGrid ? customerOrderGrid.data.records_total : 0 }}</span>
 
     <a href="{{ path('admin_orders_create') }}" class="tooltip-link float-right"
     data-toggle="pstooltip" title="" data-placement="top" data-original-title="{{ 'Add'|trans({}, 'Admin.Actions') }}">
@@ -14,7 +15,7 @@
     </a>
   </h3>
   <div class="card-body">
-    {% if customerOrderGrid.data.records_total > 0 %}
+    {% if hasOrderGrid and customerOrderGrid.data.records_total > 0 %}
       <div class="card">
         <div class="card-body">
           <div class="row">
@@ -32,7 +33,7 @@
         </div>
       </div>
     {% endif %}
-    {% if customerOrderGrid.data.records_total > 0 %}
+    {% if hasOrderGrid and customerOrderGrid.data.records_total > 0 %}
       {{ include('@PrestaShop/Admin/Common/Grid/grid.html.twig', {grid: customerOrderGrid}) }}
     {% else %}
       <div class="text-center">

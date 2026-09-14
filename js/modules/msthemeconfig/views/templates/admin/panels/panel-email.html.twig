@@ -1,0 +1,95 @@
+<div class="card">
+  <div class="card-header">
+    Email
+  </div>
+  <div class="card-body">
+
+      {# My Account #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Mijn Account
+<button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+        data-target="#collapseMyAcccount" aria-expanded="false" aria-controls="collapseMyAcccount">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseMyAcccount">
+        <div class="form-group col-xs-12" data-tab-id="my_account">
+          <label class="control-label col-xs-4 text-right">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Customer welcome and name are defined as title, so not needed in this text">
+            Welkom tekst "Mijn Account"
+            </span>
+          </label>
+          <div class="col-xs-8">
+            <textarea name="MSTHEMECONFIG_MY_ACCOUNT_LANDING_TEXT"
+                      id="MSTHEMECONFIG_MY_ACCOUNT_LANDING_TEXT" cols="60" rows="10"
+                      class="autoload_rte">{{ MSTHEMECONFIG_MY_ACCOUNT_LANDING_TEXT|raw }}</textarea>
+            <p class="help-block">
+              Set the my account landing page text in html format
+            </p>
+          </div>
+        </div>
+      </div>
+      {# Email Settings #}
+      <span class="col-xs-12 card-sub-header"><i class="star">*</i> Email Opties
+        <button class="btn btn-sm btn-link pull-right collapsed" type="button" data-toggle="collapse"
+                data-target="#collapseEmail" aria-expanded="false" aria-controls="collapseEmail">
+        <i class="toggle-panel text-white text-decoration-none"></i>
+      </button>
+      </span>
+      <div class="collapse" id="collapseEmail">
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Build it in html mode">
+            Footer tekst html
+            </span>
+          </label>
+          <div class="col-xs-8">
+            <textarea name="MSTHEMECONFIG_EMAIL_FOOTER_TEXT"
+                      id="MSTHEMECONFIG_EMAIL_FOOTER_TEXT" cols="60" rows="10"
+                      class="autoload_rte">{{ MSTHEMECONFIG_EMAIL_FOOTER_TEXT|raw }}</textarea>
+            <p class="help-block">
+              Set the footer html text of all emails in html format
+            </p>
+          </div>
+        </div>
+        <div class="form-group col-xs-12">
+          <label class="control-label col-xs-4 text-right">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Build it in text mode">
+            Footer tekst utf-8
+            </span>
+          </label>
+          <div class="col-xs-8">
+            <textarea name="MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT"
+                      id="MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT" cols="60" rows="10"
+                      class="textarea-autosize rte"
+                      style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 35px;">{{ MSTHEMECONFIG_EMAIL_FOOTER_TEXT_TXT|raw }}</textarea>
+            <p class="help-block">
+              Set the footer text of all emails in txt format
+            </p>
+          </div>
+        </div>
+        <div class="form-group hide">
+          <input type="hidden" name="MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON"
+                 id="MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON" value="{{ MSTHEMECONFIG_ORDERSTATE_SENDMAIL_JSON }}">
+        </div>
+        <div class="form-group col-xs-12" data-tab-id="email">
+          <label class="control-label col-xs-4 text-right">
+            Send extra emails
+          </label>
+          <div class="col-xs-8">
+            <select name="MSTHEMECONFIG_ORDERSTATE_SENDMAIL" class="w-100 select2-data-input"
+                    data-type="order_states" id="MSTHEMECONFIG_ORDERSTATE_SENDMAIL">
+              {{ MSTHEMECONFIG_ORDERSTATE_SENDMAIL|raw }}
+            </select>
+            <p class="help-block">
+              Select the orderstate on which you would like to send extra emails
+            </p>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+</div>

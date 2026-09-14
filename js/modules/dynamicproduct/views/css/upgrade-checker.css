@@ -1,0 +1,20 @@
+.tn-versions-list {
+  font-size: 1rem;
+
+  li {
+    display: flex;
+    align-items: center;
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.tn-upgrade-success {
+  color: #4caf50;
+}
+
+.tn-upgrade-fail {
+  color: #f44336;
+}

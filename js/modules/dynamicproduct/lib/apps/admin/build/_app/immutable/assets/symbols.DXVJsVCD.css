@@ -1,0 +1,7 @@
+.cm-editor {
+	border: 1px solid lightgray;
+}
+.cm-tooltip {
+	z-index: 10000 !important;
+	height: auto;
+}

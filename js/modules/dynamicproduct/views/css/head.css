@@ -1,0 +1,6 @@
+/* customize this css to adapt the module for your theme */
+
+/* css used to hide the quantity input when "Hide quantity input" is enabled */
+body.dp-hide-qty .product-quantity .qty {
+  display: none !important;
+}

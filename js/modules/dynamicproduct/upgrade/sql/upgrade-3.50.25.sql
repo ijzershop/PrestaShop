@@ -1,0 +1,9 @@
+ALTER TABLE `ps_dynamicproduct_dropdown_option`
+    ADD `preview_width`  int(11),
+    ADD `preview_height` int(11);
+ALTER TABLE `ps_dynamicproduct_thumbnails_option`
+    ADD `preview_width`  int(11),
+    ADD `preview_height` int(11);
+ALTER TABLE `ps_dynamicproduct_preview_option`
+    ADD `preview_width`  int(11),
+    ADD `preview_height` int(11);

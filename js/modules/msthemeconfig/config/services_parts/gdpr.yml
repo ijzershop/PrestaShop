@@ -1,0 +1,9 @@
+services:
+  msthemeconfig.gdpr.export_service:
+    class: MsThemeConfig\Adapter\Gdpr\ExportServiceDecorator
+    decorates: PrestaShop\Module\Psgdpr\Service\ExportService
+    decoration_on_invalid: ignore
+    public: false
+    arguments:
+      - '@msthemeconfig.gdpr.export_service.inner'
+      - '@=service("prestashop.adapter.legacy.context").getContext()'

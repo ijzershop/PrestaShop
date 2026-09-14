@@ -1,0 +1,17 @@
+{
+  "autoload": {
+    "psr-4": {
+      "DynamicProduct\\": ""
+    }
+  },
+  "require": {
+    "ext-zip": "*",
+    "iamgerwin/toon-php": "^1.0"
+  },
+  "config": {
+    "prepend-autoloader": false
+  },
+  "require-dev": {
+
+  }
+}

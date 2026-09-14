@@ -1,6 +1,26 @@
-<!--*
- * For the full copyright and license information, please view the
- * docs/licenses/LICENSE.txt file that was distributed with this source code.
+<!--**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
   <div class="card">
@@ -10,13 +30,14 @@
     <div class="card-body">
       <div class="table js-permissions-table">
         <bulk
+          v-if="profileDataPermissions && Object.keys(profileDataPermissions).length > 0 && types && Object.keys(types).length > 0"
           :types="types"
-          :profile-permissions.sync="profileDataPermissions"
+          :profile-permissions="profileDataPermissions"
           @updateBulk="updateBulk"
         />
         <div
           class="col-xs-12"
-          v-if="permissions === null"
+          v-if="!permissionsData || Object.keys(permissionsData).length === 0"
         >
           <td colspan="6">
             {{ emptyData }}
@@ -24,8 +45,7 @@
         </div>
 
         <template
-          v-else
-          v-for="(permission, permissionId) in permissions"
+          v-for="(permission, permissionId) in permissionsData"
           :key="permissionId"
         >
           <row
@@ -33,9 +53,9 @@
             :level-depth="1"
             :max-level-depth="4"
             :permission="permission"
-            :permission-id="permissionId"
+            :permission-id="permissionId.toString()"
             :permission-key="permissionKey"
-            :profile-permissions.sync="profileDataPermissions"
+            :profile-permissions="profileDataPermissions"
             :employee-permissions="employeePermissions"
             :parent="permission.children !== undefined"
             :types="Object.keys(types)"
@@ -54,10 +74,6 @@
 
   const {$} = window;
 
-  interface Data {
-    profileDataPermissions: Record<string, any>;
-  }
-
   export default defineComponent({
     name: 'Permission',
     components: {
@@ -67,43 +83,53 @@
     props: {
       title: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       emptyData: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       profileId: {
         type: Number,
-        required: true,
+        required: false,
+        default: 0,
       },
       messages: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       updateUrl: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       permissionKey: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       types: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       permissions: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       profilePermissions: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       employeePermissions: {
-        type: Object,
-        required: true,
+        type: [Object, Array],
+        required: false,
+        default: () => ({}),
       },
       canEdit: {
         type: Boolean,
@@ -111,10 +137,36 @@
         default: false,
       },
     },
-    data(): Data {
+    data() {
       return {
-        profileDataPermissions: this.profilePermissions,
+        profileDataPermissions: {},
+        permissionsData: {},
       };
+    },
+    watch: {
+      permissions: {
+        handler(val) {
+          this.permissionsData = val || {};
+        },
+        deep: true,
+        immediate: true,
+      },
+      profilePermissions: {
+        handler(val) {
+          this.profileDataPermissions = val || {};
+        },
+        deep: true,
+        immediate: true,
+      },
+    },
+    mounted() {
+      // In case props are already available but data() picking them up correctly
+      if (this.permissions && Object.keys(this.permissions).length > 0) {
+        this.permissionsData = this.permissions;
+      }
+      if (this.profilePermissions && Object.keys(this.profilePermissions).length > 0) {
+        this.profileDataPermissions = this.profilePermissions;
+      }
     },
     methods: {
       /**
@@ -144,6 +196,10 @@
        * Update user permissions from bulk action
        */
       updateBulk(data: Record<string, any>): void {
+        if (!this.profileDataPermissions) {
+          return;
+        }
+
         Object.keys(this.profileDataPermissions).forEach((key: string) => {
           data.types.forEach((type: string) => {
             this.profileDataPermissions[key][type] = data.status ? '1' : '0';

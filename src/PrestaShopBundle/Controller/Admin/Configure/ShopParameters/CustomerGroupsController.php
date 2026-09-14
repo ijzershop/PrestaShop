@@ -56,7 +56,7 @@ class CustomerGroupsController extends PrestaShopAdminController
     public function createAction(LegacyContext $legacyContext): Response
     {
         return $this->redirect(
-            $legacyContext->getAdminLink(
+            $legacyContext->getLegacyAdminLink(
                 'AdminGroups',
                 true,
                 [
@@ -79,7 +79,7 @@ class CustomerGroupsController extends PrestaShopAdminController
         LegacyContext $legacyContext,
     ): Response {
         return $this->redirect(
-            $legacyContext->getAdminLink(
+            $legacyContext->getLegacyAdminLink(
                 'AdminGroups',
                 true,
                 [

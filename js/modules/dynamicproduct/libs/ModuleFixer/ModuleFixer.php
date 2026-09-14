@@ -1,0 +1,400 @@
+<?php
+/**
+ * 2007-2023 TuniSoft
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    TuniSoft (tunisoft.solutions@gmail.com)
+ * @copyright 2007-2023 TuniSoft
+ * @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace DynamicProduct\libs\ModuleFixer;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+use DynamicProduct\classes\context\DynamicContext;
+use DynamicProduct\classes\DynamicTools;
+use DynamicProduct\classes\models\DynamicInput;
+use DynamicProduct\classes\models\DynamicMainConfig;
+use DynamicProduct\libs\UpgradeChecker\UpgradeChecker;
+
+class ModuleFixer
+{
+    /** @var \DynamicProduct */
+    private $module;
+
+    private $messages = [];
+    private $errors = [];
+
+    public function __construct($module)
+    {
+        $this->module = $module;
+    }
+
+    public function display()
+    {
+        $this->postProcess();
+        $module_hooks = $this->getModuleHooks();
+        $unregistered_hooks = $this->getHooksList($module_hooks);
+        $smarty = DynamicContext::getSmarty();
+        $smarty->assign([
+            'module' => $this->module,
+            'config' => DynamicMainConfig::getConfig(),
+            'module_link' => $this->getModuleLink(),
+            'module_hooks' => $module_hooks,
+            'unregistered_hooks' => $unregistered_hooks,
+            'messages' => $this->messages,
+            'errors' => $this->errors,
+            'fixes_needed' => $this->getNeededFixes(),
+            'cron_link' => DynamicContext::getLink()->getModuleLink(
+                $this->module->name,
+                'cleanup',
+                ['min_age' => '_min_age_', 'cron_key' => '_cron_key_', 'action' => 'cleanup']
+            ),
+        ]);
+
+        return $smarty->fetch(dirname(__FILE__) . '/ModuleFixer.tpl');
+    }
+
+    private function getModuleHooks(): array
+    {
+        return $this->module->installer->getHooks();
+    }
+
+    private function getHooksList($module_hooks)
+    {
+        $hooks_list = [];
+
+        foreach ($module_hooks as $hook_name) {
+            if (!\Hook::isModuleRegisteredOnHook($this->module, $hook_name, DynamicContext::getShopId())) {
+                $id_hook = (int) \Hook::getIdByName($hook_name);
+                $hook = new \Hook($id_hook, DynamicContext::getLanguageId());
+                $hooks_list[] = [
+                    'id_hook' => $id_hook,
+                    'name' => $hook_name,
+                    'description' => $hook->description,
+                ];
+            }
+        }
+
+        return $hooks_list;
+    }
+
+    private function postProcess()
+    {
+        if (\Tools::isSubmit('restore_hooks')) {
+            $this->restoreHooks();
+        }
+        if (\Tools::isSubmit('fix_templates')) {
+            $this->fixTemplates();
+            // redirect is necessary to refresh the diagnostics
+            header('Location: ' . $this->module->provider->getModuleAdminLink('view_troubleshooter'));
+            exit;
+        }
+        if (\Tools::isSubmit('sync_orders')) {
+            $this->syncOrders();
+        }
+        if (\Tools::isSubmit('cleanup')) {
+            $this->cleanUp();
+        }
+    }
+
+    private function restoreHooks()
+    {
+        $hooks = (array) \Tools::getValue('hooks');
+        if (is_array($hooks)) {
+            $hook_names = array_keys($hooks);
+            foreach ($hook_names as $hook_name) {
+                if ($hook_name) {
+                    $this->module->registerHook($hook_name);
+                }
+            }
+        }
+    }
+
+    public function fixTemplates()
+    {
+        $fixes = $this->getFixes();
+
+        foreach ($fixes as $fix) {
+            if (is_file($fix['path'])) {
+                $contents = \Tools::file_get_contents($fix['path']);
+                if ($contents) {
+                    $new_contents = str_replace($fix['search'], $fix['replace'], $contents);
+                    file_put_contents($fix['path'], $new_contents);
+                }
+            }
+        }
+
+        $customization_modal = _PS_THEME_DIR_ . 'templates/catalog/_partials/product-customization-modal.tpl';
+        if (is_file($customization_modal)) {
+            $new_contents = \Tools::file_get_contents(dirname(__FILE__) . '/templates/product-customization-modal.tpl');
+            file_put_contents($customization_modal, $new_contents);
+        }
+
+        $cart_detailed = _PS_THEME_DIR_ . 'templates/checkout/_partials/cart-detailed-product-line.tpl';
+        if (is_file($cart_detailed)) {
+            $contents = \Tools::file_get_contents($cart_detailed);
+            $start = strpos($contents, "{block name='cart_detailed_product_line_customization'}");
+            if ($start !== false) {
+                $end = strpos($contents, '{/block}', $start);
+                if ($end !== false) {
+                    $customization_block = substr($contents, $start, $end - $start + 8);
+                    $replacement = \Tools::file_get_contents(dirname(__FILE__) . '/customization.tpl');
+                    $new_contents = str_replace($customization_block, $replacement, $contents);
+                    file_put_contents($cart_detailed, $new_contents);
+                }
+            }
+        }
+    }
+
+    public function syncOrders()
+    {
+        $sql = '
+            SELECT o.id_order
+            FROM ps_orders o
+                     LEFT JOIN ps_dynamicproduct_input i ON i.id_cart = o.id_cart
+                     LEFT JOIN ps_cart_product cp ON cp.id_customization = i.id_customization
+            WHERE i.id_input IS NOT NULL AND o.id_order NOT IN (SELECT id_order FROM ps_dynamicproduct_custom_orders)
+            GROUP BY o.id_order';
+        $sql = str_replace('ps_', _DB_PREFIX_, $sql);
+        $orders = \Db::getInstance()->executeS($sql);
+
+        foreach ($orders as $order) {
+            \Db::getInstance()->insert('dynamicproduct_custom_orders', [
+                'id_order' => (int) $order['id_order'],
+            ]);
+        }
+
+        if (count($orders) > 0) {
+            $this->messages[] = count($orders) . ' ' . $this->module->l('order(s) synced successfully.');
+        } else {
+            $this->messages[] = $this->module->l('It looks like all orders were already synced.');
+        }
+    }
+
+    private function getNeededFixes($include_cart = true)
+    {
+        $needs_fix = [];
+        $fixes = $this->getFixes();
+        foreach ($fixes as $fix) {
+            if (is_file($fix['path'])) {
+                $contents = \Tools::file_get_contents($fix['path']);
+                if (strpos($contents, $fix['replace']) === false) {
+                    if (strpos($contents, $fix['search']) === false) {
+                        continue;
+                    } else {
+                        $needs_fix[] = [
+                            'path' => DynamicTools::stripRoot($fix['path']),
+                            'search' => $fix['search'],
+                            'replace' => $fix['replace'],
+                        ];
+                    }
+                }
+            }
+        }
+
+        if ($include_cart) {
+            $theme = DynamicContext::getLegacyContext()->shop->theme_name;
+            \DynamicProduct::$logger->info('Current theme: ' . $theme);
+            $customization_modal = _PS_THEME_DIR_ . 'templates/catalog/_partials/product-customization-modal.tpl';
+            if (is_file($customization_modal)) {
+                $contents = \Tools::file_get_contents($customization_modal);
+                if (strpos($contents, 'product-customization-modal') !== false) {
+                    $needs_fix[] = [
+                        'path' => DynamicTools::stripRoot($customization_modal),
+                        'search' => '',
+                        'replace' => '',
+                    ];
+                }
+            }
+            $cart_detailed = _PS_THEME_DIR_ . 'templates/checkout/_partials/cart-detailed-product-line.tpl';
+            if (is_file($cart_detailed)) {
+                $contents = \Tools::file_get_contents($cart_detailed);
+                if (strpos($contents, 'cart_detailed_product_line_customization') !== false
+                    && strpos($contents, 'customization-modal') !== false) {
+                    $needs_fix[] = [
+                        'path' => DynamicTools::stripRoot($cart_detailed),
+                        'search' => '',
+                        'replace' => '',
+                    ];
+                }
+            }
+        }
+
+        return $needs_fix;
+    }
+
+    private function getFixes(): array
+    {
+        return [
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Cart/Blocks/View/cart_summary.html.twig',
+                'search' => '{{ customizationField.value }}',
+                'replace' => '{{ customizationField.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/mails/_partials/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/mails/en/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+            [
+                'path' => _PS_THEME_DIR_ .
+                  '/mails/en/order_conf_product_list.tpl',
+                'search' => "{\$customization['customization_text']}",
+                'replace' => "{\$customization['customization_text'] nofilter}",
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/modules/ets_ordermanager/views/PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/modules/ets_ordermanager/views/templates/admin/_configure/templates/orders/_customized_data.tpl',
+                'search' => '{$data[\'value\']|escape:\'html\':\'UTF-8\'}',
+                'replace' => '{$data[\'value\']}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/modules/orderedit/views/PrestaShop/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ROOT_DIR_ .
+                  '/modules/pms_admin_order/views/Module/Admin/Sell/Order/Order/Blocks/View/product.html.twig',
+                'search' => '{{ customization.value }}',
+                'replace' => '{{ customization.value | raw }}',
+            ],
+            [
+                'path' => _PS_ADMIN_DIR_ .
+                  '/themes/new-theme/public/order_create.bundle.js',
+                'search' => 'o.find(a.default.listedProductCustomizationValue).text(e.value)',
+                'replace' => 'o.find(a.default.listedProductCustomizationValue).html(e.value)',
+            ],
+            [
+                'path' => _PS_ADMIN_DIR_ .
+                  '/themes/new-theme/public/order_create.bundle.js',
+                'search' => 'o.find(je).text(t.value)',
+                'replace' => 'o.find(je).html(t.value)',
+            ],
+        ];
+    }
+
+    private function getModuleLink()
+    {
+        $token = \Tools::getAdminTokenLite('AdminModules');
+
+        return 'index.php?controller=AdminModules&token=' . $token . '&configure=' . $this->module->name;
+    }
+
+    public function displayDiagnostics()
+    {
+        $fixes_needed = $this->getNeededFixes(false);
+
+        $has_failed_upgrades = false;
+        $upgrade_checker = new UpgradeChecker($this->module);
+        $upgrades = $upgrade_checker->getUpgrades();
+        $failed_upgrades = in_array(false, array_column($upgrades, 'success'));
+        if ($failed_upgrades) {
+            $has_failed_upgrades = true;
+        }
+        $needs_upgrade = $upgrade_checker->needsUpgrade();
+        $display_diagnostics = !empty($fixes_needed) || $has_failed_upgrades || $needs_upgrade;
+
+        $smarty = DynamicContext::getSmarty();
+        $smarty->assign([
+            'fixes_needed' => $fixes_needed,
+            'has_failed_upgrades' => $has_failed_upgrades,
+            'needs_upgrade' => $needs_upgrade,
+            'module_link' => $this->getModuleLink(),
+        ]);
+
+        if (!$display_diagnostics) {
+            return null;
+        }
+
+        return $smarty->fetch(dirname(__FILE__) . '/diagnostics.tpl');
+    }
+
+    public function cleanUp()
+    {
+        $start_time = microtime(true);
+        $max_execution_time = (int) ini_get('max_execution_time');
+
+        $min_age = \Tools::getValue('min_age');
+
+        $saved_inputs_delete_count = 0;
+
+        $old_inputs = \Db::getInstance()->executeS('SELECT i.id_input FROM ' . _DB_PREFIX_ . 'dynamicproduct_input i
+                LEFT JOIN ' . _DB_PREFIX_ . 'order_detail od ON od.id_customization = i.id_customization
+                WHERE i.date_upd < NOW() - INTERVAL ' . (int) $min_age . ' DAY
+                AND ISNULL(od.id_order_detail) AND NOT i.is_admin AND NOT i.is_bookmarked;');
+
+        foreach ($old_inputs as $old_input) {
+            $id_input = (int) $old_input['id_input'];
+            $input = new DynamicInput($id_input);
+            if (\Validate::isLoadedObject($input)) {
+                $input->delete();
+                ++$saved_inputs_delete_count;
+            }
+
+            $elapsed_time = (microtime(true) - $start_time);
+            if ($elapsed_time > $max_execution_time - 1) {
+                DynamicContext::getSmarty()->assign([
+                    'time_limit_exceeded' => true,
+                    'min_age' => $min_age,
+                    'saved_inputs_delete_count' => $saved_inputs_delete_count,
+                ]);
+
+                return [
+                    'success' => true,
+                    'saved_inputs_delete_count' => $saved_inputs_delete_count,
+                ];
+            }
+        }
+
+        DynamicContext::getSmarty()->assign([
+            'min_age' => $min_age,
+            'saved_inputs_delete_count' => $saved_inputs_delete_count,
+        ]);
+
+        return [
+            'success' => true,
+            'saved_inputs_delete_count' => $saved_inputs_delete_count,
+        ];
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "category_ids": [],
+  "excluded_category_ids": [],
+  "product_fields": ["reference", "description", "features", "combinations"],
+  "max_categories": 2000,
+  "max_products": 20000,
+  "max_description_chars": 600,
+  "max_features": 20,
+  "max_combinations": 12,
+  "max_relation_note_chars": 300,
+  "max_snapshot_bytes": 50000000,
+  "max_context_bytes": 16000,
+  "max_context_products": 8,
+  "max_context_categories": 6,
+  "max_relation_hops": 1,
+  "max_query_chars": 500,
+  "max_snapshot_age_hours": 48,
+  "aliases": {}
+}

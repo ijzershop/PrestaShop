@@ -1,0 +1,32 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{#
+  Offer Integration index page for PrestaShop 9
+  - Extends the standard Back Office layout to get the side menu, header, styles, etc.
+  - Expects variables provided by the controller:
+    - enableSidebar (bool)
+    - layoutTitle (string)
+    - layoutHeaderToolbarBtn (array)
+    - offerIntegrationGrid (array presented grid)
+#}
+
+{# Page title shown in the header #}
+{% block page_title %}
+  {{ layoutTitle|default('Offer Integration') }}
+{% endblock %}
+
+{# Header toolbar buttons #}
+{% block page_header_toolbar_btn %}
+  {% if layoutHeaderToolbarBtn is defined %}
+    {{ include('@PrestaShop/Admin/Common/HeaderToolbar/header_toolbar.html.twig', {
+      'headerToolbarButtons': layoutHeaderToolbarBtn
+    }) }}
+  {% endif %}
+{% endblock %}
+
+{# Main content: the Grid panel #}
+{% block content %}
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {
+    'grid': offerIntegrationGrid
+  }) }}
+{% endblock %}

@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="card-header">Plasmasnijden</div>
+  <div class="card-body">
+    <p>De klant koopt altijd de volledige plaat van <strong>1000 x 500 mm</strong>. Alle uitsneden en het restmateriaal worden meegeleverd.</p>
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 text-right" for="MSTHEMECONFIG_PLASMA_ENABLED">Plasmasnijden actief</label>
+      <div class="col-xs-8">
+        <select class="form-control" id="MSTHEMECONFIG_PLASMA_ENABLED" name="MSTHEMECONFIG_PLASMA_ENABLED">
+          <option value="0"{% if plasma_settings.MSTHEMECONFIG_PLASMA_ENABLED != '1' %} selected{% endif %}>Uitgeschakeld</option>
+          <option value="1"{% if plasma_settings.MSTHEMECONFIG_PLASMA_ENABLED == '1' %} selected{% endif %}>Ingeschakeld</option>
+        </select>
+        <p class="help-block">Vul eerst de productkoppelingen en gevalideerde machineparameters in. Activeer vervolgens de gewenste producten via Catalogus &gt; Product &gt; Details.</p>
+      </div>
+    </div>
+    {% set mappings = {'MATERIAL': 'Materiaal', 'WIDTH': 'Plaatbreedte (1000 mm)', 'HEIGHT': 'Plaathoogte (500 mm)', 'THICKNESS': 'Plaatdikte (mm)'} %}
+    {% for suffix, label in mappings %}
+      {% set key = 'MSTHEMECONFIG_PLASMA_' ~ suffix ~ '_SOURCE' %}
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 text-right" for="{{ key }}">{{ label }}</label>
+        <div class="col-xs-8">
+          <select name="{{ key }}" id="{{ key }}" class="form-control">
+            <option value="">{% if suffix == 'WIDTH' or suffix == 'HEIGHT' %}Vaste voorraadmaat gebruiken{% else %}Selecteer kenmerk of attribuutgroep{% endif %}</option>
+            {% for source in plasma_sources %}
+              <option value="{{ source.value }}"{% if plasma_settings[key] == source.value %} selected{% endif %}>{{ source.label }}</option>
+            {% endfor %}
+          </select>
+          {% if suffix == 'MATERIAL' %}<p class="help-block">Ondersteund: Steel (Staal), Aluminium, Corten, Zicor en RVS. Attributen worden uit de geselecteerde productcombinatie gelezen.</p>{% endif %}
+          {% if suffix == 'WIDTH' or suffix == 'HEIGHT' %}<p class="help-block">Een gekoppelde waarde moet overeenkomen met de vaste voorraadmaat. Maten en dikte in mm.</p>{% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    {% set machine_fields = {'FEED_RATE': 'Snijsnelheid (mm/min)', 'PIERCE_TIME': 'Doorsteektijd (seconden)', 'LEAD_IN_LENGTH': 'Aanlooplengte (mm)', 'OPERATING_COST_PER_MINUTE': 'Machinekosten per minuut (excl. btw, standaardvaluta)'} %}
+    {% for suffix, label in machine_fields %}
+      {% set key = 'MSTHEMECONFIG_PLASMA_' ~ suffix %}
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 text-right" for="{{ key }}">{{ label }}</label>
+        <div class="col-xs-8">
+          <input type="number" name="{{ key }}" id="{{ key }}" value="{{ plasma_settings[key] }}" class="form-control" min="{% if suffix == 'FEED_RATE' or suffix == 'OPERATING_COST_PER_MINUTE' %}0.0001{% else %}0{% endif %}" max="1000000" step="any">
+          <p class="help-block">Standaardwaarde; per product overschrijfbaar voor materiaal en dikte.</p>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="form-group col-xs-12">
+      <label class="control-label col-xs-4 text-right" for="MSTHEMECONFIG_PLASMA_PYTHON_BINARY">Python-programma</label>
+      <div class="col-xs-8">
+        <input type="text" name="MSTHEMECONFIG_PLASMA_PYTHON_BINARY" id="MSTHEMECONFIG_PLASMA_PYTHON_BINARY" value="{{ plasma_settings.MSTHEMECONFIG_PLASMA_PYTHON_BINARY }}" class="form-control" maxlength="500" placeholder="/opt/plasma/.venv/bin/python">
+        <p class="help-block">Pad naar Python met de geïnstalleerde parserdependencies, zonder extra argumenten.</p>
+      </div>
+    </div>
+    <div class="form-group col-xs-12">
+      <a class="btn btn-primary" href="{{ plasma_library_url }}"><i class="icon-folder-open"></i> Onderdelenbibliotheek beheren</a>
+    </div>
+  </div>
+</div>

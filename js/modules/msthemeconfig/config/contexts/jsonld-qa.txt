@@ -1,0 +1,80 @@
+### AANVULLENDE CONTEXT: SEO FAQ JSON-LD GENERATIE — DE MODERNE SMID / IJZERSHOP.NL
+
+Naast de reguliere productbeschrijving genereer je ook een FAQPage JSON-LD object voor Google Rich Results.
+Dit JSON-LD wordt opgeslagen als string in het veld `seo_jsonld` van de JSON-response.
+
+#### FORMAAT
+Het `seo_jsonld` veld moet een geldige JSON-string zijn (geen markdown, geen code-fences) in dit formaat:
+
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "[vraag]",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "[antwoord, plain text, max 300 tekens per antwoord]"
+      }
+    }
+  ]
+}
+
+#### AANTAL VRAGEN
+Genereer altijd precies 5 vragen per product. Kies de 5 meest relevante vraagtypes op basis van de productcategorie.
+
+#### BASELINE VRAAGTYPES (kies de 5 meest passende)
+
+1. **Materiaaleigenschappen**
+   Voorbeeld: "Waarvan is dit product gemaakt?" / "Wat is het materiaal van [productnaam]?"
+   → Beschrijf het materiaal, eventuele behandeling (verzinkt, gecoat, onbehandeld) en waarom dat geschikt is.
+
+2. **Toepassingen & gebruik**
+   Voorbeeld: "Waarvoor gebruik ik [productnaam]?" / "Voor welke projecten is dit geschikt?"
+   → Noem 2–3 concrete toepassingen (constructie, frame, beugel, lasproject, renovatie, enz.).
+
+3. **Afmetingen & maatvoering**
+   Voorbeeld: "In welke maten is dit product leverbaar?" / "Wat zijn de standaardlengtes?"
+   → Verwijs naar de specificaties in de productpagina en de maximale verzendlengte van 2000 mm indien van toepassing.
+
+4. **Bestellen op maat / zaagservice**
+   Voorbeeld: "Kan ik dit product op maat laten zagen?" / "Hoe bestel ik de juiste lengte?"
+   → Leg uit dat producten in volledige lengtes worden besteld en dat de zaagservice producten op 1 of 2 meter levert.
+   Alleen opnemen bij staalprofielen, buizen, platen, strips, balken, stafmateriaal.
+
+5. **Compatibiliteit & geschiktheid**
+   Voorbeeld: "Is dit product geschikt voor buitengebruik?" / "Kan ik dit lassen of boren?"
+   → Geef aan met welke bewerkingen (lassen, boren, zagen, schilderen) het product compatibel is.
+
+6. **Oppervlaktebehandeling & coating**
+   Voorbeeld: "Moet ik dit product nog behandelen?" / "Is dit product roestbestendig?"
+   → Beschrijf de standaardafwerking en geef advies over primer/coating indien nodig.
+   Vooral relevant voor staalproducten, plaatmateriaal en constructieprofielen.
+
+7. **Verzending & levertijd**
+   Voorbeeld: "Hoe snel wordt dit geleverd?" / "Kan ik grote lengtes laten bezorgen?"
+   → Vermeld dat de maximale verzendlengte 2000 mm is en dat het team meedenkt over oplossingen.
+
+8. **Onderhoud & levensduur**
+   Voorbeeld: "Hoe onderhoud ik dit product?" / "Hoe lang gaat dit product mee?"
+   → Geef praktisch onderhoudadvies passend bij het product (reinigen, nalubriceren, beschermen, enz.).
+
+9. **Lassen & bewerken**
+   Voorbeeld: "Welk lasproces gebruik ik voor dit product?" / "Welke elektroden zijn geschikt?"
+   → Relevant voor lasaccessoires, electroden, lasdraad, profielen die gelast worden.
+
+10. **Veiligheid & normen**
+    Voorbeeld: "Aan welke normen voldoet dit product?" / "Is er een veiligheidsinformatieblad beschikbaar?"
+    → Alleen opnemen als er relevante info beschikbaar is op basis van de productnaam/categorie. Doe geen uitspraken over certificeringen tenzij die in de productgegevens staan.
+
+#### TAALVEREISTEN
+- Schrijf alle vragen en antwoorden in correct Nederlands.
+- Gebruik korte, heldere antwoorden (max 300 tekens per antwoord).
+- Schrijf vanuit klantenstandpunt: directe, praktische antwoorden.
+- Geen HTML in de antwoordtekst van het JSON-LD — plain text only.
+
+#### VERBODEN
+- Geen verzonnen specificaties, certificeringen of maatgegevens die niet uit de productnaam/kenmerken volgen.
+- Geen vragen over prijs (prijzen zijn dynamisch en niet geschikt voor FAQ schema).
+- Geen vragen die niet van toepassing zijn op het product.

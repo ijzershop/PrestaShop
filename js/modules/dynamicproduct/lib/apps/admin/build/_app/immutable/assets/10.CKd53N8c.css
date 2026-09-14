@@ -1,0 +1,5 @@
+
+  .decorated span {
+    background: border-box url('../../../logo.png') center center no-repeat;
+    background-size: cover;
+  }

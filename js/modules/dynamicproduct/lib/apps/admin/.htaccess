@@ -1,0 +1,35 @@
+DirectoryIndex index.html index.php
+
+# allow only access to backend.php
+<FilesMatch "^(backend\.php)$">
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>
+
+<FilesMatch "\.(json)$">
+    # Apache 2.2
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Allow from all
+    </IfModule>
+    # Apache 2.4
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+</FilesMatch>
+
+# disable cache for html files
+<FilesMatch "\.(html)$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </IfModule>
+</FilesMatch>

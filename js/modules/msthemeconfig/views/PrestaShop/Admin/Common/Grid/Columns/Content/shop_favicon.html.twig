@@ -1,0 +1,17 @@
+{# external/modernesmid_webshop/module/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/shop_favicon.html.twig #}
+{% set shop_id = record[column.options.shop_id_field] %}
+{% set shop_name = record[column.options.shop_name_field] %}
+{% set favicon_url = _PS_IMG_ ~ 'favicon.ico' %}
+
+<div class="text-center">
+    {% if shop_id %}
+        <img src="{{ _PS_IMG_ }}favicon-{{ shop_id }}.ico"
+             alt="{{ shop_name }}"
+             title="{{ shop_name }}"
+             style="max-width: 32px; max-height: 32px;"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span style="display:none;">{{ shop_name }}</span>
+    {% else %}
+        {{ shop_name }}
+    {% endif %}
+</div>

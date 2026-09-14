@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-header">
+    Algemeen
+  </div>
+  <div class="card-body">
+
+      {#   Account Token   #}
+      <div class="form-group col-xs-12" data-tab-id="main_settings">
+        <br>
+        <label class="control-label col-xs-4 text-right">Account token</label>
+        <div class="col-xs-8">
+          <div class="input-group"><span class="input-group-addon"><i class="icon-key"></i></span>
+            <input type="text" name="MSTHEMECONFIG_TOKEN" id="MSTHEMECONFIG_TOKEN"
+                   value="{{ MSTHEMECONFIG_TOKEN }}" class="form-control">
+          </div>
+          <p class="help-block">Vul hier je token in die je van Moderne Smid BV hebt ontvangen</p>
+        </div>
+      </div>
+
+      {#  Favicon Prefix  #}
+      <div class="form-group col-xs-12" data-tab-id="main_settings">
+        <label class="control-label col-xs-4 text-right">Favicon prefix</label>
+        <div class="col-xs-8">
+          <input type="text" name="MSTHEMECONFIG_FAVICON_SHOP"
+                 id="MSTHEMECONFIG_FAVICON_SHOP" value="{{ MSTHEMECONFIG_FAVICON_SHOP }}"
+                 class="form-control">
+          <p class="help-block">Vul de map‑prefix in voor de favicons</p>
+        </div>
+      </div>
+
+    {#  Show Payment Error Checkout  #}
+    <div class="form-group col-xs-12" data-tab-id="main_settings">
+      <label class="control-label col-xs-4 text-right">Toon betaalfout bij checkout</label>
+      <div class="col-xs-8">
+        <div class="form-check form-switch">
+          <input type="checkbox" name="MSTHEMECONFIG_SHOW_PAYMENT_ERROR_CHECKOUT"
+                 id="MSTHEMECONFIG_SHOW_PAYMENT_ERROR_CHECKOUT"
+                 value="1"
+                 class="form-check-input"
+                 {% if MSTHEMECONFIG_SHOW_PAYMENT_ERROR_CHECKOUT %}checked{% endif %}>
+        </div>
+        <p class="help-block">Schakel in om betaalfouten te tonen tijdens het afrekenproces</p>
+      </div>
+    </div>
+
+  </div>
+</div>

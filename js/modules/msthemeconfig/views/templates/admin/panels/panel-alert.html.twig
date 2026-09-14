@@ -1,0 +1,69 @@
+<div class="card">
+  <div class="card-header">
+    Alert
+  </div>
+  <div class="card-body">
+
+      <div class="form-group col-xs-12">
+        <br>
+        <label class="control-label col-xs-4 text-right">
+          Pagina's waar notificatie word getoond
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES[]" class="w-100 select2-data-input"
+                  data-type="notification_pages" id="MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES"
+                  multiple="multiple" size="15">
+            {{ MSTHEMECONFIG_SHOP_NOTIFICATION_PAGES|raw }}
+          </select>
+          <p class="help-block">Selecteer alle pagina's waar u de notificatie wilt tonen</p>
+        </div>
+      </div>
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 text-right">
+          Notificatie type
+        </label>
+        <div class="col-xs-8">
+          <select name="MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE" class="w-100"
+                  id="MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE">
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'primary' %}selected{% endif %}
+                    value="primary" title="Standaard blauw">Standaard blauw
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'info' %}selected{% endif %}
+                    value="info" title="Informatie blauw">Informatie blauw
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'success' %}selected{% endif %}
+                    value="success" title="Succes groen">Succes groen
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'warning' %}selected{% endif %}
+                    value="warning" title="Waarschuwing oranje">Waarschuwing oranje
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'danger' %}selected{% endif %}
+                    value="danger" title="Verboden rood">Verboden rood
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'light' %}selected{% endif %}
+                    value="light" title="Licht grijs">Licht grijs
+            </option>
+            <option {% if MSTHEMECONFIG_SHOP_NOTIFICATION_TYPE == 'dark' %}selected{% endif %}
+                    value="dark" title="Donker grijs">Donker grijs
+            </option>
+          </select>
+          <p class="help-block">Selecteer het notificatie type</p>
+        </div>
+      </div>
+      <div class="form-group col-xs-12">
+        <label class="control-label col-xs-4 text-right">
+            <span class="label-tooltip" data-toggle="tooltip" data-html="true" title=""
+                  data-original-title="Only tekst is allowed">
+            Notificatie Bericht
+            </span>
+        </label>
+        <div class="col-xs-8">
+          <textarea name="MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT"
+                    id="MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT" cols="60" rows="10"
+                    class="rte autoload_rte">{{ MSTHEMECONFIG_SHOP_NOTIFICATION_TEXT|raw }}</textarea>
+          <p class="help-block">Enter the notification you would like to show on the selected pages</p>
+        </div>
+      </div>
+
+  </div>
+</div>

@@ -1,0 +1,83 @@
+<?php
+/**
+ * 2007-2020 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * @since 1.5.0
+ */
+class Ps_PinpaymentValidationModuleFrontController extends ModuleFrontController
+{
+    /**
+     * @see FrontController::postProcess()
+     */
+    public function postProcess()
+    {
+        $cart = $this->context->cart;
+        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active) {
+            Tools::redirect('index.php?controller=order&step=1');
+        }
+
+        // Check that this payment option is still available in case the customer changed his address just before the end of the checkout process
+        $authorized = false;
+        foreach (Module::getPaymentModules() as $module) {
+            if ($module['name'] == 'ps_pinpayment') {
+                $authorized = true;
+                break;
+            }
+        }
+        if (!$authorized) {
+            $this->errors[] = $this->module->getTranslator()->trans('This payment method is not available.', array(), 'Modules.Pinpayment.Shop');
+            $this->redirectWithNotifications('index.php?controller=order&step=1');
+        }
+
+        $customer = new Customer($cart->id_customer);
+        if (!Validate::isLoadedObject($customer)) {
+            Tools::redirect('index.php?controller=order&step=1');
+        }
+
+        $currency = $this->context->currency;
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+
+        $virtual_product = true;
+        foreach ($cart->getProducts() as $product) {
+            if (!$product['is_virtual']) {
+                $virtual_product = false;
+                break;
+            }
+        }
+
+        // Signal to hookDisplayPaymentReturn that this module placed the order
+        Configuration::updateValue(Ps_Pinpayment::FLAG_DISPLAY_PAYMENT_INVITE, 1);
+
+        $this->module->validateOrder(
+            $cart->id,
+            Configuration::get('BANK_PIN_COMPLETE_STATE', $this->context->language->id, $this->context->shop->id_shop_group, $this->context->shop->id),
+            $total,
+            'PIN Betaling',
+            null,
+            array(),
+            (int)$currency->id,
+            false,
+            $customer->secure_key,
+            $this->context->shop
+        );
+
+        Tools::redirect('index.php?controller=order-confirmation&id_cart='.$cart->id.'&id_module='.$this->module->id.'&id_order='.$this->module->currentOrder.'&key='.$customer->secure_key);
+    }
+}

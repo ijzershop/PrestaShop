@@ -1,0 +1,14 @@
+{# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Actions/Row/shipping_state_action.html.twig #}
+ {% if record.current_state in action.options.acceptedStates %}
+
+  <button type="button"
+          class="btn tooltip-link js-link-row-action dropdown-item inline-dropdown-item showShippingState"
+          data-order-id="{{ record.id_order }}"
+          data-order-reference="{% if record.added_to_order == "" %}{{ record.reference }}{% else %}{{ record.added_to_order }}{% endif %}"
+          data-order-added-reference="{{ record.added_to_order }}"
+          data-toggle="pstooltip"
+          data-placement="top"
+          data-original-title="{{ action.options.label }}">
+    <span class="material-icons">schedule_send</span>
+  </button>
+{% endif %}

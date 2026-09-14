@@ -1,0 +1,17 @@
+{# external/modernesmid_webshop/module/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Actions/Row/preview_row_action.html.twig #}
+{% set params = {} %}
+{% for param_name, record_field in action.options.preview_route_params %}
+    {% set params = params|merge({ (param_name): record[record_field] }) %}
+{% endfor %}
+
+<button type="button"
+        class="btn tooltip-link dropdown-item inline-dropdown-item preview-toggle"
+        data-preview-data-url="{{ path(action.options.preview_data_route, params) }}"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ action.options.label }}"
+        data-icon-expand="{{ action.options.icon_expand }}"
+        data-icon-collapse="{{ action.options.icon_collapse }}"
+>
+    <i class="material-icons">{{ action.options.icon_expand }}</i>
+</button>

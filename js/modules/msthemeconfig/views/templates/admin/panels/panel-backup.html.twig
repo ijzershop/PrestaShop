@@ -1,0 +1,30 @@
+{# Backup & Restore panel — loaded via AJAX in Configure page #}
+<div class="panel" style="height: 800px!important;">
+  <div class="card-sub-header">
+    <span class="star">★</span> Backup &amp; Restore
+  </div>
+  <p>
+    Gebruik dit paneel om een volledige 1:1 catalogus‑backup te maken en te herstellen.
+    Bestanden worden geplaatst in
+    <code>external/modernesmid_webshop/scripts/data</code> binnen je shoproot.
+  </p>
+
+  <div class="alert alert-info" style="margin-top:10px">
+    <ul style="margin:0 0 0 18px;">
+      <li>Export maakt een JSON en een of meerdere ZIP‑delen met afbeeldingen (&lt;=10MB per deel).</li>
+      <li>Import voert een 1:1 restore uit met behoud van IDs. Gebruik dit op een lege/nieuwe omgeving.</li>
+      <li>Multistore wordt strikt gevalideerd; topologie moet overeenkomen.</li>
+    </ul>
+  </div>
+
+  <p style="margin:10px 0">
+    <a class="btn btn-default" target="_blank" href="{{ console_link }}">
+      Open console in nieuw venster
+    </a>
+  </p>
+
+  <div style="border:1px solid #ccc;border-radius:4px;height:480px;">
+    <iframe src="{{ console_link }}"
+            style="width:100%;height:100%;border:0" title="Backup Console"></iframe>
+  </div>
+</div>

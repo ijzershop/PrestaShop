@@ -1,0 +1,117 @@
+imports:
+  - { resource: services_parts/order.yml }
+  - { resource: services_parts/address.yml }
+  - { resource: services_parts/customer.yml }
+  - { resource: services_parts/pdf.yml }
+  - { resource: services_parts/offers.yml }
+  - { resource: services_parts/gdpr.yml }
+
+services:
+  _defaults:
+    public: true
+    autowire: true
+    autoconfigure: true
+    bind:
+      Symfony\Contracts\Translation\TranslatorInterface: '@translator'
+
+  # Core interface aliases to ensure availability in locator
+
+  # Decorate Smarty configuration to normalize multistore array values
+  msthemeconfig.smarty_cache.configuration:
+    class: MsThemeConfig\Adapter\Smarty\SmartyCacheConfigurationDecorator
+    decorates: prestashop.adapter.smarty_cache.configuration
+    decoration_inner_name: prestashop.adapter.smarty_cache.configuration.inner
+    public: false
+    arguments:
+      - '@prestashop.adapter.smarty_cache.configuration.inner'
+
+  # ModernAjax as a service to avoid fetching private services from container
+  MsThemeConfig\Class\ModernAjax:
+    class: MsThemeConfig\Class\ModernAjax
+    public: true
+    arguments:
+      - '@router'
+      - '@security.csrf.token_manager'
+
+  # ModernHook as a service to avoid fetching private twig service from container
+  MsThemeConfig\Class\ModernHook:
+    class: MsThemeConfig\Class\ModernHook
+    public: true
+    arguments:
+      - '@msthemeconfig.module'
+      - '@prestashop.adapter.legacy.context'
+      - '@twig'
+
+  # ModernConfigurator as a service to avoid fetching private twig service from container
+  MsThemeConfig\Class\ModernConfigurator:
+    class: MsThemeConfig\Class\ModernConfigurator
+    public: true
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@twig'
+
+  # Define the module as a service for ModernHook injection
+  msthemeconfig.module:
+    class: MsThemeConfig
+    factory: ['Module', 'getInstanceByName']
+    arguments: ['msthemeconfig']
+
+  msthemeconfig.tokenized_url_listener:
+    class: MsThemeConfig\EventListener\DmsTokenizedUrlsListener
+    arguments:
+      - "@security.csrf.token_manager"
+      - "@router"
+      - "@security.helper"
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: DmsOnKernelRequest }
+
+
+  # If you have other controllers, register them too
+  MsThemeConfig\Controller\Admin\MsAdminThemeConfController:
+    class: MsThemeConfig\Controller\Admin\MsAdminThemeConfController
+    public: true
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\AdminOfferController:
+    class: MsThemeConfig\Controller\Admin\AdminOfferController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\MsAdminAjaxController:
+    class: MsThemeConfig\Controller\Admin\MsAdminAjaxController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\DmsAdminCustomerController:
+    class: MsThemeConfig\Controller\Admin\DmsAdminCustomerController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\DmsMailThemeController:
+    class: MsThemeConfig\Controller\Admin\DmsMailThemeController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  # PrestaShop 9.1.5 handles both legacy and feature-flagged catalog price rules.
+  # Use its form service so the upstream route and placeholder fixes remain active.
+
+  MsThemeConfig\Controller\Admin\DmsAdminCategoryController:
+    class: MsThemeConfig\Controller\Admin\DmsAdminCategoryController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\DmsAdminOrderController:
+    class: MsThemeConfig\Controller\Admin\DmsAdminOrderController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\KoopmanReturnController:
+    class: MsThemeConfig\Controller\Admin\KoopmanReturnController
+    tags:
+      - { name: 'controller.service_arguments' }
+
+  MsThemeConfig\Controller\Admin\DmsAdminAddressController:
+    class: MsThemeConfig\Controller\Admin\DmsAdminAddressController
+    tags:
+      - { name: 'controller.service_arguments' }

@@ -232,3 +232,4 @@ docker-compose.override.yml
 
 # config vscode
 .hintrc
+override.bak_20260914091050/

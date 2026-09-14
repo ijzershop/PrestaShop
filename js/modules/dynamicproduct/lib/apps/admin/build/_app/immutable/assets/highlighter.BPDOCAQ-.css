@@ -1,0 +1,56 @@
+.cm-name {
+    color: #2196f3;
+}
+
+.cm-paren {
+    color: #a020f0;
+}
+
+.cm-bool {
+    color: #a020f0;
+}
+
+.cm-operator {
+    color: #03a9f4;
+}
+
+.cm-number {
+    color: #4caf50;
+}
+
+.cm-field {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.cm-lintRange-error .cm-name {
+    color: #f44336 !important;
+}
+
+.rainbow-bracket-red, .rainbow-bracket-red > span {
+    color: #ff6b6b !important;
+}
+
+.rainbow-bracket-orange, .rainbow-bracket-orange > span {
+    color: #ffa500 !important;
+}
+
+.rainbow-bracket-yellow, .rainbow-bracket-yellow > span {
+    color: #cddc39 !important;
+}
+
+.rainbow-bracket-green, .rainbow-bracket-green > span {
+    color: #4caf50 !important;
+}
+
+.rainbow-bracket-blue, .rainbow-bracket-blue > span {
+    color: #2196f3 !important;
+}
+
+.rainbow-bracket-indigo, .rainbow-bracket-indigo > span {
+    color: #6610f2 !important;
+}
+
+.rainbow-bracket-violet, .rainbow-bracket-violet > span {
+    color: #a020f0 !important;
+}

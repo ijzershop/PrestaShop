@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace app\Resources\cron_scripts;
 
-require_once dirname(__DIR__).'./../../config/config.inc.php';
+require_once __DIR__ . '/shop-root.php';
+require_once modernesmidCronShopRoot() . '/config/config.inc.php';
 $_SERVER['REQUEST_METHOD'] = 'POST';
-require_once dirname(__DIR__).'./../../vendor/autoload.php';
+require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
 
 use Configuration;
 use Context;
@@ -121,7 +122,7 @@ class OrderSlipGenerator
         $this->createOrderSlipBatch($order_invoice_collection);
 
         if(count($this->errorRecords) > 0){
-            file_put_contents(dirname(__DIR__).'./../../var/logs/custom.log',
+            file_put_contents(_PS_ROOT_DIR_ . '/var/logs/custom.log',
                 "<pre>" . print_r($this->errorRecords) . "</pre>\n",
                 FILE_APPEND,
                 true);
@@ -246,7 +247,7 @@ class OrderSlipGenerator
         $delivery_slip_pdf = $pdf_file->render(false);
         $this->slipTime = time();
 
-        file_put_contents(dirname(__FILE__, 4).'/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
+        file_put_contents(_PS_ROOT_DIR_ . '/upload/pakbonnen/pakbonnen_'.$this->slipTime.'.pdf', $delivery_slip_pdf);
         return true;
     }
 }

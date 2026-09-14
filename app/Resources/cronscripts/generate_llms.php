@@ -3,7 +3,8 @@
  * Script to generate llms.txt for PrestaShop
  */
 
-require_once __DIR__ . '/config/config.inc.php';
+require_once __DIR__ . '/shop-root.php';
+require_once modernesmidCronShopRoot() . '/config/config.inc.php';
 
 function cleanText($text) {
     if (empty($text)) {

@@ -1,6 +1,26 @@
-<!--*
- * For the full copyright and license information, please view the
- * docs/licenses/LICENSE.txt file that was distributed with this source code.
+<!--**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *-->
 <template>
   <div>
@@ -46,7 +66,7 @@
         :permission-id="pId.toString()"
         :permission-key="permissionKey"
         :level-depth="levelDepth + 1"
-        :profile-permissions.sync="profilePermissions"
+        :profile-permissions="profilePermissions"
         :employee-permissions="employeePermissions"
         :types="types"
         @childUpdated="onChildUpdate"
@@ -77,28 +97,33 @@
       },
       profilePermissions: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       employeePermissions: {
-        type: Object,
+        type: [Object, Array],
         required: false,
         default: () => ({}),
       },
       permission: {
         type: Object,
-        required: true,
+        required: false,
+        default: () => ({}),
       },
       permissionId: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       permissionKey: {
         type: String,
-        required: true,
+        required: false,
+        default: '',
       },
       levelDepth: {
         type: Number,
-        required: true,
+        required: false,
+        default: 1,
       },
       canEdit: {
         type: Boolean,
@@ -107,7 +132,8 @@
       },
       types: {
         type: Array as PropType<Array<string>>,
-        required: true,
+        required: false,
+        default: () => ([]),
       },
     },
     data(): {permissionValues: Array<string>, TYPE_ALL: string} {
@@ -142,12 +168,12 @@
     methods: {
       canEditCheckbox(type: string): boolean {
         // We don't check for employee permissions
-        if (Object.keys(this.employeePermissions).length === 0) {
+        if (!this.employeePermissions || (Array.isArray(this.employeePermissions) && this.employeePermissions.length === 0) || Object.keys(this.employeePermissions).length === 0) {
           return true;
         }
 
         // Permission id not found
-        if (!this.employeePermissions[this.permissionId]) {
+        if (!(this.permissionId in this.employeePermissions)) {
           return false;
         }
 
@@ -189,7 +215,11 @@
       hasPermission(type: string): boolean {
         const permission = this.getPermission();
 
-        return permission !== undefined && parseInt(permission[type], 10) === 1;
+        if (permission === undefined) {
+          return false;
+        }
+
+        return parseInt(permission[type], 10) === 1;
       },
       /**
        * Refresh permissions and checkboxes
@@ -263,9 +293,11 @@
         }
 
         // Update profile permission to prevent wrong bulk refresh
-        this.types.forEach((t) => {
-          this.profilePermissions[this.permissionId][<string>t] = this.permissionValues.includes(<string>t) ? '1' : '0';
-        });
+        if (this.profilePermissions[this.permissionId]) {
+          this.types.forEach((t) => {
+            this.profilePermissions[this.permissionId][<string>t] = this.permissionValues.includes(<string>t) ? '1' : '0';
+          });
+        }
 
         if (this.permissionValues.includes(type)) {
           this.$emit('childUpdated', type);

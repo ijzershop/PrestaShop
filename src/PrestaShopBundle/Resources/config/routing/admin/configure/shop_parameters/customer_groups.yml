@@ -34,6 +34,8 @@ admin_customer_groups_edit:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerGroupsController::editAction'
     _legacy_controller: AdminGroups
     _legacy_link: AdminGroups:updategroup
+    _legacy_parameters:
+      id_group: groupId
     _legacy_feature_flag: customer_group
   requirements:
     groupId: \d+

@@ -1,0 +1,406 @@
+{# Catalog backup/restore panel (SuperAdmin only) #}
+<div class="panel">
+    <style type="text/css">
+      /* Bootstrap 5 Essential Styles for catalog_backup.tpl */
+
+      /* Box sizing */
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      /* Grid columns */
+      [class*="col-"] {
+        position: relative;
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+
+      @media (min-width: 992px) {
+        .col-lg-2 { width: 16.666667%; }
+        .col-lg-10 { width: 83.333333%; }
+      }
+
+      /* Buttons */
+      .btn {
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: center;
+        text-decoration: none;
+        vertical-align: middle;
+        cursor: pointer;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid transparent;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        border-radius: 0.25rem;
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .btn:hover {
+        color: #212529;
+      }
+
+      .btn:focus {
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .btn-primary {
+        color: #fff;
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+      }
+
+      .btn-primary:hover {
+        color: #fff;
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+      }
+
+      .btn-primary:focus {
+        box-shadow: 0 0 0 0.25rem rgba(49, 132, 253, 0.5);
+      }
+
+      .btn-warning {
+        color: #000;
+        background-color: #ffc107;
+        border-color: #ffc107;
+      }
+
+      .btn-warning:hover {
+        color: #000;
+        background-color: #ffca2c;
+        border-color: #ffc720;
+      }
+
+      .btn-warning:focus {
+        box-shadow: 0 0 0 0.25rem rgba(217, 164, 6, 0.5);
+      }
+
+      /* Forms */
+      .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      }
+
+      .form-control:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+
+      .form-control::placeholder {
+        color: #6c757d;
+        opacity: 1;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-horizontal .form-group {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      .control-label {
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+        margin-bottom: 0;
+        font-weight: 500;
+      }
+
+      .help-block {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #6c757d;
+      }
+
+      /* Labels/Badges */
+      .label {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: 0.75em;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        border-radius: 0.25rem;
+      }
+
+      .label-default {
+        background-color: #6c757d;
+      }
+
+      .label-info {
+        background-color: #0dcaf0;
+        color: #000;
+      }
+
+      .label-warning {
+        background-color: #ffc107;
+        color: #000;
+      }
+
+      .label-danger {
+        background-color: #dc3545;
+      }
+
+      /* Panel */
+      .panel {
+        background-color: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.125);
+        border-radius: 0.25rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .panel h3 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      /* Code */
+      code {
+        font-size: 0.875em;
+        color: #d63384;
+        background-color: #f8f9fa;
+        padding: 0.2em 0.4em;
+        border-radius: 0.25rem;
+      }
+
+      /* Horizontal rule */
+      hr {
+        margin: 1rem 0;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Icon spacing */
+      .btn i, h3 i {
+        margin-right: 0.5rem;
+      }
+    </style>
+  <h3><i class="icon-database"></i> {{ 'Catalog backup/restore'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</h3>
+
+  <p>
+    {{ 'This tool lets you create a full 1:1 backup of categories, products, combinations, features, tags, specific prices, stock and images, and restore it into a clean shop. Artifacts are written to:'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+    <code>{{ data_dir|e('html') }}</code>
+  </p>
+
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label class="control-label col-lg-2">{{ 'Export catalog'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</label>
+      <div class="col-lg-10">
+        <button id="ms-export" class="btn btn-primary">
+          <i class="icon-download"></i> {{ 'Start export'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+        </button>
+        <span class="help-block">
+          {{ 'Writes JSON and image ZIP parts into scripts/data. The console output appears below.'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+        </span>
+        <div style="margin-top:8px">
+          <label style="margin-right:12px">
+            <input type="checkbox" id="ms-include-config" />
+            {{ 'Also export configuration'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+          </label>
+          <select id="ms-config-mode" class="form-control" style="display:inline-block;width:auto;vertical-align:middle;margin-left:8px">
+            <option value="used">{{ 'Config mode: used keys'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</option>
+            <option value="all">{{ 'Config mode: all keys'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</option>
+          </select>
+        </div>
+        <div style="margin-top:8px">
+          <label>
+            <input type="checkbox" id="ms-include-shipping" />
+            {{ 'Also export shipping & payments'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+          </label>
+        </div>
+        <div style="margin-top:8px">
+          <label>
+            <input type="checkbox" id="ms-include-uploads" />
+            {{ 'Also export uploads folder (upload/)'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-lg-2">{{ 'Import catalog'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</label>
+      <div class="col-lg-10">
+        <input type="text" id="ms-import-json" class="form-control" placeholder="{{ data_dir|e('html') }}/catalog-export-YYYYMMDDHHMMSS.json" />
+        <div style="margin-top:8px">
+          <button id="ms-import" class="btn btn-warning">
+            <i class="icon-upload"></i> {{ 'Start import (strict shops, wipe catalog)'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+          </button>
+        </div>
+        <span class="help-block">
+          {{ 'Restores into this shop with the original IDs. Use on a new/empty target. The console output appears below.'|trans({}, 'Modules.MsThemeConfig.BackupController') }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+  <div id="terminal" style="height:380px;border:1px solid #ccc;border-radius:4px"></div>
+  <div style="margin-top:6px">
+    <span id="ms-status" class="label label-default">{{ 'Idle'|trans({}, 'Modules.MsThemeConfig.BackupController') }}</span>
+  </div>
+  <div id="ms-downloads" style="margin-top:10px; display:none">
+    <strong>{{ 'Downloads'|trans({}, 'Modules.MsThemeConfig.BackupController') }}:</strong>
+    <ul id="ms-downloads-list" style="margin:6px 0 0 18px;"></ul>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+<script>
+(function() {
+  let ajaxUrl = '{{ ajax_url | raw}}';
+  let term = new window.Terminal({ convertEol: true, disableStdin: true, fontFamily: 'monospace', fontSize: 12 });
+  term.open(document.getElementById('terminal'));
+  let statusEl = document.getElementById('ms-status');
+  let tailTimer = null, tailOffset = 0, tailLog = null;
+  let downloadsBox = document.getElementById('ms-downloads');
+  let downloadsList = document.getElementById('ms-downloads-list');
+
+  function setStatus(text, cls) {
+    statusEl.textContent = text;
+    statusEl.className = 'label ' + (cls || 'label-default');
+  }
+
+  function stopTail() {
+    if (tailTimer) {
+      clearInterval(tailTimer);
+      tailTimer = null;
+    }
+  }
+
+  function startTail(logPath) {
+    if (!logPath) return;
+    tailLog = logPath; tailOffset = 0;
+    if (tailTimer) { clearInterval(tailTimer); }
+    tailTimer = setInterval(function() {
+      let url = ajaxUrl + '&action=Tail&log=' + encodeURIComponent(tailLog) + '&offset=' + tailOffset;
+      fetch(url, { credentials: 'same-origin' }).then(r => r.json()).then(function(j){
+        if (!j || !j.ok) return;
+        if (j.data) { term.write(j.data.replace(/\n/g, '\r\n')); }
+        tailOffset = j.offset || tailOffset;
+      }).catch(function(){});
+    }, 900);
+  }
+
+  function startExport() {
+    term.clear(); setStatus('Export running...', 'label-info');
+    stopTail(); // ensure no previous tail keeps running
+    // Hide previous downloads
+    if (downloadsBox) { downloadsBox.style.display = 'none'; downloadsList.innerHTML = ''; }
+    let includeConfig = document.getElementById('ms-include-config').checked ? '1' : '0';
+    let configMode = document.getElementById('ms-config-mode').value || 'used';
+    let includeShipping = document.getElementById('ms-include-shipping').checked ? '1' : '0';
+    let includeUploads = document.getElementById('ms-include-uploads').checked ? '1' : '0';
+    let url = ajaxUrl + '&action=StartExport'
+      + '&include_config=' + includeConfig
+      + '&config_mode=' + encodeURIComponent(configMode)
+      + '&include_shipping=' + includeShipping
+      + '&include_uploads=' + includeUploads;
+    fetch(url, { credentials: 'same-origin' }).then(r => r.json()).then(function(j){
+      if (j && j.ok) {
+        // Export runs synchronously server-side; when we get here it is finished.
+        // Fetch the final log once and show summary, then mark as Done and do not start tailing.
+        const logUrl = ajaxUrl + '&action=Tail&log=' + encodeURIComponent(j.log) + '&offset=0';
+        fetch(logUrl, { credentials: 'same-origin' }).then(r2 => r2.json()).then(function(t){
+          if (t && t.ok && t.data) { term.write(t.data.replace(/\n/g, '\r\n')); }
+        }).catch(function(){});
+        // Write a concise summary of artifacts
+        let parts = Array.isArray(j.image_parts) ? j.image_parts : [];
+        term.write('\r\n\x1b[1mExport completed successfully.\x1b[0m\r\n');
+        if (j.json) { term.write('JSON: ' + j.json + '\r\n'); }
+        if (parts.length) {
+          parts.forEach(function(p){ term.write('ZIP : ' + p + '\r\n'); });
+        } else {
+          term.write('(No image ZIPs created)\r\n');
+        }
+        if (j.config_json) { term.write('CONFIG: ' + j.config_json + '\r\n'); }
+        if (j.shipping_json) { term.write('SHIP/PAY: ' + j.shipping_json + '\r\n'); }
+        if (Array.isArray(j.uploads_parts) && j.uploads_parts.length) {
+          j.uploads_parts.forEach(function(p){ term.write('UPLOADS ZIP: ' + p + '\r\n'); });
+        }
+
+        // Build clickable download links
+        function addDownload(label, filePath) {
+          if (!filePath) return;
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.textContent = label;
+          a.href = ajaxUrl + '&action=Download&file=' + encodeURIComponent(filePath);
+          a.target = '_blank';
+          a.rel = 'noopener';
+          li.appendChild(a);
+          const small = document.createElement('div');
+          small.style.fontSize = '11px'; small.style.color = '#666';
+          small.textContent = filePath;
+          li.appendChild(small);
+          downloadsList.appendChild(li);
+        }
+
+        // Primary JSON
+        if (j.json) addDownload('Catalog JSON', j.json);
+        // Image ZIP parts
+        if (Array.isArray(j.image_parts)) {
+          j.image_parts.forEach(function(p, idx){ addDownload('Images ZIP part ' + (idx+1), p); });
+        }
+        // Optional extras
+        if (j.config_json) addDownload('Configuration JSON', j.config_json);
+        if (j.shipping_json) addDownload('Shipping & payments JSON', j.shipping_json);
+        if (Array.isArray(j.uploads_parts)) {
+          j.uploads_parts.forEach(function(p, idx){ addDownload('Uploads ZIP part ' + (idx+1), p); });
+        }
+        if (downloadsList.children.length > 0) { downloadsBox.style.display = 'block'; }
+        setStatus('Done', 'label-default');
+        stopTail();
+      }
+      else {
+        setStatus('Export failed', 'label-danger'); if (j && j.error) { term.write(j.error + '\r\n'); }
+        stopTail();
+      }
+    }).catch(function(e){ console.error(e); setStatus('Export failed', 'label-danger'); });
+  }
+
+  function startImport() {
+    let json = document.getElementById('ms-import-json').value.trim();
+    if (!json) { alert('Please provide JSON path under scripts/data'); return; }
+    term.clear(); setStatus('Import running...', 'label-warning');
+    let url = ajaxUrl + '&action=StartImport&json=' + encodeURIComponent(json);
+    fetch(url, { credentials: 'same-origin' }).then(r => r.json()).then(function(j){
+      if (j && j.ok) { startTail(j.log); }
+      else { setStatus('Import failed', 'label-danger'); if (j && j.error) term.write(j.error+'\r\n'); }
+    }).catch(function(e){ console.error(e); setStatus('Import failed', 'label-danger'); });
+  }
+
+  document.getElementById('ms-export').addEventListener('click', function(ev){ ev.preventDefault(); startExport(); });
+  document.getElementById('ms-import').addEventListener('click', function(ev){ ev.preventDefault(); startImport(); });
+})();
+</script>

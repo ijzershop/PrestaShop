@@ -5,8 +5,51 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="82b37cda-6a12-410a-bc19-dff2adda941a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/default/scss/partials/_header.scss" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/default/scss/partials/_header.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/.webpack/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/.webpack/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/bulk.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/bulk.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/row.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/row.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/permission.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/permission.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/components/components-map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/components/components-map.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/msthemeconfig_grid/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/msthemeconfig_grid/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/combination/generator/CombinationGenerator.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/combination/generator/CombinationGenerator.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/shop/select-shop-modal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/shop/select-shop-modal.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/scss/components/_form.scss" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/scss/components/_form.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/BelgiumVatCalculation.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/BelgiumVatCalculation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/FixStockAvailable.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/FixStockAvailable.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/OfferEndDateChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/OfferEndDateChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/OrderSlipGenerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/OrderSlipGenerator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/backupInvoicesToPCloud.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/backupInvoicesToPCloud.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-cache.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-cache.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-profiler.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-profiler.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-var-folder.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-var-folder.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/generate_llms.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/generate_llms.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/updateKiyohDataToDatabase.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/updateKiyohDataToDatabase.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/docs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ai.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ai.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/msthemeconfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/msthemeconfig.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/src/Class/ModernAjax.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/src/Class/ModernAjax.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/panels/panel-config-main.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/panels/panel-config-main.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/ai-assistant.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/ai-assistant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/admin/tinymce.inc.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/admin/tinymce.inc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_cart_rules.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_cart_rules.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/override/.htaccess" beforeDir="false" afterPath="$PROJECT_DIR$/override/.htaccess" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/override/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/override/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Adapter/Configuration.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Adapter/Configuration.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerGroupsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/config/routing/admin/configure/shop_parameters/customer_groups.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/config/routing/admin/configure/shop_parameters/customer_groups.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/orders.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/orders.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/_core/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/_core/js/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/webpack.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +73,7 @@
     </execution>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="23542" />
+    <option name="cachedIndexableFilesCount" value="28267" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -43,7 +86,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/external/modernesmid_webshop" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -60,23 +103,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4029738674411725" />
-      <entry key="MS500" value="4.7186393202459564" />
-      <entry key="S2" value="12.963278258831302" />
-      <entry key="S5" value="19.299365222721608" />
-      <entry key="S10" value="22.651399950276385" />
-      <entry key="S30" value="25.497526392997486" />
-      <entry key="S60" value="28.5565624718793" />
-      <entry key="M2" value="41.10901201390911" />
-      <entry key="M5" value="76.29951867307962" />
-      <entry key="M10" value="119.80666535236158" />
-      <entry key="M15" value="160.55638542097353" />
-      <entry key="M30" value="262.76269987367067" />
-      <entry key="H1" value="379.55984015071795" />
-      <entry key="H2" value="475.625015353281" />
-      <entry key="H4" value="633.5367830482738" />
-      <entry key="D1" value="9319.332957016906" />
-      <entry key="W1" value="46166.30196363174" />
+      <entry key="MS100" value="1.4222049208916938" />
+      <entry key="MS500" value="4.966773796628529" />
+      <entry key="S2" value="13.811130709438247" />
+      <entry key="S5" value="26.941730398870725" />
+      <entry key="S10" value="45.8729175653656" />
+      <entry key="S30" value="80.23644827705388" />
+      <entry key="S60" value="96.3803592662837" />
+      <entry key="M2" value="109.30778089466678" />
+      <entry key="M5" value="128.74586091973816" />
+      <entry key="M10" value="194.10401873944457" />
+      <entry key="M15" value="279.16513119413725" />
+      <entry key="M30" value="500.69769074145853" />
+      <entry key="H1" value="766.6628068837163" />
+      <entry key="H2" value="1001.4938581894377" />
+      <entry key="H4" value="1246.8096188612055" />
+      <entry key="D1" value="9839.171946697557" />
+      <entry key="W1" value="46759.972014217994" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -86,35 +129,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="4.545170579789725E-240" />
-      <entry key="M5" value="1.8323991209290204E-96" />
-      <entry key="M10" value="1.353661376020195E-48" />
-      <entry key="M15" value="1.2236954867028221E-32" />
-      <entry key="M30" value="1.1062077050657292E-16" />
-      <entry key="H1" value="1.0517707260556058E-8" />
-      <entry key="H2" value="1.0299156124453692E-4" />
-      <entry key="H4" value="0.011372428107787573" />
-      <entry key="D1" value="1.970627073585429" />
-      <entry key="W1" value="18.451282974029933" />
+      <entry key="M2" value="7.473069116091129E-248" />
+      <entry key="M5" value="1.4105860987200489E-99" />
+      <entry key="M10" value="3.7557770151060975E-50" />
+      <entry key="M15" value="1.1215015199846407E-33" />
+      <entry key="M30" value="3.3488826793796555E-17" />
+      <entry key="H1" value="5.786989654801599E-9" />
+      <entry key="H2" value="7.639544327528538E-5" />
+      <entry key="H4" value="0.009794586518262994" />
+      <entry key="D1" value="1.9221764977371" />
+      <entry key="W1" value="18.38578235470695" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3646522901403915" />
-      <entry key="MS500" value="4.692912077119219" />
-      <entry key="S2" value="12.945137698384869" />
-      <entry key="S5" value="19.288449765516496" />
-      <entry key="S10" value="22.64497010438753" />
-      <entry key="S30" value="25.495107352291598" />
-      <entry key="S60" value="28.555202411807564" />
-      <entry key="M2" value="41.1080214439383" />
-      <entry key="M5" value="76.29877179287587" />
-      <entry key="M10" value="119.80607013205008" />
-      <entry key="M15" value="160.55584814978513" />
-      <entry key="M30" value="262.76225223157235" />
-      <entry key="H1" value="379.55951211150716" />
-      <entry key="H2" value="475.624910674641" />
-      <entry key="H4" value="633.548004112403" />
-      <entry key="D1" value="9321.302944276633" />
-      <entry key="W1" value="46184.7526408105" />
+      <entry key="MS100" value="1.3420365947183228" />
+      <entry key="MS500" value="4.9197533430010685" />
+      <entry key="S2" value="13.777719987914523" />
+      <entry key="S5" value="26.911268100104564" />
+      <entry key="S10" value="45.84574457161341" />
+      <entry key="S30" value="80.22064615255688" />
+      <entry key="S60" value="96.37099457739923" />
+      <entry key="M2" value="109.30259489373071" />
+      <entry key="M5" value="128.74354238175937" />
+      <entry key="M10" value="194.10247514402056" />
+      <entry key="M15" value="279.16376151107045" />
+      <entry key="M30" value="500.6965607765795" />
+      <entry key="H1" value="766.6619785343968" />
+      <entry key="H2" value="1001.4934055646243" />
+      <entry key="H4" value="1246.8190806998618" />
+      <entry key="D1" value="9841.093463105157" />
+      <entry key="W1" value="46778.35718772569" />
     </decayedShown>
   </component>
   <component name="PackageJsonUpdateNotifier">
@@ -457,71 +500,73 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Database Script.db_upgrade_901_to_910.sql.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.php_version_test.php.executor&quot;: &quot;Run&quot;,
-    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;PHP Script.http_access_check.php.executor&quot;: &quot;Run&quot;,
-    &quot;PHP Script.php_version_test.php.executor&quot;: &quot;Run&quot;,
-    &quot;PowerShell.composer-install.ps1 (1).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1 (2).executor&quot;: &quot;Run&quot;,
-    &quot;PowerShell.composer-install.ps1 (3).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1 (4).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ClientConfigCleanupMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.DeprecatedChatLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Statements.sql.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;SCSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
-    &quot;validate C:/wampserver/www/modernesmid-webshop/composer.json&quot;: &quot;--no-interaction --ansi --verbose --no-check-all --with-dependencies&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Database Script.db_upgrade_901_to_910.sql.executor": "Run",
+    "JavaScript Debug.php_version_test.php.executor": "Run",
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "PHP Script.http_access_check.php.executor": "Run",
+    "PHP Script.php_version_test.php.executor": "Run",
+    "PowerShell.composer-install.ps1 (1).executor": "Debug",
+    "PowerShell.composer-install.ps1 (2).executor": "Run",
+    "PowerShell.composer-install.ps1 (3).executor": "Debug",
+    "PowerShell.composer-install.ps1 (4).executor": "Debug",
+    "PowerShell.composer-install.ps1.executor": "Debug",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.ClientConfigCleanupMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "database.data.extractors.current.export.id": "SQL-Insert-Statements.sql.groovy",
+    "git-widget-placeholder": "bare-presta",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp",
+    "list.type.of.created.stylesheet": "SCSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
+    "validate C:/wampserver/www/modernesmid-webshop/composer.json": "--no-interaction --ansi --verbose --no-check-all --with-dependencies",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "mariadb"
     ],
-    &quot;RunConfigurationTargetLRU&quot;: [
-      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\&quot;modernesmid_webshop\&quot;&quot;,
-      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6&quot;
+    "RunConfigurationTargetLRU": [
+      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\"modernesmid_webshop\"",
+      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PLAIN_TEXT&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PLAIN_TEXT"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\temp" />
@@ -866,7 +911,8 @@
       <workItem from="1788860762422" duration="92000" />
       <workItem from="1788861235826" duration="6203000" />
       <workItem from="1788936481401" duration="20703000" />
-      <workItem from="1789021603870" duration="31779000" />
+      <workItem from="1789021603870" duration="35468000" />
+      <workItem from="1789368653080" duration="2881000" />
     </task>
     <servers />
   </component>

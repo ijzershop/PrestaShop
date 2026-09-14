@@ -4,73 +4,33 @@
  *}
 {foreach $list as $product}
 <tr>
-	<td style="border:1px solid #D6D4D4;">
+  <td style="border:none;">
+    <table class="table">
+      <tr>
+        <td width="5">&nbsp;</td>
+        <td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:16px" align="right">
+          <font size="2" face="Open-sans, sans-serif" color="#ffffff">
+            {$product['quantity']}X
+          </font>
+        </td>
+        <td width="5">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+	<td style="border:none;">
 		<table class="table">
 			<tr>
 				<td width="5">&nbsp;</td>
-				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						{$product['reference']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:1px solid #D6D4D4;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td>
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						<strong>{$product['name']}</strong>
+				<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:16px">
+					<font size="2" face="Open-sans, sans-serif" color="#ffffff">
+						<strong>{if class_exists('AttributeGroup')}{AttributeGroup::stripSawCutModuleAttributeGroupName($product['name'])}{else}{$product['name']}{/if}</strong>
 						{if count($product['customization']) == 1}
 							<br>
 							{foreach $product['customization'] as $customization}
-								{$customization['customization_text'] nofilter}
+                <span style="font-size:12px;">{$customization['customization_text'] nofilter}</span>
 							{/foreach}
 						{/if}
 
-						{hook h='displayProductPriceBlock' product=$product type="unit_price"}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:1px solid #D6D4D4;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						{$product['unit_price']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:1px solid #D6D4D4;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						{$product['quantity']}
-					</font>
-				</td>
-				<td width="5">&nbsp;</td>
-			</tr>
-		</table>
-	</td>
-	<td style="border:1px solid #D6D4D4;">
-		<table class="table">
-			<tr>
-				<td width="5">&nbsp;</td>
-				<td align="right">
-					<font size="2" face="Open-sans, sans-serif" color="#555454">
-						{$product['price']}
 					</font>
 				</td>
 				<td width="5">&nbsp;</td>
@@ -81,12 +41,12 @@
   {if count($product['customization']) > 1}
   	{foreach $product['customization'] as $customization}
   		<tr>
-  		<td colspan="3" style="border:1px solid #D6D4D4;">
+  		<td colspan="3" style="border:none;">
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
-  					<td>
-  						<font size="2" face="Open-sans, sans-serif" color="#555454">
+  					<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:12px">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{$customization['customization_text'] nofilter}
   						</font>
   					</td>
@@ -94,12 +54,12 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;">
+  		<td style="border:none;">
   			<table class="table">
   				<tr>
   					<td width="5">&nbsp;</td>
-  					<td align="right">
-  						<font size="2" face="Open-sans, sans-serif" color="#555454">
+  					<td style="Margin:0;mso-line-height-rule:exactly;font-family:'Open Sans', sans-serif;line-height:20px;letter-spacing:0;color:#ffffff;font-size:12px" align="right">
+  						<font size="2" face="Open-sans, sans-serif" color="#ffffff">
   							{if count($product['customization']) > 1}
   								{$customization['customization_quantity']}
   							{/if}
@@ -109,8 +69,8 @@
   				</tr>
   			</table>
   		</td>
-  		<td style="border:1px solid #D6D4D4;"></td>
+  		<td style="border:none;"></td>
   	</tr>
   	{/foreach}
   {/if}
-{/foreach}
+  {/foreach}

@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace app\Resources\cron_scripts;
 
-require_once dirname(__DIR__).'./../../config/config.inc.php';
-require_once dirname(__DIR__).'./../../vendor/autoload.php';
+require_once __DIR__ . '/shop-root.php';
+require_once modernesmidCronShopRoot() . '/config/config.inc.php';
+require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
 
 use Configuration;
 use Context;

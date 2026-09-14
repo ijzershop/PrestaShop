@@ -564,3 +564,196 @@
     }
   }
 }
+
+// New-theme header search styles for legacy pages using the new layout markup.
+.main-header {
+  #header-search-container {
+    flex-grow: 1;
+
+    // hide on very small screens
+    @include media-breakpoint-down("md") {
+      .component-search-body {
+        width: 100%;
+      }
+
+      form {
+        &.collapsed,
+        &.expanded {
+          width: 100%;
+
+          input#bo_query {
+            min-height: auto;
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-down("sm") {
+      form {
+        .input-group-append {
+          display: none;
+        }
+      }
+    }
+
+    form {
+      width: 100%; // needed for transition
+      transition: var(--#{$cdk}default-transition);
+      transition-delay: calc(var(--#{$cdk}default-transition-duration) / 2);
+
+      .btn {
+        opacity: 1;
+        transition: var(--#{$cdk}default-transition);
+      }
+
+      // behavior when the search form is collapsed
+      &.collapsed {
+        width: 360px;
+
+        input#bo_query {
+          padding-left: var(--#{$cdk}size-40); // leave out space for the loupe
+        }
+
+        .input-group {
+          // loupe icon
+          &::before {
+            pointer-events: initial;
+            opacity: 1;
+          }
+        }
+
+        .btn {
+          width: 0;
+          height: 0;
+          padding: 0;
+          overflow: hidden;
+          border: 0;
+          // we can't use display:none or else the transition doesn't work
+          opacity: 0;
+        }
+      }
+
+      &.expanded {
+        width: 500px;
+      }
+    }
+
+    // search input
+    input#bo_query {
+      font-size: var(--#{$cdk}size-14);
+      border: 1px solid var(--#{$cdk}search-border-color);
+      transition: padding-left var(--#{$cdk}default-transition-duration);
+
+      &::placeholder {
+        font-size: var(--#{$cdk}size-12);
+        color: var(--#{$cdk}primary-600);
+      }
+    }
+
+    .input-group {
+      // loupe icon (hidden by default)
+      &::before {
+        @extend .material-icons;
+        position: absolute;
+        top: 50%;
+        left: var(--#{$cdk}size-8);
+        z-index: 5;
+        font-size: var(--#{$cdk}size-24);
+        color: var(--#{$cdk}primary-800);
+        pointer-events: none;
+        content: "\e8b6";
+        opacity: 0;
+        transition: var(--#{$cdk}default-transition);
+        transform: translateY(-50%);
+      }
+
+      button:not(:first-of-type) {
+        margin-left: -1px; // collapse borders
+      }
+    }
+
+    .btn-outline-secondary {
+      border-color: var(--#{$cdk}search-border-color);
+    }
+
+    .show > .btn-outline-secondary.dropdown-toggle {
+      box-shadow: none;
+    }
+  }
+
+  .component-search {
+    @include media-breakpoint-down("md") {
+      &#header-search-container.active {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 999;
+        display: block;
+        width: 100%;
+        height: auto;
+        margin-left: 0;
+
+        .component-search-body {
+          padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8);
+          background: var(--#{$cdk}white);
+        }
+
+        .component-search-top {
+          display: flex;
+          align-items: center;
+
+          #bo_query {
+            &::placeholder {
+              font-size: var(--#{$cdk}size-14);
+            }
+          }
+        }
+
+        form {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .dropdown-item {
+          padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+          font-size: var(--#{$cdk}size-14);
+        }
+      }
+    }
+
+    &-quickaccess {
+      @extend .dropdown-menu;
+      display: block;
+      width: 100%;
+      margin: 0;
+    }
+
+    &-background {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: -1;
+      height: 100vh;
+      background: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.8);
+    }
+
+    &-cancel {
+      padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+      font-size: var(--#{$cdk}size-16);
+      font-weight: 500;
+      color: var(--#{$cdk}primary-500);
+      background: inherit;
+      border: 0;
+    }
+
+    &-title {
+      padding: var(--#{$cdk}size-8) var(--#{$cdk}size-16);
+      margin: 0;
+      font-size: var(--#{$cdk}size-14);
+      font-weight: 500;
+      color: var(--#{$cdk}primary-500);
+      text-transform: uppercase;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "admin/order-legacy.ts": {
+    "file": "assets/order-legacy-C6xJAh-G.js",
+    "name": "order",
+    "src": "admin/order-legacy.ts",
+    "isEntry": true
+  },
+  "admin/order.ts": {
+    "file": "assets/order-V_F0jZEY.js",
+    "name": "order",
+    "src": "admin/order.ts",
+    "isEntry": true,
+    "css": [
+      "assets/order-D-stuLmu.css"
+    ]
+  }
+}

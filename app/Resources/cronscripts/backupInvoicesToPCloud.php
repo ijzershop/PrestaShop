@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace modules\msthemeconfig\cron_scripts;
 
-require_once dirname(__DIR__) . '/../../config/config.inc.php';
-require_once(dirname(__DIR__) . '/vendor/autoload.php');
+require_once __DIR__ . '/shop-root.php';
+require_once modernesmidCronShopRoot() . '/config/config.inc.php';
+require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
 
 // Fix for missing constants in cli
 if (!defined('_PS_PRICE_COMPUTE_PRECISION_')) {
@@ -48,7 +49,7 @@ use PrestaShopCollection;
 use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
-$envPath = dirname(__DIR__, 3) . '/.env';
+$envPath = _PS_ROOT_DIR_ . '/.env';
 if (file_exists($envPath)) {
     $dotenv->load($envPath);
 }
@@ -541,7 +542,7 @@ class BackupInvoicesToPCloud
     {
         $this->debug = $debug;
         $this->logLevel = $logLevel; // DEBUG, INFO, WARNING, ERROR
-        $this->logFile = dirname(__DIR__) . '/../../var/logs/invoice_backup_detailed.log';
+        $this->logFile = _PS_ROOT_DIR_ . '/var/logs/invoice_backup_detailed.log';
         $this->generateInvoices = true;
         $this->deletePcloudArchivedFolder = false;
 
@@ -571,12 +572,8 @@ class BackupInvoicesToPCloud
             $_ENV['PCLOUD_ROOT_FOLDER_ID'] ??
             throw new Exception('pCloud root folder id not configured');
 
-        $this->serverFolder = str_replace('private_html',
-            'public_html',
-            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'facturen' . DIRECTORY_SEPARATOR);
-        $this->serverFolderDownloadTemp = str_replace('private_html',
-            'public_html',
-            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'upload' . DIRECTORY_SEPARATOR . 'facturendownloads' . DIRECTORY_SEPARATOR);
+        $this->serverFolder = _PS_ROOT_DIR_ . '/upload/facturen/';
+        $this->serverFolderDownloadTemp = _PS_ROOT_DIR_ . '/upload/facturendownloads/';
 
         $this->progressHash = "623t472834t6782364t"; //Hashcode to follow the progress of zipping files
 
@@ -2390,7 +2387,7 @@ class BackupInvoicesToPCloud
                 $full_path = $this->serverFolder . $fileName . '.pdf';
 
                 $file = $pdf_file->render(false);
-                file_put_contents(dirname(__FILE__, 4).$full_path, $file);
+                file_put_contents($full_path, $file);
 
 
 
@@ -2406,8 +2403,8 @@ class BackupInvoicesToPCloud
             }
 
             // Verify file was created successfully
-            if (!file_exists(dirname(__DIR__, 3).$full_path) || filesize(dirname(__DIR__, 3).$full_path) === 0) {
-                throw new PrestaShopException('PDF file was not created or is empty: ' . dirname(__DIR__, 3).$full_path);
+            if (!file_exists($full_path) || filesize($full_path) === 0) {
+                throw new PrestaShopException('PDF file was not created or is empty: ' . $full_path);
             }
 
             $file_size = filesize($full_path);
@@ -2609,7 +2606,7 @@ class BackupInvoicesToPCloud
                 } else {
                     $msg = $error . "\n";
                 }
-                file_put_contents(dirname(__DIR__) . './../../var/logs/invoice_backup.log',
+                file_put_contents(_PS_ROOT_DIR_ . '/var/logs/invoice_backup.log',
                     $msg,
                     FILE_APPEND);
             }
@@ -2688,7 +2685,7 @@ class BackupInvoicesToPCloud
         $this->log('INFO', 'Backup process completed', $summary, 'summary');
 
         // Always log the summary to a separate file for easy monitoring
-        $summaryFile = dirname(__DIR__) . '/../../var/logs/backup_summary.log';
+        $summaryFile = _PS_ROOT_DIR_ . '/var/logs/backup_summary.log';
         $summaryDir = dirname($summaryFile);
         if (!is_dir($summaryDir)) {
             mkdir($summaryDir, 0755, true);

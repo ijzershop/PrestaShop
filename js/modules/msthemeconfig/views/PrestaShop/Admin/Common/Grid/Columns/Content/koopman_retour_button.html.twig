@@ -1,0 +1,14 @@
+{# modules/msthemeconfig/views/PrestaShop/Admin/Common/Grid/Columns/Content/koopman_retour_button.html.twig #}
+<div class="text-center" style="min-width:225px;">
+  {% if record.current_state in column.options.createdStates %}
+    <button type="button" class="btn btn-secondary createRetour" data-order-id="{{ record.id_order }}" data-retour-url="{{ column.options.retourUrl }}" title="Retour bekijken" aria-label="Retour bekijken">
+      <i class="material-icons text-success">done</i> Retour aangemaakt
+    </button>
+  {% elseif record.current_state in column.options.acceptedStates %}
+    <button type="button" class="btn btn-secondary createRetour" data-order-id="{{ record.id_order }}" data-retour-url="{{ column.options.retourUrl }}" title="{{ column.options.label }}" aria-label="{{ column.options.label }}">
+      <i class="material-icons">{{ column.options.icon }}</i> {{ column.options.label }}
+    </button>
+  {% else %}
+    <span class="material-icons text-danger" title="Retour niet beschikbaar voor deze bestelstatus">close</span>
+  {% endif %}
+</div>

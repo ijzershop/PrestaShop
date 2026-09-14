@@ -59,7 +59,8 @@ function tinySetup(config) {
     },
     language: iso_user,
     content_style: lang_is_rtl === '1' ? 'body {direction:rtl;}' : '',
-    skin: 'prestashop',
+    // The bundled TinyMCE 4 uses the PrestaShop skin; Oxide requires TinyMCE 5+.
+    skin: parseInt(tinyMCE.majorVersion, 10) >= 5 ? 'oxide' : 'prestashop',
     mobile: {
       theme: 'mobile',
       plugins: ['lists', 'align', 'link', 'table', 'placeholder', 'advlist', 'code'],
@@ -85,6 +86,11 @@ function tinySetup(config) {
   $.each(default_config, function(index, el) {
     if (config[index] === undefined) config[index] = el;
   });
+
+  if (parseInt(tinyMCE.majorVersion, 10) >= 5 && config.skin === 'oxide' && config.skin_url === undefined) {
+    // Oxide assets are under skins/ui, not the skins/<name> path used by v4.
+    config.skin_url = baseAdminDir + '../js/tiny_mce/skins/ui/oxide';
+  }
 
   var plugins_arr = config['plugins'].split(/[ ,]/);
   var old_plugins_array = ['iespell', 'inlinepopups', 'style', 'xhtmlxtras', 'safari'];

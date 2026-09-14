@@ -1,0 +1,569 @@
+<div class="panel">
+  <style>
+    .ai-panel .grid { display:flex; gap:12px; flex-wrap:wrap; }
+    .ai-panel .col  { flex:1 1 320px; min-width:280px; }
+    .ai-panel .list { max-height:280px; overflow:auto; border:1px solid #ddd; padding:6px; border-radius:4px; background:#fff; }
+    .ai-panel .muted { color:#666; font-size:12px; }
+    .ai-panel .actions { margin-top:10px; }
+    .ai-panel .drafts  { margin-top:12px; }
+    .ai-panel .btn { display:inline-block; font-weight:400; line-height:1.5; text-align:center; cursor:pointer; user-select:none; border:1px solid transparent; padding:.375rem .75rem; font-size:1rem; border-radius:.25rem; transition:color .15s,background-color .15s,border-color .15s; }
+    .ai-panel .btn-default { color:#212529; background:#e9ecef; border-color:#ced4da; }
+    .ai-panel .btn-default:hover { background:#dde1e4; }
+    .ai-panel .btn-primary { color:#fff; background:#0d6efd; border-color:#0d6efd; }
+    .ai-panel .btn-primary:hover { background:#0b5ed7; }
+    .ai-panel .btn-warning { color:#000; background:#ffc107; border-color:#ffc107; }
+    .ai-panel .btn-warning:hover { background:#ffca2c; }
+    .ai-panel .btn-success { color:#fff; background:#198754; border-color:#198754; }
+    .ai-panel .btn-success:hover { background:#157347; }
+    .ai-panel .btn-danger  { color:#fff; background:#dc3545; border-color:#dc3545; }
+    .ai-panel .btn-danger:hover  { background:#b02a37; }
+    .ai-panel .btn-sm { padding:.2rem .5rem; font-size:.85rem; }
+    .ai-panel .form-control { display:block; width:100%; padding:.375rem .75rem; font-size:1rem; color:#212529; background:#fff; border:1px solid #ced4da; border-radius:.25rem; }
+    .ai-panel .form-control:focus { border-color:#86b7fe; outline:0; }
+    .ai-panel label.checkbox { display:flex; align-items:center; gap:6px; font-weight:400; }
+    .ai-panel .label { display:inline-block; padding:.25em .4em; font-size:75%; font-weight:700; color:#fff; border-radius:.25rem; }
+    .ai-panel .label-default { background:#6c757d; }
+    .ai-panel .label-info    { background:#0dcaf0; color:#000; }
+    .ai-panel .label-warning { background:#ffc107; color:#212529; }
+    .ai-panel .label-danger  { background:#dc3545; }
+    .ai-panel .label-success { background:#198754; }
+    .ai-panel .table { width:100%; margin-bottom:1rem; color:#212529; }
+    .ai-panel .table th,.ai-panel .table td { padding:.5rem; border-top:1px solid #dee2e6; vertical-align:top; }
+    .ai-panel .table thead th { border-bottom:2px solid #dee2e6; }
+    .ai-panel .table-bordered,.ai-panel .table-bordered th,.ai-panel .table-bordered td { border:1px solid #dee2e6; }
+    .ai-panel .table-striped tbody tr:nth-of-type(odd) { background:rgba(0,0,0,.02); }
+    .ai-panel .table-sm th,.ai-panel .table-sm td { padding:.3rem .4rem; }
+    .ai-panel .alert { padding:.75rem 1.25rem; border:1px solid transparent; border-radius:.25rem; margin:8px 0; }
+    .ai-panel .alert-info    { color:#055160; background:#cff4fc; border-color:#b6effb; }
+    .ai-panel .alert-warning { color:#664d03; background:#fff3cd; border-color:#ffecb5; }
+    .ai-panel h3 { margin:0 0 12px; }
+    .ai-panel .section { border:1px solid #dee2e6; border-radius:4px; padding:12px; margin-bottom:12px; }
+    .ai-panel .section-title { font-weight:600; margin-bottom:8px; font-size:.95rem; }
+    .ai-panel textarea.draft-html { font-family:monospace; font-size:12px; }
+    .ai-panel .draft-name { font-size:.85rem; }
+    .ai-panel .has-content-badge { font-size:10px; margin-left:4px; padding:1px 4px; border-radius:3px; background:#d1e7dd; color:#0a3622; }
+  </style>
+
+  <div class="ai-panel">
+    <h3><i class="icon-magic"></i> AI categorieteksten genereren</h3>
+
+    {# ── Provider + API key ─────────────────────────────────────────── #}
+    <div class="section">
+      <div class="section-title">AI provider &amp; API key</div>
+      <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <label style="font-weight:600;display:block;margin-bottom:4px">Provider</label>
+          <select id="ai-provider" class="form-control" style="width:auto;min-width:220px">
+            <option value="openai"{{ has_openai_key ? ' data-configured="1"' : '' }}>OpenAI — GPT-4o Mini ★ aanbevolen</option>
+            <option value="anthropic"{{ has_anthropic_key ? ' data-configured="1"' : '' }}>Anthropic — Claude Sonnet</option>
+            <option value="grok"{{ has_grok_key ? ' data-configured="1"' : '' }}>xAI — Grok 3 Mini (gratis tier)</option>
+            <option value="copilot"{{ has_copilot_key ? ' data-configured="1"' : '' }}>GitHub Copilot — GPT-4o Mini</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:260px;max-width:480px">
+          <label style="font-weight:600;display:block;margin-bottom:4px">API key</label>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="ai-api-key" type="password" class="form-control" placeholder="Paste key here…" autocomplete="off" style="flex:1" />
+            <button id="ai-save-key" class="btn btn-default">Save</button>
+          </div>
+          <div id="ai-key-status" class="muted" style="margin-top:4px">
+            {% if has_anthropic_key %}✓ Anthropic key saved{% elseif has_grok_key %}✓ Grok key saved{% endif %}
+          </div>
+          <div id="ai-key-hint" class="muted" style="margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+
+    {# ── Settings + category selection ─────────────────────────────── #}
+    <div class="grid">
+      <div class="col" style="flex:0 0 260px;min-width:220px">
+        <label>Taal</label>
+        <select id="ai-lang" class="form-control">
+          {% for lang in languages %}
+            <option value="{{ lang.id_lang }}"{{ lang.id_lang == default_lang_id ? ' selected' : '' }}>
+              {{ lang.name }} ({{ lang.iso_code|upper }})
+            </option>
+          {% endfor %}
+        </select>
+
+        <div class="actions" style="margin-top:8px">
+          <label class="checkbox">
+            <input type="checkbox" id="ai-overwrite" />
+            Bestaande bovenbeschrijvingen overschrijven
+          </label>
+        </div>
+
+        <div class="actions" style="margin-top:6px">
+          <label class="checkbox">
+            <input type="checkbox" id="ai-generate-meta" checked />
+            Meta title en description genereren
+          </label>
+        </div>
+
+        <div class="actions" style="margin-top:6px">
+          <label class="checkbox">
+            <input type="checkbox" id="ai-generate-jsonld" />
+            SEO JSON-LD (FAQ Q&amp;A voor Google) genereren
+          </label>
+        </div>
+      </div>
+
+      <div class="col">
+        <label style="display:flex;justify-content:space-between;align-items:center">
+          <span>Categorieën
+            <span id="ai-cat-count" class="label label-default" style="margin-left:6px;font-size:11px">0</span>
+            <span id="ai-cat-selected" class="label label-info" style="margin-left:4px;font-size:11px;display:none">0 geselecteerd</span>
+          </span>
+          <button id="ai-select-all" class="btn btn-default btn-sm" type="button">Alles selecteren</button>
+        </label>
+        <input id="ai-cat-search" class="form-control" placeholder="Zoek op naam…" style="margin-bottom:6px;margin-top:4px" />
+        <div id="ai-categories" class="list"></div>
+        <div class="muted" style="margin-top:4px">
+          <span class="has-content-badge">✓</span> = heeft al tekst in top_description
+        </div>
+      </div>
+    </div>
+
+    {# ── System context ────────────────────────────────────────────── #}
+    <div class="section" style="margin-top:12px">
+      <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        <span>System context <span class="muted">(sent as AI system prompt)</span></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          {% if ai_contexts|length > 1 %}
+          <select id="ai-context-select" class="form-control" style="width:auto;min-width:180px;font-size:13px">
+            {% for ctx in ai_contexts %}
+              <option value="{{ ctx.name }}">{{ ctx.label }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+          <span class="muted" style="font-size:11px"><code>config/contexts/</code></span>
+        </div>
+      </div>
+      <textarea id="ai-system-context" class="form-control" rows="8" style="font-family:monospace;font-size:12px">{{ default_system_context }}</textarea>
+    </div>
+
+    {# ── Extra context ─────────────────────────────────────────────── #}
+    <div style="margin-top:0">
+      <label>Extra context (toon, keywords, beperkingen)</label>
+      <textarea id="ai-context" class="form-control" rows="3" placeholder="bijv. Gebruik een zakelijke maar toegankelijke toon, benadruk de brede voorraad en snelle levering."></textarea>
+    </div>
+
+    {# ── Generate button + log ─────────────────────────────────────── #}
+    <div class="actions" style="margin-top:12px">
+      <button id="ai-generate" class="btn btn-primary"><i class="icon-cogs"></i> Beschrijvingen genereren</button>
+      <span id="ai-status" class="label label-default" style="margin-left:8px">Idle</span>
+    </div>
+
+    <div id="ai-log" class="list" style="margin-top:8px;height:100px;font-family:monospace;font-size:12px;"></div>
+
+    {# ── Drafts table ──────────────────────────────────────────────── #}
+    <div class="drafts">
+      <table class="table table-bordered table-striped table-sm" id="ai-drafts-table" style="display:none">
+        <thead>
+          <tr>
+            <th style="width:32px"><input type="checkbox" id="ai-drafts-checkall" /></th>
+            <th style="width:160px">Categorie</th>
+            <th>Bovenbeschrijving (HTML → top_description)</th>
+            <th style="width:240px">Meta</th>
+            <th style="width:220px">SEO JSON-LD</th>
+            <th style="width:60px"></th>
+          </tr>
+        </thead>
+        <tbody id="ai-drafts-body"></tbody>
+      </table>
+      <div class="actions" id="ai-drafts-actions" style="display:none">
+        <button id="ai-save-selected" class="btn btn-warning"><i class="icon-save"></i> Selectie opslaan</button>
+        <button id="ai-save-all" class="btn btn-success"><i class="icon-save"></i> Alles opslaan</button>
+      </div>
+    </div>
+
+    <div class="alert alert-info" style="margin-top:12px">
+      <strong>Tip:</strong> Controleer de gegenereerde teksten en sla de gewenste categorieën op.
+      De beschrijving wordt opgeslagen in <code>top_description</code> en verschijnt bovenaan de categorie.
+      De bestaande tekst in <code>description</code> blijft behouden.
+    </div>
+  </div>{# /ai-panel #}
+</div>
+
+<script>
+(function(){
+  const ajaxUrl = '{{ ajax_url | raw }}';
+
+  // ── context switcher ──────────────────────────────────────────────────────
+  const aiContexts = {
+    {% for ctx in ai_contexts %}
+    {{ ctx.name | json_encode | raw }}: {{ ctx.content | json_encode | raw }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+  };
+
+  const $ctxSelect = document.getElementById('ai-context-select');
+  if ($ctxSelect) {
+    $ctxSelect.addEventListener('change', function() {
+      const content = aiContexts[this.value];
+      if (content !== undefined) {
+        document.getElementById('ai-system-context').value = content;
+      }
+    });
+  }
+
+  const $catList = document.getElementById('ai-categories');
+  const $log     = document.getElementById('ai-log');
+  const $status  = document.getElementById('ai-status');
+  const $search  = document.getElementById('ai-cat-search');
+
+  // ── helpers ───────────────────────────────────────────────────────────────
+
+  function log(msg) {
+    const div = document.createElement('div');
+    div.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+    $log.appendChild(div);
+    $log.scrollTop = $log.scrollHeight;
+  }
+
+  function setStatus(t, cls) {
+    $status.textContent = t;
+    $status.className   = 'label ' + (cls || 'label-default');
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function getLangId() {
+    return document.getElementById('ai-lang').value;
+  }
+
+  function getSelectedIds(container) {
+    return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map(x => x.value);
+  }
+
+  // ── load categories ───────────────────────────────────────────────────────
+
+  let _allCategories = [];
+
+  function renderCategoryList(cats) {
+    const q = $search.value.trim().toLowerCase();
+    const filtered = q ? cats.filter(c => (c.label || c.name).toLowerCase().includes(q)) : cats;
+    $catList.innerHTML = '';
+    filtered.forEach(function(cat) {
+      const row = document.createElement('label');
+      row.style.display = 'block';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox';
+      cb.value = cat.id_category;
+      cb.style.marginRight = '6px';
+      row.appendChild(cb);
+      const label = document.createTextNode(cat.label || cat.name);
+      row.appendChild(label);
+      if (cat.has_description) {
+        const badge = document.createElement('span');
+        badge.className = 'has-content-badge';
+        badge.textContent = '✓';
+        badge.title = 'Heeft al een bovenbeschrijving (top_description)';
+        row.appendChild(badge);
+      }
+      $catList.appendChild(row);
+    });
+    updateCountBadges();
+  }
+
+  function updateCountBadges() {
+    const all     = $catList.querySelectorAll('input[type="checkbox"]');
+    const checked = $catList.querySelectorAll('input[type="checkbox"]:checked');
+    document.getElementById('ai-cat-count').textContent = all.length;
+    const selBadge = document.getElementById('ai-cat-selected');
+    if (checked.length > 0) {
+      selBadge.textContent = checked.length + ' geselecteerd';
+      selBadge.style.display = '';
+    } else {
+      selBadge.style.display = 'none';
+    }
+  }
+
+  function loadCategories(silent = false) {
+    if (!silent) setStatus('Categorieën laden…', 'label-info');
+    return fetch(ajaxUrl + '&action=ListCategories&id_lang=' + getLangId(), { credentials: 'same-origin' })
+      .then(r => r.json())
+      .then(j => {
+        if (!j || !j.ok) throw new Error(j && j.error ? j.error : 'Onbekende fout');
+        const selectedIds = silent ? new Set(getSelectedIds($catList)) : new Set();
+        _allCategories = j.categories || [];
+        renderCategoryList(_allCategories);
+        if (silent) {
+          $catList.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = selectedIds.has(cb.value));
+          updateCountBadges();
+        } else {
+          setStatus('Idle');
+        }
+      })
+      .catch(e => {
+        if (!silent) setStatus('Mislukt', 'label-danger');
+        log('Categorieoverzicht laden mislukt: ' + e.message);
+      });
+  }
+
+  $search.addEventListener('input', function() {
+    renderCategoryList(_allCategories);
+  });
+
+  $catList.addEventListener('change', updateCountBadges);
+
+  document.getElementById('ai-select-all').addEventListener('click', function() {
+    const all = $catList.querySelectorAll('input[type="checkbox"]');
+    const anyUnchecked = Array.from(all).some(cb => !cb.checked);
+    all.forEach(cb => cb.checked = anyUnchecked);
+    this.textContent = anyUnchecked ? 'Alles deselecteren' : 'Alles selecteren';
+    updateCountBadges();
+  });
+
+  document.getElementById('ai-lang').addEventListener('change', function() {
+    loadCategories();
+  });
+
+  // ── provider selector ─────────────────────────────────────────────────────
+
+  const providerConfigs = {
+    anthropic: {{ has_anthropic_key ? 'true' : 'false' }},
+    grok:      {{ has_grok_key      ? 'true' : 'false' }},
+    openai:    {{ has_openai_key    ? 'true' : 'false' }},
+    copilot:   {{ has_copilot_key   ? 'true' : 'false' }},
+  };
+
+  const providerLabels = {
+    anthropic: 'Anthropic', grok: 'Grok (xAI)', openai: 'OpenAI', copilot: 'GitHub Copilot',
+  };
+
+  const providerKeyLinks = {
+    anthropic: 'Get key: <a href="https://console.anthropic.com/settings/keys" target="_blank">console.anthropic.com</a>',
+    grok:      'Get key: <a href="https://console.x.ai/" target="_blank">console.x.ai</a> — free tier available',
+    openai:    'Get key: <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a>',
+    copilot:   'Requires GitHub Copilot Business/Enterprise. Key = GitHub PAT with <code>copilot</code> scope.',
+  };
+
+  function updateProviderHints() {
+    const p = document.getElementById('ai-provider').value;
+    document.getElementById('ai-key-status').textContent = providerConfigs[p] ? '✓ ' + providerLabels[p] + ' key saved' : '';
+    document.getElementById('ai-key-hint').innerHTML = providerKeyLinks[p] || '';
+  }
+
+  document.getElementById('ai-provider').addEventListener('change', updateProviderHints);
+  updateProviderHints();
+
+  // ── API key save ──────────────────────────────────────────────────────────
+
+  document.getElementById('ai-save-key').addEventListener('click', function() {
+    const key      = document.getElementById('ai-api-key').value.trim();
+    const provider = document.getElementById('ai-provider').value;
+    if (!key) { alert('Voer eerst een API key in.'); return; }
+    const params = new URLSearchParams({ api_key: key });
+    fetch(ajaxUrl + '&action=SaveConfig&provider=' + encodeURIComponent(provider), {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    }).then(r => r.json()).then(j => {
+      if (j && j.ok) {
+        providerConfigs[provider] = true;
+        document.getElementById('ai-key-status').textContent = '✓ ' + providerLabels[provider] + ' key saved';
+        document.getElementById('ai-api-key').value = '';
+      } else {
+        alert('Error: ' + (j && j.error ? j.error : 'unknown'));
+      }
+    }).catch(() => alert('Request mislukt'));
+  });
+
+  // ── generate drafts ───────────────────────────────────────────────────────
+
+  document.getElementById('ai-generate').addEventListener('click', function() {
+    const catIds = getSelectedIds($catList);
+    if (!catIds.length) { alert('Selecteer eerst minimaal één categorie.'); return; }
+
+    const apiKey        = document.getElementById('ai-api-key').value.trim();
+    const provider      = document.getElementById('ai-provider').value;
+    const systemCtx     = document.getElementById('ai-system-context').value.trim();
+    const extraCtx      = document.getElementById('ai-context').value.trim();
+    const overwrite     = document.getElementById('ai-overwrite').checked     ? '1' : '0';
+    const generateMeta  = document.getElementById('ai-generate-meta').checked  ? '1' : '0';
+    const generateJsonld = document.getElementById('ai-generate-jsonld').checked ? '1' : '0';
+    const idLang        = getLangId();
+
+    setStatus('Genereren…', 'label-warning');
+    log('Stuur ' + catIds.length + ' categorie(ën) naar ' + (providerLabels[provider] || provider) + '…');
+
+    document.getElementById('ai-drafts-table').style.display   = 'none';
+    document.getElementById('ai-drafts-actions').style.display = 'none';
+    document.getElementById('ai-drafts-body').innerHTML = '';
+
+    const generateUrl = ajaxUrl + '&action=GenerateDrafts&provider=' + encodeURIComponent(provider);
+
+    const params = new URLSearchParams({
+      category_ids:    catIds.join(','),
+      id_lang:         idLang,
+      extra_context:   extraCtx,
+      system_context:  systemCtx,
+      overwrite:       overwrite,
+      generate_meta:   generateMeta,
+      generate_jsonld: generateJsonld,
+    });
+    if (apiKey) params.set('api_key', apiKey);
+
+    fetch(generateUrl, {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    })
+    .then(r => r.json())
+    .then(j => {
+      if (!j || !j.ok) { setStatus('Mislukt', 'label-danger'); log('Error: ' + (j && j.error ? j.error : 'Unknown')); return; }
+      const drafts = j.drafts || [];
+      const ok   = drafts.filter(d => !d.error && !d.skipped).length;
+      const skip = drafts.filter(d => d.skipped).length;
+      const err  = drafts.filter(d => d.error).length;
+      const review = drafts.filter(d => d.needs_review).length;
+      setStatus(review ? 'Concept controleren' : 'Klaar', review ? 'label-warning' : 'label-success');
+      log('Klaar — ' + ok + ' gegenereerd' + (skip ? ', ' + skip + ' overgeslagen' : '') + (err ? ', ' + err + ' fouten' : '') + '.');
+      if (review) log('Controleer ' + review + ' concept(en) met opmerkingen en vink ze daarna aan om op te slaan.');
+      renderDrafts(drafts);
+    })
+    .catch(e => { setStatus('Mislukt', 'label-danger'); log('Request error: ' + e.message); });
+  });
+
+  // ── render drafts ─────────────────────────────────────────────────────────
+
+  function renderDrafts(drafts) {
+    const tbody = document.getElementById('ai-drafts-body');
+    tbody.innerHTML = '';
+
+    drafts.forEach(function(d) {
+      const tr = document.createElement('tr');
+      tr.dataset.categoryId = d.id_category;
+
+      if (d.error) {
+        tr.innerHTML = '<td></td>'
+          + '<td class="draft-name">' + esc(d.name || '#' + d.id_category) + '</td>'
+          + '<td colspan="3" style="color:#dc3545">Error: ' + esc(d.error) + '</td><td></td>';
+      } else if (d.skipped) {
+        tr.innerHTML = '<td></td>'
+          + '<td class="draft-name">' + esc(d.name || '#' + d.id_category) + '</td>'
+          + '<td colspan="3" class="muted">Overgeslagen: ' + esc(d.reason || '') + '</td><td></td>';
+      } else {
+        const hasMeta = d.meta_title !== undefined || d.meta_description !== undefined;
+        const source = d.source_summary;
+        const sourceNote = source
+          ? '<div class="muted" style="margin-top:6px">Gebaseerd op ' + esc(String(source.included_products))
+            + ' van ' + esc(String(source.total_products)) + ' producten, inclusief subcategorieën.</div>'
+          : '';
+        const lengthNote = Number.isFinite(d.visible_characters)
+          ? '<div class="muted">' + d.visible_characters + (d.max_visible_characters ? ' / ' + d.max_visible_characters : '') + ' zichtbare tekens</div>'
+          : '';
+        const warnings = Array.isArray(d.warnings) ? d.warnings : [];
+        const warningNote = warnings.length
+          ? '<div class="alert ' + (d.needs_review ? 'alert-warning' : 'alert-info') + '"><strong>'
+            + (d.needs_review ? 'Controlepunten bij dit concept' : 'Broninformatie') + '</strong><br>'
+            + warnings.map(warning => esc(String(warning))).join('<br>')
+            + '<br><small>Deze meldingen worden niet opgeslagen in de categorietekst.</small></div>'
+          : '';
+        tr.innerHTML = '<td><input type="checkbox" class="draft-cb" data-id="' + d.id_category + '"' + (d.needs_review ? '' : ' checked') + ' /></td>'
+          + '<td class="draft-name">' + esc(d.name || '#' + d.id_category) + sourceNote + lengthNote + '</td>'
+          + '<td><textarea class="form-control draft-html" data-id="' + d.id_category + '" rows="10">'
+            + esc(d.description || '') + '</textarea>' + warningNote + '</td>'
+          + '<td>'
+            + (hasMeta
+              ? '<div class="muted" style="margin-bottom:2px">Meta title <span style="color:#888">(max 60)</span></div>'
+                + '<input type="text" class="form-control draft-meta-title" data-id="' + d.id_category + '" maxlength="60" value="' + esc(d.meta_title || '') + '" style="margin-bottom:6px" />'
+                + '<div class="muted" style="margin-bottom:2px">Meta description <span style="color:#888">(max 155)</span></div>'
+                + '<textarea class="form-control draft-meta-desc" data-id="' + d.id_category + '" rows="2" maxlength="155">' + esc(d.meta_description || '') + '</textarea>'
+              : '<span class="muted">—</span>')
+          + '</td>'
+          + '<td>'
+            + (d.seo_jsonld !== undefined
+              ? '<textarea class="form-control draft-jsonld" data-id="' + d.id_category + '" rows="8" style="font-family:monospace;font-size:11px">'
+                + esc(d.seo_jsonld || '') + '</textarea>'
+              : '<span class="muted" style="font-size:11px">—</span>')
+          + '</td>'
+          + '<td style="white-space:nowrap">'
+            + '<button class="btn btn-default btn-sm btn-regen" data-id="' + d.id_category + '" title="Opnieuw genereren">&#x21bb;</button>'
+          + '</td>';
+      }
+      tbody.appendChild(tr);
+    });
+
+    if (tbody.children.length) {
+      document.getElementById('ai-drafts-table').style.display   = '';
+      document.getElementById('ai-drafts-actions').style.display = '';
+    }
+
+    document.getElementById('ai-drafts-checkall').addEventListener('change', function() {
+      tbody.querySelectorAll('.draft-cb').forEach(cb => cb.checked = this.checked);
+    });
+  }
+
+  // ── collect + save ────────────────────────────────────────────────────────
+
+  function collectDrafts(selectedOnly) {
+    const result = [];
+    document.querySelectorAll('#ai-drafts-body tr').forEach(function(tr) {
+      const cb = tr.querySelector('.draft-cb');
+      if (!cb) return;
+      if (selectedOnly && !cb.checked) return;
+      const draft = {
+        id_category: parseInt(cb.dataset.id),
+        description: (tr.querySelector('.draft-html') || {}).value || '',
+      };
+      const metaTitle = tr.querySelector('.draft-meta-title');
+      const metaDesc  = tr.querySelector('.draft-meta-desc');
+      const jsonldEl  = tr.querySelector('.draft-jsonld');
+      if (metaTitle) draft.meta_title       = metaTitle.value || '';
+      if (metaDesc)  draft.meta_description = metaDesc.value  || '';
+      if (jsonldEl)  draft.seo_jsonld       = jsonldEl.value  || '';
+      result.push(draft);
+    });
+    return result;
+  }
+
+  function saveDrafts(drafts) {
+    if (!drafts.length) { alert('Geen drafts om op te slaan.'); return; }
+    setStatus('Opslaan…', 'label-warning');
+    log('Sla ' + drafts.length + ' categorie(ën) op…');
+
+    const params = new URLSearchParams({
+      id_lang: getLangId(),
+      drafts:  JSON.stringify(drafts),
+    });
+
+    fetch(ajaxUrl + '&action=SaveDrafts', {
+      method: 'POST', credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    })
+    .then(r => r.json())
+    .then(j => {
+      if (!j) throw new Error('Geen antwoord ontvangen.');
+      const saved = Number(j.saved) || 0;
+      const errors = Array.isArray(j.errors) ? j.errors.slice() : [];
+      if (j.error) errors.push(j.error);
+      if (!j.ok && !errors.length) errors.push('Onbekende fout bij het opslaan.');
+
+      if (errors.length || !j.ok) {
+        setStatus(saved > 0 ? 'Deels opgeslagen' : 'Opslaan mislukt', saved > 0 ? 'label-warning' : 'label-danger');
+      } else if (saved === 0) {
+        setStatus('Niets opgeslagen', 'label-warning');
+      } else if (saved < drafts.length) {
+        setStatus('Deels opgeslagen', 'label-warning');
+      } else {
+        setStatus('Opgeslagen', 'label-success');
+      }
+      log('Opgeslagen: ' + saved + ' van ' + drafts.length + ' categorie(ën).' + (errors.length ? ' Fouten: ' + errors.join('; ') : ''));
+      // Refresh category badges without replacing the save result or draft edits.
+      if (saved > 0) loadCategories(true);
+    })
+    .catch(e => { setStatus('Opslaan mislukt', 'label-danger'); log('Save error: ' + e.message); });
+  }
+
+  document.getElementById('ai-save-selected').addEventListener('click', function() { saveDrafts(collectDrafts(true)); });
+  document.getElementById('ai-save-all').addEventListener('click',      function() { saveDrafts(collectDrafts(false)); });
+
+  // ── boot ──────────────────────────────────────────────────────────────────
+  loadCategories();
+})();
+</script>

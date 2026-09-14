@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" target-language="nl-NL" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="guest_registration_message">
+        <source>You previously ordered as a guest. Please register again with this email address to create a customer account.</source>
+        <target>U heeft eerder als gast besteld. Registreer u opnieuw met dit e-mailadres om een klantaccount aan te maken.</target>
+      </trans-unit>
+      <trans-unit id="guest_registration_link">
+        <source>Create a customer account</source>
+        <target>Klantaccount aanmaken</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

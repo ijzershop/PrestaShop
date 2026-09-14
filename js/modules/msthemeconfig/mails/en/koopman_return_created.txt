@@ -1,0 +1,3 @@
+Er is een retourzending aangemaakt met nummer {tracking_number_text}.
+
+Volg uw retourzending bij Transmission: {tracking_url_text}

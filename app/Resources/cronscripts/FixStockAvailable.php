@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace app\Resources\cron_scripts;
 
-require_once dirname(__DIR__) . './../../config/config.inc.php';
-require_once dirname(__DIR__) . './../../vendor/autoload.php';
+require_once __DIR__ . '/shop-root.php';
+require_once modernesmidCronShopRoot() . '/config/config.inc.php';
+require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
 
 use Db;
 use DbQuery;
@@ -42,7 +43,10 @@ class FixStockAvailable
         $this->id_shops = [1];
         $this->id_shop_group = 0;
         $this->skippingCategories = [1,2,6,22];
-        $this->tmpFolder = 'tmp/';
+        $this->tmpFolder = _PS_ROOT_DIR_ . '/var/tmp/stock-cleaner/';
+        if (!is_dir($this->tmpFolder) && !mkdir($this->tmpFolder, 0755, true) && !is_dir($this->tmpFolder)) {
+            throw new \RuntimeException('Cannot create stock cleaner temporary directory: ' . $this->tmpFolder);
+        }
         $this->errorFile = $this->tmpFolder."errors.txt";
         $this->validFile = $this->tmpFolder."validStock.txt";
         $this->invalidFile = $this->tmpFolder."invalidStock.txt";

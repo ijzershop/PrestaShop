@@ -1,0 +1,56 @@
+
+    .codemirror-wrapper.svelte-1p0so8x .cm-focused {
+        outline: none;
+    }
+
+    .scm-waiting.svelte-1p0so8x {
+        position: relative;
+    }
+    .scm-waiting__loading.svelte-1p0so8x {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .scm-loading.svelte-1p0so8x {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .scm-loading__spinner.svelte-1p0so8x {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 100%;
+        border: solid 2px #000;
+        border-top-color: transparent;
+        margin-right: 0.75rem;
+        animation: svelte-1p0so8x-spin 1s linear infinite;
+    }
+    .scm-loading__text.svelte-1p0so8x {
+        font-family: sans-serif;
+    }
+    .scm-pre.svelte-1p0so8x {
+        font-size: 0.85rem;
+        font-family: monospace;
+        -o-tab-size: 2;
+           tab-size: 2;
+        -moz-tab-size: 2;
+        resize: none;
+        pointer-events: none;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+                user-select: none;
+        overflow: auto;
+    }
+
+    @keyframes svelte-1p0so8x-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }

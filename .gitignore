@@ -233,3 +233,6 @@ docker-compose.override.yml
 # config vscode
 .hintrc
 override.bak_20260914091050/
+
+# Custom module source belongs in external/modernesmid_webshop.
+/js/modules/msthemeconfig/

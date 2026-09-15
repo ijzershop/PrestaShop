@@ -7,7 +7,10 @@
     <list default="true" id="82b37cda-6a12-410a-bc19-dff2adda941a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_categories.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_categories.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_cms.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_cms.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_descriptions.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_descriptions.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/checkout.scss" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/checkout.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +48,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/external/modernesmid_webshop" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -62,23 +65,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4711612485099779" />
-      <entry key="MS500" value="3.8217661389381115" />
-      <entry key="S2" value="11.138793441287095" />
-      <entry key="S5" value="22.36785974095931" />
-      <entry key="S10" value="34.683216700240024" />
-      <entry key="S30" value="50.69614298121815" />
-      <entry key="S60" value="56.38577501380492" />
-      <entry key="M2" value="59.590005961719164" />
-      <entry key="M5" value="66.32311962146501" />
-      <entry key="M10" value="98.20612105187308" />
-      <entry key="M15" value="139.41308935809215" />
-      <entry key="M30" value="252.64343841136255" />
-      <entry key="H1" value="462.15536515473707" />
-      <entry key="H2" value="932.1930716207414" />
-      <entry key="H4" value="1710.4307796335981" />
-      <entry key="D1" value="10222.460909980236" />
-      <entry key="W1" value="47799.89715887756" />
+      <entry key="MS100" value="1.0000128367850585" />
+      <entry key="MS500" value="1.1810664653071608" />
+      <entry key="S2" value="3.5507486556372725" />
+      <entry key="S5" value="5.6452324980371085" />
+      <entry key="S10" value="6.698287658992097" />
+      <entry key="S30" value="9.33206542430698" />
+      <entry key="S60" value="18.790133170092965" />
+      <entry key="M2" value="39.55452712845143" />
+      <entry key="M5" value="88.30317979835506" />
+      <entry key="M10" value="146.40855347814184" />
+      <entry key="M15" value="192.6768581942749" />
+      <entry key="M30" value="312.79815429602854" />
+      <entry key="H1" value="531.3838497514332" />
+      <entry key="H2" value="992.9391116889908" />
+      <entry key="H4" value="1789.0371739458492" />
+      <entry key="D1" value="10299.160409025988" />
+      <entry key="W1" value="47964.508204837846" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -88,35 +91,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="8.71090726226534E-309" />
-      <entry key="M5" value="5.970701452240298E-124" />
-      <entry key="M10" value="2.443501883003085E-62" />
-      <entry key="M15" value="8.420575717299167E-42" />
-      <entry key="M30" value="2.9018228267075388E-21" />
-      <entry key="H1" value="5.386890971627476E-11" />
-      <entry key="H2" value="7.370724778631263E-6" />
-      <entry key="H4" value="0.0030423381035356604" />
-      <entry key="D1" value="1.5818434159217212" />
-      <entry key="W1" value="17.881014171645113" />
+      <entry key="M2" value="5.951065E-317" />
+      <entry key="M5" value="3.2347287008445524E-127" />
+      <entry key="M10" value="5.687467539111037E-64" />
+      <entry key="M15" value="6.864558661136834E-43" />
+      <entry key="M30" value="8.285263219344764E-22" />
+      <entry key="H1" value="2.8784314722214536E-11" />
+      <entry key="H2" value="5.3878940806954024E-6" />
+      <entry key="H4" value="0.0026011290772534105" />
+      <entry key="D1" value="1.5410706964720615" />
+      <entry key="W1" value="17.81443343353551" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.4300091626653857" />
-      <entry key="MS500" value="3.797682415138884" />
-      <entry key="S2" value="11.120807174861984" />
-      <entry key="S5" value="22.35344891858523" />
-      <entry key="S10" value="34.671944870210346" />
-      <entry key="S30" value="50.69058765717586" />
-      <entry key="S60" value="56.38267461021168" />
-      <entry key="M2" value="59.588364391790826" />
-      <entry key="M5" value="66.32237749827935" />
-      <entry key="M10" value="98.20554836714645" />
-      <entry key="M15" value="139.4125147599655" />
-      <entry key="M30" value="252.64273008025583" />
-      <entry key="H1" value="462.1544765899154" />
-      <entry key="H2" value="932.1921599856016" />
-      <entry key="H4" value="1710.4330549878916" />
-      <entry key="D1" value="10224.042043811007" />
-      <entry key="W1" value="47817.77755529055" />
+      <entry key="MS100" value="8.099424435098956E-4" />
+      <entry key="MS500" value="0.35163501792434315" />
+      <entry key="S2" value="3.1127395166156346" />
+      <entry key="S5" value="5.428035783862155" />
+      <entry key="S10" value="6.580912281837764" />
+      <entry key="S30" value="9.290598330081941" />
+      <entry key="S60" value="18.76863085595577" />
+      <entry key="M2" value="39.54316073821278" />
+      <entry key="M5" value="88.29810174164108" />
+      <entry key="M10" value="146.40570170595163" />
+      <entry key="M15" value="192.67478636615377" />
+      <entry key="M30" value="312.79683379032593" />
+      <entry key="H1" value="531.3827768531679" />
+      <entry key="H2" value="992.9381341945383" />
+      <entry key="H4" value="1789.0389604030279" />
+      <entry key="D1" value="10300.70076143931" />
+      <entry key="W1" value="47982.32201894472" />
     </decayedShown>
   </component>
   <component name="PackageJsonUpdateNotifier">
@@ -494,7 +497,7 @@
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Statements.sql.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;bare-presta&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp&quot;,
@@ -887,7 +890,7 @@
       <workItem from="1788936481401" duration="20703000" />
       <workItem from="1789021603870" duration="35468000" />
       <workItem from="1789368653080" duration="13836000" />
-      <workItem from="1789444635823" duration="21503000" />
+      <workItem from="1789444635823" duration="23563000" />
     </task>
     <servers />
   </component>

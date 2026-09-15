@@ -5,16 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="82b37cda-6a12-410a-bc19-dff2adda941a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cache/smarty/cache/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cache/smarty/compile/index.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/theme-core.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/theme-core.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/cleanup.sh" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/cleanup.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/deploy.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/deployment-map.sh" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/deployment-map.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/test-deployment.cjs" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/scripts/test-deployment.cjs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +47,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/external/modernesmid_webshop" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -68,23 +64,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4613210648238473" />
-      <entry key="MS500" value="4.544810022563237" />
-      <entry key="S2" value="11.89554039497989" />
-      <entry key="S5" value="23.14424481267549" />
-      <entry key="S10" value="35.17083567185503" />
-      <entry key="S30" value="50.449092023447456" />
-      <entry key="S60" value="55.80767814823936" />
-      <entry key="M2" value="58.8277802077016" />
-      <entry key="M5" value="65.43358019431517" />
-      <entry key="M10" value="89.96982036411264" />
-      <entry key="M15" value="116.78319113144101" />
-      <entry key="M30" value="190.51502445439573" />
-      <entry key="H1" value="380.055892489881" />
-      <entry key="H2" value="857.8398369711924" />
-      <entry key="H4" value="1618.654818685979" />
-      <entry key="D1" value="10132.67516750995" />
-      <entry key="W1" value="47642.16997854756" />
+      <entry key="MS100" value="1.1385030459812078" />
+      <entry key="MS500" value="2.6540022199113222" />
+      <entry key="S2" value="7.994610025493737" />
+      <entry key="S5" value="19.94569285194915" />
+      <entry key="S10" value="33.25959411882709" />
+      <entry key="S30" value="50.6176426279035" />
+      <entry key="S60" value="57.53975046058202" />
+      <entry key="M2" value="69.6300061473441" />
+      <entry key="M5" value="117.74553152738169" />
+      <entry key="M10" value="179.23132436750092" />
+      <entry key="M15" value="224.53454270548335" />
+      <entry key="M30" value="324.4877400796242" />
+      <entry key="H1" value="521.9513739163426" />
+      <entry key="H2" value="993.8604429067713" />
+      <entry key="H4" value="1761.589633262903" />
+      <entry key="D1" value="10273.517509814954" />
+      <entry key="W1" value="47813.08941435428" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -94,35 +90,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="1.7144070121878677E-302" />
-      <entry key="M5" value="1.9662809595266905E-121" />
-      <entry key="M10" value="4.434276671032696E-61" />
-      <entry key="M15" value="5.814984006467968E-41" />
-      <entry key="M30" value="7.625604242731474E-21" />
-      <entry key="H1" value="8.732525660928595E-11" />
-      <entry key="H2" value="9.384497812964123E-6" />
-      <entry key="H4" value="0.0034328742731800374" />
-      <entry key="D1" value="1.6140063091995525" />
-      <entry key="W1" value="17.932505261625813" />
+      <entry key="M2" value="2.6966979546280925E-305" />
+      <entry key="M5" value="1.4870751704030058E-122" />
+      <entry key="M10" value="1.2194569161732776E-61" />
+      <entry key="M15" value="2.459108215766013E-41" />
+      <entry key="M30" value="4.958939620376667E-21" />
+      <entry key="H1" value="7.042018303581207E-11" />
+      <entry key="H2" value="8.427323721985422E-6" />
+      <entry key="H4" value="0.003253098532313637" />
+      <entry key="D1" value="1.5996014213229586" />
+      <entry key="W1" value="17.909553565972015" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.404787123705657" />
-      <entry key="MS500" value="4.5132902801985155" />
-      <entry key="S2" value="11.876095397688763" />
-      <entry key="S5" value="23.12941799254885" />
-      <entry key="S10" value="35.159622806130145" />
-      <entry key="S30" value="50.443735543372526" />
-      <entry key="S60" value="55.804715161058915" />
-      <entry key="M2" value="58.826218262044" />
-      <entry key="M5" value="65.43287199429454" />
-      <entry key="M10" value="89.96925265897232" />
-      <entry key="M15" value="116.78254835262553" />
-      <entry key="M30" value="190.51410368560005" />
-      <entry key="H1" value="380.0548198325686" />
-      <entry key="H2" value="857.8388402967065" />
-      <entry key="H4" value="1618.65746373895" />
-      <entry key="D1" value="10134.28846217417" />
-      <entry key="W1" value="47660.10186602499" />
+      <entry key="MS100" value="1.001025416300056" />
+      <entry key="MS500" value="2.600348162221193" />
+      <entry key="S2" value="7.96574701596118" />
+      <entry key="S5" value="19.923467404567816" />
+      <entry key="S10" value="33.242965484708655" />
+      <entry key="S30" value="50.60975499160707" />
+      <entry key="S60" value="57.53535167941773" />
+      <entry key="M2" value="69.62745132448545" />
+      <entry key="M5" value="117.74396993689741" />
+      <entry key="M10" value="179.23018153878823" />
+      <entry key="M15" value="224.53353641175633" />
+      <entry key="M30" value="324.48672691645265" />
+      <entry key="H1" value="521.9502879529567" />
+      <entry key="H2" value="993.8594336870761" />
+      <entry key="H4" value="1761.592081729066" />
+      <entry key="D1" value="10275.116396126932" />
+      <entry key="W1" value="47830.99834952114" />
     </decayedShown>
   </component>
   <component name="PackageJsonUpdateNotifier">
@@ -465,75 +461,75 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Database Script.db_upgrade_901_to_910.sql.executor": "Run",
-    "JavaScript Debug.php_version_test.php.executor": "Run",
-    "KEY_CHAT_IN_TOOLWINDOW": "false",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "PHP Script.http_access_check.php.executor": "Run",
-    "PHP Script.php_version_test.php.executor": "Run",
-    "PowerShell.composer-install.ps1 (1).executor": "Debug",
-    "PowerShell.composer-install.ps1 (2).executor": "Run",
-    "PowerShell.composer-install.ps1 (3).executor": "Debug",
-    "PowerShell.composer-install.ps1 (4).executor": "Debug",
-    "PowerShell.composer-install.ps1.executor": "Debug",
-    "RunOnceActivity.ChatTagsLlmMigration": "true",
-    "RunOnceActivity.ClientConfigCleanupMigration": "true",
-    "RunOnceActivity.CodyAccountHistoryMigration": "true",
-    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
-    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
-    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
-    "RunOnceActivity.CodyHistoryLlmMigration": "true",
-    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
-    "RunOnceActivity.CodyProjectSettingsMigration": "true",
-    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHELLCHECK.PATH": "C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "database.data.extractors.current.export.id": "SQL-Insert-Statements.sql.groovy",
-    "git-widget-placeholder": "bare-presta",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp",
-    "list.type.of.created.stylesheet": "SCSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.stylelint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.stylelint": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
-    "validate C:/wampserver/www/modernesmid-webshop/composer.json": "--no-interaction --ansi --verbose --no-check-all --with-dependencies",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Database Script.db_upgrade_901_to_910.sql.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.php_version_test.php.executor&quot;: &quot;Run&quot;,
+    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;PHP Script.http_access_check.php.executor&quot;: &quot;Run&quot;,
+    &quot;PHP Script.php_version_test.php.executor&quot;: &quot;Run&quot;,
+    &quot;PowerShell.composer-install.ps1 (1).executor&quot;: &quot;Debug&quot;,
+    &quot;PowerShell.composer-install.ps1 (2).executor&quot;: &quot;Run&quot;,
+    &quot;PowerShell.composer-install.ps1 (3).executor&quot;: &quot;Debug&quot;,
+    &quot;PowerShell.composer-install.ps1 (4).executor&quot;: &quot;Debug&quot;,
+    &quot;PowerShell.composer-install.ps1.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ClientConfigCleanupMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.DeprecatedChatLlmMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Statements.sql.groovy&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;SCSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
+    &quot;validate C:/wampserver/www/modernesmid-webshop/composer.json&quot;: &quot;--no-interaction --ansi --verbose --no-check-all --with-dependencies&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql",
-      "mariadb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;mariadb&quot;
     ],
-    "RunConfigurationTargetLRU": [
-      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\"modernesmid_webshop\"",
-      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6"
+    &quot;RunConfigurationTargetLRU&quot;: [
+      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\&quot;modernesmid_webshop\&quot;&quot;,
+      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "PLAIN_TEXT"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;PLAIN_TEXT&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\temp" />
@@ -893,7 +889,7 @@
       <workItem from="1788936481401" duration="20703000" />
       <workItem from="1789021603870" duration="35468000" />
       <workItem from="1789368653080" duration="13836000" />
-      <workItem from="1789444635823" duration="18832000" />
+      <workItem from="1789444635823" duration="20163000" />
     </task>
     <servers />
   </component>

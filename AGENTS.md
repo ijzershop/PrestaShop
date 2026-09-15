@@ -20,3 +20,12 @@
 - In the parent repository, commit only deliberate upstream/core changes, repository instructions, deployment metadata, and the intended external submodule pointer.
 - Never run `git add -A`, `git restore`, `git clean`, or recursive removal from the deployed parent checkout without first excluding and verifying all symlinks and junctions.
 - Inspect the status of the parent and external repositories separately before every commit.
+
+## Local verification and user review
+
+- Functional customization work is not ready for review until it is available in the local PrestaShop runtime through the external install script.
+- After deploying source changes, run required module upgrades and targeted cache refreshes before asking the user to test.
+- Verify the source commit, deployed link target, installed module version or schema, and the exact affected Back Office or storefront route.
+- Give the user concise steps describing where and how to test the behavior locally.
+- Respect any explicit review gate: when the user wants to test or inspect first, do not push the pending change until they have had that opportunity.
+- A document committed below `docs/` is not an online wiki publication. Publish through the separate wiki repository and verify its remote commit and rendered navigation before reporting it online.

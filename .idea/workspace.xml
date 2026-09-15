@@ -6,50 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="82b37cda-6a12-410a-bc19-dff2adda941a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/default/scss/partials/_header.scss" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/default/scss/partials/_header.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/.webpack/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/.webpack/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/bulk.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/bulk.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/row.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/components/row.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/permission.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/app/pages/permission/permission.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/components/components-map.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/components/components-map.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/msthemeconfig_grid/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/msthemeconfig_grid/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/combination/generator/CombinationGenerator.vue" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/combination/generator/CombinationGenerator.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/shop/select-shop-modal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/js/pages/product/shop/select-shop-modal.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin-dev/themes/new-theme/scss/components/_form.scss" beforeDir="false" afterPath="$PROJECT_DIR$/admin-dev/themes/new-theme/scss/components/_form.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/BelgiumVatCalculation.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/BelgiumVatCalculation.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/FixStockAvailable.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/FixStockAvailable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/OfferEndDateChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/OfferEndDateChecker.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/OrderSlipGenerator.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/OrderSlipGenerator.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/backupInvoicesToPCloud.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/backupInvoicesToPCloud.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-cache.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-cache.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-profiler.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-profiler.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/clean-var-folder.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/clean-var-folder.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/generate_llms.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/generate_llms.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Resources/cronscripts/updateKiyohDataToDatabase.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Resources/cronscripts/updateKiyohDataToDatabase.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/smarty/cache/index.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cache/smarty/compile/index.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/docs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/docs/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ai.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ai.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/msthemeconfig.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/msthemeconfig.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/src/Class/ModernAjax.php" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/src/Class/ModernAjax.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/panels/panel-config-main.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/panels/panel-config-main.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/ai-assistant.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/ai-assistant.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/custom.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/theme-core.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/js/theme-core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/js/theme.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/templates/_partials/header.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/admin/tinymce.inc.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/admin/tinymce.inc.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_cart_rules.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_cart_rules.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.tpl" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.tpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/mails/_partials/order_conf_product_list.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/override/.htaccess" beforeDir="false" afterPath="$PROJECT_DIR$/override/.htaccess" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/override/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/override/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Adapter/Configuration.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Adapter/Configuration.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerGroupsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Controller/Admin/Configure/ShopParameters/CustomerGroupsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/config/routing/admin/configure/shop_parameters/customer_groups.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/config/routing/admin/configure/shop_parameters/customer_groups.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/orders.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/src/PrestaShopBundle/Resources/views/Admin/Sell/Customer/Blocks/View/orders.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/_core/js/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/_core/js/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/themes/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/webpack.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +38,7 @@
     </execution>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="28267" />
+    <option name="cachedIndexableFilesCount" value="27604" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -103,23 +68,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.4222049208916938" />
-      <entry key="MS500" value="4.966773796628529" />
-      <entry key="S2" value="13.811130709438247" />
-      <entry key="S5" value="26.941730398870725" />
-      <entry key="S10" value="45.8729175653656" />
-      <entry key="S30" value="80.23644827705388" />
-      <entry key="S60" value="96.3803592662837" />
-      <entry key="M2" value="109.30778089466678" />
-      <entry key="M5" value="128.74586091973816" />
-      <entry key="M10" value="194.10401873944457" />
-      <entry key="M15" value="279.16513119413725" />
-      <entry key="M30" value="500.69769074145853" />
-      <entry key="H1" value="766.6628068837163" />
-      <entry key="H2" value="1001.4938581894377" />
-      <entry key="H4" value="1246.8096188612055" />
-      <entry key="D1" value="9839.171946697557" />
-      <entry key="W1" value="46759.972014217994" />
+      <entry key="MS100" value="1.4613210648238473" />
+      <entry key="MS500" value="4.544810022563237" />
+      <entry key="S2" value="11.89554039497989" />
+      <entry key="S5" value="23.14424481267549" />
+      <entry key="S10" value="35.17083567185503" />
+      <entry key="S30" value="50.449092023447456" />
+      <entry key="S60" value="55.80767814823936" />
+      <entry key="M2" value="58.8277802077016" />
+      <entry key="M5" value="65.43358019431517" />
+      <entry key="M10" value="89.96982036411264" />
+      <entry key="M15" value="116.78319113144101" />
+      <entry key="M30" value="190.51502445439573" />
+      <entry key="H1" value="380.055892489881" />
+      <entry key="H2" value="857.8398369711924" />
+      <entry key="H4" value="1618.654818685979" />
+      <entry key="D1" value="10132.67516750995" />
+      <entry key="W1" value="47642.16997854756" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -129,35 +94,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="7.473069116091129E-248" />
-      <entry key="M5" value="1.4105860987200489E-99" />
-      <entry key="M10" value="3.7557770151060975E-50" />
-      <entry key="M15" value="1.1215015199846407E-33" />
-      <entry key="M30" value="3.3488826793796555E-17" />
-      <entry key="H1" value="5.786989654801599E-9" />
-      <entry key="H2" value="7.639544327528538E-5" />
-      <entry key="H4" value="0.009794586518262994" />
-      <entry key="D1" value="1.9221764977371" />
-      <entry key="W1" value="18.38578235470695" />
+      <entry key="M2" value="1.7144070121878677E-302" />
+      <entry key="M5" value="1.9662809595266905E-121" />
+      <entry key="M10" value="4.434276671032696E-61" />
+      <entry key="M15" value="5.814984006467968E-41" />
+      <entry key="M30" value="7.625604242731474E-21" />
+      <entry key="H1" value="8.732525660928595E-11" />
+      <entry key="H2" value="9.384497812964123E-6" />
+      <entry key="H4" value="0.0034328742731800374" />
+      <entry key="D1" value="1.6140063091995525" />
+      <entry key="W1" value="17.932505261625813" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.3420365947183228" />
-      <entry key="MS500" value="4.9197533430010685" />
-      <entry key="S2" value="13.777719987914523" />
-      <entry key="S5" value="26.911268100104564" />
-      <entry key="S10" value="45.84574457161341" />
-      <entry key="S30" value="80.22064615255688" />
-      <entry key="S60" value="96.37099457739923" />
-      <entry key="M2" value="109.30259489373071" />
-      <entry key="M5" value="128.74354238175937" />
-      <entry key="M10" value="194.10247514402056" />
-      <entry key="M15" value="279.16376151107045" />
-      <entry key="M30" value="500.6965607765795" />
-      <entry key="H1" value="766.6619785343968" />
-      <entry key="H2" value="1001.4934055646243" />
-      <entry key="H4" value="1246.8190806998618" />
-      <entry key="D1" value="9841.093463105157" />
-      <entry key="W1" value="46778.35718772569" />
+      <entry key="MS100" value="1.404787123705657" />
+      <entry key="MS500" value="4.5132902801985155" />
+      <entry key="S2" value="11.876095397688763" />
+      <entry key="S5" value="23.12941799254885" />
+      <entry key="S10" value="35.159622806130145" />
+      <entry key="S30" value="50.443735543372526" />
+      <entry key="S60" value="55.804715161058915" />
+      <entry key="M2" value="58.826218262044" />
+      <entry key="M5" value="65.43287199429454" />
+      <entry key="M10" value="89.96925265897232" />
+      <entry key="M15" value="116.78254835262553" />
+      <entry key="M30" value="190.51410368560005" />
+      <entry key="H1" value="380.0548198325686" />
+      <entry key="H2" value="857.8388402967065" />
+      <entry key="H4" value="1618.65746373895" />
+      <entry key="D1" value="10134.28846217417" />
+      <entry key="W1" value="47660.10186602499" />
     </decayedShown>
   </component>
   <component name="PackageJsonUpdateNotifier">
@@ -541,9 +506,11 @@
     "last_opened_file_path": "C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp",
     "list.type.of.created.stylesheet": "SCSS",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
     "node.js.detected.package.stylelint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
     "node.js.selected.package.stylelint": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -576,14 +543,14 @@
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\theme\modernesmid\pdf" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\wampserver\www\modernesmid-webshop\app\Resources\cronscripts" />
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\module\msthemeconfig\views\img" />
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\temp" />
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\core-files\app\Resources\cronscripts" />
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\module\msthemeconfig\cron_scripts" />
-      <recent name="C:\wampserver\www\modernesmid-webshop\themes\modernesmid\assets\img\store_img" />
     </key>
   </component>
-  <component name="RunManager" selected="Database Script.db_upgrade_901_to_910.sql">
+  <component name="RunManager" selected="Shell Script.generate_certificates.sh">
     <configuration name="db_upgrade_901_to_910.sql" type="DatabaseScript" editBeforeRun="true" temporary="true" nameIsGenerated="true">
       <script-file value="$PROJECT_DIR$/db_upgrade_901_to_910.sql" />
       <script-mode>FILE</script-mode>
@@ -592,9 +559,6 @@
     </configuration>
     <configuration name="Main" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner configuration_file="$PROJECT_DIR$/tests/Unit/phpunit.xml" scope="XML" use_alternative_configuration_file="true" />
-      <method v="2" />
-    </configuration>
-    <configuration name="http_access_check.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/tools/modernesmid-development-tools/http_access_check.php">
       <method v="2" />
     </configuration>
     <configuration name="php_version_test.php" type="PhpLocalRunConfigurationType" factoryName="PHP Console" temporary="true" path="$PROJECT_DIR$/tools/modernesmid-development-tools/php_version_test.php">
@@ -608,8 +572,24 @@
       <envs />
       <method v="2" />
     </configuration>
+    <configuration name="generate_certificates.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/cron_scripts/generate_certificates.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/cron_scripts" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Shell Script.generate_certificates.sh" />
         <item itemvalue="Database Script.db_upgrade_901_to_910.sql" />
         <item itemvalue="PowerShell.composer-install.ps1 (2)" />
         <item itemvalue="PowerShell.composer-install.ps1 (1)" />
@@ -912,7 +892,8 @@
       <workItem from="1788861235826" duration="6203000" />
       <workItem from="1788936481401" duration="20703000" />
       <workItem from="1789021603870" duration="35468000" />
-      <workItem from="1789368653080" duration="2881000" />
+      <workItem from="1789368653080" duration="13836000" />
+      <workItem from="1789444635823" duration="18832000" />
     </task>
     <servers />
   </component>

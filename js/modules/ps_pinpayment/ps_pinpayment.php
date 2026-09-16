@@ -154,7 +154,7 @@ public function addOrderState($name)
 
     public function hookPaymentOptions($params)
     {
-        if (!$this->active) {
+        if (!$this->active || !(new \MsThemeConfig\Checkout\CounterCheckout($this->context))->isCounterCustomer()) {
             return [];
         }
 

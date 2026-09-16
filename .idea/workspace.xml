@@ -5,13 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="82b37cda-6a12-410a-bc19-dff2adda941a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_categories.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_categories.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_cms.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_cms.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_descriptions.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/views/templates/admin/ai_descriptions.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/checkout.scss" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/_dev/css/checkout.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" beforeDir="false" afterPath="$PROJECT_DIR$/external/modernesmid_webshop/theme/modernesmid/assets/css/theme-core-bundled.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/modules/ps_pinpayment/controllers/front/validation.php" beforeDir="false" afterPath="$PROJECT_DIR$/js/modules/ps_pinpayment/controllers/front/validation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/modules/ps_pinpayment/ps_pinpayment.php" beforeDir="false" afterPath="$PROJECT_DIR$/js/modules/ps_pinpayment/ps_pinpayment.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +33,7 @@
     </execution>
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="27604" />
+    <option name="cachedIndexableFilesCount" value="32784" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
@@ -48,7 +46,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/external/modernesmid_webshop" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="HighlightingSettingsPerFile">
@@ -462,75 +460,75 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Database Script.db_upgrade_901_to_910.sql.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.php_version_test.php.executor&quot;: &quot;Run&quot;,
-    &quot;KEY_CHAT_IN_TOOLWINDOW&quot;: &quot;false&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;PHP Script.http_access_check.php.executor&quot;: &quot;Run&quot;,
-    &quot;PHP Script.php_version_test.php.executor&quot;: &quot;Run&quot;,
-    &quot;PowerShell.composer-install.ps1 (1).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1 (2).executor&quot;: &quot;Run&quot;,
-    &quot;PowerShell.composer-install.ps1 (3).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1 (4).executor&quot;: &quot;Debug&quot;,
-    &quot;PowerShell.composer-install.ps1.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ChatTagsLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ClientConfigCleanupMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.DeprecatedChatLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1&quot;: &quot;true&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL-Insert-Statements.sql.groovy&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;bare-presta&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;SCSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.stylelint&quot;: &quot;C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.LLMThirdPartyAiProvidersConfigurable&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib&quot;,
-    &quot;validate C:/wampserver/www/modernesmid-webshop/composer.json&quot;: &quot;--no-interaction --ansi --verbose --no-check-all --with-dependencies&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Database Script.db_upgrade_901_to_910.sql.executor": "Run",
+    "JavaScript Debug.php_version_test.php.executor": "Run",
+    "KEY_CHAT_IN_TOOLWINDOW": "false",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "PHP Script.http_access_check.php.executor": "Run",
+    "PHP Script.php_version_test.php.executor": "Run",
+    "PowerShell.composer-install.ps1 (1).executor": "Debug",
+    "PowerShell.composer-install.ps1 (2).executor": "Run",
+    "PowerShell.composer-install.ps1 (3).executor": "Debug",
+    "PowerShell.composer-install.ps1 (4).executor": "Debug",
+    "PowerShell.composer-install.ps1.executor": "Debug",
+    "RunOnceActivity.ChatTagsLlmMigration": "true",
+    "RunOnceActivity.ClientConfigCleanupMigration": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.DeprecatedChatLlmMigration": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\jelme\\AppData\\Roaming\\JetBrains\\PhpStorm2025.2\\plugins\\Shell Script\\shellcheck.exe",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "database.data.extractors.current.export.id": "SQL-Insert-Statements.sql.groovy",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/wampserver/www/modernesmid-webshop/external/modernesmid_webshop/temp",
+    "list.type.of.created.stylesheet": "SCSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.jshint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.jshint": "",
+    "node.js.selected.package.stylelint": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\default\\node_modules\\stylelint",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMThirdPartyAiProvidersConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\wampserver\\www\\modernesmid-webshop\\admin-dev\\themes\\new-theme\\node_modules\\typescript\\lib",
+    "validate C:/wampserver/www/modernesmid-webshop/composer.json": "--no-interaction --ansi --verbose --no-check-all --with-dependencies",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;mariadb&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql",
+      "mariadb"
     ],
-    &quot;RunConfigurationTargetLRU&quot;: [
-      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\&quot;modernesmid_webshop\&quot;&quot;,
-      &quot;1ea6e42b-8ce4-4354-bb76-e6124571d0f6&quot;
+    "RunConfigurationTargetLRU": [
+      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6/schema/\"modernesmid_webshop\"",
+      "1ea6e42b-8ce4-4354-bb76-e6124571d0f6"
     ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PLAIN_TEXT&quot;
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PLAIN_TEXT"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\wampserver\www\modernesmid-webshop\external\modernesmid_webshop\temp" />
@@ -891,6 +889,7 @@
       <workItem from="1789021603870" duration="35468000" />
       <workItem from="1789368653080" duration="13836000" />
       <workItem from="1789444635823" duration="23563000" />
+      <workItem from="1789549089389" duration="11793000" />
     </task>
     <servers />
   </component>
@@ -916,7 +915,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ajax.php</url>
-          <line>108</line>
+          <line>110</line>
           <properties>
             <option name="className" value="\msthemeconfigAjaxModuleFrontController" />
             <option name="methodName" value="initContent" />
@@ -930,7 +929,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/external/modernesmid_webshop/module/msthemeconfig/controllers/front/ajax.php</url>
-          <line>1039</line>
+          <line>1059</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>

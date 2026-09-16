@@ -28,6 +28,12 @@ class Ps_PinpaymentValidationModuleFrontController extends ModuleFrontController
      */
     public function postProcess()
     {
+        if (!(new \MsThemeConfig\Checkout\CounterCheckout($this->context))->isCounterCustomer()) {
+            $this->errors[] = 'Deze betaalmethode is alleen beschikbaar voor baliebestellingen.';
+            $this->redirectWithNotifications($this->context->link->getPageLink('order', true));
+
+            return;
+        }
         $cart = $this->context->cart;
         if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0 || !$this->module->active) {
             Tools::redirect('index.php?controller=order&step=1');
